@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script src="../demo-guard.js"></script>
+<script src="../demo-guard.js?v=bc45f43c"></script>
 <title>Sterling Designer — TEST HARNESS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -43,7 +43,7 @@
 </style>
 </head>
 <body>
-<div class="banner" id="demo-banner">TEST DEMONSTRATION — NOT CONNECTED TO STERLING’S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM</div>
+<div class="banner" id="demo-banner">TEST DEMONSTRATION — NOT CONNECTED TO STERLING’S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM <span id="buildStamp"></span></div>
 <header>
   <h1>Sterling Designer <span style="color:#868e96">(integration test)</span></h1>
   <span class="provenance" id="provenance"></span>
@@ -68,8 +68,8 @@
 </main>
 <div id="toast"></div>
 
-<script src="vendor/fabric-4.4.0.min.js"></script>
-<script src="../generator/product-compat.js"></script>
+<script src="vendor/fabric-4.4.0.min.js?v=bc45f43c"></script>
+<script src="../generator/product-compat.js?v=bc45f43c"></script>
 <script>
 /* Test harness: loads a sterling-template-1.2 transfer, renders each page as an
  * editable Fabric v4 canvas (the same engine version the live designer uses),
@@ -77,6 +77,7 @@
  * product with proportional scaling. Entirely client-side. */
 
 const TRANSFER_KEY = 'smpDesignTransfer';
+document.getElementById('buildStamp').textContent = '· build ' + (window.DEMO_BUILD || '?');
 let demoCatalog = null;
 fetch('../data/test-products.json').then(r => r.json()).then(d => {
   demoCatalog = d.products;

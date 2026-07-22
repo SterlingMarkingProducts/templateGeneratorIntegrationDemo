@@ -8,6 +8,8 @@
 (function () {
   'use strict';
 
+  window.DEMO_BUILD = 'bc45f43c';
+
   var BLOCKED_HOST = /(^|\.)sterling\.ca$/i;
   var WARNING = '[DEMO GUARD] Blocked a network request to a Sterling production domain: ';
 
@@ -49,7 +51,7 @@
     if (document.getElementById('demo-banner')) return;
     var b = document.createElement('div');
     b.id = 'demo-banner';
-    b.textContent = "TEST DEMONSTRATION — NOT CONNECTED TO STERLING'S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM";
+    b.textContent = "TEST DEMONSTRATION — NOT CONNECTED TO STERLING'S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM · build " + window.DEMO_BUILD;
     b.style.cssText = 'position:sticky;top:0;left:0;right:0;z-index:99999;background:repeating-linear-gradient(45deg,#e8590c,#e8590c 14px,#b74708 14px,#b74708 28px);color:#fff;font:700 12px/1.5 Arial,sans-serif;text-align:center;padding:7px 10px;letter-spacing:.04em';
     document.body.insertBefore(b, document.body.firstChild);
   }
