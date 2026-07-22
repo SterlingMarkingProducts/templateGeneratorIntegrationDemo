@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="../demo-guard.js"></script>
+<title>Sterling Designer — TEST HARNESS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --accent: #e8590c; --ok: #2b8a3e; --warn: #e67700; --bad: #c92a2a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #23272b; color: #e9ecef; }
+  .banner { background: repeating-linear-gradient(45deg, #e8590c, #e8590c 14px, #b74708 14px, #b74708 28px);
+            color: #fff; font-weight: 700; text-align: center; padding: 8px 12px; letter-spacing: 0.04em; }
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 18px; background: #1a1d20; }
+  header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+  header .provenance { font-size: 0.78rem; color: #94d82d; }
+  main { display: grid; grid-template-columns: 1fr 340px; gap: 0; min-height: calc(100vh - 92px); }
+  #stage { display: flex; flex-direction: column; align-items: center; padding: 18px; overflow: auto; }
+  #pageTabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  #pageTabs button { background: #343a40; color: #dee2e6; border: 1px solid #495057; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.8rem; }
+  #pageTabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  #canvasWrap { background: #2b3035; padding: 24px; border-radius: 10px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+  canvas { border-radius: 2px; }
+  #dims { margin-top: 10px; font-size: 0.82rem; color: #adb5bd; }
+  aside { background: #1a1d20; padding: 16px; overflow: auto; border-left: 1px solid #343a40; }
+  aside h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: #868e96; margin: 18px 0 8px; }
+  aside h2:first-child { margin-top: 0; }
+  .product { background: #23272b; border: 1px solid #343a40; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .product .name { font-weight: 600; font-size: 0.88rem; }
+  .product .meta { font-size: 0.75rem; color: #adb5bd; margin: 3px 0; }
+  .tier { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tier.exact { background: var(--ok); color: #fff; }
+  .tier.compatible { background: #1971c2; color: #fff; }
+  .tier.adaptable { background: var(--warn); color: #fff; }
+  .tier.selectable { background: var(--bad); color: #fff; }
+  .why { font-size: 0.74rem; color: #ced4da; margin-top: 5px; }
+  .warn { font-size: 0.72rem; color: #ffc078; margin-top: 3px; }
+  .product button { margin-top: 8px; background: var(--accent); border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+  .product button:disabled { opacity: 0.5; }
+  #dropHint { border: 2px dashed #495057; border-radius: 10px; padding: 40px; text-align: center; color: #868e96; max-width: 460px; margin-top: 60px; }
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #343a40; color: #fff;
+           padding: 10px 18px; border-radius: 8px; font-size: 0.82rem; display: none; max-width: 80vw; box-shadow: 0 4px 16px rgba(0,0,0,.5); }
+</style>
+</head>
+<body>
+<div class="banner" id="demo-banner">TEST DEMONSTRATION — NOT CONNECTED TO STERLING’S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM</div>
+<header>
+  <h1>Sterling Designer <span style="color:#868e96">(integration test)</span></h1>
+  <span class="provenance" id="provenance"></span>
+</header>
+<main>
+  <section id="stage">
+    <div id="pageTabs"></div>
+    <div id="canvasWrap" style="display:none"><canvas id="c"></canvas></div>
+    <div id="dims"></div>
+    <div id="dropHint">
+      <p><strong>No transferred design found.</strong></p>
+      <p>Open this page via the generator's <em>Push to Designer</em> button, or drop a
+      <code>template.json</code> file here to load it.</p>
+    </div>
+  </section>
+  <aside>
+    <h2>Design</h2>
+    <div id="designInfo" class="product" style="display:none"></div>
+    <h2>Recommended products <span style="font-weight:400;text-transform:none">(test catalog)</span></h2>
+    <div id="productList"><p style="font-size:0.78rem;color:#868e96">Load a design to see recommendations.</p></div>
+  </aside>
+</main>
+<div id="toast"></div>
+
+<script src="vendor/fabric-4.4.0.min.js"></script>
+<script src="../generator/product-compat.js"></script>
+<script>
+/* Test harness: loads a sterling-template-1.2 transfer, renders each page as an
+ * editable Fabric v4 canvas (the same engine version the live designer uses),
+ * detects dimensions, classifies test products, and supports duplicate-to-
+ * product with proportional scaling. Entirely client-side. */
+
+const TRANSFER_KEY = 'smpDesignTransfer';
+let demoCatalog = null;
+fetch('../data/test-products.json').then(r => r.json()).then(d => {
+  demoCatalog = d.products;
+  if (template) renderRecommendations(designSummary(template));
+}).catch(() => { /* embedded fallback catalog remains in use */ });
+let template = null;          // the pushed sterling-template-1.2 object
+let fabricCanvas = null;
+let pages = [];               // [{label, canvasProperties, canvasData, productNumber?}]
+let activePage = 0;
+
+function toast(msg, ms = 4200) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.display = 'block';
+  clearTimeout(el._t); el._t = setTimeout(() => el.style.display = 'none', ms);
+}
+
+function loadTransferFromStorage() {
+  const id = new URLSearchParams(location.search).get('transfer');
+  if (!id) return null;
+  const raw = localStorage.getItem(`${TRANSFER_KEY}:${id}`);
+  if (!raw) return null;
+  try {
+    const rec = JSON.parse(raw);
+    if (rec.expires && rec.expires < Date.now()) {
+      localStorage.removeItem(`${TRANSFER_KEY}:${id}`);
+      toast('This transferred design expired. Push it again from the generator.');
+      return null;
+    }
+    return rec.design;
+  } catch { return null; }
+}
+
+function inches(px, dpi) { return Math.round((px / (dpi || 96)) * 100) / 100; }
+
+function designSummary(t) {
+  const cp = t.canvasProperties;
+  const widthIn = inches(cp.width, cp.dpi), heightIn = inches(cp.height, cp.dpi);
+  return {
+    widthIn, heightIn,
+    orientation: orientationOf(widthIn, heightIn),
+    aspect: Math.round((widthIn / heightIn) * 100) / 100,
+    mode: cp.designerVariationCode,
+    doubleSided: t.pages.length > 1,
+    source: cp.sourceApplication || 'unknown',
+  };
+}
+
+function initFromTemplate(t) {
+  template = t;
+  pages = t.pages.map((p, i) => ({
+    label: t.pages.length > 1 ? (i === 0 ? 'Front' : i === 1 ? 'Back' : `Page ${i + 1}`) : 'Design',
+    canvasProperties: p.canvasProperties || t.canvasProperties,
+    canvasData: p.canvasData,
+  }));
+  document.getElementById('dropHint').style.display = 'none';
+  document.getElementById('canvasWrap').style.display = 'block';
+  const s = designSummary(t);
+  if (s.source === 'templateGenerator') {
+    document.getElementById('provenance').textContent = '● Design pushed from the Design Template Generator';
+  }
+  const info = document.getElementById('designInfo');
+  info.style.display = 'block';
+  info.innerHTML = `<div class="name">${s.widthIn}" × ${s.heightIn}" — ${s.orientation}</div>
+    <div class="meta">Print mode: ${s.mode} · ${s.doubleSided ? 'Double-sided' : 'Single-sided'} · Aspect ${s.aspect}:1</div>
+    <div class="meta">Source: ${s.source}</div>`;
+  renderTabs();
+  showPage(0);
+  renderRecommendations(s);
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('pageTabs');
+  tabs.innerHTML = '';
+  pages.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.textContent = p.label;
+    b.className = i === activePage ? 'active' : '';
+    b.onclick = () => showPage(i);
+    tabs.appendChild(b);
+  });
+}
+
+function persistActivePage() {
+  // Re-serialize only pages the user actually edited, so an untouched
+  // original keeps its exact transferred JSON.
+  if (fabricCanvas && pages[activePage] && pages[activePage].dirty) {
+    pages[activePage].canvasData = fabricCanvas.toJSON(['imageKey']);
+    pages[activePage].dirty = false;
+  }
+}
+
+function showPage(i) {
+  persistActivePage();
+  activePage = i;
+  renderTabs();
+  const p = pages[i];
+  const cp = p.canvasProperties;
+  if (fabricCanvas) { fabricCanvas.dispose(); }
+  const el = document.getElementById('c');
+  el.width = cp.width; el.height = cp.height;
+  fabricCanvas = new fabric.Canvas('c', {
+    width: cp.width, height: cp.height,
+    backgroundColor: cp.materialColour || '#ffffff',
+    preserveObjectStacking: true,
+  });
+  // Scale display to fit ~640px while keeping the internal resolution
+  const maxW = 640;
+  if (cp.width > maxW) fabricCanvas.setZoom(maxW / cp.width);
+  fabricCanvas.setDimensions({ width: Math.min(cp.width, maxW), height: Math.min(cp.width, maxW) / (cp.width / cp.height) });
+  fabricCanvas.loadFromJSON(p.canvasData, () => {
+    fabricCanvas.renderAll();
+    ['object:modified', 'object:added', 'object:removed', 'text:changed'].forEach(ev =>
+      fabricCanvas.on(ev, () => { p.dirty = true; }));
+    document.getElementById('dims').textContent =
+      `${inches(cp.width, cp.dpi)}" × ${inches(cp.height, cp.dpi)}" (${cp.width}×${cp.height}px @ ${cp.dpi || 96}dpi) — every object stays editable: click to select, drag, or double-click text to edit`;
+  });
+}
+
+const TIER_LABEL = { exact: 'Exact match', compatible: 'Compatible', adaptable: 'Same proportions', selectable: 'Needs adjustment' };
+const GROUPS = [
+  ['Best matches', r => r.tier === 'exact'],
+  ['Same size, different material', r => r.tier === 'compatible'],
+  ['Same proportions', r => r.tier === 'adaptable'],
+  ['Requires design adjustment', r => r.tier === 'selectable'],
+];
+
+function renderRecommendations(summary) {
+  const results = recommendProducts(summary, demoCatalog || TEST_PRODUCT_CATALOG);
+  const wrap = document.getElementById('productList');
+  wrap.innerHTML = '';
+  for (const [title, filter] of GROUPS) {
+    const items = results.filter(filter);
+    if (!items.length) continue;
+    const h = document.createElement('h2'); h.textContent = title; wrap.appendChild(h);
+    for (const r of items) {
+      const d = document.createElement('div');
+      d.className = 'product';
+      d.innerHTML = `
+        <span class="tier ${r.tier}">${TIER_LABEL[r.tier]}</span>
+        <div class="name">${r.product.name}</div>
+        <div class="meta">#${r.product.number} · ${r.product.material} · ${r.product.w}" × ${r.product.h}" · ${orientationOf(r.product.w, r.product.h)}</div>
+        <div class="why">${r.reasons.join(' ')}</div>
+        ${r.warnings.map(w => `<div class="warn">⚠ ${w}</div>`).join('')}`;
+      const btn = document.createElement('button');
+      btn.textContent = 'Duplicate design for this product';
+      btn.onclick = () => duplicateForProduct(r);
+      d.appendChild(btn);
+      wrap.appendChild(d);
+    }
+  }
+}
+
+/* Duplicate the original design onto a product-specific page: the original
+ * page is never modified; a scaled, centred copy is appended as a new page. */
+function duplicateForProduct(rec) {
+  persistActivePage();
+  const src = pages[0];
+  const srcCp = src.canvasProperties;
+  const dpi = srcCp.dpi || 96;
+  const targetW = Math.round(rec.product.w * dpi);
+  const targetH = Math.round(rec.product.h * dpi);
+  const scale = Math.min(targetW / srcCp.width, targetH / srcCp.height);
+  const offsetX = (targetW - srcCp.width * scale) / 2;
+  const offsetY = (targetH - srcCp.height * scale) / 2;
+
+  const copy = JSON.parse(JSON.stringify(src.canvasData));
+  for (const o of copy.objects || []) {
+    o.left = (o.left || 0) * scale + offsetX;
+    o.top = (o.top || 0) * scale + offsetY;
+    if (o.type === 'textbox') {
+      o.fontSize = (o.fontSize || 16) * scale;
+      o.width = (o.width || 100) * scale;
+    } else {
+      o.scaleX = (o.scaleX || 1) * scale;
+      o.scaleY = (o.scaleY || 1) * scale;
+    }
+  }
+  pages.push({
+    label: `Copy · ${rec.product.number}`,
+    productNumber: rec.product.number,
+    sourcePage: 0,
+    conversion: { method: 'proportional-scale-centre', scale: Math.round(scale * 1000) / 1000 },
+    canvasProperties: { ...srcCp, width: targetW, height: targetH,
+                        designerVariationCode: rec.product.mode,
+                        productNumber: rec.product.number },
+    canvasData: copy,
+  });
+  showPage(pages.length - 1);
+  const notes = [`Duplicated for ${rec.product.name} at ${Math.round(scale * 100)}% scale — the original design is unchanged (first tab).`];
+  if (rec.tier === 'selectable') notes.push('Different proportions: rearrange elements manually; watch the empty areas.');
+  notes.push(...rec.warnings);
+  toast(notes.join(' '), 8000);
+}
+
+/* Drag & drop a template.json for manual testing */
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  f.text().then(txt => {
+    try { initFromTemplate(JSON.parse(txt)); }
+    catch { toast('That file is not valid template JSON.'); }
+  });
+});
+
+const fromStorage = loadTransferFromStorage();
+if (fromStorage) initFromTemplate(fromStorage);
+window.SMPTestHarness = { initFromTemplate, get pages() { return pages; }, get template() { return template; } };
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tablet / device outline -->
+  <rect x="5.5" y="5" width="15" height="22" rx="2.5" fill="none" stroke="#2a2d34" stroke-width="2"/>
+  <!-- Speaker + home dot (device cues) -->
+  <path d="M11 8.2 H15" stroke="#2a2d34" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="13" cy="24.2" r="0.75" fill="#2a2d34"/>
+
+  <!-- Drawn ink stroke -->
+  <path d="M8.2 21.2 C9 19.6 10.2 19.8 10.8 21 C11.3 22 12.3 21.8 13 20.4"
+        stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Stylus (tip on the ink stroke, barrel out past the top-right corner) -->
+  <g transform="rotate(45 13.5 20)">
+    <!-- graphite barrel with white separation from the tablet edge -->
+    <path d="M11.9 7 A1.6 1.6 0 0 1 15.1 7 L15.1 16.5 L13.5 20 L11.9 16.5 Z"
+          fill="#2a2d34" stroke="#ffffff" stroke-width="1" stroke-linejoin="round"/>
+    <!-- blue nib -->
+    <path d="M13.5 20 L15.1 16.5 L11.9 16.5 Z" fill="#2563eb"/>
+  </g>
+</svg>

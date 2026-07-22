@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script src="../demo-guard.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Template Generator — Integration Demo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="header-icon">
+        <img src="sterling-logo.svg" width="52" height="52" alt="Sterling Logo" style="object-fit:contain;display:block;" />
+      </div>
+      <div class="header-title">
+        <span class="title-main">Design Template Generator</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <div class="app-layout">
+
+    <!-- Left: Form panel -->
+    <aside class="form-panel" id="form-panel">
+      <div class="form-scroll">
+
+        <!-- Template Type -->
+        <div class="field-group required-group">
+          <label class="field-label" for="templateType">
+            Template Type
+            <span class="required-star">*</span>
+          </label>
+          <div class="select-wrapper">
+            <select id="templateType" class="form-select">
+              <option value="" disabled selected>Select a product type…</option>
+              <option value="Sign">Sign</option>
+              <option value="Business Card">Business Card</option>
+              <option value="Brochure">Brochure</option>
+              <option value="Poster">Poster</option>
+              <option value="Stamp">Stamp</option>
+              <option value="Nameplate">Nameplate</option>
+              <option value="Name Badge">Name Badge</option>
+            </select>
+            <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <p class="field-hint hidden" id="productNote"></p>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="field-group required-group">
+          <label class="field-label">
+            Dimensions
+            <span class="required-star">*</span>
+          </label>
+          <div class="dimensions-row">
+            <div class="dim-input-wrap">
+              <input type="number" id="dimWidth" class="form-input dim-input" placeholder="Width" min="1" step="any" />
+              <span class="dim-label">W</span>
+            </div>
+            <span class="dim-separator">×</span>
+            <div class="dim-input-wrap">
+              <input type="number" id="dimHeight" class="form-input dim-input" placeholder="Height" min="1" step="any" />
+              <span class="dim-label">H</span>
+            </div>
+            <div class="unit-toggle" id="unitToggle">
+              <button class="unit-btn" data-unit="px">px</button>
+              <button class="unit-btn" data-unit="mm">mm</button>
+              <button class="unit-btn active" data-unit="in">in</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Industry -->
+        <div class="field-group">
+          <label class="field-label" for="industry">Industry <span class="optional-tag">optional</span></label>
+          <input type="text" id="industry" class="form-input" placeholder="e.g. Real Estate, Hospitality, Healthcare…" />
+        </div>
+
+        <!-- Business Name -->
+        <div class="field-group">
+          <label class="field-label" for="businessName">Business Name <span class="optional-tag">optional</span></label>
+          <input type="text" id="businessName" class="form-input" placeholder="e.g. Meridian Studio, Luxe Co." />
+        </div>
+
+        <!-- Colour Scheme (collapsed by default) -->
+        <details class="field-disclosure">
+          <summary class="field-disclosure-summary">
+            Colour scheme
+            <span class="optional-tag">optional</span>
+            <span class="disclosure-hint">AI picks if empty</span>
+          </summary>
+          <div class="field-disclosure-body">
+            <div class="color-grid color-grid--compact">
+              <div class="color-row" data-slot="primary">
+                <label class="toggle-switch" title="Enable primary">
+                  <input type="checkbox" class="color-toggle" data-slot="primary" />
+                  <span class="toggle-track"></span>
+                </label>
+                <span class="color-row-label" title="Primary">1</span>
+                <div class="color-row-body disabled" id="colorBody-primary">
+                  <input type="color" class="color-picker" id="color-primary" value="#6d28d9" />
+                  <span class="color-hex" id="colorHex-primary">#6d28d9</span>
+                </div>
+              </div>
+              <div class="color-row" data-slot="secondary">
+                <label class="toggle-switch" title="Enable secondary">
+                  <input type="checkbox" class="color-toggle" data-slot="secondary" />
+                  <span class="toggle-track"></span>
+                </label>
+                <span class="color-row-label" title="Secondary">2</span>
+                <div class="color-row-body disabled" id="colorBody-secondary">
+                  <input type="color" class="color-picker" id="color-secondary" value="#2563eb" />
+                  <span class="color-hex" id="colorHex-secondary">#2563eb</span>
+                </div>
+              </div>
+              <div class="color-row" data-slot="tertiary">
+                <label class="toggle-switch" title="Enable tertiary">
+                  <input type="checkbox" class="color-toggle" data-slot="tertiary" />
+                  <span class="toggle-track"></span>
+                </label>
+                <span class="color-row-label" title="Tertiary">3</span>
+                <div class="color-row-body disabled" id="colorBody-tertiary">
+                  <input type="color" class="color-picker" id="color-tertiary" value="#059669" />
+                  <span class="color-hex" id="colorHex-tertiary">#059669</span>
+                </div>
+              </div>
+              <div class="color-row" data-slot="quaternary">
+                <label class="toggle-switch" title="Enable quaternary">
+                  <input type="checkbox" class="color-toggle" data-slot="quaternary" />
+                  <span class="toggle-track"></span>
+                </label>
+                <span class="color-row-label" title="Quaternary">4</span>
+                <div class="color-row-body disabled" id="colorBody-quaternary">
+                  <input type="color" class="color-picker" id="color-quaternary" value="#d97706" />
+                  <span class="color-hex" id="colorHex-quaternary">#d97706</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Style Direction -->
+        <div class="field-group">
+          <label class="field-label" for="styleDirection">Style Direction <span class="optional-tag">optional</span></label>
+          <input type="text" id="styleDirection" class="form-input" placeholder="e.g. Synthwave festival, Fashion editorial, WPA travel poster…" />
+          <div class="style-presets" id="stylePresets">
+            <button type="button" class="style-chip" data-style="Synthwave Neon">Synthwave</button>
+            <button type="button" class="style-chip" data-style="Psychedelic Modernism">Psychedelic</button>
+            <button type="button" class="style-chip" data-style="Y2K Chrome">Y2K Chrome</button>
+            <button type="button" class="style-chip" data-style="Pop Art Comic">Pop Art</button>
+            <button type="button" class="style-chip" data-style="Playful">Playful</button>
+            <button type="button" class="style-chip" data-style="Primary Pop">Primary Pop</button>
+            <button type="button" class="style-chip" data-style="Memphis Bold">Memphis Bold</button>
+            <button type="button" class="style-chip" data-style="Neo-Brutalism">Neo-Brutalism</button>
+            <button type="button" class="style-chip" data-style="Cosmic Celestial">Cosmic</button>
+            <button type="button" class="style-chip" data-style="Dark Tech">Dark Tech</button>
+            <button type="button" class="style-chip" data-style="Art Deco">Art Deco</button>
+            <button type="button" class="style-chip" data-style="Gilded Emerald">Gilded Emerald</button>
+            <button type="button" class="style-chip" data-style="Luxury Maximalism">Luxury Max.</button>
+            <button type="button" class="style-chip" data-style="Deckle Press">Deckle Press</button>
+            <button type="button" class="style-chip" data-style="Fashion Editorial">Fashion Edit.</button>
+            <button type="button" class="style-chip" data-style="Sage Standard">Sage Standard</button>
+            <button type="button" class="style-chip" data-style="Corporate Professional">Corporate</button>
+            <button type="button" class="style-chip" data-style="Japanese Minimalism">Japanese Min.</button>
+            <button type="button" class="style-chip" data-style="Organic Modernism">Organic Warm</button>
+            <button type="button" class="style-chip style-chip--surprise" id="surpriseChip">✦ Surprise Me</button>
+          </div>
+        </div>
+
+        <!-- Design Ambition -->
+        <div class="field-group field-group--compact">
+          <label class="field-label" for="creativityLevel">Design ambition</label>
+          <select id="creativityLevel" class="form-select">
+            <option value="bold" selected>Portfolio Bold</option>
+            <option value="standard">Balanced</option>
+          </select>
+        </div>
+
+        <!-- Optional assets & inspiration -->
+        <details class="field-disclosure">
+          <summary class="field-disclosure-summary">
+            More options
+            <span class="optional-tag">optional</span>
+          </summary>
+          <div class="field-disclosure-body field-disclosure-body--stack">
+
+            <div class="field-group field-group--compact">
+              <label class="field-label field-label--inline" for="referenceFile">Style inspiration</label>
+              <p class="field-hint">Guides the AI's creative direction — not placed in your design. Style chips work great without this.</p>
+              <div class="inspiration-row">
+                <label class="svg-file-label svg-file-label--compact" for="referenceFile">Upload image</label>
+                <input type="file" id="referenceFile" class="svg-file-input" accept="image/jpeg,image/png,image/webp,image/gif" />
+                <input type="url" id="referenceImageUrl" class="form-input form-input--compact" placeholder="or image URL" autocomplete="off" />
+              </div>
+              <div class="reference-preview hidden" id="referencePreview">
+                <img id="referencePreviewImg" alt="Reference preview" />
+                <button type="button" class="reference-clear" id="referenceClear" title="Remove reference">×</button>
+              </div>
+            </div>
+
+            <div class="field-group field-group--compact">
+              <label class="field-label field-label--inline" for="imageUrl">Photo for design</label>
+              <input type="url" id="imageUrl" class="form-input form-input--compact" placeholder="https://… — placed in the layout" autocomplete="off" />
+            </div>
+
+            <div class="field-group field-group--compact">
+              <label class="field-label field-label--inline" for="svgPaste">SVG logo</label>
+              <div class="svg-upload-row">
+                <label class="svg-file-label svg-file-label--compact" for="svgFile">Upload</label>
+                <input type="file" id="svgFile" class="svg-file-input" accept=".svg,image/svg+xml" />
+                <span class="svg-upload-or">or paste</span>
+              </div>
+              <textarea id="svgPaste" class="form-textarea form-textarea--mono form-textarea--compact" placeholder="<svg …>" rows="2" spellcheck="false"></textarea>
+            </div>
+
+            <div class="field-group field-group--compact">
+              <label class="field-label field-label--inline" for="specialInstructions">Special instructions</label>
+              <textarea id="specialInstructions" class="form-textarea form-textarea--compact" placeholder="Copy, layout notes…" rows="2"></textarea>
+            </div>
+
+          </div>
+        </details>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button class="btn-generate" id="generateBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            Generate Design
+          </button>
+          <button class="btn-reset" id="resetBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            Reset All Fields
+          </button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Right: Preview panel -->
+    <main class="preview-panel" id="previewPanel">
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 9h6M9 12h4M9 15h2"/>
+            <path d="M17 16l2 2 4-4" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <h2 class="empty-title">Your design will appear here</h2>
+        <p class="empty-desc">Fill in the details on the left and click <strong>Generate Design</strong> to create a premium template with AI.</p>
+        <ul class="empty-tips">
+          <li>Only Template Type and Dimensions are required</li>
+          <li>Pick a style chip — no reference image needed</li>
+          <li>Optional: upload inspiration under More options</li>
+        </ul>
+      </div>
+
+      <!-- Loading state -->
+      <div class="loading-state hidden" id="loadingState">
+        <div class="loading-progress-wrap">
+          <div class="loading-progress-bar" id="loadingProgressBar"></div>
+        </div>
+        <p class="loading-headline">Generating<span class="loading-dots"></span></p>
+        <p class="loading-subline" id="loadingSubline">Applying creative direction…</p>
+      </div>
+
+      <!-- Result state -->
+      <div class="result-state hidden" id="resultState">
+
+        <!-- Toolbar -->
+        <div class="result-toolbar">
+          <div class="toolbar-left">
+            <span class="toolbar-label" id="toolbarLabel">Preview</span>
+          </div>
+          <div class="toolbar-right">
+            <button class="tool-btn" id="regenBtn" title="Regenerate">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+              </svg>
+              Regenerate
+            </button>
+            <button class="tool-btn" id="downloadHtmlBtn" title="Download HTML">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              HTML
+            </button>
+            <button class="push-designer-btn" id="pushToDesignerBtn" title="Send this design to the Sterling designer (test environment)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M5 12h14"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+              Push to Designer
+            </button>
+            <button class="tool-btn tool-btn-json" id="jsonBtn" title="Generate JSON schema">
+              <svg id="jsonBtnIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span id="jsonBtnLabel">Generate JSON</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview workspace -->
+        <div class="preview-workspace">
+          <div class="preview-main">
+            <div class="canvas-wrapper" id="canvasWrapper">
+              <div class="canvas-stack">
+                <div class="dim-indicator dim-indicator--height" id="dimHeightIndicator">
+                  <div class="dim-indicator-line"></div>
+                  <span class="dim-indicator-label" id="dimHeightLabel">—</span>
+                </div>
+                <div class="guide-pills hidden" id="guidePills">
+                  <button type="button" class="guide-pill guide-pill--safe active" id="guideSafe">Safety Area</button>
+                  <button type="button" class="guide-pill guide-pill--bleed active" id="guideBleed">Bleed</button>
+                </div>
+                <div class="iframe-scroll-area" id="iframeScrollArea">
+                  <div class="iframe-outer" id="iframeOuter">
+                    <div class="iframe-scaler" id="iframeScaler">
+                      <iframe id="previewFrame" title="Design Preview" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
+                      <div class="bleed-overlay hidden" id="bleedOverlay" aria-hidden="true">
+                        <div class="bleed-line bleed-line--bleed"></div>
+                        <div class="bleed-line bleed-line--trim"></div>
+                        <div class="bleed-line bleed-line--safe"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dim-indicator dim-indicator--width" id="dimWidthIndicator">
+                  <div class="dim-indicator-line"></div>
+                  <span class="dim-indicator-label" id="dimWidthLabel">—</span>
+                </div>
+              </div>
+            </div>
+            <div class="zoom-toolbar" id="zoomToolbar">
+              <button type="button" class="zoom-btn" id="zoomOut" title="Zoom out">−</button>
+              <span class="zoom-label" id="zoomLabel">100%</span>
+              <button type="button" class="zoom-btn" id="zoomIn" title="Zoom in">+</button>
+              <button type="button" class="zoom-btn zoom-btn--fit" id="zoomFit" title="Fit to view">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <aside class="side-previews hidden" id="sidePreviews">
+            <button type="button" class="side-preview-item active" id="thumbFront">
+              <div class="side-preview-frame">
+                <iframe id="thumbFrontFrame" title="Front preview" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
+              </div>
+              <span>Front</span>
+            </button>
+            <button type="button" class="side-preview-item" id="thumbBack">
+              <div class="side-preview-frame">
+                <iframe id="thumbBackFrame" title="Back preview" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
+              </div>
+              <span>Back</span>
+            </button>
+          </aside>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Error toast -->
+  <div class="error-toast hidden" id="errorToast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+    </svg>
+    <span id="errorMessage">An error occurred.</span>
+    <button class="toast-close" id="toastClose">×</button>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="browser-api.js"></script>
+  <script src="app.js"></script>
+  <script src="product-compat.js"></script>
+  <script src="push-to-designer.js"></script>
+  <script src="demo-samples.js"></script>
+</body>
+</html>

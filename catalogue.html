@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="demo-guard.js"></script>
+<title>Test Product Catalogue — Integration Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f6f4f0; color: #2b2b2b; }
+  main { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+  h1 { font-size: 1.4rem; color: #123c5a; }
+  p.note { color: #c04a08; font-weight: 600; font-size: 0.9rem; }
+  .table-wrap { overflow-x: auto; background: #fff; border: 1px solid #e2ddd4; border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #eee7dc; white-space: nowrap; }
+  th { background: #123c5a; color: #fff; position: sticky; top: 0; }
+  a.back { color: #123c5a; }
+</style>
+</head>
+<body>
+<main>
+  <p><a class="back" href="index.html">← Back to demo home</a></p>
+  <h1>Test Product Catalogue</h1>
+  <p class="note">Every product below is fictional demonstration data (DEMO- numbers). None exists in any Sterling system.</p>
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead><tr><th>Number</th><th>Name</th><th>Category</th><th>Material</th><th>Finished size</th><th>Orientation</th><th>Print mode</th><th>Bleed</th><th>Sides</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</main>
+<script>
+fetch('data/test-products.json').then(r => r.json()).then(d => {
+  const tb = document.querySelector('#tbl tbody');
+  for (const p of d.products) {
+    const orient = p.w === p.h ? 'square' : (p.w > p.h ? 'landscape' : 'portrait');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.number}</td><td>${p.name}</td><td>${p.category}</td><td>${p.material}</td>` +
+      `<td>${p.w}" × ${p.h}"</td><td>${orient}</td><td>${p.mode}</td><td>${p.bleedIn ? p.bleedIn + '"' : '—'}</td>` +
+      `<td>${p.doubleSided ? 'Double' : 'Single'}</td>`;
+    tb.appendChild(tr);
+  }
+});
+</script>
+</body>
+</html>

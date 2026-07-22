@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="demo-guard.js"></script>
+<title>Template Generator → Sterling Designer Integration Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f6f4f0; color: #2b2b2b; }
+  main { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 1.7rem; color: #123c5a; margin: 18px 0 6px; }
+  .lede { font-size: 1.02rem; color: #555; margin-bottom: 26px; }
+  .warn-card { background: #fff4ec; border: 1px solid #f0b48a; border-radius: 10px; padding: 14px 18px; margin: 18px 0; font-size: 0.92rem; }
+  .warn-card strong { color: #c04a08; }
+  .actions { display: flex; gap: 14px; flex-wrap: wrap; margin: 26px 0; }
+  .btn { display: inline-block; padding: 13px 22px; border-radius: 9px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
+  .btn-primary { background: linear-gradient(135deg, #e8590c, #f76707); color: #fff; box-shadow: 0 2px 10px rgba(232,89,12,.35); }
+  .btn-secondary { background: #fff; color: #123c5a; border: 2px solid #123c5a; }
+  ol { line-height: 1.9; }
+  .proves { background: #fff; border: 1px solid #e2ddd4; border-radius: 10px; padding: 16px 20px; margin: 22px 0; }
+  .proves h2, .steps h2 { font-size: 1.05rem; color: #123c5a; }
+  .proves ul { margin: 8px 0; line-height: 1.7; font-size: 0.92rem; }
+  footer { font-size: 0.8rem; color: #888; margin-top: 40px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Template Generator → Sterling Designer Integration Demo</h1>
+  <p class="lede">A hosted proof of concept showing an AI-generated design being pushed into a
+  Sterling-format product designer as fully editable objects, with automatic product
+  recommendations and safe duplication for other products.</p>
+
+  <div class="warn-card">
+    <strong>This is not Sterling's production designer.</strong> It is a browser-only test
+    harness using the same canvas engine (Fabric.js 4.4.0) and the same template data format
+    (the "version 1.2" envelope). It contains <strong>demonstration products only</strong>
+    (DEMO- numbers), no customer data, no cart, no ordering, no uploads, and it makes no
+    connection to any Sterling server or database. A safety guard blocks and logs any
+    attempted request to Sterling production domains.
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="generator/index.html">Launch Integration Demo</a>
+    <a class="btn btn-secondary" href="catalogue.html">View Test Product Catalogue</a>
+  </div>
+
+  <div class="steps">
+    <h2>How to test it</h2>
+    <ol>
+      <li>Click <strong>Launch Integration Demo</strong> to open the test Design Template Generator.</li>
+      <li>Click one of the <strong>"Load sample design"</strong> demo shortcuts (no API key needed) — or generate a real design with your own Anthropic API key.</li>
+      <li>Click the orange <strong>Push to Designer</strong> button in the preview toolbar.</li>
+      <li>The test designer opens with your design as editable objects — click any text to select it, double-click to edit.</li>
+      <li>Check the right panel: the design's size and orientation are detected and demonstration products are grouped by compatibility, with reasons and warnings.</li>
+      <li>Click <strong>"Duplicate design for this product"</strong> on a same-size product, then on a different-size one — each copy appears as a new tab, scaled and centred, while the original tab stays untouched.</li>
+    </ol>
+  </div>
+
+  <div class="proves">
+    <h2>What this demo proves</h2>
+    <ul>
+      <li>Generated designs convert to Sterling-compatible version 1.2 template JSON.</li>
+      <li>Text, shapes, and images remain editable after transfer.</li>
+      <li>Design dimensions, orientation, and aspect ratio are detected automatically.</li>
+      <li>Compatible products are recommended with plain-language reasons; incompatible ones stay selectable with warnings.</li>
+      <li>Duplicating for another product never modifies the original design.</li>
+    </ul>
+    <h2>What still needs Sterling servers</h2>
+    <ul>
+      <li>Loading the transfer into the real ColdFusion designer, real product records, saved customer designs, carts, and ordering.</li>
+    </ul>
+  </div>
+
+  <footer>Demonstration build · all product data is fictional · see the repository README for details.</footer>
+</main>
+</body>
+</html>
