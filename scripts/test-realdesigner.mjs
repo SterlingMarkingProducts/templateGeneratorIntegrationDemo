@@ -69,6 +69,7 @@ const loaded = await page.evaluate(() => {
     types: objs.map(o => o.type),
     texts: objs.filter(o => o.type === 'textbox').map(o => o.text),
     editable: objs.filter(o => o.type === 'textbox').every(o => o.selectable !== false),
+    placeholders: objs.filter(o => (o.type === 'i-text' || o.type === 'text') && /^(Enter Text|Texte ici)$/.test(o.text)).length,
     badge: !![...document.querySelectorAll('div')].find(d => d.textContent === 'Design imported from the Design Template Generator'),
   };
 });

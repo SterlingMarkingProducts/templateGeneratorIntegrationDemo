@@ -41,6 +41,28 @@
     document.body.appendChild(wrap);
   }
 
+  /* The blank-template boot auto-inserts an "Enter Text" placeholder when a
+   * canvas has no text (addTextLine in SMPdesigner.js). A pushed design brings
+   * its own content, so untouched default placeholders are removed after the
+   * transfer loads. Pushed designs contain only textbox objects, never i-text,
+   * so matching i-text with the exact default strings is safe. */
+  function removePlaceholders() {
+    var defaults = ['Enter Text', 'Texte ici'];
+    (window.canvases || []).forEach(function (c) {
+      if (!c || !c.getObjects) return;
+      c.getObjects().slice().forEach(function (o) {
+        if (o.isType && (o.isType('i-text') || o.isType('text')) && defaults.indexOf(o.text) >= 0) {
+          c.remove(o);
+        }
+      });
+      if (c.textObjects) {
+        c.textObjects = c.textObjects.filter(function (o) { return defaults.indexOf(o.text) < 0; });
+      }
+      if (c.renderAll) c.renderAll();
+    });
+    if (window.currentCanvas && window.currentCanvas.renderAll) window.currentCanvas.renderAll();
+  }
+
   var tries = 0;
   var timer = setInterval(function () {
     tries++;
@@ -53,6 +75,9 @@
       setTimeout(function () {
         try {
           window.parseTemplate(JSON.parse(JSON.stringify(record.design)));
+          removePlaceholders();
+          // second sweep in case boot code adds the placeholder late
+          setTimeout(removePlaceholders, 800);
           badge();
         } catch (e) {
           if (window.toastr) toastr.error('Transferred design could not be loaded: ' + e.message);
