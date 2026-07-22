@@ -46,7 +46,13 @@ function check(name, cond, detail = '') {
   console.log(`${cond ? 'PASS' : 'FAIL'}  ${name}${detail ? ' — ' + detail : ''}`);
 }
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', headless: true });
+const launchOpts = { executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', headless: true };
+// Remote targets in sandboxed environments may require an egress proxy (CA
+// trust comes from the pre-configured NSS store, so verification stays on).
+if (!base.startsWith('http://127.0.0.1') && process.env.HTTPS_PROXY) {
+  launchOpts.proxy = { server: process.env.HTTPS_PROXY };
+}
+const browser = await chromium.launch(launchOpts);
 const ctx = await browser.newContext();
 
 // Network watchdog: record every request to a sterling.ca production host
