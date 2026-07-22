@@ -23,6 +23,12 @@
   if (!record || !record.design || record.design.version !== 1.2) return;
   if (record.expires && record.expires < Date.now()) return;
 
+  /* The captured page was rendered with ?orientation=landscape, which makes
+   * the blank-template boot auto-rotate portrait canvases. A pushed design
+   * defines its own orientation, so the blank-orientation hint is neutralized.
+   * (This script runs before the designer's document-ready boot.) */
+  window.blankOrientation = '';
+
   function badge() {
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:99999;display:flex;gap:8px;align-items:center;' +

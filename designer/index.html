@@ -256,7 +256,7 @@ function duplicateForProduct(rec) {
   for (const o of copy.objects || []) {
     o.left = (o.left || 0) * scale + offsetX;
     o.top = (o.top || 0) * scale + offsetY;
-    if (o.type === 'textbox') {
+    if (o.type === 'textbox' || o.type === 'i-text') {
       o.fontSize = (o.fontSize || 16) * scale;
       o.width = (o.width || 100) * scale;
     } else {

@@ -120,13 +120,13 @@ const realState = await realPage.evaluate(() => {
   return {
     banner: !!document.getElementById('demo-banner'),
     types: objs.map(o => o.type),
-    texts: objs.filter(o => o.type === 'textbox').map(o => o.text),
+    texts: objs.filter(o => o.type === 'i-text' || o.type === 'textbox').map(o => o.text),
     recLink: !!document.getElementById('recommendationsLink'),
     fabricVer: (typeof fabric !== 'undefined' && fabric) ? fabric.version : null,
   };
 });
 check('18d. Banner on real designer page', realState.banner);
-check('Real designer loads pushed design as editable objects', realState.types.includes('textbox') && realState.texts.some(t => t.includes('Jordan')), realState.types.join(','));
+check('Real designer loads pushed design as editable objects', realState.types.includes('i-text') && realState.texts.some(t => t.includes('Jordan')), realState.types.join(','));
 check('Real designer runs Fabric 4.4.0', realState.fabricVer === '4.4.0');
 check('Recommendations link offered in real designer', realState.recLink);
 
@@ -145,7 +145,7 @@ const state = await designer.evaluate(() => ({
   provenance: document.getElementById('provenance').textContent,
 }));
 check('Design loaded as objects', state.pages === 1 && state.types.length >= 4, state.types.join(','));
-check('6. Text objects (editable textboxes) present', state.types.includes('textbox'));
+check('6. Text objects (editable, designer-native i-text) present', state.types.includes('i-text'));
 check('7. Shape objects (editable rects) present', state.types.includes('rect'));
 check('8. Dimensions + orientation detected', state.info.includes('3.5" × 2"') && state.info.includes('landscape'), state.info.slice(0, 60));
 check('Provenance recognised', state.provenance.includes('Design Template Generator'));
@@ -155,7 +155,7 @@ const edit = await designer.evaluate(() => {
   const cEl = document.querySelector('canvas.lower-canvas') || document.querySelector('canvas');
   // fabric attaches the canvas instance registry via __fabric on wrapper? use harness pages + fabric global instead:
   const objs = window.SMPTestHarness.pages[0].canvasData.objects;
-  const tb = objs.find(o => o.type === 'textbox');
+  const tb = objs.find(o => o.type === 'i-text' || o.type === 'textbox');
   return { text: tb && tb.text, fabricLoaded: typeof fabric !== 'undefined' && !!fabric.Canvas };
 });
 check('Fabric 4.4.0 canvas active', edit.fabricLoaded && await designer.evaluate(() => fabric.version === '4.4.0'));

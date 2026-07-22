@@ -140,8 +140,13 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
       textOwners.add(el);
       const fontSize = parseFloat(style.fontSize) * factor;
       const letterPx = parseFloat(style.letterSpacing);
+      /* Emitted as i-text with sterlingType "textObject" — the exact shape the
+       * designer's parseObjectsFromCanvas registers into canvas.textObjects,
+       * which is what binds the font/colour/bold/italic toolbar to the object.
+       * (Generic "textbox" objects load and move, but the toolbar skips them.) */
       objects.push({
-        type: 'textbox', version: '4.4.0', originX: 'left', originY: 'top',
+        type: 'i-text', version: '4.4.0', originX: 'left', originY: 'top',
+        sterlingType: 'textObject',
         left: round2(left), top: round2(top), width: round2(Math.max(width, 10)),
         text: normalizeText(el),
         fontSize: round2(fontSize),
@@ -154,7 +159,6 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
         lineHeight: normalizeLineHeight(style, fontSize / factor),
         charSpacing: Number.isFinite(letterPx) && fontSize > 0 ? Math.round((letterPx * factor) / fontSize * 1000) : 0,
         angle, scaleX: 1, scaleY: 1, opacity: parseFloat(style.opacity),
-        splitByGrapheme: false,
       });
     }
   }

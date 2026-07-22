@@ -53,8 +53,8 @@ const transfer = {
     pages: [
       { page: 0, canvasProperties: {}, canvasData: { version: '4.4.0', objects: [
         { type: 'rect', version: '4.4.0', originX: 'left', originY: 'top', left: 0, top: 0, width: 336, height: 36, fill: '#123c5a', scaleX: 1, scaleY: 1, angle: 0 },
-        { type: 'textbox', version: '4.4.0', originX: 'left', originY: 'top', left: 20, top: 56, width: 220, text: 'Avery Example', fontSize: 21, fontFamily: 'Goudy Old Style', fontWeight: 'bold', fontStyle: 'normal', textAlign: 'left', fill: '#123c5a', lineHeight: 1.16, charSpacing: 0, scaleX: 1, scaleY: 1, angle: 0 },
-        { type: 'textbox', version: '4.4.0', originX: 'left', originY: 'top', left: 20, top: 140, width: 296, text: '555-0142 - avery@example.test', fontSize: 10, fontFamily: 'Arial', fontWeight: 'normal', fontStyle: 'normal', textAlign: 'left', fill: '#333333', lineHeight: 1.4, charSpacing: 0, scaleX: 1, scaleY: 1, angle: 0 },
+        { type: 'i-text', sterlingType: 'textObject', version: '4.4.0', originX: 'left', originY: 'top', left: 20, top: 56, width: 220, text: 'Avery Example', fontSize: 21, fontFamily: 'Goudy Old Style', fontWeight: 'bold', fontStyle: 'normal', textAlign: 'left', fill: '#123c5a', lineHeight: 1.16, charSpacing: 0, scaleX: 1, scaleY: 1, angle: 0 },
+        { type: 'i-text', sterlingType: 'textObject', version: '4.4.0', originX: 'left', originY: 'top', left: 20, top: 140, width: 296, text: '555-0142 - avery@example.test', fontSize: 10, fontFamily: 'Arial', fontWeight: 'normal', fontStyle: 'normal', textAlign: 'left', fill: '#333333', lineHeight: 1.4, charSpacing: 0, scaleX: 1, scaleY: 1, angle: 0 },
       ] } },
     ],
   },
@@ -67,13 +67,31 @@ const loaded = await page.evaluate(() => {
   return {
     total: objs.length,
     types: objs.map(o => o.type),
-    texts: objs.filter(o => o.type === 'textbox').map(o => o.text),
-    editable: objs.filter(o => o.type === 'textbox').every(o => o.selectable !== false),
+    texts: objs.filter(o => o.type === 'i-text' || o.type === 'textbox').map(o => o.text),
+    editable: objs.filter(o => o.type === 'i-text' || o.type === 'textbox').every(o => o.selectable !== false),
     placeholders: objs.filter(o => (o.type === 'i-text' || o.type === 'text') && /^(Enter Text|Texte ici)$/.test(o.text)).length,
     badge: !![...document.querySelectorAll('div')].find(d => d.textContent === 'Design imported from the Design Template Generator'),
+    registeredText: (currentCanvas.textObjects || []).length,
+    canvasDims: [currentCanvas.getWidth ? Math.round(canvasProperties.width) : 0, Math.round(canvasProperties.height)],
   };
 });
 console.log('TRANSFER', JSON.stringify(loaded));
+// 3. A different product size: 12x16 sign transfer
+const signTransfer = JSON.parse(JSON.stringify(transfer));
+signTransfer.id = 'tg-sign1';
+signTransfer.design.canvasProperties.width = 1152;
+signTransfer.design.canvasProperties.height = 1536;
+signTransfer.design.pages[0].canvasData.objects[1].text = 'GRAND OPENING';
+await page.evaluate(t => localStorage.setItem('smpDesignTransfer:' + t.id, JSON.stringify(t)), signTransfer);
+await page.goto(`${base}/realdesigner/index.html?transfer=tg-sign1`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(6000);
+const sign = await page.evaluate(() => ({
+  dims: [Math.round(canvasProperties.width), Math.round(canvasProperties.height)],
+  texts: currentCanvas.getObjects().filter(o => o.type === 'i-text').map(o => o.text),
+  registeredText: (currentCanvas.textObjects || []).length,
+  partNumber: canvasProperties.customerPartNumber,
+}));
+console.log('SIGN', JSON.stringify(sign));
 console.log('production requests:', prodHits.length, prodHits.slice(0,3));
 console.log('page errors after transfer:', errors.slice(0, 8));
 await browser.close(); srv.close();
