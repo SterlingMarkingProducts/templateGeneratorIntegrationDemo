@@ -24,11 +24,21 @@
   if (record.expires && record.expires < Date.now()) return;
 
   function badge() {
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:99999;display:flex;gap:8px;align-items:center;' +
+      'font:600 12px/1.4 Arial,sans-serif;';
     var b = document.createElement('div');
     b.textContent = 'Design imported from the Design Template Generator';
-    b.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:99999;background:#e8590c;color:#fff;' +
-      'padding:6px 12px;border-radius:6px;font:600 12px/1.4 Arial,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.3)';
-    document.body.appendChild(b);
+    b.style.cssText = 'background:#e8590c;color:#fff;padding:6px 12px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.3)';
+    var a = document.createElement('a');
+    a.id = 'recommendationsLink';
+    a.href = '../designer/index.html?transfer=' + encodeURIComponent(id);
+    a.target = 'sterlingDesignerTest';
+    a.textContent = 'View product recommendations →';
+    a.style.cssText = 'background:#1971c2;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.3)';
+    wrap.appendChild(b);
+    wrap.appendChild(a);
+    document.body.appendChild(wrap);
   }
 
   var tries = 0;

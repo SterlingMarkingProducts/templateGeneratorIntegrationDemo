@@ -21,7 +21,7 @@ const SMP_CONFIG = {
   transferEndpoint: '',
   // Designer page to open. Defaults to the bundled test harness, which lives
   // on the same origin as this generator in the test deployment.
-  designerUrl: '../designer/index.html',
+  designerUrl: '../realdesigner/index.html',
   transferKey: 'smpDesignTransfer',
   transferTtlMs: 30 * 60 * 1000, // stored transfers expire after 30 minutes
 };

@@ -108,14 +108,34 @@ check('4. Push to Designer button visible', await page.evaluate(() => {
   const b = document.getElementById('pushToDesignerBtn');
   return !!b && b.offsetParent !== null;
 }));
-const [designer] = await Promise.all([
+const [realPage] = await Promise.all([
   ctx.waitForEvent('page'),
   page.click('#pushToDesignerBtn'),
 ]);
-await designer.waitForLoadState('domcontentloaded');
-check('5. Test designer opens', designer.url().includes('designer/index.html?transfer='), designer.url());
+await realPage.waitForLoadState('domcontentloaded');
+check('5. Real Sterling designer test copy opens', realPage.url().includes('realdesigner/index.html?transfer='), realPage.url());
+await realPage.waitForTimeout(5000); // designer boot + transfer settle
+const realState = await realPage.evaluate(() => {
+  const objs = (typeof currentCanvas !== 'undefined' && currentCanvas) ? currentCanvas.getObjects() : [];
+  return {
+    banner: !!document.getElementById('demo-banner'),
+    types: objs.map(o => o.type),
+    texts: objs.filter(o => o.type === 'textbox').map(o => o.text),
+    recLink: !!document.getElementById('recommendationsLink'),
+    fabricVer: (typeof fabric !== 'undefined' && fabric) ? fabric.version : null,
+  };
+});
+check('18d. Banner on real designer page', realState.banner);
+check('Real designer loads pushed design as editable objects', realState.types.includes('textbox') && realState.texts.some(t => t.includes('Jordan')), realState.types.join(','));
+check('Real designer runs Fabric 4.4.0', realState.fabricVer === '4.4.0');
+check('Recommendations link offered in real designer', realState.recLink);
+
+// Follow the same transfer into the recommendations harness
+const transferId = new URL(realPage.url()).searchParams.get('transfer');
+const designer = await ctx.newPage();
+await designer.goto(base + 'designer/index.html?transfer=' + transferId, { waitUntil: 'domcontentloaded' });
 await designer.waitForTimeout(1200);
-check('18d. Banner on designer page', await designer.evaluate(() => !!document.getElementById('demo-banner')));
+check('18e. Banner on recommendations page', await designer.evaluate(() => !!document.getElementById('demo-banner')));
 
 // 6-8. Editable objects + dimension detection
 const state = await designer.evaluate(() => ({
@@ -176,14 +196,19 @@ check('Warnings displayed for adjustment products', dup.warningsShown);
 
 // 10. Sign matches for a 12x16 design
 const designerText = await designer.evaluate(() => document.body.innerText);
-await designer.close(); // the popup window is name-reused; close it so the next push emits a fresh page event
+await designer.close();
+await realPage.close(); // popup windows are name-reused; close so the next push emits a fresh page event
 await page.bringToFront();
 await page.evaluate(() => {
   [...document.querySelectorAll('button')].find(b => b.textContent.includes('Sign')).click();
 });
 await page.waitForTimeout(900);
-const [designer2] = await Promise.all([ctx.waitForEvent('page'), page.click('#pushToDesignerBtn')]);
-await designer2.waitForLoadState('domcontentloaded');
+const [realPage2] = await Promise.all([ctx.waitForEvent('page'), page.click('#pushToDesignerBtn')]);
+await realPage2.waitForLoadState('domcontentloaded');
+check('Second push also opens real designer', realPage2.url().includes('realdesigner/index.html?transfer='));
+const transferId2 = new URL(realPage2.url()).searchParams.get('transfer');
+const designer2 = await ctx.newPage();
+await designer2.goto(base + 'designer/index.html?transfer=' + transferId2, { waitUntil: 'domcontentloaded' });
 await designer2.waitForTimeout(1200);
 const signMatches = await designer2.evaluate(() =>
   [...document.querySelectorAll('#productList .product')]
