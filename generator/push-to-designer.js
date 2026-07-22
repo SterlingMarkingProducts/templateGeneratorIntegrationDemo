@@ -95,56 +95,50 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
   const els = [rootEl];
   while (walker.nextNode()) els.push(walker.currentNode);
 
+  const candidates = []; // {el, obj} for text; images/svg push directly
+
   for (const el of els) {
     const style = doc.defaultView.getComputedStyle(el);
     if (!isVisible(el, style)) continue;
     const r = el.getBoundingClientRect();
+    // skip decorations fully clipped outside the design surface
+    if (r.right < rootRect.left - 1 || r.left > rootRect.right + 1 ||
+        r.bottom < rootRect.top - 1 || r.top > rootRect.bottom + 1) continue;
+    if (parseFloat(style.opacity) < 0.05) continue;
     const left = (r.left - rootRect.left) * factor;
     const top = (r.top - rootRect.top) * factor;
     const width = r.width * factor;
     const height = r.height * factor;
     const angle = rotationOf(style);
 
-    /* Shape: painted background or visible border, recorded before any text
-     * inside it so Fabric stacking (array order) matches the DOM. */
-    const bg = cssColorToHex(style.backgroundColor, doc);
-    const hasBorder = parseFloat(style.borderTopWidth) > 0 && cssColorToHex(style.borderTopColor, doc);
-    if ((bg || hasBorder) && el !== rootEl) {
-      objects.push({
-        type: 'rect', version: '4.4.0', originX: 'left', originY: 'top',
-        left: round2(left), top: round2(top), width: round2(width), height: round2(height),
-        fill: bg || 'transparent',
-        stroke: hasBorder ? cssColorToHex(style.borderTopColor, doc) : null,
-        strokeWidth: hasBorder ? round2(parseFloat(style.borderTopWidth) * factor) : 0,
-        rx: round2(parseFloat(style.borderTopLeftRadius) * factor || 0),
-        ry: round2(parseFloat(style.borderTopLeftRadius) * factor || 0),
-        angle, scaleX: 1, scaleY: 1, opacity: parseFloat(style.opacity),
-      });
-    }
+    /* CSS-painted shapes, gradients, grids, and decorations are NOT extracted
+     * as objects — they are captured pixel-perfectly by the background raster
+     * (rasterizeBackground). Only text, photos, and inline SVGs become
+     * separate editable objects. */
 
-    /* Images (and inline SVG serialized to a data URL). */
     if (el.tagName === 'IMG' && el.currentSrc) {
+      el.setAttribute('data-tg-extract', '1');
       objects.push(makeImageObject(el.currentSrc, el.naturalWidth || r.width, el.naturalHeight || r.height,
                                    left, top, width, height, angle, style));
     } else if (el.tagName === 'svg') {
+      el.setAttribute('data-tg-extract', '1');
       const svgData = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(el.outerHTML)));
       objects.push(makeImageObject(svgData, r.width, r.height, left, top, width, height, angle, style));
-      // children of an inline svg are captured by the snapshot; skip them
       const inner = el.querySelectorAll('*');
       inner.forEach(c => textOwners.add(c));
       continue;
     }
 
-    /* Text: one Fabric textbox per element that directly owns text. */
+    /* Text: one designer-native i-text per element that directly owns text.
+     * Emitted with sterlingType "textObject" so the designer's
+     * parseObjectsFromCanvas registers it into canvas.textObjects, binding the
+     * font/colour/bold/italic toolbar. */
     if (hasDirectText(el) && !textOwners.has(el)) {
       textOwners.add(el);
+      el.setAttribute('data-tg-extract', '1');
       const fontSize = parseFloat(style.fontSize) * factor;
       const letterPx = parseFloat(style.letterSpacing);
-      /* Emitted as i-text with sterlingType "textObject" — the exact shape the
-       * designer's parseObjectsFromCanvas registers into canvas.textObjects,
-       * which is what binds the font/colour/bold/italic toolbar to the object.
-       * (Generic "textbox" objects load and move, but the toolbar skips them.) */
-      objects.push({
+      candidates.push({ el, obj: {
         type: 'i-text', version: '4.4.0', originX: 'left', originY: 'top',
         sterlingType: 'textObject',
         left: round2(left), top: round2(top), width: round2(Math.max(width, 10)),
@@ -159,9 +153,23 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
         lineHeight: normalizeLineHeight(style, fontSize / factor),
         charSpacing: Number.isFinite(letterPx) && fontSize > 0 ? Math.round((letterPx * factor) / fontSize * 1000) : 0,
         angle, scaleX: 1, scaleY: 1, opacity: parseFloat(style.opacity),
-      });
+      } });
     }
   }
+
+  /* Deduplicate glow/shadow clones: designs often layer the same text several
+   * times for effects. Keep the topmost (last in DOM order) of any copies with
+   * identical text at nearly the same position; every copy stays hidden in the
+   * raster so nothing doubles up. */
+  const deduped = [];
+  for (const c of candidates) {
+    const dup = deduped.findIndex(d => d.obj.text === c.obj.text
+      && Math.abs(d.obj.left - c.obj.left) < Math.max(8, c.obj.fontSize * 0.6)
+      && Math.abs(d.obj.top - c.obj.top) < Math.max(8, c.obj.fontSize * 0.6));
+    if (dup >= 0) deduped[dup] = c; else deduped.push(c);
+  }
+  deduped.forEach(c => objects.push(c.obj));
+
   return objects;
 }
 
@@ -194,6 +202,51 @@ function normalizeLineHeight(style, fontSizePx) {
 
 function round2(n) { return Math.round(n * 100) / 100; }
 function round4(n) { return Math.round(n * 10000) / 10000; }
+
+/* Render everything EXCEPT the extracted elements (marked data-tg-extract) to
+ * a PNG: gradients, grids, glows, and every other CSS-painted decoration
+ * transfer pixel-perfectly as a locked background image, while the extracted
+ * text/images sit on top as editable objects. Uses an SVG foreignObject
+ * snapshot — fully local, no libraries, no network. Returns null on failure
+ * (the design still transfers, just without the painted background). */
+async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
+  try {
+    const rect = rootEl.getBoundingClientRect();
+    const clone = rootEl.cloneNode(true);
+    clone.querySelectorAll('[data-tg-extract]').forEach(el => { el.style.visibility = 'hidden'; });
+    clone.querySelectorAll('img, link, script').forEach(el => {
+      if (el.tagName === 'IMG' && (el.getAttribute('src') || '').startsWith('data:')) return;
+      el.remove(); // externals cannot load inside an SVG snapshot
+    });
+    const styles = [...doc.querySelectorAll('style')].map(st => st.textContent).join('\n');
+    const serializer = new XMLSerializer();
+    const html = '<div xmlns="http://www.w3.org/1999/xhtml" style="width:' + rect.width + 'px;height:' + rect.height + 'px;overflow:hidden">'
+      + '<style>' + styles.replace(/@import[^;]+;/g, '') + '</style>'
+      + serializer.serializeToString(clone) + '</div>';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + rect.width + '" height="' + rect.height + '">'
+      + '<foreignObject width="100%" height="100%">' + html + '</foreignObject></svg>';
+    const img = new Image();
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    await img.decode();
+    const scale = 2; // 2x for print-quality zooming in the designer
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(targetWidthPx * scale);
+    cv.height = Math.round(targetHeightPx * scale);
+    const ctx = cv.getContext('2d');
+    ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    const dataUrl = cv.toDataURL('image/png');
+    return {
+      type: 'image', version: '4.4.0', originX: 'left', originY: 'top',
+      left: 0, top: 0, width: cv.width, height: cv.height,
+      scaleX: round4(targetWidthPx / cv.width), scaleY: round4(targetHeightPx / cv.height),
+      angle: 0, src: dataUrl, crossOrigin: 'anonymous', opacity: 1,
+      fixedImage: true, sterlingType: 'backgroundArt',
+    };
+  } catch (e) {
+    console.warn('Background raster failed, transferring objects only:', e.message);
+    return null;
+  }
+}
 
 /* Build the version 1.2 envelope around extracted pages. */
 function buildSterlingTemplate(pages, payload) {
@@ -243,7 +296,7 @@ function findDesignRoot(doc) {
       || doc.body?.firstElementChild;
 }
 
-function extractPage(frame, targetWidthPx, substitutions) {
+async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) {
   const doc = frame?.contentDocument;
   if (!doc || !doc.body || !doc.body.firstElementChild) return null;
   const rootEl = findDesignRoot(doc);
@@ -251,26 +304,30 @@ function extractPage(frame, targetWidthPx, substitutions) {
   const rootRect = rootEl.getBoundingClientRect();
   if (rootRect.width < 2) return null;
   const factor = targetWidthPx / rootRect.width;
-  return extractObjectsFromDoc(doc, rootEl, factor, substitutions);
+  const objects = extractObjectsFromDoc(doc, rootEl, factor, substitutions);
+  const bg = await rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx);
+  rootEl.querySelectorAll('[data-tg-extract]').forEach(el => el.removeAttribute('data-tg-extract'));
+  return bg ? [bg, ...objects] : objects;
 }
 
 /* Public: convert the current generated design. Returns {template, substitutions}. */
-function convertCurrentDesign() {
+async function convertCurrentDesign() {
   if (!generatedHtml || !lastPayload) {
     throw new Error('Generate a design first, then push it to the designer.');
   }
   const widthPx = Math.round(toPx(lastPayload.width, lastPayload.unit));
+  const heightPx = Math.round(toPx(lastPayload.height, lastPayload.unit));
   const substitutions = [];
   const pages = [];
 
   if (lastPayload.doubleSided) {
-    const front = extractPage(document.getElementById('thumbFrontFrame'), widthPx, substitutions);
-    const back = extractPage(document.getElementById('thumbBackFrame'), widthPx, substitutions);
+    const front = await extractPage(document.getElementById('thumbFrontFrame'), widthPx, heightPx, substitutions);
+    const back = await extractPage(document.getElementById('thumbBackFrame'), widthPx, heightPx, substitutions);
     if (front) pages.push(front);
     if (back) pages.push(back);
   }
   if (!pages.length) {
-    const single = extractPage(document.getElementById('previewFrame'), widthPx, substitutions);
+    const single = await extractPage(document.getElementById('previewFrame'), widthPx, heightPx, substitutions);
     if (single) pages.push(single);
   }
   if (!pages.length || !pages[0].length) {
@@ -334,7 +391,7 @@ async function pushToDesigner() {
   btn.disabled = true;
   btn.textContent = 'Transferring…';
   try {
-    const { template, substitutions } = convertCurrentDesign();
+    const { template, substitutions } = await convertCurrentDesign();
     let url;
     if (SMP_CONFIG.transferEndpoint) {
       url = await postTransfer(template);

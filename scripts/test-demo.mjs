@@ -146,7 +146,7 @@ const state = await designer.evaluate(() => ({
 }));
 check('Design loaded as objects', state.pages === 1 && state.types.length >= 4, state.types.join(','));
 check('6. Text objects (editable, designer-native i-text) present', state.types.includes('i-text'));
-check('7. Shape objects (editable rects) present', state.types.includes('rect'));
+check('7. Background artwork raster present', state.types.includes('image'));
 check('8. Dimensions + orientation detected', state.info.includes('3.5" × 2"') && state.info.includes('landscape'), state.info.slice(0, 60));
 check('Provenance recognised', state.provenance.includes('Design Template Generator'));
 
