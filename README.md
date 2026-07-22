@@ -52,3 +52,15 @@ real designer loads through its existing `?design=` flow, so this front end can 
 pointed at a Sterling-hosted staging designer without changes to the format. The staging
 plan lives in the `templateGenerator` repository (`docs/INTEGRATION_PLAN.md`, branch
 `claude/admiring-rubin-srryij`).
+
+## `/realdesigner/` — static test copy of the real designer interface
+
+Added after IT confirmed `oldDesigner` is the live designer. This folder contains the
+**genuine designer front-end** (the same `SMPdesigner.js`, `fabricMods.js`, curved-text
+plugin, and stylesheets that sterling.ca serves publicly to every visitor) with its
+ColdFusion backend replaced by `mock-backend.js` + `fixtures.js` — embedded test data for
+one product (6505, a 3.5″×2″ full-colour business card) captured from the public endpoints.
+`transfer-loader.js` feeds pushed designs into the designer's own `parseTemplate()`.
+Server-side ColdFusion source is NOT included; saving, carts, uploads, proofs, and QR are
+disabled; all assets are vendored so no request leaves the page to any Sterling system.
+Sterling's font pack is not bundled (licensing) — text renders with system-font fallbacks.

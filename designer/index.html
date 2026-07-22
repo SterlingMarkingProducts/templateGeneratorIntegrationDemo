@@ -137,6 +137,16 @@ function initFromTemplate(t) {
   if (s.source === 'templateGenerator') {
     document.getElementById('provenance').textContent = '● Design pushed from the Design Template Generator';
   }
+  const transferId = new URLSearchParams(location.search).get('transfer');
+  if (transferId && !document.getElementById('openRealBtn')) {
+    const a = document.createElement('a');
+    a.id = 'openRealBtn';
+    a.href = '../realdesigner/index.html?transfer=' + encodeURIComponent(transferId);
+    a.target = 'sterlingRealDesignerTest';
+    a.textContent = 'Open in real Sterling designer UI →';
+    a.style.cssText = 'margin-left:auto;background:#1971c2;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:0.78rem;font-weight:600;';
+    document.querySelector('header').appendChild(a);
+  }
   const info = document.getElementById('designInfo');
   info.style.display = 'block';
   info.innerHTML = `<div class="name">${s.widthIn}" × ${s.heightIn}" — ${s.orientation}</div>

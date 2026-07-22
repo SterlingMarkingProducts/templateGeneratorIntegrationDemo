@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 240 240">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0, .st1 {
+        fill: #fff;
+      }
+
+      .st1 {
+        font-family: ArialMT, Arial;
+        font-size: 36px;
+        isolation: isolate;
+      }
+    </style>
+  </defs>
+  <path class="st0" d="M40,160L120,32l80,128H40ZM68.8,144h102.4l-51.2-82-51.2,82Z"/>
+  <text class="st1" transform="translate(30 220)"><tspan x="0" y="0">TRIANGLE</tspan></text>
+</svg>

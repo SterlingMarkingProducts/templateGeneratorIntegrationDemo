@@ -1,0 +1,4698 @@
+@font-face {
+	font-family: "Arial";
+	src: url("ArialMT.woff2") format("woff2"), url("ArialMT.woff") format("woff"),
+		url("ArialMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial";
+	src: url("Arial-BoldMT.woff2") format("woff2"),
+		url("Arial-BoldMT.woff") format("woff"),
+		url("Arial-BoldMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial";
+	src: url("Arial-BoldItalicMT.woff2") format("woff2"),
+		url("Arial-BoldItalicMT.woff") format("woff"),
+		url("Arial-BoldItalicMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arial";
+	src: url("Arial-ItalicMT.woff2") format("woff2"),
+		url("Arial-ItalicMT.woff") format("woff"),
+		url("Arial-ItalicMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Atlanta";
+	src: url("Atlanta-Book.woff2") format("woff2"),
+		url("Atlanta-Book.woff") format("woff"),
+		url("Atlanta-Book.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Atlanta";
+	src: url("Atlanta-Demi.woff2") format("woff2"),
+		url("Atlanta-Demi.woff") format("woff"),
+		url("Atlanta-Demi.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Atlanta";
+	src: url("Atlanta-DemiOblique.woff2") format("woff2"),
+		url("Atlanta-DemiOblique.woff") format("woff"),
+		url("Atlanta-DemiOblique.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Atlanta";
+	src: url("Atlanta-BookOblique.woff2") format("woff2"),
+		url("Atlanta-BookOblique.woff") format("woff"),
+		url("Atlanta-BookOblique.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Atlantic Inline";
+	src: url("AtlanticInline-Normal.woff2") format("woff2"),
+		url("AtlanticInline-Normal.woff") format("woff"),
+		url("AtlanticInline-Normal.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Belgium";
+	src: url("Belgium.woff2") format("woff2"), url("Belgium.woff") format("woff"),
+		url("Belgium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bentham";
+	src: url("Bentham.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bermuda Script";
+	src: url("BermudaScript.woff2") format("woff2"),
+		url("BermudaScript.woff") format("woff"),
+		url("BermudaScript.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bermuda Script";
+	src: url("BermudaScript.woff2") format("woff2"),
+		url("BermudaScript.woff") format("woff"),
+		url("BermudaScript.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BrushScriptStd";
+	src: url("BrushScriptMT.woff2") format("woff2"),
+		url("BrushScriptMT.woff") format("woff"),
+		url("BrushScriptMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BrushScriptStd";
+	src: url("BrushScriptMT.woff2") format("woff2"),
+		url("BrushScriptMT.woff") format("woff"),
+		url("BrushScriptMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Clarendon BT";
+	src: url("ClarendonBT-Bold.woff2") format("woff2"),
+		url("ClarendonBT-Bold.woff") format("woff"),
+		url("ClarendonBT-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Clarendon BT";
+	src: url("ClarendonBT-Roman.woff2") format("woff2"),
+		url("ClarendonBT-Roman.woff") format("woff"),
+		url("ClarendonBT-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cooper Md BT";
+	src: url("CooperBT-Medium.woff2") format("woff2"),
+		url("CooperBT-Medium.woff") format("woff"),
+		url("CooperBT-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cooper Md BT";
+	src: url("CooperBT-BlackItalicHeadline.woff2") format("woff2"),
+		url("CooperBT-BlackItalicHeadline.woff") format("woff"),
+		url("CooperBT-BlackItalicHeadline.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cooper Md BT";
+	src: url("CooperBT-BlackHeadline.woff2") format("woff2"),
+		url("CooperBT-BlackHeadline.woff") format("woff"),
+		url("CooperBT-BlackHeadline.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+/*
+@font-face {
+    font-family: 'Cooper Lt BT';
+    src: url('CooperBT-Bold.woff2') format('woff2'),
+        url('CooperBT-Bold.woff') format('woff'),
+        url('CooperBT-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cooper Lt BT';
+    src: url('CooperBT-BoldItalic.woff2') format('woff2'),
+        url('CooperBT-BoldItalic.woff') format('woff'),
+        url('CooperBT-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}*/
+@font-face {
+	font-family: "Cooper Md BT";
+	src: url("CooperBT-MediumItalic.woff2") format("woff2"),
+		url("CooperBT-MediumItalic.woff") format("woff"),
+		url("CooperBT-MediumItalic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cooper BT for WFM Medium";
+	src: url("Cooper BT for WFM Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Courier New";
+	src: url("CourierNewPSMT.woff2") format("woff2"),
+		url("CourierNewPSMT.woff") format("woff"),
+		url("CourierNewPSMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Courier New";
+	src: url("CourierNewPS-BoldMT.woff2") format("woff2"),
+		url("CourierNewPS-BoldMT.woff") format("woff"),
+		url("CourierNewPS-BoldMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Courier New";
+	src: url("CourierNewPS-BoldItalicMT.woff2") format("woff2"),
+		url("CourierNewPS-BoldItalicMT.woff") format("woff"),
+		url("CourierNewPS-BoldItalicMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Courier New";
+	src: url("CourierNewPS-ItalicMT.woff2") format("woff2"),
+		url("CourierNewPS-ItalicMT.woff") format("woff"),
+		url("CourierNewPS-ItalicMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "FleurishScript";
+	src: url("FleurishScript.woff2") format("woff2"),
+		url("FleurishScript.woff") format("woff"),
+		url("FleurishScript.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "FleurishScript";
+	src: url("FleurishScript.woff2") format("woff2"),
+		url("FleurishScript.woff") format("woff"),
+		url("FleurishScript.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Franklin Gothic ITC Bk BT";
+	src: url("FranklinGothic-Book.woff2") format("woff2"),
+		url("FranklinGothic-Book.woff") format("woff"),
+		url("FranklinGothic-Book.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Franklin Gothic ITC Bk BT";
+	src: url("FranklinGothic-Demi.woff2") format("woff2"),
+		url("FranklinGothic-Demi.woff") format("woff"),
+		url("FranklinGothic-Demi.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Franklin Gothic ITC Bk BT";
+	src: url("FranklinGothic-BookItalic.woff2") format("woff2"),
+		url("FranklinGothic-BookItalic.woff") format("woff"),
+		url("FranklinGothic-BookItalic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Franklin Gothic ITC Bk BT";
+	src: url("FranklinGothic-DemiItalic.woff2") format("woff2"),
+		url("FranklinGothic-DemiItalic.woff") format("woff"),
+		url("FranklinGothic-DemiItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Franklin Gothic Medium Cond";
+	src: url("Franklin Gothic Medium Cond.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Franklin Gothic Demi Cond";
+	src: url("Franklin Gothic Demi Cond.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Md BT";
+	src: url("FuturaBT-Medium.woff2") format("woff2"),
+		url("FuturaBT-Medium.woff") format("woff"),
+		url("FuturaBT-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Md BT";
+	src: url("FuturaBT-Bold.woff2") format("woff2"),
+		url("FuturaBT-Bold.woff") format("woff"),
+		url("FuturaBT-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Md BT";
+	src: url("FuturaBT-BoldItalic.woff2") format("woff2"),
+		url("FuturaBT-BoldItalic.woff") format("woff"),
+		url("FuturaBT-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura Md BT";
+	src: url("FuturaBT-MediumItalic.woff2") format("woff2"),
+		url("FuturaBT-MediumItalic.woff") format("woff"),
+		url("FuturaBT-MediumItalic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura Hv BT";
+	src: url("Futura Hv BT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Bk BT";
+	src: url("Futura Bk BT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Germany";
+	src: url("Germany.woff2") format("woff2"), url("Germany.woff") format("woff"),
+		url("Germany.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Goudy Old Style";
+	src: url("GoudyOldStyleT-Regular.woff2") format("woff2"),
+		url("GoudyOldStyleT-Regular.woff") format("woff"),
+		url("GoudyOldStyleT-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Goudy Old Style";
+	src: url("GoudyOldStyleT-Bold.woff2") format("woff2"),
+		url("GoudyOldStyleT-Bold.woff") format("woff"),
+		url("GoudyOldStyleT-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Goudy Old Style";
+	src: url("GoudyOldStyleT-BoldItalic.woff2") format("woff2"),
+		url("GoudyOldStyleT-BoldItalic.woff") format("woff"),
+		url("GoudyOldStyleT-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Goudy Old Style";
+	src: url("GoudyOldStyleT-Italic.woff2") format("woff2"),
+		url("GoudyOldStyleT-Italic.woff") format("woff"),
+		url("GoudyOldStyleT-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helsinki Narrow";
+	src: url("Helsinki-Narrow.woff2") format("woff2"),
+		url("Helsinki-Narrow.woff") format("woff"),
+		url("Helsinki-Narrow.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helsinki Narrow";
+	src: url("Helsinki-Narrow-Bold.woff2") format("woff2"),
+		url("Helsinki-Narrow-Bold.woff") format("woff"),
+		url("Helsinki-Narrow-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helsinki Narrow";
+	src: url("Helsinki-Narrow-BoldOblique.woff2") format("woff2"),
+		url("Helsinki-Narrow-BoldOblique.woff") format("woff"),
+		url("Helsinki-Narrow-BoldOblique.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helsinki Narrow";
+	src: url("Helsinki-Narrow-Oblique.woff2") format("woff2"),
+		url("Helsinki-Narrow-Oblique.woff") format("woff"),
+		url("Helsinki-Narrow-Oblique.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helvetica";
+	src: url("HelveticaLTW01-Roman.woff2") format("woff2"),
+		url("HelveticaLTW01-Roman.woff") format("woff"),
+		url("HelveticaLTW01-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica";
+	src: url("HelveticaLTW01-Bold.woff2") format("woff2"),
+		url("HelveticaLTW01-Bold.woff") format("woff"),
+		url("HelveticaLTW01-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica";
+	src: url("HelveticaLTW01-BoldOblique.woff2") format("woff2"),
+		url("HelveticaLTW01-BoldOblique.woff") format("woff"),
+		url("HelveticaLTW01-BoldOblique.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helvetica";
+	src: url("HelveticaLTW01-Oblique.woff2") format("woff2"),
+		url("HelveticaLTW01-Oblique.woff") format("woff"),
+		url("HelveticaLTW01-Oblique.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helvetica Condensed";
+	src: url("Helvetica Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Istanbul";
+	src: url("Istanbul.woff2") format("woff2"),
+		url("Istanbul.woff") format("woff"), url("Istanbul.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Optima";
+	src: url("Optima.woff2") format("woff2"), url("Optima.woff") format("woff"),
+		url("Optima.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Optima";
+	src: url("Optima-Bold.woff2") format("woff2"),
+		url("Optima-Bold.woff") format("woff"),
+		url("Optima-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Optima";
+	src: url("Optima-BoldItalic.woff2") format("woff2"),
+		url("Optima-BoldItalic.woff") format("woff"),
+		url("Optima-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Optima";
+	src: url("Optima-Italic.woff2") format("woff2"),
+		url("Optima-Italic.woff") format("woff"),
+		url("Optima-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Palatino Linotype";
+	src: url("PalatinoLinotype-Roman.woff2") format("woff2"),
+		url("PalatinoLinotype-Roman.woff") format("woff"),
+		url("PalatinoLinotype-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Palatino Linotype";
+	src: url("PalatinoLinotype-Bold.woff2") format("woff2"),
+		url("PalatinoLinotype-Bold.woff") format("woff"),
+		url("PalatinoLinotype-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Palatino Linotype";
+	src: url("PalatinoLinotype-BoldItalic.woff2") format("woff2"),
+		url("PalatinoLinotype-BoldItalic.woff") format("woff"),
+		url("PalatinoLinotype-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Palatino Linotype";
+	src: url("PalatinoLinotype-Italic.woff2") format("woff2"),
+		url("PalatinoLinotype-Italic.woff") format("woff"),
+		url("PalatinoLinotype-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "San Diego";
+	src: url("SanDiego.woff2") format("woff2"),
+		url("SanDiego.woff") format("woff"), url("SanDiego.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 BT";
+	src: url("Swiss721BT-Roman.woff2") format("woff2"),
+		url("Swiss721BT-Roman.woff") format("woff"),
+		url("Swiss721BT-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 BT";
+	src: url("Swiss721BT-Bold.woff2") format("woff2"),
+		url("Swiss721BT-Bold.woff") format("woff"),
+		url("Swiss721BT-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 BT";
+	src: url("Swiss721BT-BoldItalic.woff2") format("woff2"),
+		url("Swiss721BT-BoldItalic.woff") format("woff"),
+		url("Swiss721BT-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Swis721 BT";
+	src: url("Swiss721BT-Italic.woff2") format("woff2"),
+		url("Swiss721BT-Italic.woff") format("woff"),
+		url("Swiss721BT-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Swis721 BT Condensed";
+	src: url("Swiss721BT-Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 BT Condensed";
+	src: url("Swiss721BT-Condensed-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 BT Light";
+	src: url("Swiss721BT-Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 Black";
+	src: url("Swiss721-Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Swis721 Heavy";
+	src: url("Swiss721-Heavy-BT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Times New Roman";
+	src: url("TimesNewRomanPSMT.woff2") format("woff2"),
+		url("TimesNewRomanPSMT.woff") format("woff"),
+		url("TimesNewRomanPSMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Times New Roman";
+	src: url("TimesNewRomanPS-BoldMT.woff2") format("woff2"),
+		url("TimesNewRomanPS-BoldMT.woff") format("woff"),
+		url("TimesNewRomanPS-BoldMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Times New Roman";
+	src: url("TimesNewRomanPS-BoldItalicMT.woff2") format("woff2"),
+		url("TimesNewRomanPS-BoldItalicMT.woff") format("woff"),
+		url("TimesNewRomanPS-BoldItalicMT.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Times New Roman";
+	src: url("TimesNewRomanPS-ItalicMT.woff2") format("woff2"),
+		url("TimesNewRomanPS-ItalicMT.woff") format("woff"),
+		url("TimesNewRomanPS-ItalicMT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Times New Roman Condensed";
+	src: url("Times New Roman Condensed-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "US Roman";
+	src: url("US-Roman.woff2") format("woff2"),
+		url("US-Roman.woff") format("woff"), url("US-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Utah";
+	src: url("Utah.woff2") format("woff2"), url("Utah.woff") format("woff"),
+		url("Utah.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Utah";
+	src: url("Utah-Bold.woff2") format("woff2"),
+		url("Utah-Bold.woff") format("woff"),
+		url("Utah-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Utah";
+	src: url("Utah-BoldOblique.woff2") format("woff2"),
+		url("Utah-BoldOblique.woff") format("woff"),
+		url("Utah-BoldOblique.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Utah";
+	src: url("Utah-Oblique.woff2") format("woff2"),
+		url("Utah-Oblique.woff") format("woff"),
+		url("Utah-Oblique.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Verdana";
+	src: url("Verdana.woff2") format("woff2"), url("Verdana.woff") format("woff"),
+		url("Verdana.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Verdana";
+	src: url("Verdana-Bold.woff2") format("woff2"),
+		url("Verdana-Bold.woff") format("woff"),
+		url("Verdana-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Verdana";
+	src: url("Verdana-BoldItalic.woff2") format("woff2"),
+		url("Verdana-BoldItalic.woff") format("woff"),
+		url("Verdana-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Verdana";
+	src: url("Verdana-Italic.woff2") format("woff2"),
+		url("Verdana-Italic.woff") format("woff"),
+		url("Verdana-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Zapf Chancery";
+	src: url("ITCZapfChanceryW01-Roman.woff2") format("woff2"),
+		url("ITCZapfChanceryW01-Roman.woff") format("woff"),
+		url("ITCZapfChanceryW01-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Zapf Chancery";
+	src: url("ITCZapfChanceryW01-Bold.woff2") format("woff2"),
+		url("ITCZapfChanceryW01-Bold.woff") format("woff"),
+		url("ITCZapfChanceryW01-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Zapf Chancery";
+	src: url("ITCZapfChanceryW01-Italic.woff2") format("woff2"),
+		url("ITCZapfChanceryW01-Italic.woff") format("woff"),
+		url("ITCZapfChanceryW01-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gotham-Book";
+	src: url("GothamBook.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gotham Light";
+	src: url("Gotham Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gotham Narrow Book";
+	src: url("GothamNarrow-Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gotham Narrow Medium";
+	src: url("Gotham Narrow Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GothamMedium";
+	src: url("GothamMedium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GothamMedium-Italic";
+	src: url("GothamMediumItalic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gotham";
+	src: url("Gotham-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GothamHTFBlack";
+	src: url("GothamHTFBlack-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "LeviathanHTFBlack";
+	src: url("LeviathanHTFBlack-BoldItalic.ttf") format("opentype");
+	font-weight: bold;
+	font-style: Italic;
+}
+
+@font-face {
+	font-family: "LeviathanHTFBlack";
+	src: url("LeviathanHTFBlack.ttf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Inter";
+	src: url("Inter-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ATB TT Norms";
+	src: url("ATB TT Norms.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ATB TT Norms";
+	src: url("ATB TT Norms-bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ATBTTNorms DemiBold";
+	src: url("ATB TT Norms-demiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ATB TT Norms DemiBold";
+	src: url("ATB TT Norms-demiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Open Sans Light";
+	src: url("Open Sans Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Open Sans";
+	src: url("Open Sans.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Open Sans";
+	src: url("Open Sans-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Open Sans";
+	src: url("Open Sans-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Open Sans";
+	src: url("Open Sans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Open Sans SemiBold";
+	src: url("Open Sans SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Akkurat-Light";
+	src: url("Akkurat-Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Akkurat";
+	src: url("Akkurat-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next";
+	src: url("Trade Gothic Next.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next";
+	src: url("Trade Gothic Next-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next";
+	src: url("Trade Gothic Next-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next Condensed";
+	src: url("Trade Gothic Next Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next Condensed";
+	src: url("Trade Gothic Next Condensed-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next Condensed";
+	src: url("Trade Gothic Next Condensed-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next Condensed";
+	src: url("Trade Gothic Next Condensed-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Trade Gothic Next Light";
+	src: url("Trade Gothic Next Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+	}
+	
+@font-face {
+	font-family: "Trade Gothic Next Light";
+	src: url("Trade Gothic Next Light-italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Brenntag Sans";
+	src: url("Brenntag Sans.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Brenntag Sans";
+	src: url("Brenntag Sans-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sanchez Niu";
+	src: url("SANCHEZNIU.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro";
+	src: url("Myriad Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro";
+	src: url("Myriad Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro";
+	src: url("Myriad Pro-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Myriad Pro";
+	src: url("Myriad Pro-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Myriad Pro Condensed";
+	src: url("Myriad Pro Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro Condensed";
+	src: url("Myriad Pro Condensed-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro Condensed";
+	src: url("Myriad Pro Condensed-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Myriad Pro Condensed";
+	src: url("Myriad Pro Condensed-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Myriad Pro Light";
+	src: url("Myriad Pro Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro Light";
+	src: url("Myriad Pro Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Myriad Pro SemiBold";
+	src: url("Myriad Pro SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro SemiBold";
+	src: url("Myriad Pro SemiBold-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Heebo";
+	src: url("Heebo.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Heebo";
+	src: url("Heebo-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Heebo Medium";
+	src: url("Heebo Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("Cera Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("Cera Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("Cera Pro-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("Cera Pro-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro Black";
+	src: url("Cera Pro Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro Black";
+	src: url("Cera Pro Black-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro Medium";
+	src: url("Cera Pro Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro Medium";
+	src: url("Cera Pro Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Ubuntu";
+	src: url("Ubuntu.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ubuntu";
+	src: url("Ubuntu-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ubuntu";
+	src: url("Ubuntu-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Museo Sans 100";
+	src: url("Museo Sans 100.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Museo Sans 300";
+	src: url("Museo Sans 300.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Museo Sans 500";
+	src: url("Museo Sans 500.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Museo Sans 700";
+	src: url("Museo Sans 700.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Museo Sans 900";
+	src: url("Museo Sans 900.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Museo Sans 100";
+	src: url("Museo Sans 100-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Museo Sans 300";
+	src: url("Museo Sans 300-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Museo Sans 500";
+	src: url("Museo Sans 500-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Museo Sans 700";
+	src: url("Museo Sans 700-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Museo Sans 900";
+	src: url("Museo Sans 900-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gill Sans MT Std Light";
+	src: url("Gill Sans MT Std Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gill Sans MT Std Condensed";
+	src: url("Gill Sans MT Std Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gill Sans MT Std Medium";
+	src: url("Gill Sans MT Std Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gill Sans MT Std";
+	src: url("Gill Sans MT Std-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gill Sans MT Pro ExtraBold";
+	src: url("Gill Sans MT Pro ExtraBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gill Sans MT";
+	src: url("Gill Sans MT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway";
+	src: url("Raleway.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway";
+	src: url("Raleway-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway Light";
+	src: url("Raleway-Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway Medium";
+	src: url("Raleway-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway-style1-lining";
+	src: url("Raleway-style1-lining.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Raleway-style1-lining";
+	src: url("Raleway-style1-lining-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "IBM Plex Sans";
+	src: url("IBMPlexSans.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "IBM Plex Sans Medium";
+	src: url("IBMPlexSans-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "IBM Plex Sans SemiBold";
+	src: url("IBMPlexSans-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "NHaasGroteskDSPro-35XLt";
+	src: url("NHaasGroteskDSPro-35XLt.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "NHaasGroteskDSPro-55Rg";
+	src: url("NHaasGroteskDSPro-55Rg.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss 2 Light";
+	src: url("Bliss 2 Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss 2";
+	src: url("Bliss 2-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss Pro";
+	src: url("Bliss Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss Pro";
+	src: url("Bliss Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss Pro ExtraBold";
+	src: url("Bliss Pro ExtraBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bliss Pro Light";
+	src: url("Bliss Pro Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ford Antenna Comp";
+	src: url("Ford Antenna Comp.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ford Antenna";
+	src: url("Ford Antenna Comp-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ford Antenna";
+	src: url("Ford Antenna.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ford Antenna";
+	src: url("Ford Antenna-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lincoln Proxima Nova";
+	src: url("Lincoln Proxima Nova.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lincoln Proxima Nova";
+	src: url("Lincoln Proxima Nova-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans No1 Book";
+	src: url("Sharp Sans No1 Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans No1 Light";
+	src: url("Sharp Sans No1 Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans No1 Light";
+	src: url("Sharp Sans No1 Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Sharp Sans No1 Medium";
+	src: url("Sharp Sans No1 Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans No1 Semibold";
+	src: url("Sharp Sans No1 Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MICR";
+	src: url("MICR.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Narrow";
+	src: url("Arial Narrow.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Narrow";
+	src: url("Arial Narrow-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Narrow";
+	src: url("Arial Narrow-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arial Narrow";
+	src: url("Arial Narrow-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Calibri Light";
+	src: url("Calibri Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Calibri Light";
+	src: url("Calibri Light-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Calibri";
+	src: url("Calibri.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Calibri";
+	src: url("Calibri-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Calibri";
+	src: url("Calibri-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Calibri";
+	src: url("Calibri-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Trebuchet MS";
+	src: url("Trebuchet MS.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trebuchet MS";
+	src: url("Trebuchet MS-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Trebuchet MS";
+	src: url("Trebuchet MS-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Trebuchet MS";
+	src: url("Trebuchet MS-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "ITC Bradley Hand Com";
+	src: url("ITC Bradley Hand Com.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Weiss Std";
+	src: url("Weiss Std.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica Neue LT Pro 45 Light";
+	src: url("Helvetica Neue LT Pro 45 Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica Neue LT Pro 55 Roman";
+	src: url("Helvetica Neue LT Pro 55 Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "HelveticaNeue";
+	src: url("Helvetica Neue LT Pro 55 Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "HelveticaNeue Light";
+	src: url("Helvetica Neue LT Pro 45 Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "HelveticaNeue Condensed";
+	src: url("HelveticaNeue Condensed-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Neutra Text Book";
+	src: url("Neutra Text Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro";
+	src: url("Adobe Caslon Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro";
+	src: url("Adobe Caslon Pro-bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro";
+	src: url("Adobe Caslon Pro-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro";
+	src: url("Adobe Caslon Pro-italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro Semibold";
+	src: url("Adobe Caslon Pro Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Adobe Caslon Pro Semibold";
+	src: url("Adobe Caslon Pro Semibold-italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("Roboto.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("Roboto-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("Roboto-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("Roboto-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto Black";
+	src: url("Roboto Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto Black";
+	src: url("Roboto Black-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto Light";
+	src: url("Roboto Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto Light";
+	src: url("Roboto Light-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto Medium";
+	src: url("Roboto Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto Medium";
+	src: url("Roboto Medium-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Roboto Thin";
+	src: url("Roboto Thin.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto Thin";
+	src: url("Roboto Thin-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Univers LT Pro 47 Light Condensed";
+	src: url("Univers LT Pro 47 Light Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Univers LT Pro 57 Condensed";
+	src: url("Univers LT Pro 57 Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "UniversCondensed";
+	src: url("Univers LT Pro 57 Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "UniversCondensed";
+	src: url("Univers LT Pro 67 Bold Condensed.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "FrutigerLinotype";
+	src: url("FrutigerLinotype-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "FrutigerLinotype";
+	src: url("FrutigerLinotype-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Std";
+	src: url("Futura Std.OTF") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Std";
+	src: url("Futura Std-Bold.OTF") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Std";
+	src: url("Futura Std-BoldItalic.OTF") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura Std";
+	src: url("Futura Std-Italic.OTF") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura Std Heavy";
+	src: url("Futura Std Heavy.OTF") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Std Heavy";
+	src: url("Futura Std Heavy-Italic.OTF") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura Std Medium";
+	src: url("Futura Std Medium.OTF") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura Std Medium";
+	src: url("Futura Std Medium-Italic.OTF") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Futura PT Book";
+	src: url("FuturaPT-Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura PT Medium";
+	src: url("FuturaPT-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura PT Demi";
+	src: url("futura-pt-demi.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Futura PT Light";
+	src: url("futura-pt-light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Greycliff CF Demi Bold";
+	src: url("Greycliff CF Demi Bold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MetaPlusBook Roman";
+	src: url("MetaPlusBook Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MetaPlusMedium Roman";
+	src: url("MetaPlusMedium Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MetaPlusMedium Caps";
+	src: url("MetaPlusMedium Caps.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sentinel Book";
+	src: url("Sentinel-Book.TTF") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lato";
+	src: url("Lato.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lato";
+	src: url("Lato-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Next LT Pro";
+	src: url("Avenir Next LT Pro.otf");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Next LT Pro";
+	src: url("Avenir Next LT Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Next LT Pro";
+	src: url("Avenir Next LT Pro-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Avenir Next LT Pro";
+	src: url("Avenir Next LT Pro-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Avenir Next LT Pro Demi";
+	src: url("Avenir Next LT Pro Demi.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir LT Std 45 Book";
+	src: url("Avenir LT Std 45 Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir LT Std 45 Book";
+	src: url("Avenir LT 45 Book Oblique.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Avenir LT Std 65 Medium";
+	src: url("Avenir LT Std 65 Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir LT Std 85 Heavy";
+	src: url("Avenir LT Std 85 Heavy.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir LT Std 95 Black";
+	src: url("Avenir LT Std 95 Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Light";
+	src: url("Avenir Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Medium";
+	src: url("Avenir-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Roman";
+	src: url("Avenir-Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Book";
+	src: url("Avenir-Book.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir";
+	src: url("Avenir.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Black";
+	src: url("Avenir-Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avant Garde";
+	src: url("Avant Garde.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avant Garde";
+	src: url("Avant Garde-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avant Garde";
+	src: url("Avant Garde-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Avant Garde";
+	src: url("Avant Garde-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Avant Garde Light";
+	src: url("Avant Garde Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avant Garde Light";
+	src: url("Avant Garde Light-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Caslon Openface";
+	src: url("CaslonOpenfaceBT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SansaPro";
+	src: url("SansaPro-Normal.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SansaPro";
+	src: url("SansaPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SansaPro SemiBold";
+	src: url("SansaPro-SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SansaPro-Bold";
+	src: url("SansaPro-Bold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ballinger";
+	src: url("Ballinger Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ballinger";
+	src: url("Ballinger Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Ballinger Medium";
+	src: url("Ballinger Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Charter";
+	src: url("Charter-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Charter BT Pro";
+	src: url("Charter BT Pro.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Charter BT Pro";
+	src: url("Charter BT Pro-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Charter BT Pro";
+	src: url("Charter BT Pro-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Charter BT Pro";
+	src: url("Charter BT Pro-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Charter BT Pro Black";
+	src: url("Charter BT Pro Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Charter BT Pro Black";
+	src: url("Charter BT Pro Black-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Value";
+	src: url("Value-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Value";
+	src: url("Value-bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Value";
+	src: url("Value-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Elston Pro";
+	src: url("Elston Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans Medium";
+	src: url("Sharp Sans Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sharp Sans Semibold";
+	src: url("Sharp Sans Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GothamRounded-Book";
+	src: url("GothamRounded-Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GothamRounded-Book";
+	src: url("GothamRounded-Book-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "GothamRounded Medium";
+	src: url("GothamRounded-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova";
+	src: url("ProximaNova.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova";
+	src: url("ProximaNova-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova SemiBold";
+	src: url("ProximaNova-SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova Light";
+	src: url("ProximaNova-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova Medium";
+	src: url("ProximaNova-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ProximaNova Extrabold";
+	src: url("ProximaNova Extrabold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Rounded";
+	src: url("Arial Rounded MT Std.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Rounded";
+	src: url("Arial Rounded MT Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Century Gothic";
+	src: url("Century Gothic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Century Gothic";
+	src: url("Century Gothic-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Century Gothic";
+	src: url("Century Gothic-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Proxima Soft";
+	src: url("Proxima Soft.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Proxima Soft";
+	src: url("Proxima Soft-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Proxima Soft";
+	src: url("Proxima Soft-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Proxima Soft";
+	src: url("Proxima Soft-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Proxima Soft Light";
+	src: url("Proxima Soft-Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Proxima Soft Medium";
+	src: url("Proxima Soft Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Proxima Soft Medium";
+	src: url("Proxima Soft Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("Gilroy-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("Gilroy-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy Light";
+	src: url("Gilroy Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy Medium";
+	src: url("Gilroy-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy SemiBold";
+	src: url("Gilroy-SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy ExtraBold";
+	src: url("Gilroy ExtraBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arvo";
+	src: url("Arvo.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arvo";
+	src: url("Arvo-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arvo";
+	src: url("Arvo-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arvo";
+	src: url("Arvo-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src: url("Poppins.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src: url("Poppins-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src: url("Poppins-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src: url("Poppins-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Poppins Light";
+	src: url("Poppins Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Poppins Light";
+	src: url("Poppins Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Poppins Medium";
+	src: url("Poppins-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Poppins SemiBold";
+	src: url("Poppins-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("Montserrat.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("Montserrat-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("Montserrat-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("Montserrat-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat Light";
+	src: url("Montserrat Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat Light";
+	src: url("Montserrat Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Montserrat-Light";
+	src: url("Montserrat Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat-LightItalic";
+	src: url("Montserrat Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Montserrat-Medium";
+	src: url("Montserrat Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat-Medium";
+	src: url("Montserrat Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Montserrat Medium";
+	src: url("Montserrat Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat SemiBold";
+	src: url("Montserrat SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Montserrat SemiBold";
+	src: url("Montserrat SemiBold-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Elston Pro Light";
+	src: url("Elston Pro Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Frutiger LT Std 55 Roman.otf";
+	src: url("Frutiger LT Std 55 Roman.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine";
+	src: url("Marine.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine";
+	src: url("Marine-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Marine";
+	src: url("Marine-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Marine";
+	src: url("Marine-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine Light";
+	src: url("Marine Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine Light";
+	src: url("Marine Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Marine Black";
+	src: url("Marine Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine Black";
+	src: url("Marine Black-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Marine UP Light";
+	src: url("Marine UP Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine UP Black";
+	src: url("Marine UP Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine UP";
+	src: url("Marine UP.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marine UP";
+	src: url("Marine UP-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MarkPro";
+	src: url("MarkPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MarkPro Light";
+	src: url("MarkPro-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MarkPro NarrowLight";
+	src: url("MarkPro-NarrowLight.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Neue Haas Unica";
+	src: url("Neue Haas Unica W06-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Berthold Akzidenz Grotesk";
+	src: url("AkzidGroCFF-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Berthold Akzidenz Grotesk";
+	src: url("Berthold Akzidenz Grotesk-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Berthold Akzidenz Grotesk";
+	src: url("AkzidGroCFF-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Berthold Akzidenz Grotesk Medium";
+	src: url("AkzidGroCFF-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Alright Sans";
+	src: url("Alright Sans-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Alright Sans";
+	src: url("Alright Sans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Alright Sans";
+	src: url("Alright Sans-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Alright Sans Medium";
+	src: url("Alright Sans Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Alright Sans Black";
+	src: url("Alright Sans Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Moderat";
+	src: url("Moderat.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Moderat";
+	src: url("Moderat-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nexa";
+	src: url("Nexa-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nexa Black";
+	src: url("Nexa Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Photina MT Pro";
+	src: url("Photina MT Pro.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Photina MT Pro";
+	src: url("Photina MT Pro-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Photina MT Pro";
+	src: url("Photina MT Pro-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arimo";
+	src: url("Arimo.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arimo";
+	src: url("Arimo-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arimo";
+	src: url("Arimo-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Arimo";
+	src: url("Arimo-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Heavy";
+	src: url("Avenir Heavy.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Neue Haas Unica Black";
+	src: url("Neue Haas Unica Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Neue Haas Unica Black";
+	src: url("Neue Haas Unica Black-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "ClassicGrotesquePro Book";
+	src: url("ClassicGrotesquePro-Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ClassicGrotesquePro Light";
+	src: url("ClassicGrotesquePro-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ClassicGrotesquePro Medium";
+	src: url("ClassicGrotesquePro-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Produkt Semibold";
+	src: url("Produkt-Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Uni Sans Regular";
+	src: url("Uni Sans Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Uni Sans Semibold";
+	src: url("Uni Sans SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Uni Sans Heavy";
+	src: url("Uni Sans Heavy.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SephoraSans";
+	src: url("SephoraSans-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SephoraSans Light";
+	src: url("SephoraSans-Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SephoraSerif Book";
+	src: url("sephoraserif-book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SephoraSerif Light";
+	src: url("sephoraserif-light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Georgia";
+	src: url("Georgia.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Georgia";
+	src: url("Georgia-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Georgia";
+	src: url("Georgia-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Minion Pro";
+	src: url("MinionPro-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Minion Pro";
+	src: url("MinionPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DIN Next LT Pro";
+	src: url("DINNextLTPro-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DIN Next LT Pro";
+	src: url("DINNextLTPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DIN Next LT Pro Medium";
+	src: url("DINNextLTPro-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Microsoft Sans Serif";
+	src: url("Microsoft Sans Serif.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "CastleT";
+	src: url("CastleT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Castle Com";
+	src: url("Castle Com.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Castle Com";
+	src: url("Castle Com-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Castle Com Ultra";
+	src: url("Castle Com Ultra.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Castle Com Light";
+	src: url("Castle Com Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lota Grotesque";
+	src: url("Lota Grotesque-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lota Grotesque";
+	src: url("Lota Grotesque-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Myriad Pro Black";
+	src: url("Myriad Pro Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lucida Handwriting";
+	src: url("Lucida Handwriting.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marsfont Light";
+	src: url("Marsfont Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marsfont Medium";
+	src: url("Marsfont Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marsfont";
+	src: url("Marsfont.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Marsfont";
+	src: url("Marsfont-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Marsfont";
+	src: url("Marsfont-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika";
+	src: url("Klavika.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika";
+	src: url("Klavika-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika";
+	src: url("Klavika-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika";
+	src: url("Klavika-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika Medium";
+	src: url("Klavika Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika Medium";
+	src: url("Klavika Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika Medium Condensed";
+	src: url("Klavika Medium Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika Medium Condensed";
+	src: url("Klavika Medium Condensed-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika Light Condensed";
+	src: url("Klavika Light Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika Light Condensed";
+	src: url("Klavika Light Condensed-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika Condensed";
+	src: url("Klavika Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika Condensed";
+	src: url("Klavika Condensed-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Klavika Condensed";
+	src: url("Klavika Condensed-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Klavika Condensed";
+	src: url("Klavika Condensed-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "MCQ Global";
+	src: url("MCQ Global.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MCQ Global";
+	src: url("MCQ Global-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MCQ Global Light";
+	src: url("MCQ Global Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MCQ Global Medium";
+	src: url("MCQ Global Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MCQ Global Condensed";
+	src: url("MCQ Global Condensed.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Rescue";
+	src: url("Rescue.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Rockwell";
+	src: url("Rockwell.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Rockwell";
+	src: url("Rockwell-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Rockwell";
+	src: url("Rockwell-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Precision Sans";
+	src: url("Precision Sans.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Precision Sans";
+	src: url("Precision Sans-Bold.otf") format("opentype");
+	font-weight: Bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Precision Sans Light";
+	src: url("Precision Sans Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Precision Sans Medium";
+	src: url("Precision Sans Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Precision Sans";
+	src: url("Precision Sans W-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Precision Sans";
+	src: url("Precision Sans W-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Precision Sans Light";
+	src: url("Precision Sans W Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Precision Sans Medium";
+	src: url("Precision Sans W Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Styrene A";
+	src: url("Styrene A.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Styrene A";
+	src: url("Styrene A-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Styrene A";
+	src: url("Styrene A-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Styrene A";
+	src: url("Styrene A-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Styrene A Light";
+	src: url("Styrene A Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Styrene A Light";
+	src: url("Styrene A Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Styrene A Medium";
+	src: url("Styrene A Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Styrene A Medium";
+	src: url("Styrene A Medium-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Giovanni Book";
+	src: url("Giovanni Book.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Giovanni LT Book";
+	src: url("Giovanni LT-book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GiovanniStd Black";
+	src: url("GiovanniStd-Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gontserrat";
+	src: url("Gontserrat-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gontserrat";
+	src: url("Gontserrat-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nunito Sans";
+	src: url("NunitoSans-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nunito Sans";
+	src: url("NunitoSans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nunito Sans SemiBold";
+	src: url("NunitoSans-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Nunito Sans ExtraBold";
+	src: url("NunitoSans-ExtraBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Boton";
+	src: url("Boton-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Boton Medium";
+	src: url("Boton-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GT Walsheim";
+	src: url("GT-Walsheim-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Circular Pro";
+	src: url("CircularPro-Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Circular Pro";
+	src: url("CircularPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sora";
+	src: url("Sora-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sora SemiBold";
+	src: url("Sora-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Titillium Web";
+	src: url("TitilliumWeb-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Titillium Web SemiBold";
+	src: url("TitilliumWeb-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SangBleu Sunrise";
+	src: url("SangBleuSunrise.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SangBleu Sunrise Medium";
+	src: url("SangBleuSunrise-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Tondo";
+	src: url("Tondo-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Objektiv Mk2";
+	src: url("Objektiv Mk2.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Objektiv Mk2";
+	src: url("Objektiv Mk2-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Objektiv Mk2 Medium";
+	src: url("Objektiv Mk2 Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial GEO";
+	src: url("Arial GEO.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Black";
+	src: url("ariblk.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Unicode MS";
+	src: url("Arial Unicode MS.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Arial Unicode MS";
+	src: url("Arial Unicode MS-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Malgun Gothic";
+	src: url("Malgun Gothic-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Malgun Gothic";
+	src: url("Malgun Gothic-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DIN Alternate";
+	src: url("DIN Alternate.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DIN Alternate";
+	src: url("DIN Alternate-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Kozuka Gothic Pr6N R";
+	src: url("KozGoPr6NRegular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BrownLL";
+	src: url("BrownLL-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BrownLL Light";
+	src: url("BrownLL-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BrownLL Thin";
+	src: url("BrownLL-Thin.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BrownLL Medium";
+	src: url("BrownLL-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Larken Medium";
+	src: url("Larken-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Studio6";
+	src: url("Studio6-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Studio6";
+	src: url("Studio6-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Studio6";
+	src: url("Studio6-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Studio6 Medium";
+	src: url("Studio6-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Outfit";
+	src: url("Outfit-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Outfit SemiBold";
+	src: url("Outfit SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Outfit Light";
+	src: url("Outfit Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Outfit";
+	src: url("Outfit.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	src: url("Source Sans Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	src: url("Source Sans Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	src: url("Source Sans Pro-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	src: url("Source Sans Pro-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Source Sans Pro Semibold";
+	src: url("Source Sans Pro Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Source Sans Pro Semibold";
+	src: url("Source Sans Pro Semibold-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "DINSerifNoLigatures";
+	src: url("DINSerifNoLigatures-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DINPro";
+	src: url("DINPro-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DINPro Medium";
+	src: url("DINPro-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DINPro Black";
+	src: url("DINPro Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "D-DIN";
+	src: url("D-DIN-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aptos";
+	src: url("Aptos.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aptos";
+	src: url("Aptos-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aptos";
+	src: url("Aptos-BoldItalic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Aptos";
+	src: url("Aptos-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Aptos Narrow";
+	src: url("Aptos Narrow.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aptos Narrow";
+	src: url("Aptos Narrow-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aptos SemiBold";
+	src: url("Aptos SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "PT Sans";
+	src: url("PT Sans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lufga";
+	src: url("Lufga.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lufga";
+	src: url("Lufga-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Lufga SemiBold";
+	src: url("Lufga-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "TodaySans Serif Medium";
+	src: url("TodaySB-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MetaPro";
+	src: url("MetaPro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MetaPro";
+	src: url("MetaPro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Suisse Intl";
+	src: url("SuisseIntl-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Suisse Intl SemiBold";
+	src: url("SuisseIntl-SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica Condensed";
+	src: url("Helvetica Condensed-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "HelveticaNeue";
+	src: url("HelveticaNeue-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "HelveticaNeue Medium Condensed";
+	src: url("HelveticaNeue-Medium Condensed.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Black";
+	src: url("Bodega Sans Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Black Oldstyle";
+	src: url("Bodega Sans Black Oldstyle.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Light";
+	src: url("Bodega Sans Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Light Oldstyle";
+	src: url("Bodega Sans Light Oldstyle.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Light Smallcaps";
+	src: url("Bodega Sans Light Smallcaps.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Medium";
+	src: url("Bodega Sans Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bodega Sans Medium Smallcaps";
+	src: url("Bodega Sans Medium Smallcaps.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "JDSans";
+	src: url("JDSans.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "JDSans";
+	src: url("JDSans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "JDSans Light";
+	src: url("JDSans Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "JDSans Book";
+	src: url("JDSans Book.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Avenir Next Cyr Medium";
+	src: url("Avenir Next Cyr-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Hilti";
+	src: url("Hilti Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Hilti";
+	src: url("Hilti-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Josefin Sans Light";
+	src: url("Josefin Sans Light.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Brandon Text";
+	src: url("Brandon Text.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Brandon Text";
+	src: url("Brandon Text-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Brandon Text";
+	src: url("Brandon Text-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "MarkOT Medium";
+	src: url("MarkOT Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MarkOT CondMedium";
+	src: url("MarkOT-CondMedium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("Gilroy-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Helvetica Light";
+	src: url("Helvetica Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Helvetica LT Std";
+	src: url("Helvetica LT Std-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "PP Neue Montreal";
+	src: url("PPNeueMontreal-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "PP Neue Montreal";
+	src: url("PPNeueMontreal-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "PP Neue Montreal Medium";
+	src: url("PPNeueMontreal-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Stem";
+	src: url("Stem-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Stem Light";
+	src: url("Stem-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Stem Hairline";
+	src: url("Stem-Hairline.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "DTL Haarlemmer SD";
+	src: url("DTL Haarlemmer SD.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bai Jamjuree";
+	src: url("BaiJamjuree-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bai Jamjuree Medium";
+	src: url("BaiJamjuree-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Tahoma";
+	src: url("Tahoma.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Tahoma";
+	src: url("Tahoma-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "FreightBigPro Light";
+	src: url("FreightBigPro Light-Italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "GerTT";
+	src: url("GerTT-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Adobe Arabic";
+	src: url("Adobe Arabic-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ITC Charter Com";
+	src: url("ITCCharterCom-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "ITC Charter Com";
+	src: url("ITCCharterCom-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Orbitron";
+	src: url("ORBITRON-REGULAR.TTF") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Orbitron Black";
+	src: url("ORBITRON-BLACK.TTF") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Orbitron Medium";
+	src: url("ORBITRON-MEDIUM.TTF") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Peoni Pro";
+	src: url("Peoni Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Seitu";
+	src: url("Seitu-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Seitu";
+	src: url("Seitu-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Seitu ExtraBold";
+	src: url("Seitu-ExtraBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Knockout-HTF69-FullLiteweight";
+	src: url("Knockout-HTF69-FullLiteweight.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "NotoSans SemiBold";
+	src: url("NotoSans-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SchibstedGrotesk";
+	src: url("SchibstedGrotesk.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SchibstedGrotesk";
+	src: url("SchibstedGrotesk-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SchibstedGrotesk SemiBold";
+	src: url("SchibstedGrotesk-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "P22 Mackinac Pro Medium";
+	src: url("P22 Mackinac Pro Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "P22 Mackinac Pro";
+	src: url("P22 Mackinac Pro-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Agenda SemiBold";
+	src: url("Agenda-SemiBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "EvoBQ";
+	src: url("EvoBQ-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "EvoBQ Medium";
+	src: url("EvoBQ-Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Geometria Light";
+	src: url("Geometria Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Interstate Black";
+	src: url("Interstate Black.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Interstate Light";
+	src: url("Interstate Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Interstate Light";
+	src: url("Interstate Light-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Graphik Light";
+	src: url("Graphik Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Graphik Medium";
+	src: url("Graphik Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "TD Graphik Medium";
+	src: url("TD Graphik Medium.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "TD Graphik Semibold";
+	src: url("TD Graphik Semibold.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Geometric Slabserif 703";
+	src: url("Geometric Slabserif 703-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Forma DJR Display";
+	src: url("FormaDJRDisplay-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Oaksans";
+	src: url("Oaksans-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Oaksans Medium";
+	src: url("Oaksans-Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Oaksans SemiBold";
+	src: url("Oaksans-SemiBold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Oaksans";
+	src: url("Oaksans-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "URWDIN";
+	src: url("URWDIN-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "URWDIN";
+	src: url("URWDIN-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "URWDIN Medium";
+	src: url("URWDIN Medium.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "URWDIN Black";
+	src: url("URWDIN Black.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Aktiv Grotesk";
+	src: url("AktivGrotesk-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Corporate Traveller";
+	src: url("Corporate Traveller.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Corporate Traveller";
+	src: url("Corporate Traveller-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cambria";
+	src: url("Cambria.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cambria";
+	src: url("Cambria-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SterlingText Roman";
+	src: url("SterlingText Roman.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "SimSun";
+	src: url("SimSun.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+@font-face {
+	font-family: "MrsEavesAllSmallCap";
+	src: url("MrsEavesAllSmallCap.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MrsEavesSmallCaps";
+	src: url("MrsEavesSmallCaps_Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "MrsEavesPetiteCaps";
+	src: url("MrsEavesPetiteCaps.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Garamond";
+	src: url("Garamond.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Sloop Scriptone";
+	src: url("Sloop Scriptone.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Channel";
+	src: url("Channel.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "League Gothic";
+	src: url("League Gothic.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Market Deco";
+	src: url("Market Deco.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "St Nicholas";
+	src: url("St Nicholas.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "GoudySwa";
+	src: url("GoudySwa-BoldItalic.otf") format("opentype");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Sail";
+	src: url("Sail-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Verlag Condensed Book";
+	src: url("Verlag Condensed Book.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bebas Neue";
+	src: url("Bebas Neue.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "KGAllThingsNew";
+	src: url("KGAllThingsNew.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "LeawoodBook";
+	src: url("LeawoodBook.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Old Claude LP SmallCap";
+	src: url("Old Claude LP SmallCap.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "RNS Camelia";
+	src: url("RNS Camelia.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Copperplate";
+	src: url("Copperplate.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Copperplate";
+	src: url("Copperplate-Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Engravers MT";
+	src: url("Engravers MT.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Bombshell Pro";
+	src: url("Bombshell Pro.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}

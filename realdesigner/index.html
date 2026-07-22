@@ -1,0 +1,2605 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+	
+	
+
+	
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+		
+	
+
+
+
+
+
+
+
+
+	
+	
+	
+		
+		
+		
+		
+
+
+
+
+
+
+	
+
+
+
+	
+	
+
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../demo-guard.js"></script>
+<!-- Google tag (gtag.js) -->
+<!-- analytics removed in test copy -->
+<!-- analytics removed in test copy -->
+<!-- /Google tag (gtag.js) -->
+<script>
+function trackAddToCart() {
+    window.dataLayer = window.dataLayer || [];
+    
+    var qtyInput = document.querySelector('#quantity') 
+        ? document.querySelector('#quantity').value 
+        : 1;
+
+    var selectedVariation = document.querySelector('select[name="Variation"]');
+    var variationText = selectedVariation 
+        ? selectedVariation.options[selectedVariation.selectedIndex].text 
+        : "";
+
+    var itemPrice = 
+        0
+    ;
+
+    dataLayer.push({
+        event: "add_to_cart",
+        ecommerce: {
+            currency: "CAD",
+            value: itemPrice,
+            items: [{
+                item_id: "BCDP\-CM",
+                item_name: "Vibrant Colour Business Cards \- Classic Matte",
+                item_category: document.getElementById("cProd").innerHTML,
+                item_category2: variationText,
+                item_category3: document.getElementById("cSize").innerHTML,
+                price: itemPrice,
+                quantity: parseInt(qtyInput) || 1
+            }]
+        }
+    });
+}
+</script>
+<title>
+
+Design your product
+
+</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+
+<link rel="stylesheet" href="vendor/lib/material-icons.css">
+<link rel="stylesheet" href="vendor/lib/mui.min.css" crossorigin="anonymous" />
+<link rel="stylesheet" href="vendor/lib/jquery-ui.css">
+
+<link rel="stylesheet" href="vendor/lib/dropzone.css" integrity="sha256-0Z6mOrdLEtgqvj7tidYQnCYWG3G2GAIpatAWKhDx+VM=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="css/sterling-combined.css">
+<link rel="stylesheet" href="hteng/css/site.app.css" type="text/css" media="all">
+<link rel="stylesheet" href="hteng/css/Overrides.css">
+<link rel="stylesheet" href="vendor/css/fonts_fonts.css" type="text/css" media="all">
+
+
+
+
+
+
+<style>
+:root {
+	--main-color: #040000;
+	--main-color-hover: #EA0029;
+	--main-accent-color: #EA0029;
+	--body-text-color: #040000;
+}
+</style>
+
+
+ 
+<!-- analytics removed in test copy --> 
+
+
+	<meta name="description" content="Design your custom product here!">
+
+ 
+<!-- modernizr stubbed by mock-backend.js --> 
+<script src="vendor/lib/mui.js" crossorigin="anonymous"></script> 
+<!--[if lt IE 9]>
+
+<script>var ieLessThan9 = true;</script>
+<![endif]--> 
+<script src="vendor/lib/jquery-3.5.1.min.js"></script>
+<script src="fixtures.js"></script>
+<script src="mock-backend.js"></script> 
+<script>
+$( function() {
+	$( "#tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+	$( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+});
+</script> 
+<script src="vendor/lib/jquery-ui.min.js"></script> 
+<script src="vendor/js/toastr.js"></script>
+<link rel="stylesheet" href="vendor/css/toastr.min.css" type="text/css" media="all">
+<script>
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": false,
+	"progressBar": true,
+	"positionClass": "toast-top-right",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "25000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+}
+JL.setOptions({
+	"defaultAjaxUrl": "jsnlog.cfm"
+});
+if (window /*&& !window.onerror*/) {
+	window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+		JL("onerrorLogger").fatalException({
+			"msg": "Uncaught Exception",
+			"errorMsg": errorMsg,
+			"url": url,
+			"line number": lineNumber,
+			"column": column,
+		}, errorObj);
+		toastr["error"](errorMsg);
+		return false;
+	}
+}
+if (typeof window !== 'undefined' /*&& !window.onunhandledrejection*/) {
+	window.onunhandledrejection = function (event) {
+		JL("onerrorLogger").fatalException({
+			"msg": "unhandledrejection",
+			"errorMsg": event.reason ? event.reason.message : null,
+		}, event.reason);
+		toastr["error"](event.reason ? event.reason.message : null);
+		return false;
+	};
+}
+</script> 
+ 
+<script src="vendor/lib/dropzone.min.js" integrity="sha256-cs4thShDfjkqFGk5s2Lxj35sgSRr4MRcyccmi0WKqCM=" crossorigin="anonymous"></script> 
+ 
+<script src="vendor/js/pngPHYsChunk.js"></script>
+
+
+
+	
+
+<script>
+		var cropCanvas = null;
+		var simpleMode = false;
+		var canRotate = true;
+		var blankOrientation = 'landscape';
+		var blankUpload = false;
+		var languageCode = 'en';
+		var saveCode = '6F88B82B\-7BD2\-4A1F\-BB60F5ECDB2D2408';
+		var currentTemplate = '32910';
+		var currentDesign = '';
+		var designerVariationCode = "FullColour";
+		var productNumber = "BCDP\-CM";
+		var productGroup = "VibrantColourBusinessCards";
+		var cartId = "\-1";
+		var saveDialogOpen = false;
+		function touchStart(e) {
+			if (e.target.tagName != 'SELECT') {
+				e.preventDefault();
+			}
+		}
+		
+</script> 
+<script src="hteng/js/encoder.js"></script> 
+ 
+<script src="vendor/lib/fabric-4.4.0.min.js"></script> 
+<script src="hteng/js/fabricMods.js"></script> 
+<script src="hteng/js/hextorgb.js"></script> 
+<script src="hteng/js/fabric.curvedText.designer.js"></script> 
+ 
+<script src="hteng/js/SMPdesigner.js"></script>
+<script src="transfer-loader.js"></script> 
+</head>
+<body>
+<script>
+function getWidth() {
+	if (self.innerHeight)
+		return self.innerWidth;
+	if (document.documentElement && document.documentElement.clientWidth)
+		return document.documentElement.clientWidth;
+	if (document.body)
+		return document.body.clientWidth;
+}
+</script>
+<header>
+	<div style="text-align:center">
+	</div>
+</header>
+<div class="blocker">
+	<div>
+		Sterling Custom Products Designer
+	</div>
+</div>
+ 
+
+
+	
+
+
+
+
+
+<aside>
+	
+	<div style="text-align: center; padding: 10px;">
+		<a href="../index.html"><img class="sterlingLogo" src="hteng/productImages/FFD16C6D-E627-FC48-D14E44EF61984410.svg" alt="Home" title="Home"></a>
+	</div>
+	<div id="saveBar">
+		<ul class="mui-list--inline">
+			<li>
+				<button class="mui-btn" onclick="saveDesign();"><i class="material-icons"> save </i><br>
+				Save</button>
+			</li>
+			<li></li>
+			<li>
+				<button class="mui-btn" onclick="preview();"> <i class="material-icons"> add_shopping_cart </i><br>
+				Add To Cart</button>
+			</li>
+			
+			<li></li>
+			<li>
+				<button class="mui-btn" onclick="undo(currentCanvas);"><i class="material-icons"> undo </i><br>
+				Undo</button>
+			</li>
+			<li></li>
+			<li>
+				<button class="mui-btn" onclick="redo(currentCanvas);"><i class="material-icons"> redo </i><br>
+				Redo</button>
+			</li>
+			
+		</ul>
+	</div>
+	<div id="tabs">
+		<ul>
+			<li>
+				<a href="#productVariationDiv">
+				<div class="menuContent">
+					<div class="menuIcon" >
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.55 45.64" height="45.64" width="45.55">
+							<path class="svgIcon" d="M21.35,0H24.2a3.25,3.25,0,0,0,.43.08A21.23,21.23,0,0,1,31,1.55a22.66,22.66,0,0,1,14.3,24.29,22,22,0,0,1-13,17.58A21.6,21.6,0,0,1,12.4,43a22.26,22.26,0,0,1-12-16.22C.19,25.93.12,25.06,0,24.2V21.35A2.53,2.53,0,0,0,.07,21a21.6,21.6,0,0,1,2.5-8.65A22.57,22.57,0,0,1,18.76.36C19.61.19,20.49.12,21.35,0Zm1.44,4.27A18.51,18.51,0,1,0,41.28,22.81,18.54,18.54,0,0,0,22.79,4.27Z"/>
+							<path class="svgIcon" d="M25.62,27.09c0,1.37,0,2.73,0,4.09a2.85,2.85,0,1,1-5.69,0V22.89a2.85,2.85,0,1,1,5.69,0C25.63,24.28,25.62,25.69,25.62,27.09Z"/>
+							<path class="svgIcon" d="M22.79,11.39a2.85,2.85,0,1,1-2.86,2.84A2.84,2.84,0,0,1,22.79,11.39Z"/>
+						</svg>
+					</div>
+					<div class="menuText">
+						Product
+					</div>
+				</div>
+				</a>
+			</li>
+			<li>
+				<a href="#textMenu">
+				<div class="menuContent">
+					<div class="menuIcon" >
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.64 46.89" height="46.89" width="38.64">
+							<path class="svgIcon" d="M38.64,0V10.35H35.43c-.78,0-1.11-.2-1.24-.66a31.47,31.47,0,0,1-.66-4.32h-11V42.18a3.76,3.76,0,0,1,.79.13c1.7.33,2.81.52,3.27.65s.66.53.66,1.18v2.75H11.4V44.14a1.28,1.28,0,0,1,1.11-1.31c.72-.13,1.9-.39,3.6-.72V5.3H5a40.78,40.78,0,0,1-.59,4.39c-.13.46-.52.66-1.31.66H0V0H38.64Z"/>
+						</svg>
+					</div>
+					<div class="menuText">
+						Text
+					</div>
+				</div>
+				</a>
+			</li>
+			
+			<li>
+				<a href="#curvedTextMenu">
+				<div class="menuContent">
+					<div class="menuIcon" >
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.64 46.89" height="46.89" width="38.64">
+							<path class="svgIcon" d="M38.64,0V10.35H35.43c-.78,0-1.11-.2-1.24-.66a31.47,31.47,0,0,1-.66-4.32h-11V42.18a3.76,3.76,0,0,1,.79.13c1.7.33,2.81.52,3.27.65s.66.53.66,1.18v2.75H11.4V44.14a1.28,1.28,0,0,1,1.11-1.31c.72-.13,1.9-.39,3.6-.72V5.3H5a40.78,40.78,0,0,1-.59,4.39c-.13.46-.52.66-1.31.66H0V0H38.64Z"/>
+						</svg>
+					</div>
+					<div class="menuText">
+						Curved Text
+					</div>
+				</div>
+				</a>
+			</li>
+			
+			
+				<li><a href="#backgroundColourMenu">
+					<div class="menuContent">
+						<div class="menuIcon" >
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.44 51.44" height="51.44" width="51.44">
+								<path class="svgIcon" d="M.6,0H51.44V50.84a5.14,5.14,0,0,1-1.6.57q-24.1.06-48.21,0C.25,51.44,0,51.19,0,49.81Q0,25.71,0,1.6A5.14,5.14,0,0,1,.6,0ZM48.55,2.18c-1.65,0-3.25,0-4.85,0a1.41,1.41,0,0,0-.84.44Q22.74,22.73,2.65,42.84a1.36,1.36,0,0,0-.45.74c0,1.65,0,3.3,0,5ZM5.1,49.26c1.61,0,3.27,0,4.92,0a1.34,1.34,0,0,0,.73-.45l38-38c.18-.18.45-.41.45-.62,0-1.71,0-3.42,0-5Q27.16,27.22,5.1,49.26ZM2.17,39.94,39.93,2.19c-1.67,0-3.33,0-5,0a1.22,1.22,0,0,0-.65.41Q18.46,18.44,2.64,34.28a1.54,1.54,0,0,0-.45.93C2.15,36.78,2.17,38.35,2.17,39.94ZM49.26,13.73,13.72,49.27c1.42,0,2.91,0,4.4,0a2.12,2.12,0,0,0,1.29-.55Q34.07,34.1,48.66,19.46a1.79,1.79,0,0,0,.58-1C49.3,16.87,49.26,15.27,49.26,13.73ZM2.17,31.19l29-29c-1.43,0-3,0-4.63,0a1.37,1.37,0,0,0-.84.43Q14.16,14.15,2.64,25.7a1.54,1.54,0,0,0-.45.93C2.15,28.2,2.17,29.77,2.17,31.19Zm47.09-8.94-27,27c1.61,0,3.26,0,4.92,0a1.36,1.36,0,0,0,.73-.46Q38.35,38.34,48.79,27.89a1.57,1.57,0,0,0,.45-.93C49.29,25.39,49.26,23.82,49.26,22.25ZM22.82,2.18c-1.53,0-3,0-4.47,0a2.16,2.16,0,0,0-1.29.53Q9.85,9.87,2.7,17.07c-.21.2-.49.47-.49.71,0,1.68,0,3.37,0,5Zm7.94,47.09c1.63,0,3.23,0,4.84,0a1.48,1.48,0,0,0,.84-.43q6.2-6.16,12.36-12.36a1.31,1.31,0,0,0,.44-.74c0-1.65,0-3.3,0-4.95ZM2.17,14,14,2.18c-1.45,0-3,0-4.64,0a1.15,1.15,0,0,0-.7.31Q5.59,5.56,2.53,8.67a1.21,1.21,0,0,0-.34.78C2.16,11,2.17,12.59,2.17,14ZM49.26,39.56l-9.71,9.71c1.43,0,3,0,4.64,0a1.38,1.38,0,0,0,.83-.45c1.27-1.24,2.53-2.49,3.76-3.77a1.59,1.59,0,0,0,.46-.92C49.29,42.53,49.26,41,49.26,39.56ZM2.25,2.23v3.3l3.34-3.3Zm46.92,47V48l-1.25,1.18Z"/>
+							</svg>
+						</div>
+						<div class="menuText">
+							Background
+						</div>
+					</div>
+					</a>
+				</li>
+			
+			
+			
+				<li><a href="#imagesMenu">
+					<div class="menuContent">
+						<div class="menuIcon" >
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50.94 52.35" height="52.35" width="50.94">
+								<path class="svgIcon" d="M2.47,52.35a9.58,9.58,0,0,1-1.35-.7A2.71,2.71,0,0,1,0,49.29V33.74a3,3,0,0,1,4.07-2.82A2.86,2.86,0,0,1,5.9,33.74V46.39H45.13V33.9a3,3,0,0,1,1-2.47A2.79,2.79,0,0,1,49,30.89a2.65,2.65,0,0,1,1.86,2.31,19.54,19.54,0,0,1,0,2.17q0,6.87,0,13.75a2.81,2.81,0,0,1-.63,2.1,6.89,6.89,0,0,1-1.18.89,2.87,2.87,0,0,1-.57.24Z"/>
+								<path class="svgIcon" d="M26,0a6.13,6.13,0,0,1,2.75,2L34.51,7.8c1.66,1.66,3.32,3.32,5,5a2.71,2.71,0,0,1,.47,3.27,2.83,2.83,0,0,1-3.32,1.45,3.91,3.91,0,0,1-1.49-.86c-2.15-2.08-4.25-4.21-6.37-6.33L28.4,10v.63q0,12.2,0,24.38a3,3,0,0,1-.64,2A2.88,2.88,0,0,1,22.7,35.8a5.7,5.7,0,0,1-.07-.92V10l-1.29,1.26c-2,1.93-3.92,3.88-5.93,5.77a2.72,2.72,0,0,1-3.74-.2,2.73,2.73,0,0,1-.18-3.93c1.5-1.56,3-3.07,4.56-4.6,2.39-2.4,4.79-4.78,7.17-7.19A4.68,4.68,0,0,1,25.05,0Z"/>
+							</svg>
+						</div>
+						<div class="menuText">
+							Images
+						</div>
+					</div>
+					</a>
+				</li>
+			
+			<li><a href="#toolsMenu">
+				<div class="menuContent">
+					<div class="menuIcon" >
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58.9 58.2" height="58.2" width="58.9">
+							<path class="svgIcon" d="M29.08,36.21l7.4-7.36c.15.14.35.32.54.52,2.13,2.13,4.26,4.25,6.37,6.39a.81.81,0,0,0,.9.23A11.23,11.23,0,0,1,58.47,47.52a15.77,15.77,0,0,1-.88,3.74c-.37,1.14-.91,1.2-1.75.37l-6.5-6.51a2.85,2.85,0,0,0-1.73-.91,2.65,2.65,0,0,0-2.82,1.44,2.71,2.71,0,0,0,.54,3.18c2.2,2.22,4.42,4.43,6.63,6.64.87.86.78,1.36-.37,1.8-4.29,1.66-8.3,1.13-11.76-1.91A10.87,10.87,0,0,1,36.34,44a.85.85,0,0,0-.26-1c-2.14-2.11-4.26-4.24-6.39-6.36A4.76,4.76,0,0,0,29.08,36.21Z"/>
+							<path class="svgIcon" d="M29,21.36,21.7,28.69,20.07,27c-1.48-1.49-3-3-4.44-4.46a1,1,0,0,0-1.15-.32,10.77,10.77,0,0,1-11.36-3.6A10.84,10.84,0,0,1,1.35,6.8c.39-1,.91-1,1.64-.3C5.21,8.72,7.43,11,9.67,13.17a2.73,2.73,0,0,0,4.58-1,2.69,2.69,0,0,0-.77-2.92Q10.19,6,6.93,2.72c-.84-.84-.77-1.33.34-1.77A10.82,10.82,0,0,1,19,2.77a10.84,10.84,0,0,1,3.58,11.37,1.06,1.06,0,0,0,.34,1.15C25,17.3,27,19.35,29,21.36Z"/>
+							<path class="svgIcon" d="M26.55,35.34l-4-4,17-17c-.22-.28-.38-.47-.52-.69A1.53,1.53,0,0,1,39,11.81a4.16,4.16,0,0,0,.09-4.06,8.08,8.08,0,0,0-3.54-3.7A19,19,0,0,0,29,1.85a7.21,7.21,0,0,1-1-.31l0-.2a8.9,8.9,0,0,1,.88-.43A11.37,11.37,0,0,1,35.39.74,21.48,21.48,0,0,1,43.5,4.67a71.8,71.8,0,0,1,6.15,5.27,15.35,15.35,0,0,1,3.39,5,11.17,11.17,0,0,1,.43,2.1,1.4,1.4,0,0,0,.1.47c.42.74.87,1.48,1.34,2.28l.83-.77a1.87,1.87,0,0,1,2.58,0,1.83,1.83,0,0,1,.07,2.61c-1.49,1.54-3,3.06-4.55,4.53a1.79,1.79,0,0,1-2.6-.11,1.88,1.88,0,0,1,.08-2.62,6.54,6.54,0,0,1,.71-.51c-1.6-1.16-3-2.2-4.44-3.18a1.37,1.37,0,0,0-1-.17,2.4,2.4,0,0,1-2.47-.73,3.52,3.52,0,0,1-.41-.65Z"/>
+							<path class="svgIcon" d="M25.49,37.12a7.84,7.84,0,0,1-.81,1.39c-3.47,3.91-7,7.79-10.45,11.69Q11.13,53.64,8,57.09a1.56,1.56,0,0,1-2.63.08L.61,52.38a1.54,1.54,0,0,1,.07-2.51L19.25,33.22a1.86,1.86,0,0,1,3,.09c.83.82,1.68,1.63,2.47,2.49A8.85,8.85,0,0,1,25.49,37.12Z"/>
+						</svg>
+					</div>
+					<div class="menuText">
+						Tools
+					</div>
+				</div>
+				</a>
+			</li>
+			<li><a href="#shapesMenu">
+				<div class="menuContent">
+					<div class="menuIcon" >
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<path class="svgIcon" d="M8.135 12.736l-.764 1.058A6.297 6.297 0 1 1 13.281 5h-1.138a5.286 5.286 0 1 0-4.644 7.8 5.201 5.201 0 0 0 .636-.064zM11 6v6.923l1 1.385V7h10v10h-8.056l.723 1H23V6zm6.044 17H1.956L9.5 12.554zM9.5 14.262L3.911 22H15.09z"/>
+						</svg>
+					</div>
+					<div class="menuText">
+						
+						Shapes
+					</div>
+				</div>
+				</a>
+			</li>
+		</ul>
+		
+		<div id="productVariationDiv" class="">
+			<div>
+				<div id="productSpecs">
+					<div id="cProd">
+					</div>
+					<div id="cSize">
+					</div>
+					<div>
+						<div id="cMaxlines" style="display: none;">
+						</div>
+						<div id="lowestPrice">
+						</div>
+					</div>
+				</div>
+				
+					
+					<p>
+						<select name="Variation" style="width: 100%; overflow: hidden;">
+							
+								<option value="BCDP-CM-100" id="variationBCDP-CM-100" data-variationid="9052">100 Lot
+								
+									
+									
+										-
+									
+									QTY 100
+								
+								- $28.99</option>
+							
+								<option value="BCDP-CM-250" id="variationBCDP-CM-250" data-variationid="9053">250 Lot
+								
+									
+									
+										-
+									
+									QTY 250
+								
+								- $39.49</option>
+							
+								<option value="BCDP-CM-500" id="variationBCDP-CM-500" data-variationid="9054">500 Lot
+								
+									
+									
+										-
+									
+									QTY 500
+								
+								- $52.99</option>
+							
+						</select>
+					</p>
+					
+				
+				<div id="productOptionsDiv"></div>
+				 
+				
+			</div>
+			<div style="display: flex; justify-content: space-between;">
+				
+			</div>
+			<div id="savedDesignDiv">
+			</div>
+		</div>
+		 
+		<div  id="textMenu">
+		<div>
+			
+				<button class="mui-btn mui-btn--primary" onclick="addTextLine(currentCanvas)" id="btnAddTextBox">Add Text Box</button>
+				<input id="btnDeleteText" type="image" alt="Delete" title="Delete" src="vendor/icons/GarbageCanButton.svg" style="height:30px; width:30px;" onclick="deleteObject(currentCanvas)">
+			
+			
+			
+			
+				
+				
+			
+			<div id="fontBX">
+				<div style="display: flex; justify-content: space-between;">
+					<select name="fontDropDown" id="fontDropDown"  style="flex-grow: 1;" onchange="javascript:fontFace=this.value;textFontChanged(currentCanvas,activeLine);">
+						
+							<option value="Arial" style="font-family:'Arial'; font-size:20px">Arial</option>
+						
+							<option value="Arial Narrow" style="font-family:'Arial Narrow'; font-size:20px">Arial Narrow</option>
+						
+							<option value="Aptos" style="font-family:'Aptos'; font-size:20px">Aptos</option>
+						
+							<option value="Atlanta" style="font-family:'Atlanta'; font-size:20px">Atlanta</option>
+						
+							<option value="Atlantic Inline" style="font-family:'Atlantic Inline'; font-size:20px">Atlantic Inline</option>
+						
+							<option value="Belgium" style="font-family:'Belgium'; font-size:20px">Belgium</option>
+						
+							<option value="Bentham" style="font-family:'Bentham'; font-size:20px">Bentham</option>
+						
+							<option value="Bermuda Script" style="font-family:'Bermuda Script'; font-size:20px">Bermuda Script</option>
+						
+							<option value="BrushScriptStd" style="font-family:'BrushScriptStd'; font-size:20px">BrushScriptStd</option>
+						
+							<option value="Castle Com" style="font-family:'Castle Com'; font-size:20px">Castle Com</option>
+						
+							<option value="Calibri" style="font-family:'Calibri'; font-size:20px">Calibri</option>
+						
+							<option value="Clarendon BT" style="font-family:'Clarendon BT'; font-size:20px">Clarendon BT</option>
+						
+							<option value="Cooper Md BT" style="font-family:'Cooper Md BT'; font-size:20px">Cooper Md BT</option>
+						
+							<option value="Courier New" style="font-family:'Courier New'; font-size:20px">Courier New</option>
+						
+							<option value="FleurishScript" style="font-family:'FleurishScript'; font-size:20px">FleurishScript</option>
+						
+							<option value="Franklin Gothic ITC Bk BT" style="font-family:'Franklin Gothic ITC Bk BT'; font-size:20px">Franklin Gothic ITC Bk BT</option>
+						
+							<option value="Futura Md BT" style="font-family:'Futura Md BT'; font-size:20px">Futura Md BT</option>
+						
+							<option value="Futura Hv BT" style="font-family:'Futura Hv BT'; font-size:20px">Futura Hv BT</option>
+						
+							<option value="Futura Bk BT" style="font-family:'Futura Bk BT'; font-size:20px">Futura Bk BT</option>
+						
+							<option value="Germany" style="font-family:'Germany'; font-size:20px">Germany</option>
+						
+							<option value="Gill Sans MT" style="font-family:'Gill Sans MT'; font-size:20px">Gill Sans MT</option>
+						
+							<option value="Goudy Old Style" style="font-family:'Goudy Old Style'; font-size:20px">Goudy Old Style</option>
+						
+							<option value="Helsinki Narrow" style="font-family:'Helsinki Narrow'; font-size:20px">Helsinki Narrow</option>
+						
+							<option value="Helvetica" style="font-family:'Helvetica'; font-size:20px">Helvetica</option>
+						
+							<option value="Istanbul" style="font-family:'Istanbul'; font-size:20px">Istanbul</option>
+						
+							<option value="Myriad Pro" style="font-family:'Myriad Pro'; font-size:20px">Myriad Pro</option>
+						
+							<option value="Myriad Pro Condensed" style="font-family:'Myriad Pro Condensed'; font-size:20px">Myriad Pro Condensed</option>
+						
+							<option value="Open Sans" style="font-family:'Open Sans'; font-size:20px">Open Sans</option>
+						
+							<option value="Open Sans Light" style="font-family:'Open Sans Light'; font-size:20px">Open Sans Light</option>
+						
+							<option value="Open Sans SemiBold" style="font-family:'Open Sans SemiBold'; font-size:20px">Open Sans SemiBold</option>
+						
+							<option value="Optima" style="font-family:'Optima'; font-size:20px">Optima</option>
+						
+							<option value="Palatino Linotype" style="font-family:'Palatino Linotype'; font-size:20px">Palatino Linotype</option>
+						
+							<option value="San Diego" style="font-family:'San Diego'; font-size:20px">San Diego</option>
+						
+							<option value="Swis721 BT" style="font-family:'Swis721 BT'; font-size:20px">Swis721 BT</option>
+						
+							<option value="Times New Roman" style="font-family:'Times New Roman'; font-size:20px">Times New Roman</option>
+						
+							<option value="Trade Gothic Next" style="font-family:'Trade Gothic Next'; font-size:20px">Trade Gothic Next</option>
+						
+							<option value="Trade Gothic Next Condensed" style="font-family:'Trade Gothic Next Condensed'; font-size:20px">Trade Gothic Next Condensed</option>
+						
+							<option value="Trade Gothic Next Light" style="font-family:'Trade Gothic Next Light'; font-size:20px">Trade Gothic Next Light</option>
+						
+							<option value="Trebuchet MS" style="font-family:'Trebuchet MS'; font-size:20px">Trebuchet MS</option>
+						
+							<option value="US Roman" style="font-family:'US Roman'; font-size:20px">US Roman</option>
+						
+							<option value="Utah" style="font-family:'Utah'; font-size:20px">Utah</option>
+						
+							<option value="Verdana" style="font-family:'Verdana'; font-size:20px">Verdana</option>
+						
+							<option value="Zapf Chancery" style="font-family:'Zapf Chancery'; font-size:20px">Zapf Chancery</option>
+						
+					</select>
+					 
+					
+					<input autocomplete="off"  id="textSize" name="textSize" type="number" style="width: 65px; height: 24px;"  >
+					<datalist id="font-size"> 
+						
+						<option value="20"></option>
+						<option value="192"></option>
+					</datalist>
+				</div>
+				<div>
+					<div class="flexBoxCenterAlign">
+						<input type="image" src="vendor/icons/BoldButton.svg" title="Bold" class="iconButtonBig" onclick="fontWeightChanged(currentCanvas,activeLine)" id="boldBtn" alt="Bold">
+						<input type="image" src="vendor/icons/ItalicButton.svg" title="Italic" class="iconButtonBig" onclick="fontStyleChanged(currentCanvas,activeLine)" id="italicBtn" alt="Italic">
+						<input type="image" src="vendor/icons/UnderlineButton.svg" title="Underline" class="iconButtonBig"  onclick="fontUnderlineChanged(currentCanvas,activeLine)" id="underlineBtn" alt="Underline">
+						<div>
+							<input type="radio" name="alignRadio" title="Left Align Text Block" style="display:none;" onclick="textAlign(currentCanvas,'left');" id="leftTextBtn" value="left" class="iconButtonRadio">
+							<label for="leftTextBtn" id="leftTextBtnLbl" title="Left Align Text Block"  class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/LeftAlignButton.svg'); "></label>
+						</div>
+						<div>
+							<input type="radio" name="alignRadio" title="Center Align Text block" style="display:none;" onclick="textAlign(currentCanvas,'center');" id="centerTextBtn" value="center" class="iconButtonRadio">
+							<label for="centerTextBtn" id="centerTextBtnLbl" title="Center Align Text block" class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/CenterAlignButton.svg'); "></label>
+						</div>
+						<div>
+							<input type="radio" name="alignRadio" title="Right Align Text Block" style="display:none;" onclick="textAlign(currentCanvas,'right');" id="rightTextBtn" value="right" class="iconButtonRadio">
+							<label for="rightTextBtn" id="rightTextBtnLbl" title="Right Align Text Block"  class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/RightAlignButton.svg'); "></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+				<div>
+					Character Spacing:
+					<div style="display: flex; justify-content: space-between;">
+						<input type="range" min="-150" max="150" step="10" value="0" id="charSpacing" style="flex-grow: 1;">
+						<button class="mui-btn mui-btn--primary" id="btnResetCharSpacing"  onclick="setCharSpacing(0,activeLine);" style="flex-grow: 0;">Reset</button>
+					</div>
+				</div>
+			
+			
+			
+				<div style="text-align:left;margin-bottom:.2cm;">
+					 
+					
+					<div class="colors">
+						<div class="colors-container leftCol">
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ffffff" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 255, 255); margin-left: 0px; border:1px solid black;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#c1b7ad" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 183, 173); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#a69d94" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(166, 157, 148); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#665a53" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(102, 90, 83); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#1a1a19" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(26, 26, 25); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#d2d0cd" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 208, 205); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#878788" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 135, 136); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#444448" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 68, 72); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ac002c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 0, 44); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#e6a997" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(230, 169, 151); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#b2554d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(178, 85, 77); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#6c1e20" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(108, 30, 32); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#b91020" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 16, 32); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#e07a65" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(224, 122, 101); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#d70033" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(215, 0, 51); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#871821" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 24, 33); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#f84c05" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 76, 5); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#fda240" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(253, 162, 64); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ff7900" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 121, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#c74800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 72, 0); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#f8a800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 168, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#f6ce58" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(246, 206, 88); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#eeb100" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 177, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#c17d00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 125, 0); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ffe500" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 229, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#f7da33" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(247, 218, 51); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#fad700" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(250, 215, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ffbb00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 187, 0); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#00903a" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 144, 58); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#9bdfaa" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(155, 223, 170); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#45844d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(69, 132, 77); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#1e4624" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(30, 70, 36); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#8ad000" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(138, 208, 0); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#c4e767" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(196, 231, 103); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#98cf44" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(152, 207, 68); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#44932d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 147, 45); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<label for="customcolour">Custom: </label>
+							</div>
+						</div>
+						<div class="colors-container">
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#00b1a5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 177, 165); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#8ed4c4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(142, 212, 196); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#50b9a2" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(80, 185, 162); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#006360" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 99, 96); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#005798" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 87, 152); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#2f89d9" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(47, 137, 217); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#213c7f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(33, 60, 127); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#0f1931" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(15, 25, 49); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#4ba6e1" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(75, 166, 225); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#93d3e5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(147, 211, 229); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#00a5de" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 165, 222); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#004b71" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 75, 113); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#422266" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(66, 34, 102); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#9a91da" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 145, 218); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#634f90" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(99, 79, 144); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#1b1528" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(27, 21, 40); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ac87ba" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 135, 186); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#dfaed4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(223, 174, 212); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#926096" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(146, 96, 150); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#8c43b4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(140, 67, 180); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ed64a7" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(237, 100, 167); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#ee84ac" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 132, 172); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#e53285" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(229, 50, 133); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#d50063" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(213, 0, 99); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#bb678c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(187, 103, 140); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#c77c98" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 124, 152); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#a4446d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(164, 68, 109); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#6e243c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(110, 36, 60); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#4f2b1f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(79, 43, 31); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#b9967d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 150, 125); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#825745" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(130, 87, 69); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#3d281e" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(61, 40, 30); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#be8f60" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(190, 143, 96); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#d2b193" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 177, 147); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#9a6843" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 104, 67); margin-left: 0px;"/>
+								<button type="button" class="mui-btn btn-color textColourButton colorSwatch" data-color="#4d270b" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(77, 39, 11); margin-left: 0px;"/>
+							</div>
+							<div class="colors-group">
+								<!--<input type="color" id="customTextColour" value="#000000"> -->
+								<input type="color" class="customTextColour" id="customTextColour" value="#000000">
+							</div>
+						</div>
+					</div>
+					<div class="clear">
+					</div>
+				</div>
+			
+			
+				<div class="flexBoxLeftAlign">
+					<input type="image" src="vendor/icons/LeftObjectAlign.svg" title="Left Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'left')" alt="Left Align Object">
+					<input type="image" src="vendor/icons/CenterObjectHorizontally.svg" title="Center Object Horizontally" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'center')" alt="Center Object Horizontally">
+					<input type="image" src="vendor/icons/RightObjectAlign.svg" title="Right Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'right')" alt="Right Align Object">
+					<input type="image" src="vendor/icons/TopObjectAlign.svg" title="Top Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'top')" alt="Top Align Object">
+					<input type="image" src="vendor/icons/CenterObjectVertically.svg" title="Center Object Vertically" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'middle')" alt="Center Object Vertically">
+					<input type="image" src="vendor/icons/BottomObjectAlign.svg" title="Bottom Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'bottom')" alt="Bottom Align Object">
+				</div>
+				<div class="flexBoxLeftAlign">
+					<input type="image" src="vendor/icons/Back.svg" id="toBack"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendToBack')" alt="Send to Back" title="Send to Back">
+					<input type="image" src="vendor/icons/Backward.svg" id="backward" class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendBackwards')" alt="Send Backwards" title="Send Backwards">
+					<input type="image" src="vendor/icons/Forward.svg" id="forward" class="iconButtonBig" onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringForward')" alt="Bring Forward" title="Bring Forward">
+					<input type="image" src="vendor/icons/Front.svg"  id="toFront"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringToFront')" alt="Bring to Front" title="Bring to Front">
+				</div>
+			
+			
+		</div>
+	</div>
+	
+		 
+		<div  id="curvedTextMenu">
+		<div>
+			<input type="text" name="curvedText" id="curvedTextBox" placeholder="Enter Your Text Here" style="width: 100%">
+			<button class="mui-btn mui-btn--primary" onclick="addCurvedText(currentCanvas,document.getElementById('curvedTextBox').value)">Add Curved Text</button>
+			<input type="image" src="vendor/icons/GarbageCanButton.svg" style="height:30px; width:30px;" onclick="deleteObject(currentCanvas)" alt="Delete" title="Delete">
+			
+				
+				
+			
+			<div id="fontBX-curve">
+				<div style="display: flex; justify-content: space-between;">
+					<select name="fontDropDown" id="fontDropDown-curve" style="flex-grow: 1;" onchange="javascript:fontFace=this.value;textFontChanged(currentCanvas,activeLine);">
+						
+							<option value="Arial" style="font-family:'Arial'; font-size:20px">Arial</option>
+						
+							<option value="Arial Narrow" style="font-family:'Arial Narrow'; font-size:20px">Arial Narrow</option>
+						
+							<option value="Aptos" style="font-family:'Aptos'; font-size:20px">Aptos</option>
+						
+							<option value="Atlanta" style="font-family:'Atlanta'; font-size:20px">Atlanta</option>
+						
+							<option value="Atlantic Inline" style="font-family:'Atlantic Inline'; font-size:20px">Atlantic Inline</option>
+						
+							<option value="Belgium" style="font-family:'Belgium'; font-size:20px">Belgium</option>
+						
+							<option value="Bentham" style="font-family:'Bentham'; font-size:20px">Bentham</option>
+						
+							<option value="Bermuda Script" style="font-family:'Bermuda Script'; font-size:20px">Bermuda Script</option>
+						
+							<option value="BrushScriptStd" style="font-family:'BrushScriptStd'; font-size:20px">BrushScriptStd</option>
+						
+							<option value="Castle Com" style="font-family:'Castle Com'; font-size:20px">Castle Com</option>
+						
+							<option value="Calibri" style="font-family:'Calibri'; font-size:20px">Calibri</option>
+						
+							<option value="Clarendon BT" style="font-family:'Clarendon BT'; font-size:20px">Clarendon BT</option>
+						
+							<option value="Cooper Md BT" style="font-family:'Cooper Md BT'; font-size:20px">Cooper Md BT</option>
+						
+							<option value="Courier New" style="font-family:'Courier New'; font-size:20px">Courier New</option>
+						
+							<option value="FleurishScript" style="font-family:'FleurishScript'; font-size:20px">FleurishScript</option>
+						
+							<option value="Franklin Gothic ITC Bk BT" style="font-family:'Franklin Gothic ITC Bk BT'; font-size:20px">Franklin Gothic ITC Bk BT</option>
+						
+							<option value="Futura Md BT" style="font-family:'Futura Md BT'; font-size:20px">Futura Md BT</option>
+						
+							<option value="Futura Hv BT" style="font-family:'Futura Hv BT'; font-size:20px">Futura Hv BT</option>
+						
+							<option value="Futura Bk BT" style="font-family:'Futura Bk BT'; font-size:20px">Futura Bk BT</option>
+						
+							<option value="Germany" style="font-family:'Germany'; font-size:20px">Germany</option>
+						
+							<option value="Gill Sans MT" style="font-family:'Gill Sans MT'; font-size:20px">Gill Sans MT</option>
+						
+							<option value="Goudy Old Style" style="font-family:'Goudy Old Style'; font-size:20px">Goudy Old Style</option>
+						
+							<option value="Helsinki Narrow" style="font-family:'Helsinki Narrow'; font-size:20px">Helsinki Narrow</option>
+						
+							<option value="Helvetica" style="font-family:'Helvetica'; font-size:20px">Helvetica</option>
+						
+							<option value="Istanbul" style="font-family:'Istanbul'; font-size:20px">Istanbul</option>
+						
+							<option value="Myriad Pro" style="font-family:'Myriad Pro'; font-size:20px">Myriad Pro</option>
+						
+							<option value="Myriad Pro Condensed" style="font-family:'Myriad Pro Condensed'; font-size:20px">Myriad Pro Condensed</option>
+						
+							<option value="Open Sans" style="font-family:'Open Sans'; font-size:20px">Open Sans</option>
+						
+							<option value="Open Sans Light" style="font-family:'Open Sans Light'; font-size:20px">Open Sans Light</option>
+						
+							<option value="Open Sans SemiBold" style="font-family:'Open Sans SemiBold'; font-size:20px">Open Sans SemiBold</option>
+						
+							<option value="Optima" style="font-family:'Optima'; font-size:20px">Optima</option>
+						
+							<option value="Palatino Linotype" style="font-family:'Palatino Linotype'; font-size:20px">Palatino Linotype</option>
+						
+							<option value="San Diego" style="font-family:'San Diego'; font-size:20px">San Diego</option>
+						
+							<option value="Swis721 BT" style="font-family:'Swis721 BT'; font-size:20px">Swis721 BT</option>
+						
+							<option value="Times New Roman" style="font-family:'Times New Roman'; font-size:20px">Times New Roman</option>
+						
+							<option value="Trade Gothic Next" style="font-family:'Trade Gothic Next'; font-size:20px">Trade Gothic Next</option>
+						
+							<option value="Trade Gothic Next Condensed" style="font-family:'Trade Gothic Next Condensed'; font-size:20px">Trade Gothic Next Condensed</option>
+						
+							<option value="Trade Gothic Next Light" style="font-family:'Trade Gothic Next Light'; font-size:20px">Trade Gothic Next Light</option>
+						
+							<option value="Trebuchet MS" style="font-family:'Trebuchet MS'; font-size:20px">Trebuchet MS</option>
+						
+							<option value="US Roman" style="font-family:'US Roman'; font-size:20px">US Roman</option>
+						
+							<option value="Utah" style="font-family:'Utah'; font-size:20px">Utah</option>
+						
+							<option value="Verdana" style="font-family:'Verdana'; font-size:20px">Verdana</option>
+						
+							<option value="Zapf Chancery" style="font-family:'Zapf Chancery'; font-size:20px">Zapf Chancery</option>
+						
+					</select>
+					
+					
+					<input list="font-size-curve" id="textSize-curve" name="textSize" type="number" style="width: 65px; height: 24px;" >
+					<datalist id="font-size-curve">
+						
+							
+								
+							
+							<option value="8"></option>
+						
+							
+								
+							
+							<option value="9"></option>
+						
+							
+								
+							
+							<option value="10"></option>
+						
+							
+								
+							
+							<option value="11"></option>
+						
+							
+								
+							
+							<option value="12"></option>
+						
+							
+								
+							
+							<option value="13"></option>
+						
+							
+								
+							
+							<option value="14"></option>
+						
+							
+								
+							
+							<option value="15"></option>
+						
+							
+								
+							
+							<option value="16"></option>
+						
+							
+								
+							
+							<option value="17"></option>
+						
+							
+								
+							
+							<option value="18"></option>
+						
+							
+								
+							
+							<option value="19"></option>
+						
+							
+								
+							
+							<option value="20"></option>
+						
+							
+								
+							
+							<option value="21"></option>
+						
+							
+								
+							
+							<option value="22"></option>
+						
+							
+								
+							
+							<option value="23"></option>
+						
+							
+								
+							
+							<option value="24"></option>
+						
+							
+								
+							
+							<option value="25"></option>
+						
+							
+								
+							
+							<option value="26"></option>
+						
+							
+								
+							
+							<option value="27"></option>
+						
+							
+								
+							
+							<option value="28"></option>
+						
+							
+								
+							
+							<option value="29"></option>
+						
+							
+								
+							
+							<option value="30"></option>
+						
+							
+								
+							
+							<option value="31"></option>
+						
+							
+								
+							
+							<option value="32"></option>
+						
+							
+								
+							
+							<option value="33"></option>
+						
+							
+								
+							
+							<option value="34"></option>
+						
+							
+								
+							
+							<option value="35"></option>
+						
+							
+								
+							
+							<option value="36"></option>
+						
+							
+								
+							
+							<option value="37"></option>
+						
+							
+								
+							
+							<option value="38"></option>
+						
+							
+								
+							
+							<option value="39"></option>
+						
+							
+								
+							
+							<option value="40"></option>
+						
+							
+								
+							
+							<option value="41"></option>
+						
+							
+								
+							
+							<option value="42"></option>
+						
+							
+								
+							
+							<option value="43"></option>
+						
+							
+								
+							
+							<option value="44"></option>
+						
+							
+								
+							
+							<option value="45"></option>
+						
+							
+								
+							
+							<option value="46"></option>
+						
+							
+								
+							
+							<option value="47"></option>
+						
+							
+								
+							
+							<option value="48"></option>
+						
+							
+								
+							
+							<option value="49"></option>
+						
+							
+								
+							
+							<option value="50"></option>
+						
+							
+								
+							
+							<option value="51"></option>
+						
+							
+								
+							
+							<option value="52"></option>
+						
+							
+								
+							
+							<option value="53"></option>
+						
+							
+								
+							
+							<option value="54"></option>
+						
+							
+								
+							
+							<option value="55"></option>
+						
+							
+								
+							
+							<option value="56"></option>
+						
+							
+								
+							
+							<option value="57"></option>
+						
+							
+								
+							
+							<option value="58"></option>
+						
+							
+								
+							
+							<option value="59"></option>
+						
+							
+								
+							
+							<option value="60"></option>
+						
+							
+								
+							
+							<option value="61"></option>
+						
+							
+								
+							
+							<option value="62"></option>
+						
+							
+								
+							
+							<option value="63"></option>
+						
+							
+								
+							
+							<option value="64"></option>
+						
+							
+								
+							
+							<option value="65"></option>
+						
+							
+								
+							
+							<option value="66"></option>
+						
+							
+								
+							
+							<option value="67"></option>
+						
+							
+								
+							
+							<option value="68"></option>
+						
+							
+								
+							
+							<option value="69"></option>
+						
+							
+								
+							
+							<option value="70"></option>
+						
+							
+								
+							
+							<option value="71"></option>
+						
+							
+								
+							
+							<option value="72"></option>
+						
+							
+								
+							
+							<option value="73"></option>
+						
+							
+								
+							
+							<option value="74"></option>
+						
+							
+								
+							
+							<option value="75"></option>
+						
+							
+								
+							
+							<option value="76"></option>
+						
+							
+								
+							
+							<option value="77"></option>
+						
+							
+								
+							
+							<option value="78"></option>
+						
+							
+								
+							
+							<option value="79"></option>
+						
+							
+								
+							
+							<option value="80"></option>
+						
+							
+								
+							
+							<option value="81"></option>
+						
+							
+								
+							
+							<option value="82"></option>
+						
+							
+								
+							
+							<option value="83"></option>
+						
+							
+								
+							
+							<option value="84"></option>
+						
+							
+								
+							
+							<option value="85"></option>
+						
+							
+								
+							
+							<option value="86"></option>
+						
+							
+								
+							
+							<option value="87"></option>
+						
+							
+								
+							
+							<option value="88"></option>
+						
+							
+								
+							
+							<option value="89"></option>
+						
+							
+								
+							
+							<option value="90"></option>
+						
+							
+								
+							
+							<option value="91"></option>
+						
+							
+								
+							
+							<option value="92"></option>
+						
+							
+								
+							
+							<option value="93"></option>
+						
+							
+								
+							
+							<option value="94"></option>
+						
+							
+								
+							
+							<option value="95"></option>
+						
+							
+								
+							
+							<option value="96"></option>
+						
+							
+								
+							
+							<option value="97"></option>
+						
+							
+								
+							
+							<option value="98"></option>
+						
+							
+								
+							
+							<option value="99"></option>
+						
+							
+								
+							
+							<option value="100"></option>
+						
+							
+								
+							
+							<option value="101"></option>
+						
+							
+								
+							
+							<option value="102"></option>
+						
+							
+								
+							
+							<option value="103"></option>
+						
+							
+								
+							
+							<option value="104"></option>
+						
+							
+								
+							
+							<option value="105"></option>
+						
+							
+								
+							
+							<option value="106"></option>
+						
+							
+								
+							
+							<option value="107"></option>
+						
+							
+								
+							
+							<option value="108"></option>
+						
+							
+								
+							
+							<option value="109"></option>
+						
+							
+								
+							
+							<option value="110"></option>
+						
+							
+								
+							
+							<option value="111"></option>
+						
+							
+								
+							
+							<option value="112"></option>
+						
+							
+								
+							
+							<option value="113"></option>
+						
+							
+								
+							
+							<option value="114"></option>
+						
+							
+								
+							
+							<option value="115"></option>
+						
+							
+								
+							
+							<option value="116"></option>
+						
+							
+								
+							
+							<option value="117"></option>
+						
+							
+								
+							
+							<option value="118"></option>
+						
+							
+								
+							
+							<option value="119"></option>
+						
+							
+								
+							
+							<option value="120"></option>
+						
+							
+								
+							
+							<option value="121"></option>
+						
+							
+								
+							
+							<option value="122"></option>
+						
+							
+								
+							
+							<option value="123"></option>
+						
+							
+								
+							
+							<option value="124"></option>
+						
+							
+								
+							
+							<option value="125"></option>
+						
+							
+								
+							
+							<option value="126"></option>
+						
+							
+								
+							
+							<option value="127"></option>
+						
+							
+								
+							
+							<option value="128"></option>
+						
+							
+								
+							
+							<option value="129"></option>
+						
+							
+								
+							
+							<option value="130"></option>
+						
+							
+								
+							
+							<option value="131"></option>
+						
+							
+								
+							
+							<option value="132"></option>
+						
+							
+								
+							
+							<option value="133"></option>
+						
+							
+								
+							
+							<option value="134"></option>
+						
+							
+								
+							
+							<option value="135"></option>
+						
+							
+								
+							
+							<option value="136"></option>
+						
+							
+								
+							
+							<option value="137"></option>
+						
+							
+								
+							
+							<option value="138"></option>
+						
+							
+								
+							
+							<option value="139"></option>
+						
+							
+								
+							
+							<option value="140"></option>
+						
+							
+								
+							
+							<option value="141"></option>
+						
+							
+								
+							
+							<option value="142"></option>
+						
+							
+								
+							
+							<option value="143"></option>
+						
+							
+								
+							
+							<option value="144"></option>
+						
+							
+								
+							
+							<option value="145"></option>
+						
+							
+								
+							
+							<option value="146"></option>
+						
+							
+								
+							
+							<option value="147"></option>
+						
+							
+								
+							
+							<option value="148"></option>
+						
+							
+								
+							
+							<option value="149"></option>
+						
+							
+								
+							
+							<option value="150"></option>
+						
+							
+								
+							
+							<option value="151"></option>
+						
+							
+								
+							
+							<option value="152"></option>
+						
+							
+								
+							
+							<option value="153"></option>
+						
+							
+								
+							
+							<option value="154"></option>
+						
+							
+								
+							
+							<option value="155"></option>
+						
+							
+								
+							
+							<option value="156"></option>
+						
+							
+								
+							
+							<option value="157"></option>
+						
+							
+								
+							
+							<option value="158"></option>
+						
+							
+								
+							
+							<option value="159"></option>
+						
+							
+								
+							
+							<option value="160"></option>
+						
+							
+								
+							
+							<option value="161"></option>
+						
+							
+								
+							
+							<option value="162"></option>
+						
+							
+								
+							
+							<option value="163"></option>
+						
+							
+								
+							
+							<option value="164"></option>
+						
+							
+								
+							
+							<option value="165"></option>
+						
+							
+								
+							
+							<option value="166"></option>
+						
+							
+								
+							
+							<option value="167"></option>
+						
+							
+								
+							
+							<option value="168"></option>
+						
+							
+								
+							
+							<option value="169"></option>
+						
+							
+								
+							
+							<option value="170"></option>
+						
+							
+								
+							
+							<option value="171"></option>
+						
+							
+								
+							
+							<option value="172"></option>
+						
+							
+								
+							
+							<option value="173"></option>
+						
+							
+								
+							
+							<option value="174"></option>
+						
+							
+								
+							
+							<option value="175"></option>
+						
+							
+								
+							
+							<option value="176"></option>
+						
+							
+								
+							
+							<option value="177"></option>
+						
+							
+								
+							
+							<option value="178"></option>
+						
+							
+								
+							
+							<option value="179"></option>
+						
+							
+								
+							
+							<option value="180"></option>
+						
+							
+								
+							
+							<option value="181"></option>
+						
+							
+								
+							
+							<option value="182"></option>
+						
+							
+								
+							
+							<option value="183"></option>
+						
+							
+								
+							
+							<option value="184"></option>
+						
+							
+								
+							
+							<option value="185"></option>
+						
+							
+								
+							
+							<option value="186"></option>
+						
+							
+								
+							
+							<option value="187"></option>
+						
+							
+								
+							
+							<option value="188"></option>
+						
+							
+								
+							
+							<option value="189"></option>
+						
+							
+								
+							
+							<option value="190"></option>
+						
+							
+								
+							
+							<option value="191"></option>
+						
+							
+								
+							
+							<option value="192"></option>
+						
+					</datalist>
+				</div>
+				<div>
+					<div class="flexBoxCenterAlign">
+						<input type="image" src="vendor/icons/BoldButton.svg" title="Bold" class="iconButtonBig" onclick="fontWeightChanged(currentCanvas,activeLine)" id="boldBtn-curve" alt="Bold">
+						<input type="image" src="vendor/icons/ItalicButton.svg" title="Italic" class="iconButtonBig" onclick="fontStyleChanged(currentCanvas,activeLine)" id="italicBtn-curve" alt="Italic">
+						<input type="image" src="vendor/icons/UnderlineButton.svg" title="Underline" class="iconButtonBig"  onclick="fontUnderlineChanged(currentCanvas,activeLine)" id="underlineBtn-curve" alt="Underline">
+						<div>
+							<input type="radio" name="alignRadio" title="Left Align Text Block" style="display:none;" onclick="textAlign(currentCanvas,'left');" id="leftTextBtn-curve" value="left" class="iconButtonRadio">
+							<label for="leftTextBtn-curve" id="leftTextBtnLbl-curve" title="Left Align Text Block"  class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/LeftAlignButton.svg'); "></label>
+						</div>
+						<div>
+							<input type="radio" name="alignRadio" title="Center Align Text block" style="display:none;" onclick="textAlign(currentCanvas,'center');" id="centerTextBtn-curve" value="center" class="iconButtonRadio">
+							<label for="centerTextBtn-curve" id="centerTextBtnLbl-curve" title="Center Align Text block" class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/CenterAlignButton.svg'); "></label>
+						</div>
+						<div>
+							<input type="radio" name="alignRadio" title="Right Align Text Block" style="display:none;" onclick="textAlign(currentCanvas,'right');" id="rightTextBtn-curve" value="right" class="iconButtonRadio">
+							<label for="rightTextBtn-curve" id="rightTextBtnLbl-curve" title="Right Align Text Block"  class="iconButton iconButtonBig" style=" display: inline-block; background-image: url('vendor/icons/RightAlignButton.svg'); "></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+				<div>
+					Character Spacing:
+					<div style="display: flex; justify-content: space-between;">
+						
+						<input type="range" min="1" max="10" step="0.1" value="1" id="charSpacing-curve" style="flex-grow: 1;">
+						<button class="mui-btn mui-btn--primary"  onclick="setCurveSpacing(5,activeLine);" style="flex-grow: 0;">Reset</button>
+					</div>
+				</div>
+				<div>
+					Curve Radius:
+					<div style="display: flex; justify-content: space-between;">
+						<input type="range" min="10" max="400" step="1" value="50" id="radius-curve" style="flex-grow: 1;">
+						<button class="mui-btn mui-btn--primary"  onclick="setCurveRadius(50,activeLine);" style="flex-grow: 0;">Reset</button>
+					</div>
+				</div>
+				<div>
+					<span>
+					<input type="checkbox" name="curveSwitch" title="Left Align Text Block" style="display:none;" id="curveSwitchInput" value="curve" class="iconButtonRadio">
+					<label for="curveSwitchInput" id="curveSwitchInputLbl" title="Direction" class="mui-btn mui-btn--primary">Direction</label>
+					</span>
+				</div>
+			
+			
+		</div>
+		</div>
+	
+	
+		
+		 
+		 
+		<div  id="backgroundColourMenu">
+		<div>
+			<div style="text-align:left;margin-bottom:.2cm;">
+				 
+				
+				<div class="colors">
+					<div class="colors-container leftCol">
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ffffff" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 255, 255); margin-left: 0px; border:1px solid black;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#c1b7ad" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 183, 173); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#a69d94" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(166, 157, 148); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#665a53" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(102, 90, 83); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#1a1a19" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(26, 26, 25); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#d2d0cd" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 208, 205); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#878788" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 135, 136); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#444448" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 68, 72); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ac002c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 0, 44); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#e6a997" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(230, 169, 151); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#b2554d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(178, 85, 77); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#6c1e20" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(108, 30, 32); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#b91020" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 16, 32); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#e07a65" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(224, 122, 101); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#d70033" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(215, 0, 51); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#871821" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 24, 33); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#f84c05" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 76, 5); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#fda240" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(253, 162, 64); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ff7900" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 121, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#c74800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 72, 0); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#f8a800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 168, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#f6ce58" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(246, 206, 88); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#eeb100" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 177, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#c17d00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 125, 0); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ffe500" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 229, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#f7da33" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(247, 218, 51); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#fad700" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(250, 215, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ffbb00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 187, 0); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#00903a" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 144, 58); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#9bdfaa" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(155, 223, 170); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#45844d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(69, 132, 77); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#1e4624" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(30, 70, 36); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#8ad000" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(138, 208, 0); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#c4e767" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(196, 231, 103); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#98cf44" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(152, 207, 68); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#44932d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 147, 45); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<label for="customcolour">Custom: </label>
+						</div>
+					</div>
+					<div class="colors-container">
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#00b1a5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 177, 165); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#8ed4c4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(142, 212, 196); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#50b9a2" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(80, 185, 162); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#006360" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 99, 96); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#005798" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 87, 152); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#2f89d9" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(47, 137, 217); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#213c7f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(33, 60, 127); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#0f1931" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(15, 25, 49); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#4ba6e1" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(75, 166, 225); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#93d3e5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(147, 211, 229); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#00a5de" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 165, 222); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#004b71" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 75, 113); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#422266" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(66, 34, 102); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#9a91da" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 145, 218); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#634f90" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(99, 79, 144); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#1b1528" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(27, 21, 40); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ac87ba" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 135, 186); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#dfaed4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(223, 174, 212); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#926096" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(146, 96, 150); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#8c43b4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(140, 67, 180); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ed64a7" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(237, 100, 167); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#ee84ac" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 132, 172); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#e53285" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(229, 50, 133); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#d50063" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(213, 0, 99); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#bb678c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(187, 103, 140); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#c77c98" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 124, 152); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#a4446d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(164, 68, 109); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#6e243c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(110, 36, 60); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#4f2b1f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(79, 43, 31); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#b9967d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 150, 125); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#825745" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(130, 87, 69); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#3d281e" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(61, 40, 30); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#be8f60" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(190, 143, 96); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#d2b193" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 177, 147); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#9a6843" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 104, 67); margin-left: 0px;"/>
+							<button type="button" class="mui-btn btn-color backColourButton colorSwatch" data-color="#4d270b" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(77, 39, 11); margin-left: 0px;"/>
+						</div>
+						<div class="colors-group">
+								<input type="color" id="customBackgroundColour" class="customBackgroundColour" value="#000000">
+						</div>
+					</div>
+				</div>
+				<div class="clear">
+				</div>
+			</div>
+		</div>
+		</div>
+		
+	
+	
+	
+		 
+		<div  id="imagesMenu">
+		<div>
+			<div id="imageWarning" style="color: red; font-weight: bold;">
+			</div>
+			<form action="designerImageUpload.cfm" class="dropzone" id="foregroundImageForm">
+				<div class="fallback">
+					<input name="file" type="file"/>
+				</div>
+			</form>
+			<div>
+				<input id="btnDeleteText" type="image" alt="Delete" title="Delete" src="vendor/icons/GarbageCanButton.svg" style="height:30px; width:30px;" onclick="deleteObject(currentCanvas)">
+			</div>
+			
+				<div class="flexBoxLeftAlign">
+					<input type="image" src="vendor/icons/LeftObjectAlign.svg" title="Left Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'left')" alt="Left Align Object">
+					<input type="image" src="vendor/icons/CenterObjectHorizontally.svg" title="Center Object Horizontally" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'center')" alt="Center Object Horizontally">
+					<input type="image" src="vendor/icons/RightObjectAlign.svg" title="Right Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'right')" alt="Right Align Object">
+					<input type="image" src="vendor/icons/TopObjectAlign.svg" title="Top Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'top')" alt="Top Align Object">
+					<input type="image" src="vendor/icons/CenterObjectVertically.svg" title="Center Object Vertically" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'middle')" alt="Center Object Vertically">
+					<input type="image" src="vendor/icons/BottomObjectAlign.svg" title="Bottom Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'bottom')" alt="Bottom Align Object">
+				</div>
+				<div class="flexBoxLeftAlign">
+					<input type="image" src="vendor/icons/Back.svg" id="toBack"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendToBack')" alt="Send to Back" title="Send to Back">
+					<input type="image" src="vendor/icons/Backward.svg" id="backward" class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendBackwards')" alt="Send Backwards" title="Send Backwards">
+					<input type="image" src="vendor/icons/Forward.svg" id="forward" class="iconButtonBig" onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringForward')" alt="Bring Forward" title="Bring Forward">
+					<input type="image" src="vendor/icons/Front.svg"  id="toFront"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringToFront')" alt="Bring to Front" title="Bring to Front">
+				</div>
+				<div>
+					<label for="imageY" class="specInputLabel">Top</label>
+					<input type="number" id="imageY" class="specInputNumber">
+					<br>
+					<label for="imageX" class="specInputLabel">Left</label>
+					<input type="number" id="imageX" class="specInputNumber">
+					<br>
+					<label for="imageHeight" class="specInputLabel">Height</label>
+					<input type="number" id="imageHeight" class="specInputNumber">
+					&nbsp;X&nbsp;
+					<label for="imageWidth" class="specInputLabel">Width</label>
+					<input type="number" id="imageWidth" class="specInputNumber">
+				</div>
+			
+		</div>
+		</div>
+		
+	
+	 
+	 
+	 
+	<div  id="toolsMenu">
+	<div>
+		<div class="flexBoxLeftAlign">
+			<input type="image" src="vendor/icons/Zoomin.svg" id="zoomIn" class="iconButtonBig" style="padding:5px;" onclick="zoomPlus(currentCanvas);" title="Zoom In" alt="Zoom In">
+			<input type="image" src="vendor/icons/ZoomOut.svg" id="ZoomOut" class="iconButtonBig" style="padding:5px;" onclick="zoomMinus(currentCanvas);" title="Zoom Out" alt="Zoom Out">
+			<input type="image" src="vendor/icons/ActualSize.svg" id="ActualSize" class="iconButtonBig" style="padding:5px;" onclick="zoomInBy(currentCanvas,1)" title="Actual Size" alt="Actual Size">
+			<input type="image" src="vendor/icons/FitScreen.svg"  id="FitScreen"  class="iconButtonBig" style="padding:5px;" onclick="fitToScreen(currentCanvas)" title="Fit to Screen" alt="Fit to Screen">
+		</div>
+		
+		
+			<div class="flexBoxLeftAlign">
+				<input type="image" src="vendor/icons/LeftObjectAlign.svg" title="Left Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'left')" alt="Left Align Object">
+				<input type="image" src="vendor/icons/CenterObjectHorizontally.svg" title="Center Object Horizontally" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'center')" alt="Center Object Horizontally">
+				<input type="image" src="vendor/icons/RightObjectAlign.svg" title="Right Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'right')" alt="Right Align Object">
+				<input type="image" src="vendor/icons/TopObjectAlign.svg" title="Top Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'top')" alt="Top Align Object">
+				<input type="image" src="vendor/icons/CenterObjectVertically.svg" title="Center Object Vertically" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'middle')" alt="Center Object Vertically">
+				<input type="image" src="vendor/icons/BottomObjectAlign.svg" title="Bottom Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'bottom')" alt="Bottom Align Object">
+			</div>
+			<div class="flexBoxLeftAlign">
+				<input type="image" src="vendor/icons/Back.svg" id="toBack"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendToBack')" alt="Send to Back" title="Send to Back">
+				<input type="image" src="vendor/icons/Backward.svg" id="backward" class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendBackwards')" alt="Send Backwards" title="Send Backwards">
+				<input type="image" src="vendor/icons/Forward.svg" id="forward" class="iconButtonBig" onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringForward')" alt="Bring Forward" title="Bring Forward">
+				<input type="image" src="vendor/icons/Front.svg"  id="toFront"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringToFront')" alt="Bring to Front" title="Bring to Front">
+			</div>
+			<div>
+				<button class="mui-btn mui-btn--primary"  onclick="toggleGuides(currentCanvas)" style="width: 100%">Toggle Safe Area Guides</button>
+			</div>
+			
+				<div>
+					<button class="mui-btn mui-btn--primary"  onclick="rotate(currentCanvas, 'shrink')" style="width: 100%">Rotate Canvas</button>
+				</div>
+			
+			 
+			
+		
+			</div>
+		</div>
+
+		<div  id="shapesMenu">
+
+
+
+		<div>
+
+					<div class="flexBoxLeftAlign">
+						<input type="image" src="vendor/icons/AddShape_Line.svg" title="Line" class="iconButtonBig"  onclick="addShape(currentCanvas,'line')" alt="Line">
+						<input type="image" src="vendor/icons/AddShape_Triangle.svg" title="Triangle" class="iconButtonBig"  onclick="addShape(currentCanvas,'triangle')" alt="Triangle">
+						<input type="image" src="vendor/icons/AddShape_Rect.svg" title="Rectangle" class="iconButtonBig"  onclick="addShape(currentCanvas,'rect')" alt="Rectangle">
+						<input type="image" src="vendor/icons/AddShape_Circle.svg" title="Circle" class="iconButtonBig"  onclick="addShape(currentCanvas,'circle')" alt="Circle">
+						<input type="image" src="vendor/icons/AddShape_Ellipse.svg" title="ellipse" class="iconButtonBig"  onclick="addShape(currentCanvas,'ellipse')" alt="ellipse">
+					</div>
+
+
+
+					
+
+					
+
+					
+						<div class="flexBoxLeftAlign">
+							<input type="image" src="vendor/icons/LeftObjectAlign.svg" title="Left Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'left')" alt="Left Align Object">
+							<input type="image" src="vendor/icons/CenterObjectHorizontally.svg" title="Center Object Horizontally" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'center')" alt="Center Object Horizontally">
+							<input type="image" src="vendor/icons/RightObjectAlign.svg" title="Right Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'right')" alt="Right Align Object">
+							<input type="image" src="vendor/icons/TopObjectAlign.svg" title="Top Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'top')" alt="Top Align Object">
+							<input type="image" src="vendor/icons/CenterObjectVertically.svg" title="Center Object Vertically" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'middle')" alt="Center Object Vertically">
+							<input type="image" src="vendor/icons/BottomObjectAlign.svg" title="Bottom Align Object" class="iconButtonBig"  onclick="objectAlign(currentCanvas,'bottom')" alt="Bottom Align Object">
+						</div>
+						<div class="flexBoxLeftAlign">
+							<input type="image" src="vendor/icons/Back.svg" id="toBack"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendToBack')" alt="Send to Back" title="Send to Back">
+							<input type="image" src="vendor/icons/Backward.svg" id="backward" class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'sendBackwards')" alt="Send Backwards" title="Send Backwards">
+							<input type="image" src="vendor/icons/Forward.svg" id="forward" class="iconButtonBig" onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringForward')" alt="Bring Forward" title="Bring Forward">
+							<input type="image" src="vendor/icons/Front.svg"  id="toFront"  class="iconButtonBig"  onclick="changeLayer(currentCanvas,currentCanvas.getActiveObject(),'bringToFront')" alt="Bring to Front" title="Bring to Front">
+						</div>
+						<div>
+							<label for="shapeY" class="specInputLabel">Top</label>
+							<input type="number" id="shapeY" class="specInputNumber">
+							<br>
+							<label for="shapeX" class="specInputLabel">Left</label>
+							<input type="number" id="shapeX" class="specInputNumber">
+							<br>
+							<label for="shapeHeight" class="specInputLabel">Height</label>
+							<input type="number" id="shapeHeight" class="specInputNumber">
+							&nbsp; X &nbsp;
+							<label for="shapeWidth" class="specInputLabel">Width</label>
+							<input type="number" id="shapeWidth" class="specInputNumber">
+							<br>
+							<label for="sweight" class="specInputLabel">Stroke</label>
+							<input type="number" id="sweight" name="strokeWeight" class="specInputNumber" placeholder="1" min="0" max="20" step="0.1">
+							px
+							
+						</div>
+					
+					
+					<div class="fillStrokeContainer">
+								<div class="colorMenuButton" data-selectedType="fill">
+							<div id = "fillColorSelect"></div>
+							<div>Fill</div>
+						</div>
+
+						<div class="colorMenuButton" data-selectedType="stroke">
+							<div id = "strokeColorSelect"></div>
+							<div>Stroke</div>
+						</div>
+</div>
+						
+
+
+					<div id="colorMenu" class = "showColorMenu">
+						
+							<div style="text-align:left;margin-bottom:.2cm;">
+							<div class="colors">
+								<div class="colors-container leftCol">
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ffffff" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 255, 255); margin-left: 0px; border:1px solid black;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#c1b7ad" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 183, 173); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#a69d94" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(166, 157, 148); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#665a53" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(102, 90, 83); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#1a1a19" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(26, 26, 25); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#d2d0cd" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 208, 205); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#878788" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 135, 136); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#444448" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 68, 72); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ac002c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 0, 44); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#e6a997" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(230, 169, 151); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#b2554d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(178, 85, 77); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#6c1e20" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(108, 30, 32); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#b91020" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 16, 32); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#e07a65" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(224, 122, 101); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#d70033" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(215, 0, 51); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#871821" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(135, 24, 33); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#f84c05" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 76, 5); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#fda240" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(253, 162, 64); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ff7900" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 121, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#c74800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 72, 0); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#f8a800" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(248, 168, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#f6ce58" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(246, 206, 88); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#eeb100" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 177, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#c17d00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(193, 125, 0); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ffe500" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 229, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#f7da33" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(247, 218, 51); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#fad700" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(250, 215, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ffbb00" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(255, 187, 0); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#00903a" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 144, 58); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#9bdfaa" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(155, 223, 170); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#45844d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(69, 132, 77); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#1e4624" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(30, 70, 36); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#8ad000" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(138, 208, 0); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#c4e767" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(196, 231, 103); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#98cf44" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(152, 207, 68); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#44932d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(68, 147, 45); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="transparent" data-toggle-class="active" data-toggle-class-group="font-color" style="  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 20px 20px; margin-left: 0px; border:1px solid black;"/>
+									</div>
+								</div>
+								<div class="colors-container">
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#00b1a5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 177, 165); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#8ed4c4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(142, 212, 196); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#50b9a2" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(80, 185, 162); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#006360" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 99, 96); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#005798" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 87, 152); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#2f89d9" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(47, 137, 217); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#213c7f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(33, 60, 127); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#0f1931" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(15, 25, 49); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#4ba6e1" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(75, 166, 225); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#93d3e5" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(147, 211, 229); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#00a5de" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 165, 222); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#004b71" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(0, 75, 113); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#422266" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(66, 34, 102); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#9a91da" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 145, 218); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#634f90" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(99, 79, 144); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#1b1528" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(27, 21, 40); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ac87ba" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(172, 135, 186); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#dfaed4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(223, 174, 212); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#926096" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(146, 96, 150); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#8c43b4" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(140, 67, 180); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ed64a7" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(237, 100, 167); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#ee84ac" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(238, 132, 172); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#e53285" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(229, 50, 133); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#d50063" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(213, 0, 99); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#bb678c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(187, 103, 140); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#c77c98" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(199, 124, 152); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#a4446d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(164, 68, 109); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#6e243c" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(110, 36, 60); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#4f2b1f" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(79, 43, 31); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#b9967d" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(185, 150, 125); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#825745" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(130, 87, 69); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#3d281e" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(61, 40, 30); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#be8f60" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(190, 143, 96); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#d2b193" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(210, 177, 147); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#9a6843" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(154, 104, 67); margin-left: 0px;"/>
+										<button type="button" class="mui-btn btn-color shapeColourButton colorSwatch" data-color="#4d270b" data-toggle-class="active" data-toggle-class-group="font-color" style="background: rgb(77, 39, 11); margin-left: 0px;"/>
+									</div>
+									<div class="colors-group">
+										<label for="customcolour">Custom: </label>
+										<input type="color" class="customShapeColour" value="#000000">
+									</div>
+								</div>
+							</div>
+							<div class="clear">
+							</div>
+						</div>
+					</div>
+							
+						
+
+
+		</div>
+		</div>
+	</div>
+</aside>
+<script>
+var els = document.getElementsByClassName('collapsible-header');
+for (var i = 0; i < els.length; i++) {
+	els[i].addEventListener('click', function(ev) {
+		// toggle element
+		var bodyEl = this.nextElementSibling;
+		//if (bodyEl.style.maxHeight) {
+		//bodyEl.style.maxHeight = null;
+		//} else {
+		bodyEl.style.maxHeight = bodyEl.scrollHeight + 'px';
+		//}
+		// hide others
+		var els = this.parentNode.querySelectorAll('.collapsible-body');
+		for (var i = 0; i < els.length; i++) {
+			if (els[i] !== bodyEl) els[i].style.maxHeight = null;
+		}
+		var els = this.parentNode.querySelectorAll('.collapsible-header>i');
+		for (var i = 0; i < els.length; i++) {
+			if (els[i].parentElement !== this) {
+				els[i].classList.remove("menuOpenArrow");
+			} else {
+				els[i].classList.add("menuOpenArrow");
+			}
+		}
+	});
+}
+// Function from David Walsh: http://davidwalsh.name/css-animation-callback
+function whichTransitionEvent() {
+	var t,
+		el = document.createElement("fakeelement");
+
+	var transitions = {
+		"transition": "transitionend",
+		"OTransition": "oTransitionEnd",
+		"MozTransition": "transitionend",
+		"WebkitTransition": "webkitTransitionEnd"
+	}
+
+	for (t in transitions) {
+		if (el.style[t] !== undefined) {
+			return transitions[t];
+		}
+	}
+}
+
+function whichAnimationEvent() {
+	var t;
+	var el = document.createElement("fakeelement");
+
+	var animations = {
+		"animation": "animationend",
+		"OAnimation": "oAnimationEnd",
+		"MozAnimation": "animationend",
+		"WebkitAnimation": "webkitAnimationEnd"
+	}
+
+	for (t in animations) {
+		if (el.style[t] !== undefined) {
+			return animations[t];
+		}
+	}
+}
+
+var transitionEvent = whichTransitionEvent();
+var collapsibleBodies = document.querySelectorAll(".collapsible-body");
+for (i = 0; i < collapsibleBodies.length; ++i) {
+	collapsibleBodies[i].addEventListener(transitionEvent, fixHopscotch);
+}
+
+
+function fixHopscotch(event) {
+	if (hopscotch !== void 0 && hopscotch !== null) {
+		hopscotch.refreshBubblePosition();
+	}
+}
+</script>
+<main>
+	<noscript>
+	JavaScript may not be enabled in your browser. Please enable to view this page or use a different browser.
+	</noscript>
+	<table class="rulerTable">
+		<tr>
+			<td>
+				<button class="mui-btn" onClick="changeRulerUnit();" id="changeRulerUnitButton">"</button>
+			</td>
+			<td id="topRulerContainer">
+				<div>
+					<canvas id="canvasTopRuler" height="40px;" ></canvas>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td id="leftRulerContainer">
+				<div>
+					<canvas id="canvasLeftRuler" width="40px;"> </canvas>
+				</div>
+			</td>
+			<td>
+				<div id="canvasParent">
+				<div style="text-align:center;" id="canvdim">
+					<canvas id="canvasPage" style="z-index: 1; position: absolute; top:0; left: 0;" > Your browser does not support this application.  Please use a current browser. If you are using Internet Explorer, make sure compatibility view is turned off for this site. </canvas>
+					<canvas id="canvasBackground" style="z-index: 0; position: absolute; top:0; left: 0;" > </canvas>
+				</div>
+				<div id="floatingMenu">
+					<div class="floatingMenuButton">
+						<button class="mui-btn" onclick="zoomInBy(currentCanvas,1)"><i class="material-icons"> zoom_in_map </i></button>
+					</div>
+					<div class="floatingMenuButton">
+						<button class="mui-btn" onclick="zoomMinus(currentCanvas)"><i class="material-icons"> zoom_out </i></button>
+					</div>
+					<div class="floatingMenuButton">
+						<span id="zoomPercent">100%</span>
+					</div>
+					<div class="floatingMenuButton">
+						<button class="mui-btn" onclick="zoomPlus(currentCanvas)"><i class="material-icons"> zoom_in </i></button>
+					</div>
+					<div class="floatingMenuButton">
+						<button class="mui-btn" onclick="fitToScreen(currentCanvas)"><i class="material-icons"> zoom_out_map </i></button>
+					</div>
+					<div class="floatingMenuButton">
+						<button class="mui-btn" onclick="preview()"><i class="material-icons"> remove_red_eye </i></button>
+					</div>
+					<div class="radio-group" id="pageSelectButtonContainer">
+						<input type="radio" id="pageSelectButton1" name="pageSelector" value="pageSelectButton1" checked="" onclick="currentCanvas = selectCanvas(0)">
+						<label for="pageSelectButton1">Page 1</label>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</main>
+<div class="designe rHolder" id="designerHolderID" >
+	<div id="overlay" class="designerLoadingOverlay" style="background-color:white; visibility:collapse; height:0 ">
+		
+		
+		
+		<div id="fntinit" style="color:white; background-color:white;">
+			
+				<span class= "initFo nt" style="font-family:'Arial';"></span> <span class= "initFo nt" style="font-family:'Arial';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Arial';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Arial';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Arial Narrow';"></span> <span class= "initFo nt" style="font-family:'Arial Narrow';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Arial Narrow';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Arial Narrow';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Aptos';"></span> <span class= "initFo nt" style="font-family:'Aptos';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Aptos';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Aptos';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Atlanta';"></span> <span class= "initFo nt" style="font-family:'Atlanta';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Atlanta';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Atlanta';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Atlantic Inline';"></span> <span class= "initFo nt" style="font-family:'Atlantic Inline';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Atlantic Inline';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Atlantic Inline';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Belgium';"></span> <span class= "initFo nt" style="font-family:'Belgium';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Belgium';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Belgium';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Bentham';"></span> <span class= "initFo nt" style="font-family:'Bentham';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Bentham';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Bentham';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Bermuda Script';"></span> <span class= "initFo nt" style="font-family:'Bermuda Script';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Bermuda Script';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Bermuda Script';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'BrushScriptStd';"></span> <span class= "initFo nt" style="font-family:'BrushScriptStd';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'BrushScriptStd';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'BrushScriptStd';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Castle Com';"></span> <span class= "initFo nt" style="font-family:'Castle Com';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Castle Com';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Castle Com';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Calibri';"></span> <span class= "initFo nt" style="font-family:'Calibri';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Calibri';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Calibri';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Clarendon BT';"></span> <span class= "initFo nt" style="font-family:'Clarendon BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Clarendon BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Clarendon BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Cooper Md BT';"></span> <span class= "initFo nt" style="font-family:'Cooper Md BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Cooper Md BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Cooper Md BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Courier New';"></span> <span class= "initFo nt" style="font-family:'Courier New';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Courier New';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Courier New';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'FleurishScript';"></span> <span class= "initFo nt" style="font-family:'FleurishScript';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'FleurishScript';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'FleurishScript';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Franklin Gothic ITC Bk BT';"></span> <span class= "initFo nt" style="font-family:'Franklin Gothic ITC Bk BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Franklin Gothic ITC Bk BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Franklin Gothic ITC Bk BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Futura Md BT';"></span> <span class= "initFo nt" style="font-family:'Futura Md BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Futura Md BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Futura Md BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Futura Hv BT';"></span> <span class= "initFo nt" style="font-family:'Futura Hv BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Futura Hv BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Futura Hv BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Futura Bk BT';"></span> <span class= "initFo nt" style="font-family:'Futura Bk BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Futura Bk BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Futura Bk BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Germany';"></span> <span class= "initFo nt" style="font-family:'Germany';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Germany';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Germany';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Gill Sans MT';"></span> <span class= "initFo nt" style="font-family:'Gill Sans MT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Gill Sans MT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Gill Sans MT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Goudy Old Style';"></span> <span class= "initFo nt" style="font-family:'Goudy Old Style';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Goudy Old Style';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Goudy Old Style';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Helsinki Narrow';"></span> <span class= "initFo nt" style="font-family:'Helsinki Narrow';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Helsinki Narrow';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Helsinki Narrow';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Helvetica';"></span> <span class= "initFo nt" style="font-family:'Helvetica';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Helvetica';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Helvetica';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Istanbul';"></span> <span class= "initFo nt" style="font-family:'Istanbul';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Istanbul';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Istanbul';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Myriad Pro';"></span> <span class= "initFo nt" style="font-family:'Myriad Pro';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Myriad Pro';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Myriad Pro';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Myriad Pro Condensed';"></span> <span class= "initFo nt" style="font-family:'Myriad Pro Condensed';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Myriad Pro Condensed';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Myriad Pro Condensed';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Open Sans';"></span> <span class= "initFo nt" style="font-family:'Open Sans';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Open Sans';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Open Sans';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Open Sans Light';"></span> <span class= "initFo nt" style="font-family:'Open Sans Light';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Open Sans Light';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Open Sans Light';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Open Sans SemiBold';"></span> <span class= "initFo nt" style="font-family:'Open Sans SemiBold';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Open Sans SemiBold';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Open Sans SemiBold';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Optima';"></span> <span class= "initFo nt" style="font-family:'Optima';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Optima';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Optima';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Palatino Linotype';"></span> <span class= "initFo nt" style="font-family:'Palatino Linotype';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Palatino Linotype';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Palatino Linotype';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'San Diego';"></span> <span class= "initFo nt" style="font-family:'San Diego';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'San Diego';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'San Diego';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Swis721 BT';"></span> <span class= "initFo nt" style="font-family:'Swis721 BT';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Swis721 BT';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Swis721 BT';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Times New Roman';"></span> <span class= "initFo nt" style="font-family:'Times New Roman';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Times New Roman';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Times New Roman';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Trade Gothic Next';"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Trade Gothic Next';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Trade Gothic Next Condensed';"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next Condensed';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next Condensed';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Trade Gothic Next Condensed';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Trade Gothic Next Light';"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next Light';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Trade Gothic Next Light';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Trade Gothic Next Light';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Trebuchet MS';"></span> <span class= "initFo nt" style="font-family:'Trebuchet MS';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Trebuchet MS';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'US Roman';"></span> <span class= "initFo nt" style="font-family:'US Roman';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'US Roman';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'US Roman';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Utah';"></span> <span class= "initFo nt" style="font-family:'Utah';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Utah';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Utah';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Verdana';"></span> <span class= "initFo nt" style="font-family:'Verdana';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Verdana';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Verdana';font-weight:bold;font-style:italic;"></span>
+			
+				<span class= "initFo nt" style="font-family:'Zapf Chancery';"></span> <span class= "initFo nt" style="font-family:'Zapf Chancery';font-weight:bold;"></span> <span class= "initFo nt" style="font-family:'Zapf Chancery';font-style:italic;"></span> <span class= "initFo  nt" style="font-family:'Zapf Chancery';font-weight:bold;font-style:italic;"></span>
+			
+		</div>
+	</div>
+</div>
+
+
+	
+	
+
+	
+
+
+<script>
+	/*function disableBack() {
+		//debugger;
+		var queryDict = {};
+		location.search.substr(1).split("&").forEach(function (item) {
+			queryDict[item.split("=")[0]] = item.split("=")[1]
+		});
+		if (queryDict['design'] === saveCode) {
+			window.location = window.location & "?design=6F88B82B\-7BD2\-4A1F\-BB60F5ECDB2D2408\x26template=32910\x26product=6505&"
+		}
+	}*/
+$(document).ready(function () {
+	var userAgentString = navigator.userAgent;
+	var IExplorerAgent = (userAgentString.indexOf("MSIE") > -1 || userAgentString.indexOf("rv:") > -1) && userAgentString.indexOf("Firefox") == -1;
+	if (IExplorerAgent){
+		 toastr["info"]("You may be using Internet Explorer, which is no longer supported.  Please use one of the following browsers for best results: Google Chrome, Apple Safari, Mozilla Firefox, or Microsoft Edge.  The designer will function in Internet Explorer, but may have some issues with large canvases");
+	}
+
+	
+	/*
+	window.onload = disableBack();
+	window.onpageshow = function (evt) {
+		if (evt.persisted) disableBack()
+	}
+	var locationString = "Designer.cfm?design=6F88B82B\-7BD2\-4A1F\-BB60F5ECDB2D2408\x26template=32910\x26product=6505";
+	if(simpleMode){
+		locationString += "&simple=true";
+	} else {
+		locationString += "&simple=false";
+	}
+	history.replaceState({}, 'Designer', locationString);
+	*/
+	window.dataChunk = {};
+});
+function pageShown(evt){
+	if (evt.persisted) {
+		//alert("pageshow event handler called.  The page was just restored from the Page Cache (eg. From the Back button.");
+		//TODO: add a handler here to clean up from the Add to Cart events. ----> save state as a special name before save, then reload state when back to page.
+		for (i = 0; i < canvases.length; i++) {
+			undo(canvases[i]);
+		}
+	} else {
+		//alert("pageshow event handler called for the initial load.  This is the same as the load event.");
+	}
+}
+function pageHidden(evt){
+	if (evt.persisted) {
+		//alert("pagehide event handler called.  The page was suspended and placed into the Page Cache.");
+	} else {
+		//alert("pagehide event handler called for page destruction.  This is the same as the unload event.");
+	}
+}
+window.addEventListener("pageshow", pageShown, false);
+window.addEventListener("pagehide", pageHidden, false);
+
+
+</script> 
+ 
+ 
+
+</body>
+</html>
