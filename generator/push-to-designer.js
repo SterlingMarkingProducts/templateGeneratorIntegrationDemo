@@ -579,30 +579,63 @@ function splitTopLevel(str) {
 }
 
 /* Build the version 1.2 envelope around extracted pages. */
-/* Scale + offset every object so the trim-sized design covers the full bleed
- * canvas (edges extend past the trim into the bleed, like a print "scale to
- * bleed"). Mutates objects in place. */
-function scaleObjectsForBleed(objects, s, offX, offY) {
+
+/* Cover-scale a single object so a trim-sized element grows to cover the full
+ * bleed canvas (edges extend past the trim, like a print "scale to bleed"). */
+function coverScaleObject(o, s, offX, offY) {
+  o.left = round2((o.left || 0) * s + offX);
+  o.top = round2((o.top || 0) * s + offY);
+  if (o.type === 'image') {
+    o.scaleX = round4((o.scaleX || 1) * s); o.scaleY = round4((o.scaleY || 1) * s);
+  } else if (o.type === 'rect') {
+    o.width = round2(o.width * s); o.height = round2(o.height * s);
+    if (o.rx) o.rx = round2(o.rx * s); if (o.ry) o.ry = round2(o.ry * s);
+  } else if (o.type === 'circle') {
+    o.radius = round2(o.radius * s);
+  } else if (o.type === 'ellipse') {
+    o.rx = round2(o.rx * s); o.ry = round2(o.ry * s);
+  } else if (o.type === 'polygon' && Array.isArray(o.points)) {
+    o.points = o.points.map(p => ({ x: round2(p.x * s), y: round2(p.y * s) }));
+    if (o.width) o.width = round2(o.width * s);
+    if (o.height) o.height = round2(o.height * s);
+  }
+}
+
+/* Does this object act as the card background (it should bleed off every edge)
+ * rather than as foreground content (which must stay inside the safe area)? */
+function isBackgroundObject(o, trimW, trimH) {
+  if (o.sterlingType === 'backgroundArt' || o.sterlingType === 'fixedImage') return true;
+  if (o.type !== 'image' && o.type !== 'rect') return false;
+  const w = (o.width || 0) * (o.scaleX || 1);
+  const h = (o.height || 0) * (o.scaleY || 1);
+  const nearOrigin = (o.left || 0) <= trimW * 0.06 && (o.top || 0) <= trimH * 0.06;
+  return nearOrigin && w >= trimW * 0.9 && h >= trimH * 0.9;
+}
+
+/* Print-correct bleed: the background art is scaled to COVER the full bleed
+ * canvas so it extends past the trim on every edge, while foreground content
+ * (text, logos, accents) is only translated into the padded canvas by the
+ * bleed offset — never enlarged — so it stays inside the safe/trim area. A
+ * foreground rect that was already touching a trim edge is stretched out to the
+ * bleed edge so intentional edge bands keep bleeding. Mutates in place. */
+function applyBleed(objects, trimW, trimH, bleedPx) {
+  if (bleedPx <= 0) return;
+  const canvasW = trimW + 2 * bleedPx, canvasH = trimH + 2 * bleedPx;
+  const s = Math.max(canvasW / trimW, canvasH / trimH);
+  const offX = (canvasW - trimW * s) / 2, offY = (canvasH - trimH * s) / 2;
+  const tol = 1.5;
   for (const o of objects) {
-    o.left = round2((o.left || 0) * s + offX);
-    o.top = round2((o.top || 0) * s + offY);
-    if (typeof o.fontSize === 'number') o.fontSize = round2(o.fontSize * s);
-    if (o.type === 'i-text' || o.type === 'textbox' || o.type === 'text') {
-      if (o.width) o.width = round2(o.width * s);
-    } else if (o.type === 'image') {
-      o.scaleX = round4((o.scaleX || 1) * s); o.scaleY = round4((o.scaleY || 1) * s);
-    } else if (o.type === 'rect') {
-      o.width = round2(o.width * s); o.height = round2(o.height * s);
-      if (o.rx) o.rx = round2(o.rx * s); if (o.ry) o.ry = round2(o.ry * s);
-      if (o.strokeWidth) o.strokeWidth = round2(o.strokeWidth * s);
-    } else if (o.type === 'circle') {
-      o.radius = round2(o.radius * s);
-    } else if (o.type === 'ellipse') {
-      o.rx = round2(o.rx * s); o.ry = round2(o.ry * s);
-    } else if (o.type === 'polygon' && Array.isArray(o.points)) {
-      o.points = o.points.map(p => ({ x: round2(p.x * s), y: round2(p.y * s) }));
-      if (o.width) o.width = round2(o.width * s);
-      if (o.height) o.height = round2(o.height * s);
+    if (isBackgroundObject(o, trimW, trimH)) { coverScaleObject(o, s, offX, offY); continue; }
+    const origLeft = o.left || 0, origTop = o.top || 0;
+    o.left = round2(origLeft + bleedPx);
+    o.top = round2(origTop + bleedPx);
+    // extend edge-touching rectangular bands out into the bleed
+    if (o.type === 'rect' && typeof o.width === 'number' && typeof o.height === 'number') {
+      const right = origLeft + o.width, bottom = origTop + o.height;
+      if (origLeft <= tol) { o.width = round2(o.width + o.left); o.left = 0; }
+      if (right >= trimW - tol) { o.width = round2(o.width + bleedPx); }
+      if (origTop <= tol) { o.height = round2(o.height + o.top); o.top = 0; }
+      if (bottom >= trimH - tol) { o.height = round2(o.height + bleedPx); }
     }
   }
 }
@@ -618,9 +651,7 @@ function buildSterlingTemplate(pages, payload) {
   const widthPx = trimW + 2 * bleedPx;
   const heightPx = trimH + 2 * bleedPx;
   if (bleedPx > 0) {
-    const s = Math.max(widthPx / trimW, heightPx / trimH);
-    const offX = (widthPx - trimW * s) / 2, offY = (heightPx - trimH * s) / 2;
-    pages.forEach(objects => scaleObjectsForBleed(objects, s, offX, offY));
+    pages.forEach(objects => applyBleed(objects, trimW, trimH, bleedPx));
   }
 
   const canvasProperties = {
