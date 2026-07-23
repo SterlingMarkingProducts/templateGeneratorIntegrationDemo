@@ -651,9 +651,25 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
   const isLargeFormat = /poster|sign/i.test(templateType || '') || heightPx > 600;
   const isBold = creativityLevel === 'bold';
 
+  /* The preview iframe is sized to the full bleed canvas (trim + bleed), but
+   * designs are authored at trim size and would otherwise sit in the top-left
+   * corner leaving white on the right/bottom. Center the trim design and
+   * scale it to COVER the bleed canvas so the artwork fills the frame and
+   * bleeds off every edge — mirroring what Push to Designer does. */
+  const bleedPair = bleedPxFor(templateType) * 2;
+  const trimW = widthPx - bleedPair, trimH = heightPx - bleedPair;
+  const cover = bleedPair > 0 && trimW > 0 && trimH > 0
+    ? Math.max(widthPx / trimW, heightPx / trimH) : 1;
+  const bodyFill = cover > 1
+    ? `html{margin:0;padding:0;overflow:hidden;width:${widthPx}px;height:${heightPx}px;}`
+      + `body{margin:0;padding:0;width:${trimW}px;height:${trimH}px;position:absolute;`
+      + `left:50%;top:50%;transform:translate(-50%,-50%) scale(${cover.toFixed(4)});`
+      + `transform-origin:center center;}`
+    : `html,body{margin:0;padding:0;}`;
+
   // Posters and large formats need monumental type — skip card-style safety caps
   if (isLargeFormat) {
-    const minimalRules = `<style id="layout-safety">html,body{margin:0;padding:0;}.card,.design,.canvas,[class*="card"]{overflow:hidden!important;position:relative!important;}</style>`;
+    const minimalRules = `<style id="layout-safety">${bodyFill}.card,.design,.canvas,[class*="card"]{overflow:hidden!important;position:relative!important;}</style>`;
     return html.includes('</head>') ? html.replace('</head>', minimalRules + '</head>') : minimalRules + html;
   }
 
@@ -662,7 +678,7 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
   if (/nameplate|name badge|name tag/i.test(templateType || '')) {
     // The model names the outer container freely (.card, .plate, .badge…), so
     // match it generically for both the overflow clamp and the fit-down script.
-    const rules = `html,body{margin:0;padding:0;}
+    const rules = `${bodyFill}
 .card,.plate,.nameplate,.badge,.design,.canvas,[class*="card"],[class*="plate"],[class*="badge"]{overflow:hidden!important;position:relative!important;}
 .zone-copy{display:flex!important;flex-direction:column!important;gap:6px!important;}
 .layout-hidden{display:none!important;}`;
@@ -682,7 +698,7 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
   const minScale = isBold ? 0.6 : 0.45;
   const bottomPad = 10;
   let rules = `
-html,body{margin:0;padding:0;}
+${bodyFill}
 .card,.design,.canvas,[class*="card"]{overflow:hidden!important;position:relative!important;}
 .zone-copy{display:flex!important;flex-direction:column!important;gap:6px!important;overflow:hidden!important;}
 .zone-copy>*{margin-top:0!important;flex-shrink:1!important;}

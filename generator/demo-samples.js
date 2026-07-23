@@ -28,10 +28,15 @@
     const scaler = document.getElementById('iframeScaler');
     frame.style.width = widthPx + 'px';
     frame.style.height = heightPx + 'px';
+    // Route through the same preview pipeline the real generator uses, so the
+    // design is centered and scaled to cover the bleed canvas (otherwise a
+    // trim-sized card sits in the top-left with white on the right/bottom).
+    const rendered = (typeof renderPreviewHtml === 'function')
+      ? renderPreviewHtml(sample.html, lastPayload) : sample.html;
     // For double-sided samples show the front and populate BOTH side thumbnails,
     // so Push to Designer transfers both pages (Front + Back).
     const showFront = (sample.doubleSided && typeof injectThumbSideCss === 'function')
-      ? injectThumbSideCss(sample.html, 'front') : sample.html;
+      ? injectThumbSideCss(rendered, 'front') : rendered;
     frame.srcdoc = showFront;
     if (scaler) applyPreviewScale(widthPx, heightPx);
     if (sample.doubleSided && typeof injectThumbSideCss === 'function') {
