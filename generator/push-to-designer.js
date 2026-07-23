@@ -99,6 +99,33 @@ function hasDirectText(el) {
   return Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim().length > 0);
 }
 
+/* Bounding box (viewport px) of an element's DIRECT text — the union of its text
+ * nodes' client rects — rather than its border box. The container box can be
+ * wider/taller than the text (a leading inline mark like a bullet/square,
+ * padding, or vertical centering), which would otherwise place the i-text on top
+ * of neighbouring elements. Positioning at the real text keeps the import
+ * aligned. Returns null when there's no measurable text. */
+function directTextRect(el, doc) {
+  let rect = null;
+  const range = doc.createRange();
+  for (const node of el.childNodes) {
+    if (node.nodeType !== 3 || !node.textContent || !node.textContent.trim()) continue;
+    range.selectNodeContents(node);
+    const rects = range.getClientRects();
+    for (const r of rects) {
+      if (r.width < 0.5 || r.height < 0.5) continue;
+      if (!rect) rect = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      else {
+        rect.left = Math.min(rect.left, r.left);
+        rect.top = Math.min(rect.top, r.top);
+        rect.right = Math.max(rect.right, r.right);
+        rect.bottom = Math.max(rect.bottom, r.bottom);
+      }
+    }
+  }
+  return rect;
+}
+
 /* An element must be "clean" to become a native editable shape: a single solid
  * fill, no gradient/photo background, no shadow/filter/blend. Anything richer is
  * left for the flattened raster. */
@@ -263,10 +290,16 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
       el.setAttribute('data-tg-extract', '1');
       const fontSize = parseFloat(style.fontSize) * factor;
       const letterPx = parseFloat(style.letterSpacing);
+      /* Anchor to the real text box, not the container box — see directTextRect.
+       * Falls back to the element box when the text isn't measurable. */
+      const tr = directTextRect(el, doc);
+      const tLeft = tr ? (tr.left - rootRect.left) * factor : left;
+      const tTop = tr ? (tr.top - rootRect.top) * factor : top;
+      const tWidth = tr ? (tr.right - tr.left) * factor : width;
       candidates.push({ el, obj: {
         type: 'i-text', version: '4.4.0', originX: 'left', originY: 'top',
         sterlingType: 'textObject',
-        left: round2(left), top: round2(top), width: round2(Math.max(width, 10)),
+        left: round2(tLeft), top: round2(tTop), width: round2(Math.max(tWidth, 10)),
         text: getWrappedText(el, doc),
         fontSize: round2(fontSize),
         fontFamily: mapFont(style.fontFamily, substitutions),
