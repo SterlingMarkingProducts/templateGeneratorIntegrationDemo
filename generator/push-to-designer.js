@@ -245,7 +245,11 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
     left: 0, top: 0, width: cw, height: ch,
     scaleX: round4(targetWidthPx / cw), scaleY: round4(targetHeightPx / ch),
     angle: 0, src: cv.toDataURL('image/png'), crossOrigin: 'anonymous', opacity: 1,
-    fixedImage: true, sterlingType: 'backgroundArt',
+    /* Selectable/movable: the background artwork is a normal image object (not
+     * fixedImage) so it can be selected, dragged, and scaled in the designer.
+     * It renders behind the text purely by array order (first object = bottom
+     * of the stack). sterlingType marks its provenance without locking it. */
+    sterlingType: 'backgroundArt',
   });
 
   // --- Primary: whole-card foreignObject snapshot ---
