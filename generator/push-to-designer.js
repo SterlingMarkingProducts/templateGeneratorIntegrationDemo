@@ -235,7 +235,12 @@ function round4(n) { return Math.round(n * 10000) / 10000; }
  * legible, on-brand background instead of white. */
 async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
   const rect = rootEl.getBoundingClientRect();
-  const scale = 2; // 2x for crisp zooming in the designer
+  /* Render at ~300 dpi (print standard) so the background stays crisp when the
+   * designer is zoomed in — targetWidthPx is at 96 dpi, so 300/96 ≈ 3.125x.
+   * Cap the longest side (keeps large signs from producing a huge data URL
+   * that would overflow the browser's transfer storage); never below 2x. */
+  const DPI_SCALE = 300 / 96, MAX_SIDE = 2600;
+  const scale = Math.max(2, Math.min(DPI_SCALE, MAX_SIDE / Math.max(targetWidthPx, targetHeightPx)));
   const cw = Math.round(targetWidthPx * scale), ch = Math.round(targetHeightPx * scale);
   const cv = document.createElement('canvas');
   cv.width = cw; cv.height = ch;
