@@ -773,7 +773,10 @@ async function convertCurrentDesign() {
     }
   }
   if (!pages.length) {
-    const single = await extractPage(document.getElementById('previewFrame'), widthPx, heightPx, substitutions);
+    /* Render the RAW design in a clean offscreen iframe — never read the visible
+     * preview, which carries layout-safety CSS (centering / cover-scale-to-bleed
+     * transforms) that would be baked into the raster and misplace the art. */
+    const single = await extractFromOffscreen(generatedHtml, widthPx, heightPx, substitutions);
     if (single) pages.push(single);
   }
   if (!pages.length || !pages[0].length) {
