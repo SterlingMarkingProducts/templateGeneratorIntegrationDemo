@@ -149,11 +149,19 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
     opacity: parseFloat(style.opacity), sterlingType: 'shape', typeImage: 'shapes',
   };
   // clip-path polygon wedge/band → real polygon
-  const poly = parseClipPolygon(style.clipPath, w / 1, h / 1);
+  const poly = parseClipPolygon(style.clipPath, w, h);
   if (poly) {
-    // element-local px are already at canvas scale (w,h are scaled); points too
-    return { ...base, type: 'polygon', points: poly.map(p => ({ x: round2(p.x), y: round2(p.y) })),
-             width: round2(w), height: round2(h) };
+    /* Fabric positions a polygon by its points' BOUNDING BOX, not the source
+     * element's box. Set left/top to the bbox corner in canvas coords and make
+     * the points relative to that corner, or the shape lands in the wrong place
+     * (e.g. a bottom band rendering at the top). */
+    const xs = poly.map(p => p.x), ys = poly.map(p => p.y);
+    const minX = Math.min(...xs), minY = Math.min(...ys);
+    const maxX = Math.max(...xs), maxY = Math.max(...ys);
+    return { ...base, type: 'polygon',
+      points: poly.map(p => ({ x: round2(p.x - minX), y: round2(p.y - minY) })),
+      left: round2(left + minX), top: round2(top + minY),
+      width: round2(maxX - minX), height: round2(maxY - minY) };
   }
   const rad = cornerRadii(style, w, h);
   const allEqual = Math.abs(rad.tl - rad.tr) < 0.5 && Math.abs(rad.tr - rad.br) < 0.5 && Math.abs(rad.br - rad.bl) < 0.5;
