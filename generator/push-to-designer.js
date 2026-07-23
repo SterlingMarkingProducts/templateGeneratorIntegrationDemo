@@ -165,7 +165,10 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
   }
   const rad = cornerRadii(style, w, h);
   const allEqual = Math.abs(rad.tl - rad.tr) < 0.5 && Math.abs(rad.tr - rad.br) < 0.5 && Math.abs(rad.br - rad.bl) < 0.5;
-  const isCircleish = allEqual && rad.tl >= Math.min(w, h) / 2 - 1;
+  // "circle-ish" requires a REAL corner radius that reaches the half-extent — a
+  // plain rectangle (radius 0) must never qualify, or thin bars/lines where
+  // min(w,h)/2 ≈ 0 would be misread as flat ellipses.
+  const isCircleish = allEqual && rad.tl > 1 && rad.tl >= Math.min(w, h) / 2 - 1;
   if (isCircleish && Math.abs(w - h) < 1.5) {
     return { ...base, type: 'circle', radius: round2(w / 2), left: round2(left), top: round2(top) };
   }
