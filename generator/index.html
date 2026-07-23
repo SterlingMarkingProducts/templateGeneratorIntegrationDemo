@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <script src="../demo-guard.js?v=tier1-08"></script>
+  <script src="../demo-guard.js?v=tier1-09"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Template Generator — Integration Demo</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -235,6 +235,15 @@
             </svg>
             Reset All Fields
           </button>
+          <button class="btn-reset" id="uploadDesignBtn" title="Load a pre-created design (an HTML file, or a JSON exported from this tool) into the generator">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Upload Design (HTML / JSON)
+          </button>
+          <input type="file" id="uploadDesignInput" accept=".html,.htm,.json,application/json,text/html" style="display:none">
         </div>
 
       </div>
@@ -301,7 +310,7 @@
               </svg>
               Push to Designer
             </button>
-            <button class="tool-btn tool-btn-json" id="jsonBtn" title="Generate JSON schema">
+            <button class="tool-btn tool-btn-json" id="jsonBtn" title="Build and download the Sterling template JSON for this design">
               <svg id="jsonBtnIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
@@ -383,11 +392,11 @@
     <button class="toast-close" id="toastClose">×</button>
   </div>
 
-  <script src="engine.js?v=tier1-08"></script>
-  <script src="browser-api.js?v=tier1-08"></script>
-  <script src="app.js?v=tier1-08"></script>
-  <script src="product-compat.js?v=tier1-08"></script>
-  <script src="push-to-designer.js?v=tier1-08"></script>
-  <script src="demo-samples.js?v=tier1-08"></script>
+  <script src="engine.js?v=tier1-09"></script>
+  <script src="browser-api.js?v=tier1-09"></script>
+  <script src="app.js?v=tier1-09"></script>
+  <script src="product-compat.js?v=tier1-09"></script>
+  <script src="push-to-designer.js?v=tier1-09"></script>
+  <script src="demo-samples.js?v=tier1-09"></script>
 </body>
 </html>

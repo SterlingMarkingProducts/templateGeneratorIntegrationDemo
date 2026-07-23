@@ -1185,19 +1185,139 @@ jsonBtn.addEventListener('click', async () => {
 
   setJsonState('loading');
   try {
-    const res  = await fetch('/generate-json', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ html: generatedHtml }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'JSON generation failed.');
-    generatedJson = data.json;
+    /* Build the Sterling v1.2 template JSON deterministically in the browser —
+     * the same payload Push to Designer produces — instead of calling a server.
+     * Embed the source HTML + form payload so the file can be re-uploaded to
+     * reload the exact design (see the Upload Design button). */
+    if (!window.SMPPush?.convertCurrentDesign) throw new Error('Converter unavailable.');
+    const { template } = await window.SMPPush.convertCurrentDesign();
+    template.canvasProperties.sourceMeta = template.canvasProperties.sourceMeta || {};
+    template.canvasProperties.sourceMeta.sourceHtml = generatedHtml;
+    template.canvasProperties.sourceMeta.payload = {
+      templateType: lastPayload.templateType, width: lastPayload.width,
+      height: lastPayload.height, unit: lastPayload.unit,
+      doubleSided: !!lastPayload.doubleSided, businessName: lastPayload.businessName || '',
+    };
+    generatedJson = JSON.stringify(template, null, 2);
     setJsonState('download');
   } catch (err) {
     setJsonState('generate');
-    showError(err.message || 'JSON generation failed. Please try again.');
+    showError(err.message || 'Could not build the design JSON. Please try again.');
   }
+});
+
+/* ── Upload a pre-created design (HTML, or a JSON exported by this tool) ── */
+const uploadDesignBtn   = document.getElementById('uploadDesignBtn');
+const uploadDesignInput = document.getElementById('uploadDesignInput');
+
+/* Best-effort product match from finished dimensions (inches, either orientation). */
+function matchTemplateType(wIn, hIn) {
+  const fit = (a, b) => Math.abs(a - b) <= Math.max(0.2, b * 0.06);
+  for (const [name, p] of Object.entries(PRODUCT_PRESETS)) {
+    if ((fit(wIn, p.w) && fit(hIn, p.h)) || (fit(wIn, p.h) && fit(hIn, p.w))) return name;
+  }
+  return 'Business Card';
+}
+
+/* Render HTML off-screen and measure the design surface, to infer its size. */
+function measureHtmlDims(html) {
+  return new Promise(resolve => {
+    const f = document.createElement('iframe');
+    f.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+    f.style.cssText = 'position:fixed;left:-10000px;top:0;width:1600px;height:1600px;border:0;';
+    let done = false;
+    const finish = (v) => { if (done) return; done = true; try { f.remove(); } catch {} resolve(v); };
+    // Append FIRST, then attach the listener, then set srcdoc — otherwise the
+    // load event fires for the initial about:blank (empty) document.
+    document.body.appendChild(f);
+    f.addEventListener('load', () => {
+      try {
+        const doc = f.contentDocument;
+        const el = doc.querySelector('.card, .design, .canvas, [class*="card"], [class*="plate"], [class*="badge"]')
+          || doc.body.firstElementChild;
+        const r = el.getBoundingClientRect();
+        finish(r.width > 2 && r.height > 2 ? { wpx: Math.round(r.width), hpx: Math.round(r.height) } : null);
+      } catch { finish(null); }
+    }, { once: true });
+    f.srcdoc = html;
+    setTimeout(() => finish(null), 2500);
+  });
+}
+
+/* Load an arbitrary design into the generator exactly as if it had just been
+ * generated — preview, Push to Designer, and Download JSON all then work. */
+function loadDesignIntoGenerator(payload, html, label) {
+  lastPayload = {
+    templateType: payload.templateType || 'Business Card',
+    width: payload.width, height: payload.height, unit: payload.unit || 'in',
+    doubleSided: !!payload.doubleSided,
+    businessName: payload.businessName || 'Demo Co',
+    creativityLevel: creativityLevel?.value || 'bold',
+  };
+  generatedHtml = html;
+  generatedJson = null;
+  setJsonState('generate');
+  // keep the form controls in sync so Regenerate / Push stay consistent
+  if ([...templateType.options].some(o => o.value === lastPayload.templateType)) templateType.value = lastPayload.templateType;
+  if (dimWidth)  dimWidth.value  = lastPayload.width;
+  if (dimHeight) dimHeight.value = lastPayload.height;
+  if (businessName && payload.businessName && payload.businessName !== 'Demo Co') businessName.value = payload.businessName;
+  showPanel('result');
+  const widthPx  = Math.round(toPx(lastPayload.width, lastPayload.unit));
+  const heightPx = Math.round(toPx(lastPayload.height, lastPayload.unit));
+  previewFrame.style.width  = widthPx + 'px';
+  previewFrame.style.height = heightPx + 'px';
+  previewFrame.srcdoc = renderPreviewHtml(html, lastPayload);
+  applyPreviewScale(widthPx, heightPx);
+  toolbarLabel.textContent = (label || 'Uploaded design') + ' — loaded';
+}
+
+async function handleUploadedFile(file) {
+  try {
+    const text = await file.text();
+    const isJson = /\.json$/i.test(file.name) || (!/\.html?$/i.test(file.name) && /^\s*[{[]/.test(text));
+    if (isJson) {
+      const data = JSON.parse(text);
+      // 1) A Sterling template exported by this tool (Download JSON) — has the
+      //    source HTML + form payload embedded in canvasProperties.sourceMeta.
+      const meta = data?.canvasProperties?.sourceMeta;
+      if (data?.pages && meta?.sourceHtml) {
+        const p = meta.payload || {};
+        loadDesignIntoGenerator(
+          { templateType: p.templateType, width: p.width, height: p.height, unit: p.unit,
+            doubleSided: p.doubleSided, businessName: p.businessName },
+          meta.sourceHtml, file.name.replace(/\.json$/i, ''));
+        return;
+      }
+      // 2) A sample-style design JSON: {samples:[…]} or {html,width,height,…}
+      const s = Array.isArray(data?.samples) ? data.samples[0] : (data?.html ? data : null);
+      if (s?.html) {
+        loadDesignIntoGenerator(
+          { templateType: s.templateType, width: s.width, height: s.height,
+            unit: s.unit || 'in', doubleSided: s.doubleSided, businessName: s.businessName },
+          s.html, s.name || file.name.replace(/\.json$/i, ''));
+        return;
+      }
+      throw new Error('That JSON has no embedded design HTML. Upload an HTML file, or a JSON exported by this tool with the Download JSON button.');
+    }
+    // An HTML file — measure the design surface and infer the product.
+    const dims = await measureHtmlDims(text);
+    if (!dims) throw new Error('Could not find a design element (e.g. a .card) in that HTML file.');
+    const wIn = +(dims.wpx / 96).toFixed(2), hIn = +(dims.hpx / 96).toFixed(2);
+    loadDesignIntoGenerator(
+      { templateType: matchTemplateType(wIn, hIn), width: wIn, height: hIn, unit: 'in',
+        doubleSided: /card--back/i.test(text) },
+      text, file.name.replace(/\.[^.]+$/, ''));
+  } catch (err) {
+    showError(err.message || 'Could not load that file.');
+  }
+}
+
+uploadDesignBtn?.addEventListener('click', () => uploadDesignInput?.click());
+uploadDesignInput?.addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (file) handleUploadedFile(file);
+  e.target.value = ''; // let the same file be picked again
 });
 
 /* ── Error toast ───────────────────────────────────── */

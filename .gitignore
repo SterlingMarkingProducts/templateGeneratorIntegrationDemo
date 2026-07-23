@@ -1,3 +1,5 @@
 node_modules/
 package-lock.json
 scripts/_shot_*.png
+scripts/_ui*.png
+scripts/_*.mjs
