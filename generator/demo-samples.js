@@ -78,7 +78,10 @@
     anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
   }
 
-  fetch('../data/test-templates.json')
+  // Cache-bust the sample data by build stamp — otherwise the browser serves a
+  // stale test-templates.json (sample edits wouldn't show even on a new build).
+  const v = (typeof window !== 'undefined' && window.DEMO_BUILD) ? window.DEMO_BUILD : Date.now();
+  fetch('../data/test-templates.json?v=' + encodeURIComponent(v))
     .then(r => r.json())
     .then(data => { samples = data.samples; buildUi(); })
     .catch(err => console.warn('Demo samples unavailable:', err.message));
