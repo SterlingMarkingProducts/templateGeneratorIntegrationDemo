@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script src="../demo-guard.js?v=tier1-02"></script>
+<script src="../demo-guard.js?v=tier1-03"></script>
 <title>Sterling Designer — TEST HARNESS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -68,8 +68,8 @@
 </main>
 <div id="toast"></div>
 
-<script src="vendor/fabric-4.4.0.min.js?v=tier1-02"></script>
-<script src="../generator/product-compat.js?v=tier1-02"></script>
+<script src="vendor/fabric-4.4.0.min.js?v=tier1-03"></script>
+<script src="../generator/product-compat.js?v=tier1-03"></script>
 <script>
 /* Test harness: loads a sterling-template-1.2 transfer, renders each page as an
  * editable Fabric v4 canvas (the same engine version the live designer uses),
@@ -114,7 +114,10 @@ function inches(px, dpi) { return Math.round((px / (dpi || 96)) * 100) / 100; }
 
 function designSummary(t) {
   const cp = t.canvasProperties;
-  const widthIn = inches(cp.width, cp.dpi), heightIn = inches(cp.height, cp.dpi);
+  // Prefer the TRIM size (finished product size) for recommendations, so a
+  // 3.5x2 card matches even though the canvas is the larger bleed size.
+  const widthIn = cp.sourceMeta && cp.sourceMeta.widthIn ? cp.sourceMeta.widthIn : inches(cp.width, cp.dpi);
+  const heightIn = cp.sourceMeta && cp.sourceMeta.heightIn ? cp.sourceMeta.heightIn : inches(cp.height, cp.dpi);
   return {
     widthIn, heightIn,
     orientation: orientationOf(widthIn, heightIn),

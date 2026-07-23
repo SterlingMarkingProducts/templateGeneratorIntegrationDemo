@@ -264,7 +264,7 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
         type: 'i-text', version: '4.4.0', originX: 'left', originY: 'top',
         sterlingType: 'textObject',
         left: round2(left), top: round2(top), width: round2(Math.max(width, 10)),
-        text: normalizeText(el),
+        text: getWrappedText(el, doc),
         fontSize: round2(fontSize),
         fontFamily: mapFont(style.fontFamily, substitutions),
         fontWeight: normalizeWeight(style.fontWeight),
@@ -308,6 +308,44 @@ function makeImageObject(src, naturalW, naturalH, left, top, width, height, angl
 function normalizeText(el) {
   // innerText preserves line breaks the way the user sees them
   return (el.innerText || el.textContent || '').replace(/ /g, ' ').trim();
+}
+
+/* Preserve the design's VISUAL line wrapping. innerText only inserts breaks for
+ * <br>/block boundaries, not soft wraps, so a paragraph that wraps to two lines
+ * would become one long i-text line that overflows. This measures each word and
+ * starts a new line whenever the vertical position jumps, reproducing exactly
+ * the line breaks the customer sees. */
+function getWrappedText(el, doc) {
+  const lines = [];
+  let curTop = null, curLine = '';
+  const flush = () => { if (curLine.trim()) lines.push(curLine.trim()); curLine = ''; };
+  const walk = (node) => {
+    if (node.nodeType === 3) {
+      const parts = node.textContent.split(/(\s+)/);
+      let idx = 0;
+      for (const w of parts) {
+        const start = idx; idx += w.length;
+        if (!w) continue;
+        if (!w.trim()) { curLine += ' '; continue; }
+        let top = curTop;
+        try {
+          const range = doc.createRange();
+          range.setStart(node, start); range.setEnd(node, idx);
+          top = Math.round(range.getBoundingClientRect().top);
+        } catch (e) { /* keep current line */ }
+        if (curTop !== null && top !== null && Math.abs(top - curTop) > 3) flush();
+        if (top !== null) curTop = top;
+        curLine += w;
+      }
+    } else if (node.nodeType === 1 && node.tagName === 'BR') {
+      flush(); curTop = null;
+    } else if (node.nodeType === 1) {
+      node.childNodes.forEach(walk);
+    }
+  };
+  el.childNodes.forEach(walk);
+  flush();
+  return lines.join('\n') || normalizeText(el);
 }
 
 function normalizeWeight(w) {
@@ -541,11 +579,49 @@ function splitTopLevel(str) {
 }
 
 /* Build the version 1.2 envelope around extracted pages. */
+/* Scale + offset every object so the trim-sized design covers the full bleed
+ * canvas (edges extend past the trim into the bleed, like a print "scale to
+ * bleed"). Mutates objects in place. */
+function scaleObjectsForBleed(objects, s, offX, offY) {
+  for (const o of objects) {
+    o.left = round2((o.left || 0) * s + offX);
+    o.top = round2((o.top || 0) * s + offY);
+    if (typeof o.fontSize === 'number') o.fontSize = round2(o.fontSize * s);
+    if (o.type === 'i-text' || o.type === 'textbox' || o.type === 'text') {
+      if (o.width) o.width = round2(o.width * s);
+    } else if (o.type === 'image') {
+      o.scaleX = round4((o.scaleX || 1) * s); o.scaleY = round4((o.scaleY || 1) * s);
+    } else if (o.type === 'rect') {
+      o.width = round2(o.width * s); o.height = round2(o.height * s);
+      if (o.rx) o.rx = round2(o.rx * s); if (o.ry) o.ry = round2(o.ry * s);
+      if (o.strokeWidth) o.strokeWidth = round2(o.strokeWidth * s);
+    } else if (o.type === 'circle') {
+      o.radius = round2(o.radius * s);
+    } else if (o.type === 'ellipse') {
+      o.rx = round2(o.rx * s); o.ry = round2(o.ry * s);
+    } else if (o.type === 'polygon' && Array.isArray(o.points)) {
+      o.points = o.points.map(p => ({ x: round2(p.x * s), y: round2(p.y * s) }));
+      if (o.width) o.width = round2(o.width * s);
+      if (o.height) o.height = round2(o.height * s);
+    }
+  }
+}
+
 function buildSterlingTemplate(pages, payload) {
-  const widthPx = Math.round(toPx(payload.width, payload.unit));
-  const heightPx = Math.round(toPx(payload.height, payload.unit));
+  const trimW = Math.round(toPx(payload.width, payload.unit));
+  const trimH = Math.round(toPx(payload.height, payload.unit));
   const bleedPx = bleedPxFor(payload.templateType);
   const mode = MODE_BY_PRODUCT[payload.templateType] || 'FullColour';
+
+  /* Full canvas = trim + bleed on every edge. The design is scaled to COVER it
+   * (uniform, so nothing distorts) so artwork bleeds off all four edges. */
+  const widthPx = trimW + 2 * bleedPx;
+  const heightPx = trimH + 2 * bleedPx;
+  if (bleedPx > 0) {
+    const s = Math.max(widthPx / trimW, heightPx / trimH);
+    const offX = (widthPx - trimW * s) / 2, offY = (heightPx - trimH * s) / 2;
+    pages.forEach(objects => scaleObjectsForBleed(objects, s, offX, offY));
+  }
 
   const canvasProperties = {
     width: widthPx, height: heightPx, dpi: 96, shape: 'rect', angle: 0,
@@ -560,10 +636,13 @@ function buildSterlingTemplate(pages, payload) {
     /* provenance — lets the designer recognise generator designs */
     sourceApplication: 'templateGenerator',
     sourceVersion: 1,
+    /* Trim size (the finished product size, excluding bleed) so product
+     * recommendations match on 3.5x2, not the bleed canvas of 3.75x2.25. */
+    trimWidthPx: trimW, trimHeightPx: trimH, bleedPx,
     sourceMeta: {
       templateType: payload.templateType,
-      widthIn: payload.unit === 'in' ? payload.width : round2(widthPx / 96),
-      heightIn: payload.unit === 'in' ? payload.height : round2(heightPx / 96),
+      widthIn: round2(trimW / 96),
+      heightIn: round2(trimH / 96),
       businessName: payload.businessName || '',
     },
   };
