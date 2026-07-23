@@ -649,8 +649,12 @@ function buildSterlingTemplate(pages, payload) {
   const bleedPx = bleedPxFor(payload.templateType);
   const mode = MODE_BY_PRODUCT[payload.templateType] || 'FullColour';
 
-  /* Full canvas = trim + bleed on every edge. The design is scaled to COVER it
-   * (uniform, so nothing distorts) so artwork bleeds off all four edges. */
+  /* The Sterling designer builds its canvas as canvasProperties.width/height +
+   * the declared bleeds (see SMPdesigner canvas.setHeight = height + bleedTop +
+   * bleedBottom). So canvasProperties.width/height MUST be the TRIM size, with
+   * the bleed declared separately — otherwise the designer adds bleed on top of
+   * an already-bleed-inclusive size and the artwork leaves a gap. The objects
+   * are positioned in the full trim+bleed coordinate space by applyBleed. */
   const widthPx = trimW + 2 * bleedPx;
   const heightPx = trimH + 2 * bleedPx;
   if (bleedPx > 0) {
@@ -658,7 +662,7 @@ function buildSterlingTemplate(pages, payload) {
   }
 
   const canvasProperties = {
-    width: widthPx, height: heightPx, dpi: 96, shape: 'rect', angle: 0,
+    width: trimW, height: trimH, dpi: 96, shape: 'rect', angle: 0,
     designerVariationCode: mode,
     bleedTop: bleedPx, bleedRight: bleedPx, bleedBottom: bleedPx, bleedLeft: bleedPx, bleedMargin: 0,
     borderTop: 0, borderRight: 0, borderBottom: 0, borderLeft: 0, borderWidth: 2,
