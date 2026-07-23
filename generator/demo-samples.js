@@ -28,8 +28,24 @@
     const scaler = document.getElementById('iframeScaler');
     frame.style.width = widthPx + 'px';
     frame.style.height = heightPx + 'px';
-    frame.srcdoc = sample.html;
+    // For double-sided samples show the front and populate BOTH side thumbnails,
+    // so Push to Designer transfers both pages (Front + Back).
+    const showFront = (sample.doubleSided && typeof injectThumbSideCss === 'function')
+      ? injectThumbSideCss(sample.html, 'front') : sample.html;
+    frame.srcdoc = showFront;
     if (scaler) applyPreviewScale(widthPx, heightPx);
+    if (sample.doubleSided && typeof injectThumbSideCss === 'function') {
+      // Populate BOTH per-side thumbnails with explicit sizes so Push to
+      // Designer reliably transfers Front + Back (the converter reads these).
+      [['thumbFrontFrame', 'front'], ['thumbBackFrame', 'back']].forEach(([id, side]) => {
+        const tf = document.getElementById(id);
+        if (!tf) return;
+        tf.style.width = widthPx + 'px';
+        tf.style.height = heightPx + 'px';
+        tf.srcdoc = injectThumbSideCss(sample.html, side);
+      });
+      if (typeof updateSidePreviews === 'function') { try { updateSidePreviews(); } catch (e) {} }
+    }
     const label = document.getElementById('toolbarLabel');
     if (label) label.textContent = sample.name + ' — Sample (demo)';
   }
@@ -43,13 +59,16 @@
     title.textContent = 'Demo shortcuts — no API key needed:';
     title.style.cssText = 'font-size:12px;font-weight:700;color:#e8590c;margin-bottom:6px;';
     wrap.appendChild(title);
+    const list = document.createElement('div');
+    list.style.cssText = 'max-height:260px;overflow-y:auto;';
+    wrap.appendChild(list);
     samples.forEach(sample => {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = 'Load sample: ' + sample.name;
-      b.style.cssText = 'display:block;width:100%;margin:4px 0;padding:7px 10px;border:1px solid #e8590c;border-radius:6px;background:#fff4ec;color:#c04a08;font-weight:600;cursor:pointer;font-size:12px;';
+      b.style.cssText = 'display:block;width:100%;margin:4px 0;padding:7px 10px;border:1px solid #e8590c;border-radius:6px;background:#fff4ec;color:#c04a08;font-weight:600;cursor:pointer;font-size:12px;text-align:left;';
       b.addEventListener('click', () => loadSample(sample));
-      wrap.appendChild(b);
+      list.appendChild(b);
     });
     anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
   }

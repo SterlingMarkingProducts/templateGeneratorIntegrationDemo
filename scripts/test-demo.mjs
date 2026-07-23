@@ -93,7 +93,7 @@ check('No API key shipped in demo', !apiSrc.includes('DEFAULT_KEY_PARTS') && api
 // 3. "Generate" a sample design (no API key)
 const sampleBtns = await page.evaluate(() =>
   [...document.querySelectorAll('button')].filter(b => b.textContent.startsWith('Load sample:')).map(b => b.textContent));
-check('3. Sample-design shortcuts present', sampleBtns.length === 2, sampleBtns.join(' | '));
+check('3. Sample-design shortcuts present', sampleBtns.length >= 8, sampleBtns.length + ' shortcuts');
 await page.evaluate(() => {
   [...document.querySelectorAll('button')].find(b => b.textContent.includes('Business card')).click();
 });

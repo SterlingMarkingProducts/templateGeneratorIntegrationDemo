@@ -99,6 +99,89 @@ function hasDirectText(el) {
   return Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim().length > 0);
 }
 
+/* An element must be "clean" to become a native editable shape: a single solid
+ * fill, no gradient/photo background, no shadow/filter/blend. Anything richer is
+ * left for the flattened raster. */
+function isCleanSolid(style) {
+  const bgImg = style.backgroundImage || 'none';
+  if (bgImg !== 'none') return false;                       // gradients / textures / photos
+  if ((style.boxShadow || 'none') !== 'none') return false; // drop shadows
+  if ((style.filter || 'none') !== 'none') return false;    // blur etc.
+  const blend = style.mixBlendMode || 'normal';
+  if (blend !== 'normal') return false;
+  const bc = style.backgroundColor || '';
+  if (!bc || bc === 'transparent' || /rgba\(0,\s*0,\s*0,\s*0\)/.test(bc)) return false;
+  return true;
+}
+
+/* Parse `clip-path: polygon(x% y%, ...)` into points in element-local pixels. */
+function parseClipPolygon(clip, w, h) {
+  const m = (clip || '').match(/polygon\(([^)]*)\)/i);
+  if (!m) return null;
+  const pts = m[1].split(',').map(pair => {
+    const [xs, ys] = pair.trim().split(/\s+/);
+    const x = xs.endsWith('%') ? parseFloat(xs) / 100 * w : parseFloat(xs);
+    const y = ys.endsWith('%') ? parseFloat(ys) / 100 * h : parseFloat(ys);
+    return { x, y };
+  });
+  return pts.length >= 3 ? pts : null;
+}
+
+/* Read the four corner radii (px) from computed style. */
+function cornerRadii(style, w, h) {
+  const px = (v, base) => v.endsWith('%') ? parseFloat(v) / 100 * base : parseFloat(v) || 0;
+  return {
+    tl: px(style.borderTopLeftRadius, Math.min(w, h)),
+    tr: px(style.borderTopRightRadius, Math.min(w, h)),
+    br: px(style.borderBottomRightRadius, Math.min(w, h)),
+    bl: px(style.borderBottomLeftRadius, Math.min(w, h)),
+  };
+}
+
+/* Classify a clean-solid element into a native Fabric shape descriptor, in
+ * canvas pixels. Returns null when the geometry isn't cleanly representable
+ * (left for the raster). left/top/w/h are already in canvas px. */
+function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
+  const base = {
+    version: '4.4.0', originX: 'left', originY: 'top',
+    left: round2(left), top: round2(top), fill,
+    stroke: null, strokeWidth: 0, angle, scaleX: 1, scaleY: 1,
+    opacity: parseFloat(style.opacity), sterlingType: 'shape', typeImage: 'shapes',
+  };
+  // clip-path polygon wedge/band → real polygon
+  const poly = parseClipPolygon(style.clipPath, w / 1, h / 1);
+  if (poly) {
+    // element-local px are already at canvas scale (w,h are scaled); points too
+    return { ...base, type: 'polygon', points: poly.map(p => ({ x: round2(p.x), y: round2(p.y) })),
+             width: round2(w), height: round2(h) };
+  }
+  const rad = cornerRadii(style, w, h);
+  const allEqual = Math.abs(rad.tl - rad.tr) < 0.5 && Math.abs(rad.tr - rad.br) < 0.5 && Math.abs(rad.br - rad.bl) < 0.5;
+  const isCircleish = allEqual && rad.tl >= Math.min(w, h) / 2 - 1;
+  if (isCircleish && Math.abs(w - h) < 1.5) {
+    return { ...base, type: 'circle', radius: round2(w / 2), left: round2(left), top: round2(top) };
+  }
+  if (isCircleish) {
+    return { ...base, type: 'ellipse', rx: round2(w / 2), ry: round2(h / 2) };
+  }
+  // quarter/half disc: exactly one corner fully rounded → circle centred on the
+  // opposite corner (the canvas edge clips the rest, reproducing the arc)
+  const corners = [rad.tl, rad.tr, rad.br, rad.bl];
+  const bigCorners = corners.filter(c => c >= Math.min(w, h) - 2);
+  if (bigCorners.length === 1 && Math.abs(w - h) < 2) {
+    const R = w; // radius spans the box
+    let cx = left, cy = top;
+    if (rad.tl >= w - 2) { cx = left + w; cy = top + h; }        // rounded TL → centre BR
+    else if (rad.tr >= w - 2) { cx = left; cy = top + h; }       // rounded TR → centre BL
+    else if (rad.br >= w - 2) { cx = left; cy = top; }           // rounded BR → centre TL
+    else { cx = left + w; cy = top; }                            // rounded BL → centre TR
+    return { ...base, type: 'circle', radius: round2(R), left: round2(cx - R), top: round2(cy - R) };
+  }
+  // plain rectangle (optionally uniformly rounded)
+  return { ...base, type: 'rect', width: round2(w), height: round2(h),
+           rx: round2(allEqual ? rad.tl : 0), ry: round2(allEqual ? rad.tl : 0) };
+}
+
 /* Extract Fabric v4 objects from one rendered document. rootEl is the design
  * surface (the card element); factor rescales its pixels to canvas pixels. */
 function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
@@ -126,24 +209,36 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     const height = r.height * factor;
     const angle = rotationOf(style);
 
-    /* ALL decoration — CSS gradients, grids, painted shapes, inline SVG
-     * foliage/ornaments (including those with gradient defs and mirror/rotate
-     * transforms), and everything else that isn't plain text or a photo — is
-     * captured pixel-perfectly by the background raster (rasterizeBackground).
-     * It is NOT extracted as a separate object: standalone SVG serialization
-     * loses shared gradient defs and CSS transforms, which is what made foliage
-     * vanish and ornaments land off-position. Only genuine photos (<img>) and
-     * text become editable overlays. */
+    /* Classification (Tier 1):
+     *  - text            → editable i-text
+     *  - clean solid shape (rect / rounded / circle / ellipse / clip-polygon /
+     *                       quarter-disc) → NATIVE editable Fabric shape
+     *  - inline SVG, gradients, shadows, blends, textures, photos → flattened
+     *    into the raster (rasterizeBackground), which is clip-path aware.
+     * Native objects are marked data-tg-extract so the raster skips them. */
 
     if (el.tagName === 'svg') {
-      // leave in the raster; skip its descendants as text sources
-      el.querySelectorAll('*').forEach(c => textOwners.add(c));
+      el.querySelectorAll('*').forEach(c => textOwners.add(c)); // stays in raster
       continue;
     }
     if (el.tagName === 'IMG' && el.currentSrc && !el.currentSrc.startsWith('data:image/svg')) {
       el.setAttribute('data-tg-extract', '1');
       objects.push(makeImageObject(el.currentSrc, el.naturalWidth || r.width, el.naturalHeight || r.height,
                                    left, top, width, height, angle, style));
+      continue;
+    }
+
+    // Native solid shape (not the card root, not a text-owner)
+    if (el !== rootEl && !hasDirectText(el) && isCleanSolid(style)) {
+      const fill = cssColorToHex(style.backgroundColor, doc);
+      if (fill) {
+        const shape = classifyNativeShape(style, left, top, width, height, angle, fill, factor);
+        if (shape) {
+          el.setAttribute('data-tg-extract', '1');
+          objects.push(shape);
+          continue;
+        }
+      }
     }
 
     /* Text extraction is limited to axis-aligned, non-mirrored, non-vertical
@@ -266,8 +361,22 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
       el.remove();
     });
     const styles = [...doc.querySelectorAll('style')].map(st => st.textContent).join('\n');
-    const html = '<div xmlns="http://www.w3.org/1999/xhtml" style="width:' + rect.width + 'px;height:' + rect.height + 'px;overflow:hidden">'
-      + '<style>' + styles.replace(/@import[^;]+;/g, '') + '</style>'
+    /* Wrap CSS in CDATA so characters that are illegal in XML — `&` in font
+     * URLs, `>` child combinators, `<` — pass through literally instead of
+     * breaking the SVG parse (which silently fell back to a blank raster). */
+    const cssSafe = styles.replace(/@import[^;]+;/g, '').replace(/\]\]>/g, ']]&gt;');
+    /* The design's `:root` custom properties (var(--x)) don't resolve inside
+     * the foreignObject, so decorative elements using var() colours would render
+     * empty. Read their resolved values off the real root and set them inline on
+     * the wrapper so var() works. */
+    const cs = doc.defaultView.getComputedStyle(rootEl);
+    const varDecls = [...new Set(styles.match(/--[\w-]+/g) || [])]
+      .map(n => [n, cs.getPropertyValue(n).trim()])
+      .filter(([, v]) => v)
+      .map(([n, v]) => n + ':' + v).join(';');
+    const wrapStyle = 'width:' + rect.width + 'px;height:' + rect.height + 'px;overflow:hidden;' + varDecls;
+    const html = '<div xmlns="http://www.w3.org/1999/xhtml" style="' + wrapStyle + '">'
+      + '<style><![CDATA[' + cssSafe + ']]></style>'
       + new XMLSerializer().serializeToString(clone) + '</div>';
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + rect.width + '" height="' + rect.height + '">'
       + '<foreignObject width="100%" height="100%">' + html + '</foreignObject></svg>';
@@ -299,6 +408,9 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
       const rot = rotationOf(st);
       ctx.save();
       if (rot) { ctx.translate(x + w / 2, y + h / 2); ctx.rotate(rot * Math.PI / 180); ctx.translate(-(x + w / 2), -(y + h / 2)); }
+      /* Clip to the element's real silhouette so clipped bands/wedges and
+       * rounded/quarter-circle corners don't paint as full rectangles. */
+      clipToElementShape(ctx, st, x, y, w, h);
       const painted = paintCssBackground(ctx, w, h, st, x, y, parseFloat(st.opacity));
       if (!painted) {
         const bg = cssColorToHex(st.backgroundColor, doc);
@@ -367,6 +479,31 @@ function paintCssBackground(ctx, w, h, style, x = 0, y = 0, alpha = 1) {
   }
   ctx.restore();
   return painted;
+}
+
+/* Clip the current canvas path to an element's real silhouette: a clip-path
+ * polygon, or its rounded/quarter-circle corners. No-op for a plain rectangle.
+ * (Caller has already applied rotation, so work in axis-aligned x,y,w,h.) */
+function clipToElementShape(ctx, style, x, y, w, h) {
+  const poly = parseClipPolygon(style.clipPath, w, h);
+  if (poly) {
+    ctx.beginPath();
+    poly.forEach((p, i) => i ? ctx.lineTo(x + p.x, y + p.y) : ctx.moveTo(x + p.x, y + p.y));
+    ctx.closePath(); ctx.clip();
+    return;
+  }
+  const rad = cornerRadii(style, w, h);
+  if (rad.tl || rad.tr || rad.br || rad.bl) {
+    const tl = Math.min(rad.tl, w, h), tr = Math.min(rad.tr, w, h),
+          br = Math.min(rad.br, w, h), bl = Math.min(rad.bl, w, h);
+    ctx.beginPath();
+    ctx.moveTo(x + tl, y);
+    ctx.lineTo(x + w - tr, y); ctx.arcTo(x + w, y, x + w, y + tr, tr);
+    ctx.lineTo(x + w, y + h - br); ctx.arcTo(x + w, y + h, x + w - br, y + h, br);
+    ctx.lineTo(x + bl, y + h); ctx.arcTo(x, y + h, x, y + h - bl, bl);
+    ctx.lineTo(x, y + tl); ctx.arcTo(x, y, x + tl, y, tl);
+    ctx.closePath(); ctx.clip();
+  }
 }
 
 /* Extract {color,pos} stops from a computed gradient string. */
@@ -467,6 +604,26 @@ async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) 
 }
 
 /* Public: convert the current generated design. Returns {template, substitutions}. */
+/* Render an HTML string in a temporary, laid-out (but off-screen) iframe and
+ * extract one page from it. Used for reliable double-sided extraction. */
+async function extractFromOffscreen(html, widthPx, heightPx, substitutions) {
+  const frame = document.createElement('iframe');
+  frame.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+  frame.style.cssText = 'position:fixed;left:-10000px;top:0;border:0;'
+    + 'width:' + widthPx + 'px;height:' + (heightPx * 2) + 'px;';
+  document.body.appendChild(frame);
+  try {
+    await new Promise(resolve => {
+      frame.addEventListener('load', resolve, { once: true });
+      frame.srcdoc = html;
+    });
+    await new Promise(r => setTimeout(r, 250)); // let fonts/layout settle
+    return await extractPage(frame, widthPx, heightPx, substitutions);
+  } finally {
+    frame.remove();
+  }
+}
+
 async function convertCurrentDesign() {
   if (!generatedHtml || !lastPayload) {
     throw new Error('Generate a design first, then push it to the designer.');
@@ -481,6 +638,18 @@ async function convertCurrentDesign() {
     const back = await extractPage(document.getElementById('thumbBackFrame'), widthPx, heightPx, substitutions);
     if (front) pages.push(front);
     if (back) pages.push(back);
+    /* Robust path: if the app's side thumbnails weren't laid out (so a side
+     * came back empty) but the design markup has a back side, render each side
+     * in a temporary offscreen iframe and extract from there. Independent of
+     * the app's preview UI, so double-sided always transfers both pages. */
+    if (pages.length < 2 && /card--back/i.test(generatedHtml)) {
+      pages.length = 0;
+      for (const side of ['front', 'back']) {
+        const html = (typeof injectThumbSideCss === 'function') ? injectThumbSideCss(generatedHtml, side) : generatedHtml;
+        const p = await extractFromOffscreen(html, widthPx, heightPx, substitutions);
+        if (p) pages.push(p);
+      }
+    }
   }
   if (!pages.length) {
     const single = await extractPage(document.getElementById('previewFrame'), widthPx, heightPx, substitutions);

@@ -1065,6 +1065,9 @@ function parseObjectsFromCanvas(index, canvas) {
 				objectIndexesToDelete.push(i);
 				//canvas.remove(currentObject);
 				//canvas.nonPrintedObjects.push(currentObject);
+			} else {
+				// TIER 1: imported solid circle → first-class shape
+				canvas.shapeObjects.push(currentObject);
 			}
 		} else if (currentObject.type === "curvedText") {
 			currentObject.set("objectCaching", false);
@@ -1100,6 +1103,21 @@ function parseObjectsFromCanvas(index, canvas) {
 				canvas.shapeObjects.push(currentObject);
 			}
 			//else imageObjects.push(currentObject);
+		} else if (
+			// TIER 1: native vector shapes (polygons/paths/ellipses/triangles/
+			// lines) and anything explicitly tagged sterlingType "shape" become
+			// first-class editable shapes — so the shape tools recolour them and
+			// production output (fabric toSVG) renders them. Previously these
+			// types fell through and were untracked.
+			currentObject.type === "polygon" || currentObject.type === "path" ||
+			currentObject.type === "ellipse" || currentObject.type === "triangle" ||
+			currentObject.type === "line" || currentObject.sterlingType === "shape") {
+			if (currentObject.sterlingType === "nonPrintedObject") {
+				objectIndexesToDelete.push(i);
+			} else {
+				currentObject.set("objectCaching", false);
+				canvas.shapeObjects.push(currentObject);
+			}
 		}
 	}
 	for (var i = objectIndexesToDelete.length - 1; i >= 0; i--) {
