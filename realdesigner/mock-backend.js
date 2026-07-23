@@ -86,13 +86,6 @@
     return info;
   }
 
-  function synthesizeBlankTemplate(design) {
-    var t = JSON.parse(JSON.stringify(design));
-    (t.pages || []).forEach(function (p) {
-      if (p.canvasData) p.canvasData.objects = [];
-    });
-    return t;
-  }
 
   function blockedMessage(endpoint) {
     if (window.toastr) {
@@ -109,7 +102,10 @@
       return { data: pushed ? synthesizeStampInfo(pushed) : JSON.parse(JSON.stringify(FIXTURE_STAMPINFO)) };
     }
     if (path.indexOf('gettemplatejson.cfm') >= 0) {
-      return { data: pushed ? synthesizeBlankTemplate(pushed) : JSON.parse(JSON.stringify(FIXTURE_TEMPLATE)) };
+      // Serve the FULL pushed design (with objects) so the designer loads it
+      // natively on boot through its own parseTemplate — one clean load,
+      // correct page count for double-sided designs, no double-loading.
+      return { data: pushed ? JSON.parse(JSON.stringify(pushed)) : JSON.parse(JSON.stringify(FIXTURE_TEMPLATE)) };
     }
     if (path.indexOf('getdesignjson.cfm') >= 0) {
       var m = /designcode=([^&]+)/i.exec(query);

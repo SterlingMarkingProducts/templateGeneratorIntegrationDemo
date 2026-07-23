@@ -80,6 +80,21 @@ function rotationOf(style) {
   return Math.round(Math.atan2(b, a) * (180 / Math.PI) * 100) / 100;
 }
 
+/* True when a computed transform is at most a pure rotation (uniform, no
+ * mirror/scale/skew/translate) — the only case an axis-anchored i-text overlay
+ * can reproduce faithfully. Anything else (scaleX(-1), skew, translate) stays
+ * baked in the raster. */
+function isSimpleTransform(t) {
+  if (!t || t === 'none') return true;
+  const m = t.match(/matrix\(([^)]+)\)/);
+  if (!m) return true;
+  const [a, b, c, d, e, f] = m[1].split(',').map(parseFloat);
+  const sx = Math.hypot(a, b), sy = Math.hypot(c, d);
+  const det = a * d - b * c;
+  return det > 0 && Math.abs(sx - 1) < 0.02 && Math.abs(sy - 1) < 0.02
+      && Math.abs(e) < 0.5 && Math.abs(f) < 0.5;
+}
+
 function hasDirectText(el) {
   return Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim().length > 0);
 }
@@ -111,29 +126,33 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     const height = r.height * factor;
     const angle = rotationOf(style);
 
-    /* CSS-painted shapes, gradients, grids, and decorations are NOT extracted
-     * as objects — they are captured pixel-perfectly by the background raster
-     * (rasterizeBackground). Only text, photos, and inline SVGs become
-     * separate editable objects. */
+    /* ALL decoration — CSS gradients, grids, painted shapes, inline SVG
+     * foliage/ornaments (including those with gradient defs and mirror/rotate
+     * transforms), and everything else that isn't plain text or a photo — is
+     * captured pixel-perfectly by the background raster (rasterizeBackground).
+     * It is NOT extracted as a separate object: standalone SVG serialization
+     * loses shared gradient defs and CSS transforms, which is what made foliage
+     * vanish and ornaments land off-position. Only genuine photos (<img>) and
+     * text become editable overlays. */
 
-    if (el.tagName === 'IMG' && el.currentSrc) {
+    if (el.tagName === 'svg') {
+      // leave in the raster; skip its descendants as text sources
+      el.querySelectorAll('*').forEach(c => textOwners.add(c));
+      continue;
+    }
+    if (el.tagName === 'IMG' && el.currentSrc && !el.currentSrc.startsWith('data:image/svg')) {
       el.setAttribute('data-tg-extract', '1');
       objects.push(makeImageObject(el.currentSrc, el.naturalWidth || r.width, el.naturalHeight || r.height,
                                    left, top, width, height, angle, style));
-    } else if (el.tagName === 'svg') {
-      el.setAttribute('data-tg-extract', '1');
-      const svgData = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(el.outerHTML)));
-      objects.push(makeImageObject(svgData, r.width, r.height, left, top, width, height, angle, style));
-      const inner = el.querySelectorAll('*');
-      inner.forEach(c => textOwners.add(c));
-      continue;
     }
 
-    /* Text: one designer-native i-text per element that directly owns text.
-     * Emitted with sterlingType "textObject" so the designer's
-     * parseObjectsFromCanvas registers it into canvas.textObjects, binding the
-     * font/colour/bold/italic toolbar. */
-    if (hasDirectText(el) && !textOwners.has(el)) {
+    /* Text extraction is limited to axis-aligned, non-mirrored, non-vertical
+     * text so overlays land exactly where the raster shows them. Vertical
+     * monograms, mirrored, or skewed text stay baked in the raster (visible but
+     * not editable) rather than being lifted to the wrong place. */
+    const wm = style.writingMode || '';
+    const transformOK = isSimpleTransform(style.transform);
+    if (hasDirectText(el) && !textOwners.has(el) && !wm.startsWith('vertical') && transformOK) {
       textOwners.add(el);
       el.setAttribute('data-tg-extract', '1');
       const fontSize = parseFloat(style.fontSize) * factor;
@@ -290,10 +309,19 @@ function buildSterlingTemplate(pages, payload) {
   };
 }
 
-/* Locate the design surface inside a preview document. */
+/* Locate the design surface inside a preview document. Must return the first
+ * VISIBLE candidate: a double-sided design renders both .card--front and
+ * .card--back in every frame, with one hidden via display:none. Returning the
+ * first match by DOM order would pick the hidden front card in the back frame
+ * (width 0), silently dropping the back page. */
 function findDesignRoot(doc) {
-  return doc.querySelector('.card, .design, .canvas, [class*="card"], [class*="plate"], [class*="badge"]')
-      || doc.body?.firstElementChild;
+  const candidates = doc.querySelectorAll('.card, .design, .canvas, [class*="card"], [class*="plate"], [class*="badge"]');
+  for (const el of candidates) {
+    const style = doc.defaultView.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') continue;
+    if (el.getBoundingClientRect().width > 2) return el;
+  }
+  return candidates[0] || doc.body?.firstElementChild;
 }
 
 async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) {

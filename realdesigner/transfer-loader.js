@@ -69,28 +69,25 @@
     if (window.currentCanvas && window.currentCanvas.renderAll) window.currentCanvas.renderAll();
   }
 
-  var tries = 0;
+  /* The pushed design is served to the designer's OWN boot template-load via
+   * the mock backend (gettemplatejson returns the full design), so it loads
+   * natively — correct page count, toolbar-bound text, no double-loading. This
+   * loader only waits for that native load to finish, sweeps any stray default
+   * placeholder, and shows the provenance badge + recommendations link. */
+  var tries = 0, shown = false;
   var timer = setInterval(function () {
     tries++;
-    var ready = typeof window.parseTemplate === 'function'
-      && typeof window.currentCanvas !== 'undefined' && window.currentCanvas
-      && window.canvases && window.canvases.length > 0;
-    if (ready) {
+    var loaded = window.canvases && window.canvases.length > 0
+      && window.canvases.some(function (c) { return c.getObjects && c.getObjects().length > 0; });
+    if (loaded && !shown) {
+      shown = true;
       clearInterval(timer);
-      // small settle delay so the blank-template boot finishes rendering first
-      setTimeout(function () {
-        try {
-          window.parseTemplate(JSON.parse(JSON.stringify(record.design)));
-          removePlaceholders();
-          // second sweep in case boot code adds the placeholder late
-          setTimeout(removePlaceholders, 800);
-          badge();
-        } catch (e) {
-          if (window.toastr) toastr.error('Transferred design could not be loaded: ' + e.message);
-        }
-      }, 600);
+      removePlaceholders();
+      setTimeout(removePlaceholders, 800);
+      badge();
     } else if (tries > 100) { // ~30s
       clearInterval(timer);
+      if (!shown) badge();
     }
   }, 300);
 })();
