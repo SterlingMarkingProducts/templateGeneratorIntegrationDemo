@@ -222,49 +222,168 @@ function normalizeLineHeight(style, fontSizePx) {
 function round2(n) { return Math.round(n * 100) / 100; }
 function round4(n) { return Math.round(n * 10000) / 10000; }
 
-/* Render everything EXCEPT the extracted elements (marked data-tg-extract) to
- * a PNG: gradients, grids, glows, and every other CSS-painted decoration
- * transfer pixel-perfectly as a locked background image, while the extracted
- * text/images sit on top as editable objects. Uses an SVG foreignObject
- * snapshot — fully local, no libraries, no network. Returns null on failure
- * (the design still transfers, just without the painted background). */
+/* Render everything EXCEPT the extracted elements (marked data-tg-extract) into
+ * a PNG that becomes a locked background layer, while the extracted text/images
+ * sit on top as editable objects.
+ *
+ * Primary path: a single SVG-foreignObject snapshot of the whole card — captures
+ * CSS gradients, patterns, grids, blends, and inline SVG pixel-perfectly when it
+ * decodes. Some designs (blend-modes + conic-gradient + SVG <defs>/<use>) can't
+ * be decoded that way; for those we fall back to a COMPOSITIONAL raster: paint
+ * the card's real background, then draw each decorative block and each inline
+ * SVG individually (standalone SVGs decode reliably). Worst case still yields a
+ * legible, on-brand background instead of white. */
 async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
+  const rect = rootEl.getBoundingClientRect();
+  const scale = 2; // 2x for crisp zooming in the designer
+  const cw = Math.round(targetWidthPx * scale), ch = Math.round(targetHeightPx * scale);
+  const cv = document.createElement('canvas');
+  cv.width = cw; cv.height = ch;
+  const ctx = cv.getContext('2d');
+  const toObj = () => ({
+    type: 'image', version: '4.4.0', originX: 'left', originY: 'top',
+    left: 0, top: 0, width: cw, height: ch,
+    scaleX: round4(targetWidthPx / cw), scaleY: round4(targetHeightPx / ch),
+    angle: 0, src: cv.toDataURL('image/png'), crossOrigin: 'anonymous', opacity: 1,
+    fixedImage: true, sterlingType: 'backgroundArt',
+  });
+
+  // --- Primary: whole-card foreignObject snapshot ---
   try {
-    const rect = rootEl.getBoundingClientRect();
     const clone = rootEl.cloneNode(true);
     clone.querySelectorAll('[data-tg-extract]').forEach(el => { el.style.visibility = 'hidden'; });
     clone.querySelectorAll('img, link, script').forEach(el => {
       if (el.tagName === 'IMG' && (el.getAttribute('src') || '').startsWith('data:')) return;
-      el.remove(); // externals cannot load inside an SVG snapshot
+      el.remove();
     });
     const styles = [...doc.querySelectorAll('style')].map(st => st.textContent).join('\n');
-    const serializer = new XMLSerializer();
     const html = '<div xmlns="http://www.w3.org/1999/xhtml" style="width:' + rect.width + 'px;height:' + rect.height + 'px;overflow:hidden">'
       + '<style>' + styles.replace(/@import[^;]+;/g, '') + '</style>'
-      + serializer.serializeToString(clone) + '</div>';
+      + new XMLSerializer().serializeToString(clone) + '</div>';
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + rect.width + '" height="' + rect.height + '">'
       + '<foreignObject width="100%" height="100%">' + html + '</foreignObject></svg>';
     const img = new Image();
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     await img.decode();
-    const scale = 2; // 2x for print-quality zooming in the designer
-    const cv = document.createElement('canvas');
-    cv.width = Math.round(targetWidthPx * scale);
-    cv.height = Math.round(targetHeightPx * scale);
-    const ctx = cv.getContext('2d');
-    ctx.drawImage(img, 0, 0, cv.width, cv.height);
-    const dataUrl = cv.toDataURL('image/png');
-    return {
-      type: 'image', version: '4.4.0', originX: 'left', originY: 'top',
-      left: 0, top: 0, width: cv.width, height: cv.height,
-      scaleX: round4(targetWidthPx / cv.width), scaleY: round4(targetHeightPx / cv.height),
-      angle: 0, src: dataUrl, crossOrigin: 'anonymous', opacity: 1,
-      fixedImage: true, sterlingType: 'backgroundArt',
-    };
+    ctx.drawImage(img, 0, 0, cw, ch);
+    return toObj();
   } catch (e) {
-    console.warn('Background raster failed, transferring objects only:', e.message);
+    console.warn('Whole-card raster failed; using compositional fallback:', e.message);
+  }
+
+  // --- Fallback: paint background + decorative blocks + standalone SVGs ---
+  try {
+    const f = cw / rect.width; // root px -> canvas px
+    paintCssBackground(ctx, cw, ch, doc.defaultView.getComputedStyle(rootEl));
+    // decorative blocks (solid or gradient painted divs), back-to-front
+    const walker = doc.createTreeWalker(rootEl, NodeFilter.SHOW_ELEMENT);
+    const els = [];
+    while (walker.nextNode()) els.push(walker.currentNode);
+    for (const el of els) {
+      if (el.hasAttribute('data-tg-extract') || el.tagName === 'svg' || el === rootEl) continue;
+      const st = doc.defaultView.getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden' || parseFloat(st.opacity) < 0.05) continue;
+      if (hasDirectText(el)) continue; // text handled by overlay
+      const r = el.getBoundingClientRect();
+      const x = (r.left - rect.left) * f, y = (r.top - rect.top) * f, w = r.width * f, h = r.height * f;
+      if (w < 1 || h < 1) continue;
+      const rot = rotationOf(st);
+      ctx.save();
+      if (rot) { ctx.translate(x + w / 2, y + h / 2); ctx.rotate(rot * Math.PI / 180); ctx.translate(-(x + w / 2), -(y + h / 2)); }
+      const painted = paintCssBackground(ctx, w, h, st, x, y, parseFloat(st.opacity));
+      if (!painted) {
+        const bg = cssColorToHex(st.backgroundColor, doc);
+        if (bg) { ctx.globalAlpha = parseFloat(st.opacity); ctx.fillStyle = bg; ctx.fillRect(x, y, w, h); }
+      }
+      ctx.restore();
+      continue;
+    }
+    // inline SVGs, standalone (they decode even when the whole-card snapshot won't)
+    for (const svgEl of rootEl.querySelectorAll('svg')) {
+      try {
+        const r = svgEl.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) continue;
+        const clone = svgEl.cloneNode(true);
+        if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        if (!clone.getAttribute('xmlns:xlink')) clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        if (!clone.getAttribute('width')) clone.setAttribute('width', r.width);
+        if (!clone.getAttribute('height')) clone.setAttribute('height', r.height);
+        const s = new XMLSerializer().serializeToString(clone);
+        const im = new Image();
+        im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+        await im.decode();
+        const st = doc.defaultView.getComputedStyle(svgEl);
+        const rot = rotationOf(st);
+        const x = (r.left - rect.left) * f, y = (r.top - rect.top) * f, w = r.width * f, h = r.height * f;
+        ctx.save();
+        ctx.globalAlpha = parseFloat(st.opacity);
+        if (rot) { ctx.translate(x + w / 2, y + h / 2); ctx.rotate(rot * Math.PI / 180); ctx.drawImage(im, -w / 2, -h / 2, w, h); }
+        else ctx.drawImage(im, x, y, w, h);
+        ctx.restore();
+      } catch (svgErr) { /* skip an undecodable ornament */ }
+    }
+    return toObj();
+  } catch (e2) {
+    console.warn('Compositional raster failed; transferring objects only:', e2.message);
     return null;
   }
+}
+
+/* Paint a CSS background (linear-gradient or solid) into ctx at (x,y,w,h).
+ * Returns true if it painted a gradient/color, false if there was nothing to
+ * paint. Radial/conic gradients fall back to their first colour stop. */
+function paintCssBackground(ctx, w, h, style, x = 0, y = 0, alpha = 1) {
+  const bgImg = style.backgroundImage || 'none';
+  const stops = parseGradientStops(bgImg);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  let painted = false;
+  const lin = bgImg.match(/linear-gradient\(([^]*)\)/i);
+  if (lin && stops.length) {
+    const angleMatch = lin[1].match(/^\s*(-?[\d.]+)deg/);
+    const ang = (angleMatch ? parseFloat(angleMatch[1]) : 180) * Math.PI / 180;
+    const cx = x + w / 2, cy = y + h / 2;
+    const len = Math.abs(w * Math.sin(ang)) + Math.abs(h * Math.cos(ang));
+    const dx = Math.sin(ang) * len / 2, dy = -Math.cos(ang) * len / 2;
+    const g = ctx.createLinearGradient(cx - dx, cy - dy, cx + dx, cy + dy);
+    stops.forEach(s => g.addColorStop(s.pos, s.color));
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h); painted = true;
+  } else if (/radial-gradient|conic-gradient/i.test(bgImg) && stops.length) {
+    ctx.fillStyle = stops[0].color; ctx.fillRect(x, y, w, h); painted = true;
+  } else {
+    const bc = style.backgroundColor;
+    if (bc && bc !== 'transparent' && !/rgba\(0,\s*0,\s*0,\s*0\)/.test(bc)) {
+      ctx.fillStyle = bc; ctx.fillRect(x, y, w, h); painted = true;
+    }
+  }
+  ctx.restore();
+  return painted;
+}
+
+/* Extract {color,pos} stops from a computed gradient string. */
+function parseGradientStops(bgImg) {
+  const inner = bgImg.match(/gradient\(([^]*)\)/i);
+  if (!inner) return [];
+  const parts = splitTopLevel(inner[1]);
+  const stops = [];
+  for (const p of parts) {
+    const m = p.match(/(rgba?\([^)]*\)|#[0-9a-f]{3,8})\s*([\d.]+)%?/i);
+    if (m) stops.push({ color: m[1], pos: Math.max(0, Math.min(1, parseFloat(m[2]) / 100 || 0)) });
+  }
+  if (stops.length && stops.every((s, i) => s.pos === 0)) stops.forEach((s, i) => s.pos = i / (stops.length - 1 || 1));
+  return stops;
+}
+
+/* Split a comma list, ignoring commas inside parentheses (rgb(...)). */
+function splitTopLevel(str) {
+  const out = []; let depth = 0, cur = '';
+  for (const ch of str) {
+    if (ch === '(') depth++;
+    if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) { out.push(cur); cur = ''; } else cur += ch;
+  }
+  if (cur.trim()) out.push(cur);
+  return out;
 }
 
 /* Build the version 1.2 envelope around extracted pages. */
