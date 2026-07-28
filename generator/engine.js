@@ -775,11 +775,6 @@ USER SVG LOGO — when User SVG markup is provided, treat it as the brand logo:
 - Apply CSS fill/stroke color overrides ONLY if needed to ensure contrast against the background; otherwise preserve original colors
 - Do NOT use external references inside the SVG — inline only
 
-VECTOR ARTWORK — logos, brand marks, emblems, monograms, and contact icons (phone, mail, globe, pin, tooth, etc.):
-- Draw them as INLINE <svg> with a viewBox and real shapes/paths — NOT as emoji, icon-font glyphs, background-image, or a raster <img>. Inline SVG is imported as crisp, editable VECTOR that stays sharp at any size (this matters most for large-format/signage) and remains a separately movable object.
-- Make each icon/logo self-contained (its own <svg> with viewBox), recognizable, and clean — a viewer should instantly read what it is.
-- When recreating a reference design, rebuild its logo mark and contact icons as inline <svg> that closely match the shapes you see in the reference.
-
 ANTI-PATTERNS — NEVER DO THESE:
 - Do NOT produce a boring single-color card with only text and a tiny photo — this is the #1 failure mode
 - Do NOT use nav-dots, a single thin rule line, or one vertical stripe as the primary graphic language
