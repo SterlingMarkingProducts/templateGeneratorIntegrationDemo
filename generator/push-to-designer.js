@@ -256,22 +256,28 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
      * Native objects are marked data-tg-extract so the raster skips them. */
 
     if (el.tagName === 'svg') {
-      /* Carry vector artwork (logos, icons, emblems) as a crisp SVG image so it
-       * stays sharp at ANY size — critical for signage — and remains a separate
-       * movable/scalable object, instead of being flattened into the raster. */
-      try {
-        if (r.width > 1 && r.height > 1) {
-          const uri = svgElementToDataUri(el, doc, r.width, r.height);
-          if (uri) {
-            el.setAttribute('data-tg-extract', '1');
-            const obj = makeImageObject(uri, round2(r.width), round2(r.height),
-              left, top, width, height, angle, style);
-            obj.sterlingType = 'vectorArt';
-            objects.push(obj);
-            continue;
+      /* Carry LOGO/ICON-sized vector artwork as a crisp SVG image so it stays
+       * sharp at any size and remains a separate movable object. Large or
+       * full-card SVGs (backgrounds, big decorative waves) are left in the
+       * raster — vectorizing them whole can misrender and flood the card. */
+      const areaFrac = (r.width * r.height) / Math.max(1, rootRect.width * rootRect.height);
+      const logoSized = areaFrac <= 0.22 &&
+        r.width <= rootRect.width * 0.5 && r.height <= rootRect.height * 0.6;
+      if (logoSized) {
+        try {
+          if (r.width > 1 && r.height > 1) {
+            const uri = svgElementToDataUri(el, doc, r.width, r.height);
+            if (uri) {
+              el.setAttribute('data-tg-extract', '1');
+              const obj = makeImageObject(uri, round2(r.width), round2(r.height),
+                left, top, width, height, angle, style);
+              obj.sterlingType = 'vectorArt';
+              objects.push(obj);
+              continue;
+            }
           }
-        }
-      } catch (e) { /* fall back to rasterizing the SVG */ }
+        } catch (e) { /* fall back to rasterizing the SVG */ }
+      }
       el.querySelectorAll('*').forEach(c => textOwners.add(c)); // stays in raster
       continue;
     }

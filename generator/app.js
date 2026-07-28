@@ -1024,11 +1024,13 @@ function updateBleedOverlay(scale) {
   }
 
   bleedOverlay.style.setProperty('--bleed', `${hasBleedProduct ? bleed : 12}px`);
-  bleedOverlay.style.setProperty('--safe', `${hasBleedProduct ? bleed * 2 : 12}px`);
+  // Safe-area guide sits at the trim line (one bleed-width in from the edge).
+  bleedOverlay.style.setProperty('--safe', `${hasBleedProduct ? bleed : 12}px`);
   bleedOverlay.style.setProperty('--lw', `${1 / (scale || 1)}px`);
 
   bleedOverlay.querySelector('.bleed-line--bleed')?.classList.toggle('hidden', !showBleedGuide || !hasBleedProduct);
-  bleedOverlay.querySelector('.bleed-line--trim')?.classList.toggle('hidden', !showBleedGuide || !hasBleedProduct);
+  // The separate dark trim line is redundant — the safe-area guide marks the trim.
+  bleedOverlay.querySelector('.bleed-line--trim')?.classList.add('hidden');
   bleedOverlay.querySelector('.bleed-line--safe')?.classList.toggle('hidden', !showSafeGuide);
 
   bleedOverlay.classList.remove('hidden');
