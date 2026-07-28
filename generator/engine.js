@@ -913,11 +913,7 @@ async function handleGenerate(body, send) {
       if (recreateRef) {
         recreatingRef = true;
         refImageForGen = img;
-        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design", palette, and "avoid corporate blue" guidance — do NOT invent a different brand name, palette, or layout. Match what you see.
-
-CONTENT COMPLETENESS — reproduce EVERY line of text captured from the reference: the full name, the title/role, EVERY contact line (phone, email, website, AND the complete street address), the tagline/slogan, any descriptor line, and any service list. Omitting or truncating ANY line the reference contains is WRONG. If space is tight, REDUCE FONT SIZES and tighten spacing to make everything fit — never drop, shorten, or clip a line, and never let text run past the card edge.
-
-${inspiration}`;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design", palette, and "avoid corporate blue" guidance — do NOT invent a different brand name, palette, or layout. Match what you see.\n\n${inspiration}`;
       } else {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }
