@@ -974,6 +974,48 @@ function recurseGroup(objects, canvas) {
 	});
 }
 
+/* TIER 2: convert a pushed vector-artwork image (an SVG data URI, sterlingType
+ * "vectorArt") into an editable native vector GROUP via fabric.loadSVGFromString,
+ * so logos/icons transfer as real editable vector paths — close to a direct
+ * platform-to-platform handoff — rather than a flattened image. Async: the
+ * placeholder image renders immediately and is swapped for the vector group when
+ * parsing finishes. Returns true if a conversion was started. */
+function importVectorArt(canvas, imgObj) {
+	var src = (imgObj && typeof imgObj.getSrc === "function") ? imgObj.getSrc() : (imgObj && imgObj.src);
+	if (!src || src.indexOf("data:image/svg+xml") !== 0) return false;
+	var svgMarkup;
+	try {
+		var comma = src.indexOf(",");
+		var meta = src.slice(0, comma);
+		var payload = src.slice(comma + 1);
+		svgMarkup = /;base64/i.test(meta) ? decodeURIComponent(escape(window.atob(payload))) : decodeURIComponent(payload);
+	} catch (e) { return false; }
+	var tLeft = imgObj.left, tTop = imgObj.top, tAngle = imgObj.angle || 0;
+	var tW = imgObj.width * (imgObj.scaleX || 1);
+	var tH = imgObj.height * (imgObj.scaleY || 1);
+	try {
+		fabric.loadSVGFromString(svgMarkup, function (objects, options) {
+			if (!objects || !objects.length) return; // keep the placeholder image
+			var grp = fabric.util.groupSVGElements(objects, options);
+			var gw = grp.width || tW, gh = grp.height || tH;
+			grp.set({
+				originX: "left", originY: "top",
+				left: tLeft, top: tTop, angle: tAngle,
+				scaleX: gw ? tW / gw : 1, scaleY: gh ? tH / gh : 1,
+				sterlingType: "shape", objectCaching: false,
+			});
+			canvas.remove(imgObj);
+			for (var k = canvas.imageObjects.length - 1; k >= 0; k--) {
+				if (canvas.imageObjects[k].fabricImage === imgObj) canvas.imageObjects.splice(k, 1);
+			}
+			canvas.add(grp);
+			canvas.shapeObjects.push(grp);
+			if (typeof canvas.requestRenderAll === "function") canvas.requestRenderAll(); else canvas.renderAll();
+		});
+		return true;
+	} catch (e) { return false; }
+}
+
 function parseObjectsFromCanvas(index, canvas) {
 	if ((canvas === null || canvas === undefined) && parseInt(index) > -1) {
 		canvas = canvases[index];
@@ -1058,6 +1100,10 @@ function parseObjectsFromCanvas(index, canvas) {
 					currentObject.hasControls = false;
 					currentObject.lockMovementX = true;
 					currentObject.lockMovementY = true;
+				}
+				// TIER 2: swap pushed vector artwork for an editable vector group
+				if (currentObject.sterlingType === "vectorArt") {
+					importVectorArt(canvas, currentObject);
 				}
 			}
 		} else if (currentObject.type === "circle") {

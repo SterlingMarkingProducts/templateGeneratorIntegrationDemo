@@ -18,8 +18,9 @@ check('vector image contains real SVG markup',/<svg/.test(conv.vectorSvgDecoded|
 const popupP=ctx.waitForEvent('page',{timeout:20000});
 await page.getByRole('button',{name:/Push to Designer/i}).click();
 const d=await popupP;await d.waitForLoadState('domcontentloaded');await d.waitForTimeout(9000);
-const des=await d.evaluate(()=>{const cv=currentCanvas;const imgs=cv.getObjects().filter(o=>o.type==='image');return {imgCount:imgs.length,anySelectable:imgs.some(o=>o.selectable!==false),srcs:imgs.map(o=>(o.getSrc?o.getSrc():o.src||'').slice(0,24))};});
+const des=await d.evaluate(()=>{const cv=currentCanvas;const objs=cv.getObjects();const groups=objs.filter(o=>o.type==='group'||o.type==='path');const svgImgs=objs.filter(o=>o.type==='image'&&(o.getSrc?o.getSrc():o.src||'').indexOf('data:image/svg')===0);const shapeHasVec=(cv.shapeObjects||[]).some(o=>o.type==='group'||o.type==='path');return {objTypes:objs.map(o=>o.type),groupCount:groups.length,svgImgsLeft:svgImgs.length,shapeHasVec,groupSelectable:groups.some(o=>o.selectable!==false)};});
 console.log('designer:',JSON.stringify(des));
-check('SVG image present & selectable in designer',des.imgCount>=1&&des.anySelectable);
+check('SVG logo converted to editable vector group (not a flat image)',des.groupCount>=1&&des.svgImgsLeft===0);
+check('vector group registered as an editable shape',des.shapeHasVec&&des.groupSelectable);
 console.log(`\n${pass}/${pass+fail} checks passed`);
 await br.close();srv.close();process.exit(fail?1:0);
