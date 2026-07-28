@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script src="../demo-guard.js?v=tier1-21"></script>
+<script src="../demo-guard.js?v=tier1-22"></script>
 <title>Sterling Designer — TEST HARNESS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Designer type library (open CORS). Fabric measures/renders pushed text in
+     these real faces so a transferred design keeps its fonts and layout.
+     Static assets only — no data / API / cart / order connection. -->
+<link rel="stylesheet" href="https://saturn.sterling.ca/cdn/hteng/fonts/fonts.css" type="text/css" media="all">
 <style>
   :root { --accent: #e8590c; --ok: #2b8a3e; --warn: #e67700; --bad: #c92a2a; }
   * { box-sizing: border-box; }
@@ -68,8 +72,8 @@
 </main>
 <div id="toast"></div>
 
-<script src="vendor/fabric-4.4.0.min.js?v=tier1-21"></script>
-<script src="../generator/product-compat.js?v=tier1-21"></script>
+<script src="vendor/fabric-4.4.0.min.js?v=tier1-22"></script>
+<script src="../generator/product-compat.js?v=tier1-22"></script>
 <script>
 /* Test harness: loads a sterling-template-1.2 transfer, renders each page as an
  * editable Fabric v4 canvas (the same engine version the live designer uses),
@@ -202,6 +206,11 @@ function showPage(i) {
   fabricCanvas.setDimensions({ width: Math.min(cp.width, maxW), height: Math.min(cp.width, maxW) / (cp.width / cp.height) });
   fabricCanvas.loadFromJSON(p.canvasData, () => {
     fabricCanvas.renderAll();
+    // Fabric measures text before web fonts finish loading; repaint once the
+    // designer type library is ready so pushed text shows its real faces.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => { if (fabricCanvas) fabricCanvas.requestRenderAll(); });
+    }
     ['object:modified', 'object:added', 'object:removed', 'text:changed'].forEach(ev =>
       fabricCanvas.on(ev, () => { p.dirty = true; }));
     document.getElementById('dims').textContent =

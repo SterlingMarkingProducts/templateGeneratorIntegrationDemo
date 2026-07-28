@@ -778,8 +778,20 @@ function appendUniversalFit(out) {
     : out + UNIVERSAL_FIT_SCRIPT;
 }
 
+/* The designer's full type library. Loading it into the preview makes the
+ * preview render in the SAME fonts the designer uses, so what the user approves
+ * on screen matches what transfers. Marked so the push extractor's own font
+ * loader treats it as already present. */
+const DESIGNER_FONTS_LINK = '<link rel="stylesheet" href="https://saturn.sterling.ca/cdn/hteng/fonts/fonts.css" data-tg-fonts="1">';
+
 function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
   const { creativityLevel, templateType } = options;
+  // Ensure the preview loads the designer fonts (once).
+  if (!html.includes('data-tg-fonts')) {
+    html = html.includes('</head>')
+      ? html.replace('</head>', DESIGNER_FONTS_LINK + '</head>')
+      : DESIGNER_FONTS_LINK + html;
+  }
   const isLargeFormat = /poster|sign/i.test(templateType || '') || heightPx > 600;
   const isBold = creativityLevel === 'bold';
 

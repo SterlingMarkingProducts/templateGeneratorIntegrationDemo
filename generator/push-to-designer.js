@@ -26,17 +26,114 @@ const SMP_CONFIG = {
   transferTtlMs: 30 * 60 * 1000, // stored transfers expire after 30 minutes
 };
 
-/* Fonts available in the live designer (fontlist in Designer.cfm). */
-const STERLING_FONTS = ['Arial','Arial Narrow','Aptos','Atlanta','Atlantic Inline','Belgium','Bentham','Bermuda Script','BrushScriptStd','Castle Com','Calibri','Clarendon BT','Cooper Md BT','Courier New','FleurishScript','Franklin Gothic ITC Bk BT','Futura Md BT','Futura Hv BT','Futura Bk BT','Germany','Gill Sans MT','Goudy Old Style','Helsinki Narrow','Helvetica','Istanbul','Myriad Pro','Myriad Pro Condensed','Open Sans','Open Sans Light','Open Sans SemiBold','Optima','Palatino Linotype','San Diego','Swis721 BT','Times New Roman','Trade Gothic Next','Trade Gothic Next Condensed','Trade Gothic Next Light','Trebuchet MS','US Roman','Utah','Verdana','Zapf Chancery'];
+/* The designer loads its full type library from this stylesheet. The generator
+ * and the designer must agree on it exactly so a pushed design renders in the
+ * SAME font it was measured in — otherwise the browser substitutes a fallback
+ * with different metrics and text shifts / overlaps on transfer. */
+const FONTS_CSS_URL = 'https://saturn.sterling.ca/cdn/hteng/fonts/fonts.css';
 
+/* Every font-family the designer's fonts.css actually provides (derived from
+ * that stylesheet). Because this now matches the designer's real library, a
+ * design authored in e.g. Montserrat / Poppins / Roboto maps to itself rather
+ * than collapsing to Arial, so metrics are preserved end to end. */
+const STERLING_FONTS = ["Adobe Arabic","Adobe Caslon Pro","Adobe Caslon Pro Semibold","Agenda SemiBold","Akkurat","Akkurat-Light","Aktiv Grotesk","Alright Sans","Alright Sans Black","Alright Sans Medium","Aptos","Aptos Narrow","Aptos SemiBold","Arial","Arial Black","Arial GEO","Arial Narrow","Arial Rounded","Arial Unicode MS","Arimo","Arvo","ATB TT Norms","ATB TT Norms DemiBold","ATBTTNorms DemiBold","Atlanta","Atlantic Inline","Avant Garde","Avant Garde Light","Avenir","Avenir Black","Avenir Book","Avenir Heavy","Avenir Light","Avenir LT Std 45 Book","Avenir LT Std 65 Medium","Avenir LT Std 85 Heavy","Avenir LT Std 95 Black","Avenir Medium","Avenir Next Cyr Medium","Avenir Next LT Pro","Avenir Next LT Pro Demi","Avenir Roman","Bai Jamjuree","Bai Jamjuree Medium","Ballinger","Ballinger Medium","Bebas Neue","Belgium","Bentham","Bermuda Script","Berthold Akzidenz Grotesk","Berthold Akzidenz Grotesk Medium","Bliss 2","Bliss 2 Light","Bliss Pro","Bliss Pro ExtraBold","Bliss Pro Light","Bodega Sans Black","Bodega Sans Black Oldstyle","Bodega Sans Light","Bodega Sans Light Oldstyle","Bodega Sans Light Smallcaps","Bodega Sans Medium","Bodega Sans Medium Smallcaps","Bombshell Pro","Boton","Boton Medium","Brandon Text","Brenntag Sans","BrownLL","BrownLL Light","BrownLL Medium","BrownLL Thin","BrushScriptStd","Calibri","Calibri Light","Cambria","Caslon Openface","Castle Com","Castle Com Light","Castle Com Ultra","CastleT","Century Gothic","Cera Pro","Cera Pro Black","Cera Pro Medium","Channel","Charter","Charter BT Pro","Charter BT Pro Black","Circular Pro","Clarendon BT","ClassicGrotesquePro Book","ClassicGrotesquePro Light","ClassicGrotesquePro Medium","Cooper BT for WFM Medium","Cooper Md BT","Copperplate","Corporate Traveller","Courier New","D-DIN","DIN Alternate","DIN Next LT Pro","DIN Next LT Pro Medium","DINPro","DINPro Black","DINPro Medium","DINSerifNoLigatures","DTL Haarlemmer SD","Elston Pro","Elston Pro Light","Engravers MT","EvoBQ","EvoBQ Medium","FleurishScript","Ford Antenna","Ford Antenna Comp","Forma DJR Display","Franklin Gothic Demi Cond","Franklin Gothic ITC Bk BT","Franklin Gothic Medium Cond","FreightBigPro Light","FrutigerLinotype","Futura Bk BT","Futura Hv BT","Futura Md BT","Futura PT Book","Futura PT Demi","Futura PT Light","Futura PT Medium","Futura Std","Futura Std Heavy","Futura Std Medium","Garamond","Geometria Light","Geometric Slabserif 703","Georgia","Germany","GerTT","Gill Sans MT","Gill Sans MT Pro ExtraBold","Gill Sans MT Std","Gill Sans MT Std Condensed","Gill Sans MT Std Light","Gill Sans MT Std Medium","Gilroy","Gilroy ExtraBold","Gilroy Light","Gilroy Medium","Gilroy SemiBold","Giovanni Book","Giovanni LT Book","GiovanniStd Black","Gontserrat","Gotham","Gotham Light","Gotham Narrow Book","Gotham Narrow Medium","Gotham-Book","GothamHTFBlack","GothamMedium","GothamMedium-Italic","GothamRounded Medium","GothamRounded-Book","Goudy Old Style","GoudySwa","Graphik Light","Graphik Medium","Greycliff CF Demi Bold","GT Walsheim","Heebo","Heebo Medium","Helsinki Narrow","Helvetica","Helvetica Condensed","Helvetica Light","Helvetica LT Std","Helvetica Neue LT Pro 45 Light","Helvetica Neue LT Pro 55 Roman","HelveticaNeue","HelveticaNeue Condensed","HelveticaNeue Light","HelveticaNeue Medium Condensed","Hilti","IBM Plex Sans","IBM Plex Sans Medium","IBM Plex Sans SemiBold","Inter","Interstate Black","Interstate Light","Istanbul","ITC Bradley Hand Com","ITC Charter Com","JDSans","JDSans Book","JDSans Light","Josefin Sans Light","KGAllThingsNew","Klavika","Klavika Condensed","Klavika Light Condensed","Klavika Medium","Klavika Medium Condensed","Knockout-HTF69-FullLiteweight","Kozuka Gothic Pr6N R","Larken Medium","Lato","League Gothic","LeawoodBook","LeviathanHTFBlack","Lincoln Proxima Nova","Lota Grotesque","Lucida Handwriting","Lufga","Lufga SemiBold","Malgun Gothic","Marine","Marine Black","Marine Light","Marine UP","Marine UP Black","Marine UP Light","Market Deco","MarkOT CondMedium","MarkOT Medium","MarkPro","MarkPro Light","MarkPro NarrowLight","Marsfont","Marsfont Light","Marsfont Medium","MCQ Global","MCQ Global Condensed","MCQ Global Light","MCQ Global Medium","MetaPlusBook Roman","MetaPlusMedium Caps","MetaPlusMedium Roman","MetaPro","MICR","Microsoft Sans Serif","Minion Pro","Moderat","Montserrat","Montserrat Light","Montserrat Medium","Montserrat SemiBold","Montserrat-Light","Montserrat-LightItalic","Montserrat-Medium","MrsEavesAllSmallCap","MrsEavesPetiteCaps","MrsEavesSmallCaps","Museo Sans 100","Museo Sans 300","Museo Sans 500","Museo Sans 700","Museo Sans 900","Myriad Pro","Myriad Pro Black","Myriad Pro Condensed","Myriad Pro Light","Myriad Pro SemiBold","Neue Haas Unica","Neue Haas Unica Black","Neutra Text Book","Nexa","Nexa Black","NHaasGroteskDSPro-35XLt","NHaasGroteskDSPro-55Rg","NotoSans SemiBold","Nunito Sans","Nunito Sans ExtraBold","Nunito Sans SemiBold","Oaksans","Oaksans Medium","Oaksans SemiBold","Objektiv Mk2","Objektiv Mk2 Medium","Old Claude LP SmallCap","Open Sans","Open Sans Light","Open Sans SemiBold","Optima","Orbitron","Orbitron Black","Orbitron Medium","Outfit","Outfit Light","Outfit SemiBold","P22 Mackinac Pro","P22 Mackinac Pro Medium","Palatino Linotype","Peoni Pro","Photina MT Pro","Poppins","Poppins Light","Poppins Medium","Poppins SemiBold","PP Neue Montreal","PP Neue Montreal Medium","Precision Sans","Precision Sans Light","Precision Sans Medium","Produkt Semibold","Proxima Soft","Proxima Soft Light","Proxima Soft Medium","ProximaNova","ProximaNova Extrabold","ProximaNova Light","ProximaNova Medium","ProximaNova SemiBold","PT Sans","Raleway","Raleway Light","Raleway Medium","Raleway-style1-lining","Rescue","RNS Camelia","Roboto","Roboto Black","Roboto Light","Roboto Medium","Roboto Thin","Rockwell","Sail","San Diego","Sanchez Niu","SangBleu Sunrise","SangBleu Sunrise Medium","SansaPro","SansaPro SemiBold","SansaPro-Bold","SchibstedGrotesk","SchibstedGrotesk SemiBold","Seitu","Seitu ExtraBold","Sentinel Book","SephoraSans","SephoraSans Light","SephoraSerif Book","SephoraSerif Light","Sharp Sans Medium","Sharp Sans No1 Book","Sharp Sans No1 Light","Sharp Sans No1 Medium","Sharp Sans No1 Semibold","Sharp Sans Semibold","SimSun","Sloop Scriptone","Sora","Sora SemiBold","Source Sans Pro","Source Sans Pro Semibold","St Nicholas","Stem","Stem Hairline","Stem Light","SterlingText Roman","Studio6","Studio6 Medium","Styrene A","Styrene A Light","Styrene A Medium","Suisse Intl","Suisse Intl SemiBold","Swis721 Black","Swis721 BT","Swis721 BT Condensed","Swis721 BT Light","Swis721 Heavy","Tahoma","TD Graphik Medium","TD Graphik Semibold","Times New Roman","Times New Roman Condensed","Titillium Web","Titillium Web SemiBold","TodaySans Serif Medium","Tondo","Trade Gothic Next","Trade Gothic Next Condensed","Trade Gothic Next Light","Trebuchet MS","Ubuntu","Uni Sans Heavy","Uni Sans Regular","Uni Sans Semibold","Univers LT Pro 47 Light Condensed","Univers LT Pro 57 Condensed","UniversCondensed","URWDIN","URWDIN Black","URWDIN Medium","US Roman","Utah","Value","Verdana","Verlag Condensed Book","Weiss Std","Zapf Chancery"];
+
+/* Steer a few common web/system fonts the designer does NOT carry toward the
+ * closest library match. Exact matches are resolved before this table, so
+ * families the designer DOES have (Georgia, Roboto, Lato, …) map to themselves
+ * and never reach here. */
 const FONT_FALLBACKS = {
-  'sans-serif': 'Arial', 'system-ui': 'Arial', 'segoe ui': 'Arial', 'roboto': 'Arial',
-  'helvetica neue': 'Helvetica', 'inter': 'Open Sans', 'lato': 'Open Sans',
-  'serif': 'Times New Roman', 'georgia': 'Goudy Old Style', 'garamond': 'Goudy Old Style',
-  'playfair display': 'Goudy Old Style', 'monospace': 'Courier New', 'futura': 'Futura Md BT',
-  'gill sans': 'Gill Sans MT', 'optima': 'Optima', 'palatino': 'Palatino Linotype',
-  'brush script mt': 'BrushScriptStd', 'trade gothic': 'Trade Gothic Next',
+  // CSS generic families (guarded here so e.g. "sans-serif" is not caught by the
+  // substring "serif" in the category heuristic below).
+  'sans-serif': 'Arial', 'serif': 'Times New Roman', 'monospace': 'Courier New',
+  'ui-sans-serif': 'Arial', 'ui-serif': 'Times New Roman', 'ui-monospace': 'Courier New',
+  'cursive': 'BrushScriptStd', 'fantasy': 'Arial', 'system-ui': 'Arial', '-apple-system': 'Arial',
+  // Common web fonts the designer does NOT carry, steered to the closest match.
+  'playfair display': 'Georgia', 'merriweather': 'Georgia', 'pt serif': 'Georgia',
+  'oswald': 'League Gothic', 'anton': 'League Gothic', 'archivo narrow': 'Trade Gothic Next Condensed',
+  'segoe ui': 'Arial', 'work sans': 'Open Sans', 'noto sans': 'Open Sans',
+  'brush script mt': 'BrushScriptStd', 'pacifico': 'BrushScriptStd', 'dancing script': 'Bermuda Script',
 };
+
+function normFont(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+const STERLING_NORM = STERLING_FONTS.map(f => ({ f, n: normFont(f) }));
+
+/* Resolve a CSS font-family stack to an exact designer family name (pure). */
+function mapFontName(cssFontFamily) {
+  const requested = (cssFontFamily || '').split(',')[0].trim().replace(/^["']|["']$/g, '');
+  if (!requested) return { used: 'Arial', requested: '' };
+  const rn = normFont(requested);
+  const exact = STERLING_NORM.find(x => x.n === rn);
+  if (exact) return { used: exact.f, requested };
+  const fb = FONT_FALLBACKS[requested.toLowerCase()];
+  if (fb) return { used: fb, requested };
+  if (rn.length >= 4) {
+    const partial = STERLING_NORM.find(x => x.n.startsWith(rn) || rn.startsWith(x.n));
+    if (partial) return { used: partial.f, requested };
+  }
+  const lc = requested.toLowerCase();
+  const used = /script|hand|brush|cursive|calligraph/.test(lc) ? 'BrushScriptStd'
+    : /slab|rockwell|clarendon|arvo/.test(lc) ? 'Clarendon BT'
+    : /serif|times|georgia|garamond|caslon|minion|didot|bodoni|playfair|merriweather/.test(lc) ? 'Times New Roman'
+    : /mono|courier|consol/.test(lc) ? 'Courier New'
+    : 'Arial';
+  return { used, requested };
+}
+
+function mapFont(cssFontFamily, substitutions) {
+  const { used, requested } = mapFontName(cssFontFamily);
+  if (requested && normFont(requested) !== normFont(used) && substitutions) {
+    substitutions.push({ requested, used });
+  }
+  return used;
+}
+
+/* Attach the designer's fonts.css to a document so text measures/renders in the
+ * real library fonts (idempotent). */
+function ensureFontsCss(doc) {
+  try {
+    if (!doc || doc.querySelector('link[data-tg-fonts]')) return;
+    const l = doc.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = FONTS_CSS_URL;
+    l.setAttribute('data-tg-fonts', '1');
+    (doc.head || doc.documentElement).appendChild(l);
+  } catch (e) { /* non-fatal: fall back to whatever fonts are present */ }
+}
+
+/* Wait (bounded) for pending web-font loads so measurement is not taken against
+ * a fallback face that the designer will later replace. */
+function fontsReady(doc, ms) {
+  try {
+    if (doc && doc.fonts && doc.fonts.ready) {
+      return Promise.race([doc.fonts.ready, new Promise(r => setTimeout(r, ms))]);
+    }
+  } catch (e) { /* ignore */ }
+  return new Promise(r => setTimeout(r, ms));
+}
+
+/* Before measuring, pin every text element to the exact designer family it will
+ * be pushed as, so the box we measure is the box the designer will render. This
+ * only changes the typeface (never size, colour, position, bleed, or raster
+ * output), so it cannot affect print-production characteristics. */
+function snapFontsToDesigner(doc, rootEl, substitutions) {
+  try {
+    const view = doc.defaultView;
+    const els = [rootEl];
+    const walker = doc.createTreeWalker(rootEl, NodeFilter.SHOW_ELEMENT);
+    while (walker.nextNode()) els.push(walker.currentNode);
+    for (const el of els) {
+      if (!hasDirectText(el)) continue;
+      const cs = view.getComputedStyle(el);
+      const { used, requested } = mapFontName(cs.fontFamily);
+      if (requested && normFont(requested) !== normFont(used) && substitutions) {
+        substitutions.push({ requested, used });
+      }
+      el.style.setProperty('font-family', '"' + used + '"', 'important');
+    }
+    void rootEl.getBoundingClientRect(); // force reflow with the pinned fonts
+  } catch (e) { /* leave original fonts if anything goes wrong */ }
+}
 
 const MODE_BY_PRODUCT = {
   'Business Card': 'FullColour', 'Poster': 'FullColour', 'Sign': 'FullColour',
@@ -791,6 +888,13 @@ async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) 
   if (!doc || !doc.body || !doc.body.firstElementChild) return null;
   const rootEl = findDesignRoot(doc);
   if (!rootEl) return null;
+  /* Render/measure in the designer's real fonts so the box we lift is the box
+   * the designer will draw. fonts.css is attached, its faces are awaited, then
+   * each text run is pinned to the exact family it will be pushed as. */
+  ensureFontsCss(doc);
+  await fontsReady(doc, 1500);
+  snapFontsToDesigner(doc, rootEl, substitutions);
+  await fontsReady(doc, 800);
   const rootRect = rootEl.getBoundingClientRect();
   if (rootRect.width < 2) return null;
   const factor = targetWidthPx / rootRect.width;
