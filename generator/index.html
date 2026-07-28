@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <script src="../demo-guard.js?v=tier1-22"></script>
+  <script src="../demo-guard.js?v=tier1-23"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Template Generator — Integration Demo</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -147,10 +147,15 @@
           </div>
         </details>
 
-        <!-- Style Direction -->
-        <div class="field-group">
-          <label class="field-label" for="styleDirection">Style Direction <span class="optional-tag">optional</span></label>
-          <input type="text" id="styleDirection" class="form-input" placeholder="e.g. Synthwave festival, Fashion editorial, WPA travel poster…" />
+        <!-- Style Direction (collapsed by default) -->
+        <details class="field-disclosure">
+          <summary class="field-disclosure-summary">
+            Style direction
+            <span class="optional-tag">optional</span>
+            <span class="disclosure-hint">AI picks if empty</span>
+          </summary>
+          <div class="field-disclosure-body">
+          <input type="text" id="styleDirection" class="form-input" placeholder="e.g. Synthwave festival, Fashion editorial, WPA travel poster…" aria-label="Style direction" />
           <div class="style-presets" id="stylePresets">
             <button type="button" class="style-chip" data-style="Synthwave Neon">Synthwave</button>
             <button type="button" class="style-chip" data-style="Psychedelic Modernism">Psychedelic</button>
@@ -173,7 +178,8 @@
             <button type="button" class="style-chip" data-style="Organic Modernism">Organic Warm</button>
             <button type="button" class="style-chip style-chip--surprise" id="surpriseChip">✦ Surprise Me</button>
           </div>
-        </div>
+          </div>
+        </details>
 
         <!-- Optional assets & inspiration -->
         <details class="field-disclosure">
@@ -405,11 +411,11 @@
     <button class="toast-close" id="toastClose">×</button>
   </div>
 
-  <script src="engine.js?v=tier1-22"></script>
-  <script src="browser-api.js?v=tier1-22"></script>
-  <script src="app.js?v=tier1-22"></script>
-  <script src="product-compat.js?v=tier1-22"></script>
-  <script src="push-to-designer.js?v=tier1-22"></script>
-  <script src="demo-samples.js?v=tier1-22"></script>
+  <script src="engine.js?v=tier1-23"></script>
+  <script src="browser-api.js?v=tier1-23"></script>
+  <script src="app.js?v=tier1-23"></script>
+  <script src="product-compat.js?v=tier1-23"></script>
+  <script src="push-to-designer.js?v=tier1-23"></script>
+  <script src="demo-samples.js?v=tier1-23"></script>
 </body>
 </html>
