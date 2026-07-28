@@ -16,6 +16,10 @@ const businessName    = document.getElementById('businessName');
 const styleDirection  = document.getElementById('styleDirection');
 const creativityLevel = document.getElementById('creativityLevel');
 const imageUrl        = document.getElementById('imageUrl');
+const designPhotoFile = document.getElementById('designPhotoFile');
+const designPhotoPreview = document.getElementById('designPhotoPreview');
+const designPhotoPreviewImg = document.getElementById('designPhotoPreviewImg');
+const designPhotoClear = document.getElementById('designPhotoClear');
 const referenceFile   = document.getElementById('referenceFile');
 const referenceImageUrl = document.getElementById('referenceImageUrl');
 const referencePreview = document.getElementById('referencePreview');
@@ -74,6 +78,17 @@ let userZoomPercent   = 100;
 let showSafeGuide     = true;
 let showBleedGuide    = true;
 let referenceImageData = null; // { mediaType, data } base64, no prefix
+
+/* Uploaded "Photo for design": kept as a data: URI and embedded directly in the
+ * generated design (no backend storage needed). Large-format products keep full
+ * resolution; small products are downscaled/compressed to keep the pushed
+ * transfer small. The AI is given a sentinel URL to place, which is swapped for
+ * the real data URI after generation (the model can't emit a huge base64). */
+let designPhotoOriginal = null; // original data: URI as uploaded
+let designPhotoData = null;     // data: URI actually embedded (maybe compressed)
+const UPLOADED_PHOTO_URL = 'https://smp-generated.local/uploaded-photo.jpg';
+const PHOTO_COMPRESS_FORMATS = ['Business Card', 'Stamp', 'Nameplate', 'Name Badge'];
+const PHOTO_MAX_BYTES = 25 * 1024 * 1024;
 
 const SUBLINES = [
   'Reading the brief…',
@@ -377,6 +392,105 @@ if (referenceClear) {
   referenceClear.addEventListener('click', clearReferenceImage);
 }
 
+/* ── Design photo upload (embedded as a data: URI, no backend) ── */
+function photoNeedsCompression() {
+  return PHOTO_COMPRESS_FORMATS.includes(templateType.value);
+}
+
+/* Downscale/re-encode a data: URI via canvas. Only used for small products. */
+function resizeDataUrl(dataUrl, maxDim, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return resolve(dataUrl);
+      const scale = Math.min(1, maxDim / Math.max(w, h));
+      w = Math.round(w * scale); h = Math.round(h * scale);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); // flatten alpha for JPEG
+      ctx.drawImage(img, 0, 0, w, h);
+      try { resolve(c.toDataURL('image/jpeg', quality)); }
+      catch { resolve(dataUrl); }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+/* Derive the embedded photo (designPhotoData) from the original per the product:
+ * full resolution for large-format, compressed for small products. */
+async function applyPhotoPolicy() {
+  if (!designPhotoOriginal) { designPhotoData = null; return; }
+  designPhotoData = photoNeedsCompression()
+    ? await resizeDataUrl(designPhotoOriginal, 1600, 0.85)
+    : designPhotoOriginal; // signage etc. — keep full resolution
+}
+
+function setDesignPhotoPreview(dataUrl) {
+  if (!designPhotoPreview || !designPhotoPreviewImg) return;
+  if (dataUrl) { designPhotoPreviewImg.src = dataUrl; designPhotoPreview.classList.remove('hidden'); }
+  else { designPhotoPreviewImg.src = ''; designPhotoPreview.classList.add('hidden'); }
+}
+
+function clearDesignPhoto() {
+  designPhotoOriginal = null; designPhotoData = null;
+  if (designPhotoFile) designPhotoFile.value = '';
+  setDesignPhotoPreview(null);
+}
+
+function loadDesignPhotoFromFile(file) {
+  if (!file) return;
+  if (file.size > PHOTO_MAX_BYTES) {
+    showError('Photo must be under 25 MB.');
+    if (designPhotoFile) designPhotoFile.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async () => {
+    if (typeof reader.result !== 'string' || !reader.result.startsWith('data:image/')) {
+      showError('Could not read that photo.');
+      return;
+    }
+    designPhotoOriginal = reader.result;
+    if (imageUrl) imageUrl.value = ''; // upload and URL are mutually exclusive
+    await applyPhotoPolicy();
+    setDesignPhotoPreview(designPhotoOriginal);
+  };
+  reader.onerror = () => showError('Could not read that photo.');
+  reader.readAsDataURL(file);
+}
+
+if (designPhotoFile) {
+  designPhotoFile.addEventListener('change', () => {
+    const file = designPhotoFile.files && designPhotoFile.files[0];
+    if (file) loadDesignPhotoFromFile(file);
+  });
+}
+if (imageUrl) {
+  imageUrl.addEventListener('input', () => { if (imageUrl.value.trim()) clearDesignPhoto(); });
+}
+if (designPhotoClear) {
+  designPhotoClear.addEventListener('click', clearDesignPhoto);
+}
+// Re-apply the compression policy if the product type changes after uploading.
+if (templateType) {
+  templateType.addEventListener('change', () => { if (designPhotoOriginal) applyPhotoPolicy(); });
+}
+
+/* Test hook (read-only) for the design-photo pipeline. */
+window.SMPGen = Object.assign(window.SMPGen || {}, {
+  photo: {
+    get data() { return designPhotoData; },
+    get original() { return designPhotoOriginal; },
+    needsCompression: () => photoNeedsCompression(),
+    applyPolicy: () => applyPhotoPolicy(),
+    sentinel: UPLOADED_PHOTO_URL,
+  },
+  renderPreviewHtml: (h, p) => renderPreviewHtml(h, p),
+});
+
 /* ── Collect colours ───────────────────────────────── */
 function getColors() {
   const result = {};
@@ -401,7 +515,7 @@ function buildPayload() {
     colors:       getColors(),
     styleDirection:      styleDirection.value.trim(),
     creativityLevel:     creativityLevel?.value || 'bold',
-    imageUrl:            imageUrl.value.trim(),
+    imageUrl:            designPhotoData ? UPLOADED_PHOTO_URL : imageUrl.value.trim(),
     referenceImage:      referenceImageData,
     referenceImageUrl:   referenceImageUrl?.value.trim() || '',
     svgContent:          svgPaste.value.trim(),
@@ -723,6 +837,11 @@ ${bodyFill}
 }
 
 function renderPreviewHtml(htmlStr, payload) {
+  // Swap the sentinel URL the AI was told to place for the real uploaded photo
+  // data URI (the model can't emit a large base64 string itself).
+  if (designPhotoData && htmlStr.includes(UPLOADED_PHOTO_URL)) {
+    htmlStr = htmlStr.split(UPLOADED_PHOTO_URL).join(designPhotoData);
+  }
   if (payload.templateType === 'Business Card') {
     contactDomSide = detectContactDomSideFromHtml(htmlStr);
   }
@@ -1080,6 +1199,7 @@ resetBtn.addEventListener('click', () => {
   businessName.value   = '';
   styleDirection.value = '';
   imageUrl.value       = '';
+  clearDesignPhoto();
   clearReferenceImage();
   svgPaste.value       = '';
   svgFile.value        = '';

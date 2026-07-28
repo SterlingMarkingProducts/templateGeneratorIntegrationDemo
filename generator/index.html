@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <script src="../demo-guard.js?v=tier1-12"></script>
+  <script src="../demo-guard.js?v=tier1-13"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Template Generator — Integration Demo</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -198,8 +198,17 @@
             </div>
 
             <div class="field-group field-group--compact">
-              <label class="field-label field-label--inline" for="imageUrl">Photo for design</label>
-              <input type="url" id="imageUrl" class="form-input form-input--compact" placeholder="https://… — placed in the layout" autocomplete="off" />
+              <label class="field-label field-label--inline" for="designPhotoFile">Photo for design</label>
+              <div class="inspiration-row">
+                <label class="svg-file-label svg-file-label--compact" for="designPhotoFile">Upload photo</label>
+                <input type="file" id="designPhotoFile" class="svg-file-input" accept="image/jpeg,image/png,image/webp,image/gif" />
+                <input type="url" id="imageUrl" class="form-input form-input--compact" placeholder="or image URL" autocomplete="off" />
+              </div>
+              <p class="field-hint" id="designPhotoHint">Placed in the layout. Large-format products (signs, posters, brochures) keep full resolution; business cards, stamps, nameplates and name badges are optimized for size.</p>
+              <div class="reference-preview hidden" id="designPhotoPreview">
+                <img id="designPhotoPreviewImg" alt="Photo preview" />
+                <button type="button" class="reference-clear" id="designPhotoClear" title="Remove photo">×</button>
+              </div>
             </div>
 
             <div class="field-group field-group--compact">
@@ -392,11 +401,11 @@
     <button class="toast-close" id="toastClose">×</button>
   </div>
 
-  <script src="engine.js?v=tier1-12"></script>
-  <script src="browser-api.js?v=tier1-12"></script>
-  <script src="app.js?v=tier1-12"></script>
-  <script src="product-compat.js?v=tier1-12"></script>
-  <script src="push-to-designer.js?v=tier1-12"></script>
-  <script src="demo-samples.js?v=tier1-12"></script>
+  <script src="engine.js?v=tier1-13"></script>
+  <script src="browser-api.js?v=tier1-13"></script>
+  <script src="app.js?v=tier1-13"></script>
+  <script src="product-compat.js?v=tier1-13"></script>
+  <script src="push-to-designer.js?v=tier1-13"></script>
+  <script src="demo-samples.js?v=tier1-13"></script>
 </body>
 </html>

@@ -840,7 +840,16 @@ function storeTransferLocally(template) {
       } catch { localStorage.removeItem(key); }
     }
   }
-  localStorage.setItem(`${SMP_CONFIG.transferKey}:${id}`, JSON.stringify(record));
+  try {
+    localStorage.setItem(`${SMP_CONFIG.transferKey}:${id}`, JSON.stringify(record));
+  } catch (e) {
+    /* Quota exceeded — almost always a large full-resolution photo embedded in a
+     * large-format design. The localStorage handoff is a demo-only transport; a
+     * hosted deployment posts to a staging endpoint with no such limit. */
+    throw new Error('This design is too large for the browser-only demo transfer '
+      + '(likely a high-resolution photo). In the hosted integration it transfers via '
+      + "the staging endpoint with no size limit. For the demo, use a smaller image or the image-URL option.");
+  }
   return id;
 }
 
