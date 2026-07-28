@@ -762,6 +762,22 @@ function injectCapturedLayoutFixes(html, css) {
   return html.includes('</head>') ? html.replace('</head>', tag + '</head>') : tag + html;
 }
 
+/* Universal preview overflow-fit — the final safety net so nothing is ever
+ * clipped in the preview. The zone scripts only know about .zone-copy /
+ * .zone-contact; recreate/custom layouts name their blocks freely, so their
+ * bottom-most block could spill past the card edge. This measures every direct
+ * child of each card and, for any that genuinely overflows the bottom (and is
+ * not a full-height background/bar), scales it down from its top-left just
+ * enough to fit. Idempotent (resets first, re-measures) and gated on measured
+ * overflow, so blocks that already fit — and .zone-* elements — are untouched. */
+const UNIVERSAL_FIT_SCRIPT = `<script id="layout-universal-fit">(function(){function fullFit(){var cards=document.querySelectorAll(".card,[class*=card]");var list=cards.length?Array.prototype.slice.call(cards):(document.body&&document.body.firstElementChild?[document.body.firstElementChild]:[]);list.forEach(function(card){var cs=getComputedStyle(card);if(cs.position==="static")card.style.position="relative";var ch=card.clientHeight,cw=card.clientWidth;if(!ch||!cw)return;var cr=card.getBoundingClientRect();var kids=card.children;for(var i=0;i<kids.length;i++){var k=kids[i];var tn=k.tagName;if(tn==="STYLE"||tn==="SCRIPT"||tn==="LINK")continue;if(k.matches&&k.matches(".zone-copy,.zone-contact"))continue;k.style.transform="";var kr=k.getBoundingClientRect();var kh=kr.height;if(kh<8)continue;var topInCard=kr.top-cr.top;if(topInCard<=2&&kh>=ch-2)continue;var avail=ch-topInCard-2;if(avail>16&&kh>avail+2){var s=Math.max(0.55,avail/kh);k.style.transformOrigin="top left";k.style.transform="scale("+s.toFixed(4)+")";}}});}function r(){fullFit();setTimeout(fullFit,60);setTimeout(fullFit,240);setTimeout(fullFit,650);}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(r);else r();window.addEventListener("load",r);})();</script>`;
+
+function appendUniversalFit(out) {
+  return out.includes('</body>')
+    ? out.replace('</body>', UNIVERSAL_FIT_SCRIPT + '</body>')
+    : out + UNIVERSAL_FIT_SCRIPT;
+}
+
 function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
   const { creativityLevel, templateType } = options;
   const isLargeFormat = /poster|sign/i.test(templateType || '') || heightPx > 600;
@@ -802,7 +818,7 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
     const fitScript = `<script id="layout-safety-script">(function(){function fit(){var c=document.querySelector(".card,.plate,.nameplate,.badge,[class*=card],[class*=plate],[class*=badge]")||(document.body&&document.body.firstElementChild);if(!c)return;var cw=c.clientWidth,ch=c.clientHeight;var zones=c.querySelectorAll(".zone-copy,.zone-contact");if(!zones.length)return;zones.forEach(function(z){z.style.transform="";z.style.transformOrigin="center center";var aw=cw-24,ah=ch-24,zw=z.scrollWidth,zh=z.scrollHeight;if((zw>aw||zh>ah)&&zw>0&&zh>0){var s=Math.max(0.4,Math.min(aw/zw,ah/zh));z.style.transform="scale("+s+")";}});}function r(){fit();setTimeout(fit,60);setTimeout(fit,220);setTimeout(fit,600);}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(r);else r();window.addEventListener("load",r);})();<\/script>`;
     let out = html.includes('</head>') ? html.replace('</head>', styleTag + '</head>') : styleTag + html;
     out = out.includes('</body>') ? out.replace('</body>', fitScript + '</body>') : out + fitScript;
-    return out;
+    return appendUniversalFit(out);
   }
 
   const isSmall = heightPx <= 240;
@@ -835,7 +851,7 @@ ${bodyFill}
   const fitScript = `<script id="layout-safety-script">(function(){var bp=${bottomPad},gap=8,minScale=${minScale};function R(c){var copy=c.querySelector(".zone-copy"),contact=c.querySelector(".zone-contact"),ch=c.clientHeight,cr=c.getBoundingClientRect();if(copy)copy.style.transform="";if(contact){contact.style.transform="";contact.style.top="";contact.style.bottom="";}c.querySelectorAll(".layout-hidden").forEach(function(el){el.classList.remove("layout-hidden");el.style.display="";});if(copy&&contact){var ch2=contact.scrollHeight;function sc(mx){var av=mx-copy.offsetTop;if(av>0&&copy.scrollHeight>av){var s=Math.max(minScale,av/copy.scrollHeight);copy.style.transform="scale("+s+")";copy.style.transformOrigin="top left";}}if(ch<=240){sc(ch-bp-ch2-gap);var cb=copy.getBoundingClientRect().bottom-cr.top,ct=Math.round(cb+gap),mct=ch-bp-ch2;if(ct>mct){sc(mct-gap);cb=copy.getBoundingClientRect().bottom-cr.top;ct=Math.min(mct,Math.round(cb+gap));}contact.style.bottom="auto";contact.style.top=ct+"px";}else{var mh=contact.offsetTop-gap;if(mh>copy.offsetTop+20)sc(mh);var cb2=copy.getBoundingClientRect().bottom-cr.top;if(cb2>contact.offsetTop-gap){contact.style.bottom="auto";contact.style.top=Math.min(ch-bp-ch2,cb2+gap)+"px";}}${isBold ? '' : 'var cpr=copy.getBoundingClientRect(),ct2=contact.offsetTop,cbt=ct2+contact.offsetHeight;c.querySelectorAll(".rule-line,[class*=\'rule-line\'],[class*=\'divider-line\']").forEach(function(l){var lr=l.getBoundingClientRect(),lt=l.offsetTop,cb3=copy.getBoundingClientRect().bottom-cr.top,cross=cpr&&lr.bottom>cpr.top+2&&lr.top<cpr.bottom-2,inBand=lt>=(copy.offsetTop||0)-4&&lt<=cbt+4;if(cross||inBand||(lt>=cb3-4&&lt<=ct2+4)){l.classList.add("layout-hidden");l.style.display="none";}});'}}else{c.querySelectorAll(".zone-copy,.zone-contact").forEach(function(z){z.style.transform="";var a=ch-z.offsetTop-bp;if(z.scrollHeight>a&&a>0){var s=Math.max(minScale,a/z.scrollHeight);z.style.transform="scale("+s+")";z.style.transformOrigin="top left";}});}}function f(){var c=document.querySelector(".card")||document.querySelector('[class*="card"]');if(c)R(c);}function r(){f();setTimeout(f,50);setTimeout(f,200);setTimeout(f,600);}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(r);else r();window.addEventListener("load",r);})();</script>`;
   let out = html.includes('</head>') ? html.replace('</head>', styleTag + '</head>') : styleTag + html;
   out = out.includes('</body>') ? out.replace('</body>', fitScript + '</body>') : out + fitScript;
-  return out;
+  return appendUniversalFit(out);
 }
 
 function renderPreviewHtml(htmlStr, payload) {
