@@ -22,6 +22,7 @@ const designPhotoPreviewImg = document.getElementById('designPhotoPreviewImg');
 const designPhotoClear = document.getElementById('designPhotoClear');
 const referenceFile   = document.getElementById('referenceFile');
 const referenceImageUrl = document.getElementById('referenceImageUrl');
+const referenceMode   = document.getElementById('referenceMode');
 const referencePreview = document.getElementById('referencePreview');
 const referencePreviewImg = document.getElementById('referencePreviewImg');
 const referenceClear  = document.getElementById('referenceClear');
@@ -518,6 +519,7 @@ function buildPayload() {
     imageUrl:            designPhotoData ? UPLOADED_PHOTO_URL : imageUrl.value.trim(),
     referenceImage:      referenceImageData,
     referenceImageUrl:   referenceImageUrl?.value.trim() || '',
+    referenceMode:       referenceMode?.value || 'recreate',
     svgContent:          svgPaste.value.trim(),
     specialInstructions: specialInstr.value.trim(),
     doubleSided:         DOUBLE_SIDED_PRODUCTS.includes(templateType.value),
@@ -1201,6 +1203,7 @@ resetBtn.addEventListener('click', () => {
   imageUrl.value       = '';
   clearDesignPhoto();
   clearReferenceImage();
+  if (referenceMode) referenceMode.value = 'recreate';
   svgPaste.value       = '';
   svgFile.value        = '';
   specialInstr.value   = '';

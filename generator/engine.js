@@ -47,6 +47,37 @@ ATMOSPHERE
 INSPIRATION MANDATE
 [1 sentence telling the designer what to channel from this reference without cloning it]`;
 
+const REFERENCE_RECREATE_PROMPT = `You are reproducing this uploaded design as an editable template. Transcribe and describe it COMPLETELY, LITERALLY and EXACTLY so a designer can recreate it faithfully. Be exhaustive — do not paraphrase or "improve" anything.
+
+Return ONLY these sections:
+
+SIDES
+[Is this a single design, or a mockup showing a FRONT and a BACK (or inside/outside)? If two sides, say which is which; describe each separately in the LAYOUT sections below.]
+
+BRAND
+[The exact company/brand name as written — preserve capitalization and any two-tone/colour split (e.g. "BrightSmile" where "Bright" and "Smile" differ in colour). Include any descriptor line (e.g. "DENTAL CLINIC") and tagline/slogan.]
+
+TEXT CONTENT — verbatim
+[EVERY piece of text, exactly as written, one item per line: person name, title/role, phone, email, website, address, service lists, taglines, footnotes. Copy them character-for-character.]
+
+COLORS
+[Exact hex values and where each is used: background(s), primary, secondary/accent, text/light. Give real hex codes.]
+
+LOGO / ICONS
+[Describe the logo mark precisely enough to rebuild in CSS/SVG — shape, style, colours. List every icon (phone, mail, globe, pin, tooth, etc.) and how contact lines use them.]
+
+TYPOGRAPHY
+[Heading vs body font personality (serif/sans, weight, letter-spacing), and any two-tone or all-caps treatments.]
+
+LAYOUT — FRONT
+[Exact composition: logo position, each text block's placement and alignment, decorative shapes (waves, diagonal splits, rounded corners), and where everything sits relative to the edges.]
+
+LAYOUT — BACK
+[Same level of detail, only if a back/second side exists.]
+
+FIDELITY MANDATE
+[One sentence: reproduce this design faithfully — same brand, colours, content and layout — adapting only to the given product dimensions.]`;
+
 async function fetchReferenceImageFromUrl(url) {
   const res = await fetch(url, { redirect: 'follow' });
   if (!res.ok) throw new Error(`Failed to fetch reference image (${res.status})`);
@@ -61,7 +92,8 @@ async function fetchReferenceImageFromUrl(url) {
   return { mediaType: contentType, data: btoa(binary) };
 }
 
-async function analyzeReferenceImage(image) {
+async function analyzeReferenceImage(image, mode) {
+  const recreate = mode === 'recreate';
   const response = await anthropic.messages.create({
     model: MODEL_SPEC,
     messages: [{
@@ -71,11 +103,11 @@ async function analyzeReferenceImage(image) {
           type: 'image',
           source: { type: 'base64', media_type: image.mediaType, data: image.data },
         },
-        { type: 'text', text: REFERENCE_INSPIRATION_PROMPT },
+        { type: 'text', text: recreate ? REFERENCE_RECREATE_PROMPT : REFERENCE_INSPIRATION_PROMPT },
       ],
     }],
-    max_tokens: 900,
-    ...tempParam(MODEL_SPEC, 0.5),
+    max_tokens: recreate ? 1800 : 900,
+    ...tempParam(MODEL_SPEC, recreate ? 0.2 : 0.5),
   });
   return getTextContent(response);
 }
@@ -821,6 +853,7 @@ async function handleGenerate(body, send) {
     creativityLevel,
     referenceImage,
     referenceImageUrl,
+    referenceMode,
   } = body;
 
   if (!templateType) { send({ error: 'Template type is required.' }); return; }
@@ -849,6 +882,7 @@ async function handleGenerate(body, send) {
   // must win (never override it with a random industry palette). Only fall back to industry
   // guidance when there is no style direction at all.
   const hasChosenStyle = (styleDirection || '').trim() && !GENERIC_STYLE.test((styleDirection || '').trim());
+  const userSetColors = colorParts.length > 0;
   const colorScheme = colorParts.length > 0
     ? `${colorParts.join(', ')} — USER-SELECTED PALETTE, MANDATORY: build the design's palette from EXACTLY these hex values (plus black/white/neutrals as needed). They take priority over any signature palette named in the Style Direction — do not substitute different hues.`
     : (hasChosenStyle
@@ -860,6 +894,9 @@ async function handleGenerate(body, send) {
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;
   const hasRefUrl = (referenceImageUrl || '').trim();
+  const recreateRef = referenceMode === 'recreate';
+  let refImageForGen = null;   // shown to the spec/HTML models in recreate mode
+  let recreatingRef = false;   // true once a reference is analysed for recreation
 
   if (hasRefUpload || hasRefUrl) {
     send({ phase: 0 });
@@ -867,8 +904,14 @@ async function handleGenerate(body, send) {
       const img = hasRefUpload
         ? referenceImage
         : await fetchReferenceImageFromUrl(referenceImageUrl.trim());
-      const inspiration = await analyzeReferenceImage(img);
-      styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
+      const inspiration = await analyzeReferenceImage(img, recreateRef ? 'recreate' : 'inspire');
+      if (recreateRef) {
+        recreatingRef = true;
+        refImageForGen = img;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design", palette, and "avoid corporate blue" guidance — do NOT invent a different brand name, palette, or layout. Match what you see.\n\n${inspiration}`;
+      } else {
+        styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
+      }
     } catch (err) {
       console.warn('Reference image analysis skipped:', err.message);
     }
@@ -879,6 +922,8 @@ async function handleGenerate(body, send) {
 
   const imageUrlValue   = imageUrl?.trim()   || 'None';
   const svgContentValue = svgContent?.trim() || 'None';
+  // In recreate mode, defer brand to the reference unless the user typed one.
+  const brandValue = businessName || (recreatingRef ? 'Use the EXACT brand/company name from the REFERENCE DESIGN above' : 'Create tasteful placeholder branding');
 
   // ── Large-format poster/sign notes injected into prompts ─────────────────
   const isLargeFormat = /poster|sign/i.test(templateType || '');
@@ -920,6 +965,10 @@ LARGE FORMAT POSTER/SIGN IMPLEMENTATION (${pxW}×${pxH}px) — MANDATORY OVERRID
   if (isStamp) {
     effectiveColorScheme = 'STAMP MONOCHROMATIC MANDATORY: Background #ffffff (white paper), all ink #000000 (pure black). NO other colors, NO grey tones, NO rgba opacity tricks. Self-inking stamps print black ink only.';
   }
+  // In recreate mode, use the reference's own colours unless the user set a palette (stamps stay mono).
+  const colorsValue = (recreatingRef && !userSetColors && !isStamp)
+    ? 'Use the EXACT colours from the REFERENCE DESIGN above — match the hex values given for background, primary, accent and text. Do NOT substitute a different palette.'
+    : effectiveColorScheme;
 
   // ── Double-sided notes injected into prompts ─────────────────────────────
   const isBrochure = templateType === 'Brochure';
@@ -1120,8 +1169,8 @@ PORTFOLIO BOLD — make the CONCEPT and HERO MOMENT unmistakable and the canvas 
       .replace('{{PRODUCT_TYPE}}',         templateType)
       .replace('{{DIMENSIONS}}',           dimensions)
       .replace('{{INDUSTRY}}',             industry            || 'Not specified')
-      .replace('{{BUSINESS_NAME}}',        businessName        || 'Create tasteful placeholder branding')
-      .replace('{{COLORS}}',              effectiveColorScheme)
+      .replace('{{BUSINESS_NAME}}',        brandValue)
+      .replace('{{COLORS}}',              colorsValue)
       .replace('{{STYLE_DIRECTION}}',      styleDirFinal)
       .replace('{{SPECIAL_INSTRUCTIONS}}', specialInstructions || 'None')
       .replace('{{IMAGE_URL}}',            imageUrlValue)
@@ -1129,10 +1178,15 @@ PORTFOLIO BOLD — make the CONCEPT and HERO MOMENT unmistakable and the canvas 
       .replace('{{LAYOUT_BUDGET}}',        layoutBudget)
       .replace('{{DS_SPEC_NOTE}}',         dsSpecNote);
 
+    // In recreate mode, show the reference image to the model so it can match it.
+    const specMessage = refImageForGen
+      ? [{ type: 'image', source: { type: 'base64', media_type: refImageForGen.mediaType, data: refImageForGen.data } }, { type: 'text', text: specContent }]
+      : specContent;
+
     const specResponse = await anthropic.messages.create({
       model: MODEL_SPEC,
       system: SYSTEM_DESIGNER,
-      messages: [{ role: 'user', content: specContent }],
+      messages: [{ role: 'user', content: specMessage }],
       max_tokens: doubleSided ? 2800 : (isLargeFormat ? 2200 : 1800),
       ...tempParam(MODEL_SPEC, 1),
     });
@@ -1151,9 +1205,9 @@ PORTFOLIO BOLD — make the CONCEPT and HERO MOMENT unmistakable and the canvas 
       .replace('{{DESIGN_SPEC}}',          designSpec)
       .replace('{{PRODUCT_TYPE}}',         templateType)
       .replace('{{DIMENSIONS}}',           dimensions)
-      .replace('{{BUSINESS_NAME}}',        businessName        || 'Create tasteful placeholder branding')
+      .replace('{{BUSINESS_NAME}}',        brandValue)
       .replace('{{INDUSTRY}}',             industry            || 'Not specified')
-      .replace('{{COLORS}}',               effectiveColorScheme)
+      .replace('{{COLORS}}',               colorsValue)
       .replace('{{STYLE_DIRECTION}}',      styleDirFinal)
       .replace('{{SPECIAL_INSTRUCTIONS}}', specialInstructions || 'None')
       .replace('{{IMAGE_URL}}',            imageUrlValue)
@@ -1161,10 +1215,15 @@ PORTFOLIO BOLD — make the CONCEPT and HERO MOMENT unmistakable and the canvas 
       .replace('{{LAYOUT_BUDGET}}',        layoutBudget)
       .replace('{{DS_HTML_NOTE}}',         dsHtmlNote);
 
+    // In recreate mode, also show the reference image to the implementer model.
+    const htmlMessage = refImageForGen
+      ? [{ type: 'image', source: { type: 'base64', media_type: refImageForGen.mediaType, data: refImageForGen.data } }, { type: 'text', text: htmlContent }]
+      : htmlContent;
+
     const stream = anthropic.messages.stream({
       model: MODEL_HTML,
       system: SYSTEM_DESIGNER,
-      messages: [{ role: 'user', content: htmlContent }],
+      messages: [{ role: 'user', content: htmlMessage }],
       max_tokens: 16000,
       ...tempParam(MODEL_HTML, 0.95),
     });

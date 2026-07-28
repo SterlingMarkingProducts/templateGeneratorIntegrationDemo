@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <script src="../demo-guard.js?v=tier1-13"></script>
+  <script src="../demo-guard.js?v=tier1-14"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Template Generator — Integration Demo</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -184,13 +184,17 @@
           <div class="field-disclosure-body field-disclosure-body--stack">
 
             <div class="field-group field-group--compact">
-              <label class="field-label field-label--inline" for="referenceFile">Style inspiration</label>
-              <p class="field-hint">Guides the AI's creative direction — not placed in your design. Style chips work great without this.</p>
+              <label class="field-label field-label--inline" for="referenceFile">Reference design</label>
+              <p class="field-hint">Upload a business card or design to <strong>recreate</strong> (matching brand, colours, layout — front &amp; back) — or use it as loose inspiration.</p>
               <div class="inspiration-row">
                 <label class="svg-file-label svg-file-label--compact" for="referenceFile">Upload image</label>
                 <input type="file" id="referenceFile" class="svg-file-input" accept="image/jpeg,image/png,image/webp,image/gif" />
                 <input type="url" id="referenceImageUrl" class="form-input form-input--compact" placeholder="or image URL" autocomplete="off" />
               </div>
+              <select id="referenceMode" class="form-input form-input--compact" style="margin-top:6px;">
+                <option value="recreate" selected>Recreate this design — match brand, colours &amp; layout</option>
+                <option value="inspire">Loose inspiration only — just the vibe</option>
+              </select>
               <div class="reference-preview hidden" id="referencePreview">
                 <img id="referencePreviewImg" alt="Reference preview" />
                 <button type="button" class="reference-clear" id="referenceClear" title="Remove reference">×</button>
@@ -401,11 +405,11 @@
     <button class="toast-close" id="toastClose">×</button>
   </div>
 
-  <script src="engine.js?v=tier1-13"></script>
-  <script src="browser-api.js?v=tier1-13"></script>
-  <script src="app.js?v=tier1-13"></script>
-  <script src="product-compat.js?v=tier1-13"></script>
-  <script src="push-to-designer.js?v=tier1-13"></script>
-  <script src="demo-samples.js?v=tier1-13"></script>
+  <script src="engine.js?v=tier1-14"></script>
+  <script src="browser-api.js?v=tier1-14"></script>
+  <script src="app.js?v=tier1-14"></script>
+  <script src="product-compat.js?v=tier1-14"></script>
+  <script src="push-to-designer.js?v=tier1-14"></script>
+  <script src="demo-samples.js?v=tier1-14"></script>
 </body>
 </html>
