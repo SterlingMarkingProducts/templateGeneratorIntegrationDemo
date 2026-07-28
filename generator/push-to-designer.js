@@ -256,6 +256,22 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
      * Native objects are marked data-tg-extract so the raster skips them. */
 
     if (el.tagName === 'svg') {
+      /* Carry vector artwork (logos, icons, emblems) as a crisp SVG image so it
+       * stays sharp at ANY size — critical for signage — and remains a separate
+       * movable/scalable object, instead of being flattened into the raster. */
+      try {
+        if (r.width > 1 && r.height > 1) {
+          const uri = svgElementToDataUri(el, doc, r.width, r.height);
+          if (uri) {
+            el.setAttribute('data-tg-extract', '1');
+            const obj = makeImageObject(uri, round2(r.width), round2(r.height),
+              left, top, width, height, angle, style);
+            obj.sterlingType = 'vectorArt';
+            objects.push(obj);
+            continue;
+          }
+        }
+      } catch (e) { /* fall back to rasterizing the SVG */ }
       el.querySelectorAll('*').forEach(c => textOwners.add(c)); // stays in raster
       continue;
     }
@@ -329,6 +345,23 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
   deduped.forEach(c => objects.push(c.obj));
 
   return objects;
+}
+
+/* Serialize an inline <svg> into a self-contained, correctly-sized SVG data URI
+ * (vector — stays crisp at any scale). Returns null if it can't be serialized. */
+function svgElementToDataUri(el, doc, cssW, cssH) {
+  const clone = el.cloneNode(true);
+  if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  if (!clone.getAttribute('viewBox')) {
+    const vw = parseFloat(clone.getAttribute('width')) || cssW;
+    const vh = parseFloat(clone.getAttribute('height')) || cssH;
+    if (vw > 0 && vh > 0) clone.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
+  }
+  clone.setAttribute('width', Math.round(cssW));
+  clone.setAttribute('height', Math.round(cssH));
+  const markup = new XMLSerializer().serializeToString(clone);
+  if (!markup || markup.length > 500000) return null; // guard runaway markup
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(markup)));
 }
 
 function makeImageObject(src, naturalW, naturalH, left, top, width, height, angle, style) {
