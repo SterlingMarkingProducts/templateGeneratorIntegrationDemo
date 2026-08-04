@@ -317,6 +317,18 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
            rx: round2(allEqual ? rad.tl : 0), ry: round2(allEqual ? rad.tl : 0) };
 }
 
+/* True when text is painted with a gradient/image clipped to the glyphs
+ * (background-clip:text + transparent text fill) — the "gradient text" effect a
+ * flat i-text fill can't reproduce, so it must stay in the raster. */
+function isGradientFilledText(style) {
+  const clip = ((style.webkitBackgroundClip || '') + ' ' + (style.backgroundClip || '')).toLowerCase();
+  if (!clip.includes('text')) return false;
+  const fill = (style.webkitTextFillColor || style.color || '').replace(/\s+/g, '');
+  const transparentFill = fill === 'transparent' || fill === 'rgba(0,0,0,0)';
+  const hasImage = (style.backgroundImage || 'none') !== 'none';
+  return transparentFill && hasImage;
+}
+
 /* Extract Fabric v4 objects from one rendered document. rootEl is the design
  * surface (the card element); factor rescales its pixels to canvas pixels. */
 function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
@@ -405,6 +417,11 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     const wm = style.writingMode || '';
     const transformOK = isSimpleTransform(style.transform);
     if (hasDirectText(el) && !textOwners.has(el) && !wm.startsWith('vertical') && transformOK) {
+      /* Gradient-/clip-filled text (background-clip:text with a transparent text
+       * fill) can't be reproduced by a flat i-text colour — lifting it would drop
+       * the gradient to solid black. Leave it in the rasterized background so it
+       * transfers pixel-perfectly (it just isn't separately editable). */
+      if (isGradientFilledText(style)) { textOwners.add(el); continue; }
       textOwners.add(el);
       el.setAttribute('data-tg-extract', '1');
       const fontSize = parseFloat(style.fontSize) * factor;
@@ -824,10 +841,12 @@ function buildSterlingTemplate(pages, payload) {
    * the bleed declared separately — otherwise the designer adds bleed on top of
    * an already-bleed-inclusive size and the artwork leaves a gap. The objects
    * are positioned in the full trim+bleed coordinate space by applyBleed. */
-  const widthPx = trimW + 2 * bleedPx;
-  const heightPx = trimH + 2 * bleedPx;
+  /* Each page is { objects, bleedAuthored }. Bleed-authored pages already sit in
+   * the full bleed-canvas coordinate space (art runs to the bleed edge), so they
+   * need no offset. Only trim-authored pages get applyBleed (translate content
+   * in, cover-scale the background out to the bleed edge). */
   if (bleedPx > 0) {
-    pages.forEach(objects => applyBleed(objects, trimW, trimH, bleedPx));
+    pages.forEach(pg => { if (!pg.bleedAuthored) applyBleed(pg.objects, trimW, trimH, bleedPx); });
   }
 
   const canvasProperties = {
@@ -860,12 +879,42 @@ function buildSterlingTemplate(pages, payload) {
     version: 1.2,
     canvasProperties,
     productList: [],
-    pages: pages.map((objects, i) => ({
+    pages: pages.map((pg, i) => ({
       page: i,
       canvasProperties: { ...canvasProperties },
-      canvasData: { version: '4.4.0', objects },
+      canvasData: { version: '4.4.0', objects: pg.objects },
     })),
   };
+}
+
+/* Preview-only decorations the generator injects for ON-SCREEN fitting. They
+ * MUST be removed before extraction so we measure the design's true geometry —
+ * never the cover-scaled (body{transform:scale()}) or fit-shrunk
+ * (.zone-copy{transform:scale()}) preview. `thumb-side-only` is deliberately
+ * NOT stripped: it hides the opposite side and must stay for per-side capture. */
+const PREVIEW_DECORATION_IDS = ['layout-safety', 'layout-fix-applied', 'download-both-sides', 'layout-safety-script', 'layout-universal-fit'];
+
+/* Pins the design surface to its intrinsic size at the origin, so a design
+ * whose own <body> uses flex / padding / centring can't shrink or shift the
+ * artboard during measurement. Only touches the container and the card box —
+ * never the exported objects' own styles, so it cannot change appearance. */
+const EXTRACT_NORMALIZE_CSS = '<style id="tg-extract-normalize">html,body{margin:0!important;padding:0!important;background:transparent!important;display:block!important;width:auto!important;height:auto!important;transform:none!important;}.card,.design,.canvas,[class*="card"],[class*="plate"],[class*="badge"]{flex:none!important;margin:0!important;}</style>';
+
+function stripPreviewDecorations(html) {
+  let out = html;
+  for (const id of PREVIEW_DECORATION_IDS) {
+    out = out.replace(new RegExp('<style id="' + id + '">[\\s\\S]*?<\\/style>', 'g'), '')
+             .replace(new RegExp('<script id="' + id + '">[\\s\\S]*?<\\/script>', 'g'), '');
+  }
+  return out;
+}
+
+/* Strip preview decorations and pin the artboard to intrinsic geometry. */
+function normalizeHtmlForExtraction(html) {
+  const clean = stripPreviewDecorations(html);
+  return clean.includes('</head>')
+    ? clean.replace('</head>', EXTRACT_NORMALIZE_CSS + '</head>')
+    : EXTRACT_NORMALIZE_CSS + clean;
 }
 
 /* Locate the design surface inside a preview document. Must return the first
@@ -883,7 +932,18 @@ function findDesignRoot(doc) {
   return candidates[0] || doc.body?.firstElementChild;
 }
 
-async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) {
+/* Extract one page. `trimW/trimH` are the finished (trim) size; `bleedPx` the
+ * per-edge bleed. The designer's canvas is trim+bleed, so objects must land in
+ * that full "bleed canvas" coordinate space.
+ *
+ * Designs come in two shapes and we detect which by measuring the artboard:
+ *   • bleed-authored — the card IS the full bleed canvas (art already runs to
+ *     the bleed edge). Map the card 1:1 onto the bleed canvas; NO applyBleed.
+ *   • trim-authored  — the card is the trim rectangle. Map it to trim size and
+ *     let applyBleed translate content in and cover-scale the background.
+ * Either way canvasProperties stays trim+declared-bleed, so production export,
+ * sizing, and bleed handling are unchanged. */
+async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
   const doc = frame?.contentDocument;
   if (!doc || !doc.body || !doc.body.firstElementChild) return null;
   const rootEl = findDesignRoot(doc);
@@ -897,21 +957,29 @@ async function extractPage(frame, targetWidthPx, targetHeightPx, substitutions) 
   await fontsReady(doc, 800);
   const rootRect = rootEl.getBoundingClientRect();
   if (rootRect.width < 2) return null;
-  const factor = targetWidthPx / rootRect.width;
+
+  const bleedW = trimW + 2 * bleedPx, bleedH = trimH + 2 * bleedPx;
+  const bleedAuthored = bleedPx > 0 &&
+    Math.abs(rootRect.width - bleedW) <= Math.abs(rootRect.width - trimW);
+  const targetW = bleedAuthored ? bleedW : trimW;
+  const targetH = bleedAuthored ? bleedH : trimH;
+  const factor = targetW / rootRect.width;
+
   const objects = extractObjectsFromDoc(doc, rootEl, factor, substitutions);
-  const bg = await rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx);
+  const bg = await rasterizeBackground(doc, rootEl, targetW, targetH);
   rootEl.querySelectorAll('[data-tg-extract]').forEach(el => el.removeAttribute('data-tg-extract'));
-  return bg ? [bg, ...objects] : objects;
+  return { objects: bg ? [bg, ...objects] : objects, bleedAuthored };
 }
 
 /* Public: convert the current generated design. Returns {template, substitutions}. */
 /* Render an HTML string in a temporary, laid-out (but off-screen) iframe and
  * extract one page from it. Used for reliable double-sided extraction. */
-async function extractFromOffscreen(html, widthPx, heightPx, substitutions) {
+async function extractFromOffscreen(html, trimW, trimH, bleedPx, substitutions) {
   const frame = document.createElement('iframe');
   frame.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+  const bleedW = trimW + 2 * bleedPx, bleedH = trimH + 2 * bleedPx;
   frame.style.cssText = 'position:fixed;left:-10000px;top:0;border:0;'
-    + 'width:' + widthPx + 'px;height:' + (heightPx * 2) + 'px;';
+    + 'width:' + bleedW + 'px;height:' + (bleedH * 2) + 'px;';
   document.body.appendChild(frame);
   try {
     await new Promise(resolve => {
@@ -919,7 +987,7 @@ async function extractFromOffscreen(html, widthPx, heightPx, substitutions) {
       frame.srcdoc = html;
     });
     await new Promise(r => setTimeout(r, 250)); // let fonts/layout settle
-    return await extractPage(frame, widthPx, heightPx, substitutions);
+    return await extractPage(frame, trimW, trimH, bleedPx, substitutions);
   } finally {
     frame.remove();
   }
@@ -929,37 +997,30 @@ async function convertCurrentDesign() {
   if (!generatedHtml || !lastPayload) {
     throw new Error('Generate a design first, then push it to the designer.');
   }
-  const widthPx = Math.round(toPx(lastPayload.width, lastPayload.unit));
-  const heightPx = Math.round(toPx(lastPayload.height, lastPayload.unit));
+  const trimW = Math.round(toPx(lastPayload.width, lastPayload.unit));
+  const trimH = Math.round(toPx(lastPayload.height, lastPayload.unit));
+  const bleedPx = bleedPxFor(lastPayload.templateType);
   const substitutions = [];
   const pages = [];
 
-  if (lastPayload.doubleSided) {
-    const front = await extractPage(document.getElementById('thumbFrontFrame'), widthPx, heightPx, substitutions);
-    const back = await extractPage(document.getElementById('thumbBackFrame'), widthPx, heightPx, substitutions);
-    if (front) pages.push(front);
-    if (back) pages.push(back);
-    /* Robust path: if the app's side thumbnails weren't laid out (so a side
-     * came back empty) but the design markup has a back side, render each side
-     * in a temporary offscreen iframe and extract from there. Independent of
-     * the app's preview UI, so double-sided always transfers both pages. */
-    if (pages.length < 2 && /card--back/i.test(generatedHtml)) {
-      pages.length = 0;
-      for (const side of ['front', 'back']) {
-        const html = (typeof injectThumbSideCss === 'function') ? injectThumbSideCss(generatedHtml, side) : generatedHtml;
-        const p = await extractFromOffscreen(html, widthPx, heightPx, substitutions);
-        if (p) pages.push(p);
-      }
+  /* Extraction ALWAYS runs on decoration-free, intrinsic-geometry HTML rendered
+   * in a clean offscreen iframe — never the visible preview / thumbnails, which
+   * carry the on-screen fit transforms (body cover-scale, .zone-copy scale) that
+   * would otherwise be baked into positions and the raster. */
+  const clean = normalizeHtmlForExtraction(generatedHtml);
+
+  if (lastPayload.doubleSided && /card--back/i.test(generatedHtml)) {
+    for (const side of ['front', 'back']) {
+      const html = (typeof injectThumbSideCss === 'function') ? injectThumbSideCss(clean, side) : clean;
+      const p = await extractFromOffscreen(html, trimW, trimH, bleedPx, substitutions);
+      if (p) pages.push(p);
     }
   }
   if (!pages.length) {
-    /* Render the RAW design in a clean offscreen iframe — never read the visible
-     * preview, which carries layout-safety CSS (centering / cover-scale-to-bleed
-     * transforms) that would be baked into the raster and misplace the art. */
-    const single = await extractFromOffscreen(generatedHtml, widthPx, heightPx, substitutions);
+    const single = await extractFromOffscreen(clean, trimW, trimH, bleedPx, substitutions);
     if (single) pages.push(single);
   }
-  if (!pages.length || !pages[0].length) {
+  if (!pages.length || !pages[0].objects || !pages[0].objects.length) {
     throw new Error('Could not read any design elements from the preview. Try regenerating the design.');
   }
   return { template: buildSterlingTemplate(pages, lastPayload), substitutions };
