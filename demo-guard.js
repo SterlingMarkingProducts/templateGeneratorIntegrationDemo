@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  window.DEMO_BUILD = 'tier1-26';
+  window.DEMO_BUILD = 'tier1-27';
 
   var BLOCKED_HOST = /(^|\.)sterling\.ca$/i;
   var WARNING = '[DEMO GUARD] Blocked a network request to a Sterling production domain: ';
