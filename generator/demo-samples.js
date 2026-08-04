@@ -37,8 +37,14 @@
     // so Push to Designer transfers both pages (Front + Back).
     const showFront = (sample.doubleSided && typeof injectThumbSideCss === 'function')
       ? injectThumbSideCss(rendered, 'front') : rendered;
+    // Mirror the real generation path exactly: reset zoom to 100% and let the
+    // previewFrame 'load' listener (fitIframeToContent -> applyPreviewScale) fit
+    // the preview with the correct bleed-inclusive size. Previously this called
+    // applyPreviewScale directly with a NO-bleed size, which fought that listener
+    // and made the design viewer appear to zoom out on each shortcut click.
+    if (typeof userZoomPercent !== 'undefined') userZoomPercent = 100;
+    if (typeof zoomLabel !== 'undefined' && zoomLabel) zoomLabel.textContent = '100%';
     frame.srcdoc = showFront;
-    if (scaler) applyPreviewScale(widthPx, heightPx);
     if (sample.doubleSided && typeof injectThumbSideCss === 'function') {
       // Populate BOTH per-side thumbnails with explicit sizes so Push to
       // Designer reliably transfers Front + Back (the converter reads these).
