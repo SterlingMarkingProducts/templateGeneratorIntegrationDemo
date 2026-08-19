@@ -411,6 +411,13 @@
     <button class="toast-close" id="toastClose">×</button>
   </div>
 
+  <!-- Integration layer: normalized design model + replaceable adapters.
+       Loaded before the app so the Generator can delegate product facts
+       and Sterling translation without knowing either. -->
+  <script src="../integration/normalized-design.js?v=int1"></script>
+  <script src="../integration/product-provider.js?v=int1"></script>
+  <script src="../integration/adapters/sterling-legacy.js?v=int1"></script>
+  <script src="../integration/adapters/transport-local.js?v=int1"></script>
   <script src="engine.js?v=tier1-30"></script>
   <script src="browser-api.js?v=tier1-30"></script>
   <script src="app.js?v=tier1-30"></script>

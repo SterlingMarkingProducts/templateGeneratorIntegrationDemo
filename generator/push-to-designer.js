@@ -1,7 +1,11 @@
-/* Push to Designer — converts the generated HTML design into Sterling's
- * "version 1.2" template JSON (the format served by gettemplateJson.cfm and
- * consumed by SMPdesigner.js / parseTemplate) and hands it to a designer
- * instance.
+/* Push to Designer — reads the generated design out of the preview DOM,
+ * normalizes it (integration/normalized-design.js), and hands it to an adapter
+ * for translation and transport.
+ *
+ * The Generator owns GENERATION; this file owns MEASUREMENT + orchestration;
+ * integration/adapters/ owns everything a specific designer needs to be told.
+ * Sterling's "version 1.2" envelope is produced by the legacy adapter, not
+ * here — see integration/adapters/sterling-legacy.js.
  *
  * TEST-ENVIRONMENT MODULE. It ships disabled against production: the designer
  * URL below intentionally points at a test harness page, never at
@@ -135,11 +139,9 @@ function snapFontsToDesigner(doc, rootEl, substitutions) {
   } catch (e) { /* leave original fonts if anything goes wrong */ }
 }
 
-const MODE_BY_PRODUCT = {
-  'Business Card': 'FullColour', 'Poster': 'FullColour', 'Sign': 'FullColour',
-  'Brochure': 'FullColour', 'Stamp': 'SingleColour',
-  'Nameplate': 'EngravedPlastic', 'Name Badge': 'EngravedPlastic',
-};
+/* Product mode now comes from integration/product-provider.js, so it can be
+ * sourced from Sterling's CMS later instead of the template-type dropdown. */
+
 
 function mapFont(cssFontFamily, substitutions) {
   const requested = (cssFontFamily || '').split(',')[0].trim().replace(/^["']|["']$/g, '');
@@ -262,15 +264,18 @@ function cornerRadii(style, w, h) {
   };
 }
 
-/* Classify a clean-solid element into a native Fabric shape descriptor, in
- * canvas pixels. Returns null when the geometry isn't cleanly representable
- * (left for the raster). left/top/w/h are already in canvas px. */
+/* Classify a clean-solid element into a native shape element, in canvas
+ * pixels. Returns null when the geometry isn't cleanly representable (left for
+ * the raster). left/top/w/h are already in canvas px. */
 function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
+  /* Common style for every shape kind. Geometry is supplied per branch below.
+   * NOTE: this now yields NORMALIZED elements (integration/normalized-design.js);
+   * the Fabric dialect is added by the Sterling adapter. The measurement and
+   * classification logic below is unchanged. */
+  const N = window.SMPNormalized;
   const base = {
-    version: '4.4.0', originX: 'left', originY: 'top',
-    left: round2(left), top: round2(top), fill,
-    stroke: null, strokeWidth: 0, angle, scaleX: 1, scaleY: 1,
-    opacity: parseFloat(style.opacity), sterlingType: 'shape', typeImage: 'shapes',
+    fill, stroke: null, strokeWidth: 0,
+    rotation: angle, opacity: parseFloat(style.opacity),
   };
   // clip-path polygon wedge/band → real polygon
   const poly = parseClipPolygon(style.clipPath, w, h);
@@ -282,10 +287,10 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
     const xs = poly.map(p => p.x), ys = poly.map(p => p.y);
     const minX = Math.min(...xs), minY = Math.min(...ys);
     const maxX = Math.max(...xs), maxY = Math.max(...ys);
-    return { ...base, type: 'polygon',
+    return N.polygon({ ...base,
       points: poly.map(p => ({ x: round2(p.x - minX), y: round2(p.y - minY) })),
-      left: round2(left + minX), top: round2(top + minY),
-      width: round2(maxX - minX), height: round2(maxY - minY) };
+      x: round2(left + minX), y: round2(top + minY),
+      width: round2(maxX - minX), height: round2(maxY - minY) });
   }
   const rad = cornerRadii(style, w, h);
   const allEqual = Math.abs(rad.tl - rad.tr) < 0.5 && Math.abs(rad.tr - rad.br) < 0.5 && Math.abs(rad.br - rad.bl) < 0.5;
@@ -294,10 +299,10 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
   // min(w,h)/2 ≈ 0 would be misread as flat ellipses.
   const isCircleish = allEqual && rad.tl > 1 && rad.tl >= Math.min(w, h) / 2 - 1;
   if (isCircleish && Math.abs(w - h) < 1.5) {
-    return { ...base, type: 'circle', radius: round2(w / 2), left: round2(left), top: round2(top) };
+    return N.circle({ ...base, radius: round2(w / 2), x: round2(left), y: round2(top) });
   }
   if (isCircleish) {
-    return { ...base, type: 'ellipse', rx: round2(w / 2), ry: round2(h / 2) };
+    return N.ellipse({ ...base, x: round2(left), y: round2(top), radiusX: round2(w / 2), radiusY: round2(h / 2) });
   }
   // quarter/half disc: exactly one corner fully rounded → circle centred on the
   // opposite corner (the canvas edge clips the rest, reproducing the arc)
@@ -310,11 +315,13 @@ function classifyNativeShape(style, left, top, w, h, angle, fill, factor) {
     else if (rad.tr >= w - 2) { cx = left; cy = top + h; }       // rounded TR → centre BL
     else if (rad.br >= w - 2) { cx = left; cy = top; }           // rounded BR → centre TL
     else { cx = left + w; cy = top; }                            // rounded BL → centre TR
-    return { ...base, type: 'circle', radius: round2(R), left: round2(cx - R), top: round2(cy - R) };
+    return N.circle({ ...base, radius: round2(R), x: round2(cx - R), y: round2(cy - R) });
   }
   // plain rectangle (optionally uniformly rounded)
-  return { ...base, type: 'rect', width: round2(w), height: round2(h),
-           rx: round2(allEqual ? rad.tl : 0), ry: round2(allEqual ? rad.tl : 0) };
+  return N.rect({ ...base, x: round2(left), y: round2(top),
+                  width: round2(w), height: round2(h),
+                  cornerRadiusX: round2(allEqual ? rad.tl : 0),
+                  cornerRadiusY: round2(allEqual ? rad.tl : 0) });
 }
 
 /* True when text is painted with a gradient/image clipped to the glyphs
@@ -329,7 +336,7 @@ function isGradientFilledText(style) {
   return transparentFill && hasImage;
 }
 
-/* Extract Fabric v4 objects from one rendered document. rootEl is the design
+/* Extract NORMALIZED design elements from one rendered document. rootEl is the design
  * surface (the card element); factor rescales its pixels to canvas pixels. */
 function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
   const rootRect = rootEl.getBoundingClientRect();
@@ -359,7 +366,7 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     /* Classification (Tier 1):
      *  - text            → editable i-text
      *  - clean solid shape (rect / rounded / circle / ellipse / clip-polygon /
-     *                       quarter-disc) → NATIVE editable Fabric shape
+     *                       quarter-disc) → NATIVE editable shape element
      *  - inline SVG, gradients, shadows, blends, textures, photos → flattened
      *    into the raster (rasterizeBackground), which is clip-path aware.
      * Native objects are marked data-tg-extract so the raster skips them. */
@@ -380,7 +387,10 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
               el.setAttribute('data-tg-extract', '1');
               const obj = makeImageObject(uri, round2(r.width), round2(r.height),
                 left, top, width, height, angle, style);
-              obj.sterlingType = 'vectorArt';
+              /* Inline SVG kept as vector art rather than rasterized. The
+               * adapter maps this role onto whatever the target designer calls
+               * it (Sterling: sterlingType 'vectorArt'). */
+              obj.role = 'vector';
               objects.push(obj);
               continue;
             }
@@ -432,22 +442,22 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
       const tLeft = tr ? (tr.left - rootRect.left) * factor : left;
       const tTop = tr ? (tr.top - rootRect.top) * factor : top;
       const tWidth = tr ? (tr.right - tr.left) * factor : width;
-      candidates.push({ el, obj: {
-        type: 'i-text', version: '4.4.0', originX: 'left', originY: 'top',
-        sterlingType: 'textObject',
-        left: round2(tLeft), top: round2(tTop), width: round2(Math.max(tWidth, 10)),
+      /* NORMALIZED text element. Letter spacing stays in pixels here; the
+       * Sterling adapter converts it to Fabric's 1/1000-em charSpacing. */
+      candidates.push({ el, obj: window.SMPNormalized.text({
+        x: round2(tLeft), y: round2(tTop), width: round2(Math.max(tWidth, 10)),
         text: getWrappedText(el, doc),
-        fontSize: round2(fontSize),
+        fontSizePx: round2(fontSize),
         fontFamily: mapFont(style.fontFamily, substitutions),
         fontWeight: normalizeWeight(style.fontWeight),
         fontStyle: style.fontStyle === 'italic' ? 'italic' : 'normal',
         underline: (style.textDecorationLine || '').includes('underline'),
-        textAlign: ['left','center','right','justify'].includes(style.textAlign) ? style.textAlign : 'left',
-        fill: cssColorToHex(style.color, doc) || '#000000',
-        lineHeight: normalizeLineHeight(style, fontSize / factor),
-        charSpacing: Number.isFinite(letterPx) && fontSize > 0 ? Math.round((letterPx * factor) / fontSize * 1000) : 0,
-        angle, scaleX: 1, scaleY: 1, opacity: parseFloat(style.opacity),
-      } });
+        align: ['left','center','right','justify'].includes(style.textAlign) ? style.textAlign : 'left',
+        color: cssColorToHex(style.color, doc) || '#000000',
+        lineHeightRatio: normalizeLineHeight(style, fontSize / factor),
+        letterSpacingPx: Number.isFinite(letterPx) ? letterPx * factor : 0,
+        rotation: angle, opacity: parseFloat(style.opacity),
+      }) });
     }
   }
 
@@ -458,8 +468,8 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
   const deduped = [];
   for (const c of candidates) {
     const dup = deduped.findIndex(d => d.obj.text === c.obj.text
-      && Math.abs(d.obj.left - c.obj.left) < Math.max(8, c.obj.fontSize * 0.6)
-      && Math.abs(d.obj.top - c.obj.top) < Math.max(8, c.obj.fontSize * 0.6));
+      && Math.abs(d.obj.x - c.obj.x) < Math.max(8, c.obj.font.sizePx * 0.6)
+      && Math.abs(d.obj.y - c.obj.y) < Math.max(8, c.obj.font.sizePx * 0.6));
     if (dup >= 0) deduped[dup] = c; else deduped.push(c);
   }
   deduped.forEach(c => objects.push(c.obj));
@@ -485,13 +495,14 @@ function svgElementToDataUri(el, doc, cssW, cssH) {
 }
 
 function makeImageObject(src, naturalW, naturalH, left, top, width, height, angle, style) {
-  return {
-    type: 'image', version: '4.4.0', originX: 'left', originY: 'top',
-    left: round2(left), top: round2(top),
-    width: round2(naturalW), height: round2(naturalH),
-    scaleX: round4(width / naturalW), scaleY: round4(height / naturalH),
-    angle, src, crossOrigin: 'anonymous', opacity: parseFloat(style.opacity),
-  };
+  /* NORMALIZED image element: intrinsic size and target size are kept separate;
+   * the adapter derives Fabric's width/height + scaleX/scaleY from them. */
+  return window.SMPNormalized.image({
+    x: round2(left), y: round2(top),
+    width, height,
+    naturalWidth: naturalW, naturalHeight: naturalH,
+    rotation: angle, src, opacity: parseFloat(style.opacity),
+  });
 }
 
 function normalizeText(el) {
@@ -575,16 +586,17 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
   const cv = document.createElement('canvas');
   cv.width = cw; cv.height = ch;
   const ctx = cv.getContext('2d');
-  const toObj = () => ({
-    type: 'image', version: '4.4.0', originX: 'left', originY: 'top',
-    left: 0, top: 0, width: cw, height: ch,
-    scaleX: round4(targetWidthPx / cw), scaleY: round4(targetHeightPx / ch),
-    angle: 0, src: cv.toDataURL('image/png'), crossOrigin: 'anonymous', opacity: 1,
-    /* Selectable/movable: the background artwork is a normal image object (not
-     * fixedImage) so it can be selected, dragged, and scaled in the designer.
-     * It renders behind the text purely by array order (first object = bottom
-     * of the stack). sterlingType marks its provenance without locking it. */
-    sterlingType: 'backgroundArt',
+  /* Selectable/movable: the background artwork is a normal image element so it
+   * can be selected, dragged, and scaled in the designer. It renders behind the
+   * text purely by array order (first element = bottom of the stack). The
+   * 'background' role records its provenance without locking it, and tells the
+   * adapter this is the artwork that must bleed off every edge. */
+  const toObj = () => window.SMPNormalized.image({
+    role: 'background',
+    x: 0, y: 0,
+    width: targetWidthPx, height: targetHeightPx,
+    naturalWidth: cw, naturalHeight: ch,
+    rotation: 0, src: cv.toDataURL('image/png'), opacity: 1,
   });
 
   // --- Primary: whole-card foreignObject snapshot ---
@@ -771,120 +783,56 @@ function splitTopLevel(str) {
 
 /* Cover-scale a single object so a trim-sized element grows to cover the full
  * bleed canvas (edges extend past the trim, like a print "scale to bleed"). */
-function coverScaleObject(o, s, offX, offY) {
-  o.left = round2((o.left || 0) * s + offX);
-  o.top = round2((o.top || 0) * s + offY);
-  if (o.type === 'image') {
-    o.scaleX = round4((o.scaleX || 1) * s); o.scaleY = round4((o.scaleY || 1) * s);
-  } else if (o.type === 'rect') {
-    o.width = round2(o.width * s); o.height = round2(o.height * s);
-    if (o.rx) o.rx = round2(o.rx * s); if (o.ry) o.ry = round2(o.ry * s);
-  } else if (o.type === 'circle') {
-    o.radius = round2(o.radius * s);
-  } else if (o.type === 'ellipse') {
-    o.rx = round2(o.rx * s); o.ry = round2(o.ry * s);
-  } else if (o.type === 'polygon' && Array.isArray(o.points)) {
-    o.points = o.points.map(p => ({ x: round2(p.x * s), y: round2(p.y * s) }));
-    if (o.width) o.width = round2(o.width * s);
-    if (o.height) o.height = round2(o.height * s);
-  }
-}
-
-/* Does this object act as the card background (it should bleed off every edge)
- * rather than as foreground content (which must stay inside the safe area)? */
-function isBackgroundObject(o, trimW, trimH) {
-  if (o.sterlingType === 'backgroundArt' || o.sterlingType === 'fixedImage') return true;
-  if (o.type !== 'image' && o.type !== 'rect') return false;
-  const w = (o.width || 0) * (o.scaleX || 1);
-  const h = (o.height || 0) * (o.scaleY || 1);
-  const nearOrigin = (o.left || 0) <= trimW * 0.06 && (o.top || 0) <= trimH * 0.06;
-  return nearOrigin && w >= trimW * 0.9 && h >= trimH * 0.9;
-}
-
-/* Print-correct bleed: the background art is scaled to COVER the full bleed
- * canvas so it extends past the trim on every edge, while foreground content
- * (text, logos, accents) is only translated into the padded canvas by the
- * bleed offset — never enlarged — so it stays inside the safe/trim area. A
- * foreground rect that was already touching a trim edge is stretched out to the
- * bleed edge so intentional edge bands keep bleeding. Mutates in place. */
-function applyBleed(objects, trimW, trimH, bleedPx) {
-  if (bleedPx <= 0) return;
-  const canvasW = trimW + 2 * bleedPx, canvasH = trimH + 2 * bleedPx;
-  const s = Math.max(canvasW / trimW, canvasH / trimH);
-  const offX = (canvasW - trimW * s) / 2, offY = (canvasH - trimH * s) / 2;
-  const tol = 1.5;
-  for (const o of objects) {
-    if (isBackgroundObject(o, trimW, trimH)) { coverScaleObject(o, s, offX, offY); continue; }
-    const origLeft = o.left || 0, origTop = o.top || 0;
-    o.left = round2(origLeft + bleedPx);
-    o.top = round2(origTop + bleedPx);
-    // extend edge-touching rectangular bands out into the bleed
-    if (o.type === 'rect' && typeof o.width === 'number' && typeof o.height === 'number') {
-      const right = origLeft + o.width, bottom = origTop + o.height;
-      if (origLeft <= tol) { o.width = round2(o.width + o.left); o.left = 0; }
-      if (right >= trimW - tol) { o.width = round2(o.width + bleedPx); }
-      if (origTop <= tol) { o.height = round2(o.height + o.top); o.top = 0; }
-      if (bottom >= trimH - tol) { o.height = round2(o.height + bleedPx); }
-    }
-  }
-}
+/* Bleed / cover-scale geometry now lives in
+ * integration/adapters/sterling-legacy.js — it operates in the Designer's
+ * coordinate space, so it belongs with the Designer's dialect. Moved verbatim.
+ */
 
 function buildSterlingTemplate(pages, payload) {
-  const trimW = Math.round(toPx(payload.width, payload.unit));
-  const trimH = Math.round(toPx(payload.height, payload.unit));
-  const bleedPx = bleedPxFor(payload.templateType);
-  const mode = MODE_BY_PRODUCT[payload.templateType] || 'FullColour';
+  /* THE INTEGRATION BOUNDARY.
+   *
+   * Everything above produced a design description. This assembles it into the
+   * normalized model and hands it to an adapter. The Generator knows nothing
+   * about Fabric or Sterling past this line; swapping the Designer means
+   * swapping the adapter, not editing the Generator.
+   *
+   * Product facts (bleed, designer mode, page count) come from the
+   * ProductProvider, so they can later be sourced from Sterling's CMS instead
+   * of being inferred from the template-type dropdown.
+   */
+  const N = window.SMPNormalized;
+  const productContext = window.SMPProductProvider.resolve(payload);
 
-  /* The Sterling designer builds its canvas as canvasProperties.width/height +
-   * the declared bleeds (see SMPdesigner canvas.setHeight = height + bleedTop +
-   * bleedBottom). So canvasProperties.width/height MUST be the TRIM size, with
-   * the bleed declared separately — otherwise the designer adds bleed on top of
-   * an already-bleed-inclusive size and the artwork leaves a gap. The objects
-   * are positioned in the full trim+bleed coordinate space by applyBleed. */
-  /* Each page is { objects, bleedAuthored }. Bleed-authored pages already sit in
-   * the full bleed-canvas coordinate space (art runs to the bleed edge), so they
-   * need no offset. Only trim-authored pages get applyBleed (translate content
-   * in, cover-scale the background out to the bleed edge). */
-  if (bleedPx > 0) {
-    pages.forEach(pg => { if (!pg.bleedAuthored) applyBleed(pg.objects, trimW, trimH, bleedPx); });
-  }
-
-  const canvasProperties = {
-    width: trimW, height: trimH, dpi: 96, shape: 'rect', angle: 0,
-    designerVariationCode: mode,
-    bleedTop: bleedPx, bleedRight: bleedPx, bleedBottom: bleedPx, bleedLeft: bleedPx, bleedMargin: 0,
-    borderTop: 0, borderRight: 0, borderBottom: 0, borderLeft: 0, borderWidth: 2,
-    marginTop: 0, marginRight: 0, marginBottom: 0, marginLeft: 0,
-    sideBorder: 0, topBorder: 0, sideMargin: 0, topMargin: 0,
-    daterBoxHeight: 0, daterBoxWidth: 0, maxLines: 0,
-    drawFullBorder: false, greenInkAvailable: false, isProstamp: false,
-    materialColour: '', productNumber: '', productNumberVariation: '',
-    /* provenance — lets the designer recognise generator designs */
-    sourceApplication: 'templateGenerator',
-    sourceVersion: 1,
-    /* Trim size (the finished product size, excluding bleed) so product
-     * recommendations match on 3.5x2, not the bleed canvas of 3.75x2.25. */
-    trimWidthPx: trimW, trimHeightPx: trimH, bleedPx,
-    sourceMeta: {
-      templateType: payload.templateType,
-      widthIn: round2(trimW / 96),
-      heightIn: round2(trimH / 96),
+  const doc = N.createDocument({
+    trimWidthPx: Math.round(toPx(payload.width, payload.unit)),
+    trimHeightPx: Math.round(toPx(payload.height, payload.unit)),
+    bleedPx: productContext.bleedPx,
+    dpi: 96,
+    unit: payload.unit,
+    widthIn: round2(Math.round(toPx(payload.width, payload.unit)) / 96),
+    heightIn: round2(Math.round(toPx(payload.height, payload.unit)) / 96),
+    productContext,
+    pages: pages.map((pg, i) => ({
+      index: i,
+      bleedAuthored: pg.bleedAuthored,
+      elements: pg.objects,
+    })),
+    provenance: {
+      sourceApplication: 'templateGenerator',
+      sourceVersion: 1,
       businessName: payload.businessName || '',
     },
-  };
+  });
 
-  return {
-    templateNumber: 0,
-    templateKey: 'TG-' + Date.now().toString(36).toUpperCase(),
-    version: 1.2,
-    canvasProperties,
-    productList: [],
-    pages: pages.map((pg, i) => ({
-      page: i,
-      canvasProperties: { ...canvasProperties },
-      canvasData: { version: '4.4.0', objects: pg.objects },
-    })),
-  };
+  const problems = N.validate(doc);
+  if (problems.length) console.warn('[integration] normalized model problems:', problems);
+
+  /* Keep the last normalized document available for inspection/tests and for a
+   * future adapter to consume without re-extracting. */
+  window.SMPPush = window.SMPPush || {};
+  window.SMPPush.lastNormalizedDesign = doc;
+
+  return window.SterlingLegacyAdapter.toSterlingTemplate(doc);
 }
 
 /* Preview-only decorations the generator injects for ON-SCREEN fitting. They
@@ -1028,106 +976,13 @@ async function convertCurrentDesign() {
 
 /* ── Transfer transports ─────────────────────────────── */
 
-/* Re-encode a PNG/WebP data URI as opaque JPEG (optionally downscaled). Fills a
- * white backdrop first so any transparent pixels (e.g. rounded card corners in
- * the bleed margin) don't turn black. Returns the original src on any failure. */
-async function recompressDataUriToJpeg(src, quality, maxSide) {
-  if (typeof src !== 'string' || !/^data:image\/(png|webp)/i.test(src)) return src;
-  try {
-    const img = new Image();
-    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = src; });
-    let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
-    if (maxSide && Math.max(w, h) > maxSide) {
-      const k = maxSide / Math.max(w, h); w = Math.round(w * k); h = Math.round(h * k);
-    }
-    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
-    const ctx = cv.getContext('2d');
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
-    ctx.drawImage(img, 0, 0, w, h);
-    return cv.toDataURL('image/jpeg', quality);
-  } catch (e) { return src; }
-}
-
-/* Shrink a template's raster images so a decoration-heavy design still fits the
- * browser-only demo transport (localStorage, ~5 MB). DEMO TRANSPORT ONLY — a
- * hosted deployment posts the ORIGINAL full-quality PNG template to the staging
- * endpoint (postTransfer) and Download JSON keeps PNG too, so print-production
- * export quality is unchanged. Compresses the opaque background raster hardest;
- * small overlay images are left alone. */
-async function compressTemplateForDemoTransport(template, opts) {
-  const { bgQuality = 0.85, imgQuality = 0.9, maxSide = 0 } = opts || {};
-  for (const page of template.pages || []) {
-    const objs = (page.canvasData && page.canvasData.objects) || [];
-    for (const o of objs) {
-      if (o.type !== 'image' || typeof o.src !== 'string' || !o.src.startsWith('data:image/png')) continue;
-      const isBg = o.sterlingType === 'backgroundArt' || o.sterlingType === 'fixedImage';
-      o.src = await recompressDataUriToJpeg(o.src, isBg ? bgQuality : imgQuality, isBg ? maxSide : 0);
-    }
-  }
-  return template;
-}
-
-function storeTransferLocally(template) {
-  const id = 'tg-' + Math.random().toString(36).slice(2, 10);
-  const record = {
-    id, format: 'sterling-template-1.2', source: 'templateGenerator',
-    created: Date.now(), expires: Date.now() + SMP_CONFIG.transferTtlMs,
-    design: template,
-  };
-  // prune expired transfers so localStorage cannot fill up
-  for (const key of Object.keys(localStorage)) {
-    if (key.startsWith(SMP_CONFIG.transferKey + ':')) {
-      try {
-        const old = JSON.parse(localStorage.getItem(key));
-        if (!old.expires || old.expires < Date.now()) localStorage.removeItem(key);
-      } catch { localStorage.removeItem(key); }
-    }
-  }
-  try {
-    localStorage.setItem(`${SMP_CONFIG.transferKey}:${id}`, JSON.stringify(record));
-  } catch (e) {
-    /* localStorage quota exceeded. Signal the caller so it can compress the
-     * demo-only transport and retry (production posts to the staging endpoint
-     * with no such limit). */
-    const err = new Error('DEMO_TRANSFER_QUOTA');
-    err.code = 'QUOTA';
-    throw err;
-  }
-  return id;
-}
-
-/* Store for the demo (localStorage), compressing rasters and retrying if the
- * design is too big to fit. Returns the transfer id. */
-async function storeTransferLocallyWithFallback(template) {
-  try {
-    return storeTransferLocally(template);
-  } catch (e) {
-    if (!e || e.code !== 'QUOTA') throw e;
-  }
-  // First retry: JPEG-compress the opaque background raster.
-  await compressTemplateForDemoTransport(template, { bgQuality: 0.85, imgQuality: 0.9 });
-  try { return storeTransferLocally(template); } catch (e2) { if (e2.code !== 'QUOTA') throw e2; }
-  // Second retry: harder compression + downscale the background.
-  await compressTemplateForDemoTransport(template, { bgQuality: 0.6, imgQuality: 0.7, maxSide: 1600 });
-  try { return storeTransferLocally(template); } catch (e3) {
-    if (e3.code !== 'QUOTA') throw e3;
-    throw new Error('This design is too large for the browser-only demo transfer '
-      + '(a very large embedded image). In the hosted integration it transfers via the '
-      + 'staging endpoint with no size limit. For the demo, use a smaller image or the image-URL option.');
-  }
-}
-
-async function postTransfer(template) {
-  const res = await fetch(SMP_CONFIG.transferEndpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ source: 'templateGenerator', design: template }),
-  });
-  if (!res.ok) throw new Error(`Transfer endpoint returned ${res.status}`);
-  const data = await res.json();
-  if (!data.designerUrl) throw new Error('Transfer endpoint did not return a designer URL.');
-  return data.designerUrl;
-}
+/* Transport now lives in integration/adapters/transport-local.js. These thin
+ * wrappers keep the existing call sites and the window.SMPPush API unchanged. */
+const recompressDataUriToJpeg = (...a) => window.SMPTransportLocal.recompressDataUriToJpeg(...a);
+const compressTemplateForDemoTransport = (...a) => window.SMPTransportLocal.compressTemplateForDemoTransport(...a);
+const storeTransferLocally = (...a) => window.SMPTransportLocal.storeTransferLocally(...a);
+const storeTransferLocallyWithFallback = (...a) => window.SMPTransportLocal.storeTransferLocallyWithFallback(...a);
+const postTransfer = (...a) => window.SMPTransportLocal.postTransfer(...a);
 
 function downloadTemplateJson(template) {
   const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });

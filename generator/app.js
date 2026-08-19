@@ -119,6 +119,13 @@ const DOUBLE_SIDED_PRODUCTS = ['Business Card', 'Brochure'];
 const BLEED_IN = 0.125;
 const BLEED_PRODUCTS = ['Business Card', 'Poster', 'Brochure'];
 function bleedPxFor(type) {
+  /* Bleed is a PRODUCT fact, so it comes from the ProductProvider — the same
+   * source the Sterling adapter uses. Routing both through one provider means
+   * the on-screen bleed overlay and the transferred design can never disagree,
+   * and swapping in CMS-backed product data later changes nothing here.
+   * The inline constants below remain the fallback if the integration layer
+   * is not loaded (e.g. the Generator opened standalone). */
+  if (window.SMPProductProvider) return window.SMPProductProvider.bleedPxFor(type);
   return BLEED_PRODUCTS.includes(type) ? Math.round(BLEED_IN * 96) : 0;
 }
 
