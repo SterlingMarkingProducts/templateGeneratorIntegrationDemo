@@ -1009,6 +1009,45 @@ const recompressDataUriToJpeg = (...a) => window.SMPTransportLocal.recompressDat
 const compressTemplateForDemoTransport = (...a) => window.SMPTransportLocal.compressTemplateForDemoTransport(...a);
 const storeTransferLocally = (...a) => window.SMPTransportLocal.storeTransferLocally(...a);
 const storeTransferLocallyWithFallback = (...a) => window.SMPTransportLocal.storeTransferLocallyWithFallback(...a);
+
+/* ── Transport modes ──────────────────────────────────────────────────
+ *
+ *   'local'  the existing same-origin localStorage handoff to realdesigner.
+ *            THE DEFAULT, and the one every regression test exercises.
+ *   'import' the Sterling templateImport bridge. Requires an INJECTED
+ *            endpoint, because templateImport.cfm does not exist yet — there
+ *            is no production import mode to select.
+ *
+ * Deliberately not a Generator UI control: it is an implementation choice, not
+ * a creative one. Tests and the preview harness set it through
+ * window.SMPPush.setTransportMode(). */
+let transportMode = 'local';
+let importTransport = null;
+
+function setTransportMode(mode, transport) {
+  if (mode !== 'local' && mode !== 'import') {
+    throw new Error(`Unknown transport mode "${mode}". Use 'local' or 'import'.`);
+  }
+  if (mode === 'import' && !transport) {
+    throw new Error('Import mode requires an explicit transport. There is no production '
+      + 'import endpoint yet — inject a TemplateImportTransport (mock or otherwise).');
+  }
+  transportMode = mode;
+  importTransport = mode === 'import' ? transport : null;
+  return transportMode;
+}
+
+/* Push the current design through the IMPORT transport. Returns the server's
+ * response. Never falls back to the local transport: a failed import must
+ * surface as a failure, not quietly become a localStorage handoff. */
+async function pushViaImport() {
+  if (transportMode !== 'import' || !importTransport) {
+    throw new Error('Import transport is not configured.');
+  }
+  const product = window.SMPProductSelection?.get?.() || null;
+  const { template } = await convertCurrentDesign();
+  return importTransport.send(template, product);
+}
 const postTransfer = (...a) => window.SMPTransportLocal.postTransfer(...a);
 
 function downloadTemplateJson(template) {
@@ -1060,4 +1099,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* Expose for the test harness and unit tests */
-window.SMPPush = { convertCurrentDesign, buildSterlingTemplate, extractObjectsFromDoc, mapFont, SMP_CONFIG, downloadTemplateJson, compressTemplateForDemoTransport, storeTransferLocallyWithFallback };
+window.SMPPush = { convertCurrentDesign, buildSterlingTemplate, extractObjectsFromDoc, mapFont, SMP_CONFIG, downloadTemplateJson, compressTemplateForDemoTransport, storeTransferLocallyWithFallback, setTransportMode, pushViaImport, transportMode: () => transportMode };

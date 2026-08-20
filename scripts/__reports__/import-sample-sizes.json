@@ -1,0 +1,117 @@
+{
+ "generated": "run scripts/test-import-samples.mjs to regenerate",
+ "rows": [
+  {
+   "name": "Axiom",
+   "pages": 2,
+   "imageObjects": 2,
+   "extractedObjects": 2,
+   "inlineObjects": 0,
+   "inlineBytes": 0,
+   "uniqueAssets": 2,
+   "duplicatesCollapsed": 0,
+   "dataUriBytes": 305144,
+   "assetBytes": 228823,
+   "before": [
+    159812,
+    151774
+   ],
+   "after": [
+    4332,
+    2146
+   ],
+   "storedBytes": [
+    4435,
+    2249
+   ],
+   "openUrl": "/templateDesigner.cfm?template=900001&product=6505",
+   "noRasterDataUris": true,
+   "mimesInline": {},
+   "allKeysUuid": true,
+   "originalIntact": true
+  },
+  {
+   "name": "Atelier Noir",
+   "pages": 2,
+   "imageObjects": 11,
+   "extractedObjects": 2,
+   "inlineObjects": 9,
+   "inlineBytes": 4994,
+   "uniqueAssets": 2,
+   "duplicatesCollapsed": 0,
+   "dataUriBytes": 2693686,
+   "assetBytes": 2016484,
+   "before": [
+    1261170,
+    1438522
+   ],
+   "after": [
+    5086,
+    5950
+   ],
+   "storedBytes": [
+    5189,
+    6053
+   ],
+   "openUrl": "/templateDesigner.cfm?template=900001&product=6505",
+   "noRasterDataUris": true,
+   "mimesInline": {
+    "image/svg+xml": 9
+   },
+   "allKeysUuid": true,
+   "originalIntact": true
+  },
+  {
+   "name": "Business card",
+   "pages": 1,
+   "imageObjects": 1,
+   "extractedObjects": 1,
+   "inlineObjects": 0,
+   "inlineBytes": 0,
+   "uniqueAssets": 1,
+   "duplicatesCollapsed": 0,
+   "dataUriBytes": 784762,
+   "assetBytes": 588554,
+   "before": [
+    787052
+   ],
+   "after": [
+    2308
+   ],
+   "storedBytes": [
+    2411
+   ],
+   "openUrl": "/templateDesigner.cfm?template=900001&product=6505",
+   "noRasterDataUris": true,
+   "mimesInline": {},
+   "allKeysUuid": true,
+   "originalIntact": true
+  },
+  {
+   "name": "Sign 12",
+   "pages": 1,
+   "imageObjects": 1,
+   "extractedObjects": 1,
+   "inlineObjects": 0,
+   "inlineBytes": 0,
+   "uniqueAssets": 1,
+   "duplicatesCollapsed": 0,
+   "dataUriBytes": 197058,
+   "assetBytes": 147775,
+   "before": [
+    199129
+   ],
+   "after": [
+    2089
+   ],
+   "storedBytes": [
+    2192
+   ],
+   "openUrl": "/templateDesigner.cfm?template=900001&product=6505",
+   "noRasterDataUris": true,
+   "mimesInline": {},
+   "allKeysUuid": true,
+   "originalIntact": true
+  }
+ ]
+}
