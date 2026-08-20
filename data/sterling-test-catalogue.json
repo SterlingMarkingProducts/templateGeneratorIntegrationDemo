@@ -50,7 +50,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -93,6 +93,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -186,6 +187,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -279,6 +281,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -372,6 +375,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -465,6 +469,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -558,6 +563,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -651,6 +657,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -744,6 +751,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -837,6 +845,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -928,6 +937,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1019,6 +1029,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1108,6 +1119,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1196,6 +1208,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1284,6 +1297,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1375,6 +1389,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1466,6 +1481,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1557,6 +1573,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1648,6 +1665,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1739,6 +1757,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1831,6 +1850,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -1922,6 +1942,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2013,6 +2034,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2104,6 +2126,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2195,6 +2218,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2286,6 +2310,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2377,6 +2402,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2468,6 +2494,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2559,6 +2586,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2650,6 +2678,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2741,6 +2770,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2832,6 +2862,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -2923,6 +2954,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3014,6 +3046,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3105,6 +3138,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3196,6 +3230,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3287,6 +3322,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3378,6 +3414,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3480,6 +3517,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3582,6 +3620,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3681,6 +3720,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3780,6 +3820,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3879,6 +3920,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -3978,6 +4020,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4077,6 +4120,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4178,6 +4222,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4279,6 +4324,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4380,6 +4426,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4481,6 +4528,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4572,6 +4620,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4663,6 +4712,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4754,6 +4804,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4845,6 +4896,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -4936,6 +4988,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5027,6 +5080,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5118,6 +5172,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5209,6 +5264,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5300,6 +5356,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5391,6 +5448,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5482,6 +5540,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5573,6 +5632,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5664,6 +5724,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5755,6 +5816,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5846,6 +5908,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -5937,6 +6000,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6028,6 +6092,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6119,6 +6184,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6210,6 +6276,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6301,6 +6368,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6392,6 +6460,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6483,6 +6552,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6574,6 +6644,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6665,6 +6736,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6757,6 +6829,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6848,6 +6921,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -6939,6 +7013,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7030,6 +7105,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7121,6 +7197,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7212,6 +7289,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7303,6 +7381,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7394,6 +7473,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7485,6 +7565,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7576,6 +7657,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7667,6 +7749,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7758,6 +7841,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7849,6 +7933,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -7940,6 +8025,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8031,6 +8117,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8122,6 +8209,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8213,6 +8301,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8304,6 +8393,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8395,6 +8485,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8486,6 +8577,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8577,6 +8669,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8668,6 +8761,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8761,6 +8855,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8854,6 +8949,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -8955,6 +9051,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9001,7 +9098,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9044,6 +9141,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9090,7 +9188,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9132,6 +9230,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9178,7 +9277,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9220,6 +9319,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9266,7 +9366,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9308,6 +9408,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9354,7 +9455,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9396,6 +9497,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9442,7 +9544,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9484,6 +9586,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9530,7 +9633,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9572,6 +9675,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9618,7 +9722,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9660,6 +9764,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9706,7 +9811,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9748,6 +9853,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9794,7 +9900,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9836,6 +9942,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9882,7 +9989,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -9924,6 +10031,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -9970,7 +10078,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10012,6 +10120,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10058,7 +10167,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10100,6 +10209,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10146,7 +10256,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10188,6 +10298,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10234,7 +10345,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10276,6 +10387,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10322,7 +10434,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10365,6 +10477,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10411,7 +10524,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10453,6 +10566,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10499,7 +10613,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10541,6 +10655,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10587,7 +10702,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10629,6 +10744,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10675,7 +10791,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10720,6 +10836,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10766,7 +10883,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10808,6 +10925,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10854,7 +10972,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10896,6 +11014,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -10942,7 +11061,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -10984,6 +11103,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11030,7 +11150,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11075,6 +11195,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11121,7 +11242,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11163,6 +11284,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11209,7 +11331,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11251,6 +11373,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11297,7 +11420,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11339,6 +11462,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11385,7 +11509,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11433,6 +11557,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11479,7 +11604,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11521,6 +11646,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11567,7 +11693,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11609,6 +11735,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11655,7 +11782,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11697,6 +11824,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11743,7 +11871,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11788,6 +11916,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11834,7 +11963,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11876,6 +12005,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -11922,7 +12052,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -11964,6 +12094,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12010,7 +12141,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12052,6 +12183,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12098,7 +12230,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12141,6 +12273,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12187,7 +12320,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12229,6 +12362,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12275,7 +12409,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12317,6 +12451,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12363,7 +12498,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12405,6 +12540,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12451,7 +12587,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12496,6 +12632,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12542,7 +12679,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12584,6 +12721,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12630,7 +12768,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12672,6 +12810,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12718,7 +12857,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12760,6 +12899,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12806,7 +12946,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12848,6 +12988,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12894,7 +13035,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -12936,6 +13077,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -12982,7 +13124,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13024,6 +13166,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13070,7 +13213,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13113,6 +13256,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13159,7 +13303,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13201,6 +13345,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13247,7 +13392,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13289,6 +13434,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13335,7 +13481,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13377,6 +13523,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13423,7 +13570,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13468,6 +13615,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13514,7 +13662,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13556,6 +13704,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13602,7 +13751,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13644,6 +13793,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13690,7 +13840,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13732,6 +13882,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13778,7 +13929,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13821,6 +13972,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13867,7 +14019,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13909,6 +14061,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -13955,7 +14108,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -13997,6 +14150,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14043,7 +14197,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14085,6 +14239,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14131,7 +14286,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14174,6 +14329,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14220,7 +14376,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14262,6 +14418,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14308,7 +14465,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14350,6 +14507,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14396,7 +14554,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14438,6 +14596,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14484,7 +14643,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14529,6 +14688,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14575,7 +14735,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14617,6 +14777,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14663,7 +14824,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14705,6 +14866,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14751,7 +14913,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14793,6 +14955,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14839,7 +15002,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14882,6 +15045,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -14928,7 +15092,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -14970,6 +15134,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15016,7 +15181,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15058,6 +15223,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15104,7 +15270,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15146,6 +15312,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15192,7 +15359,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15234,6 +15401,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15280,7 +15448,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15322,6 +15490,7 @@
     "spreadsheets": [
      "xls"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15368,7 +15537,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15411,6 +15580,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15457,7 +15627,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15499,6 +15669,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15545,7 +15716,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15587,6 +15758,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15633,7 +15805,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15676,6 +15848,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15722,7 +15895,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15778,6 +15951,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15824,7 +15998,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15867,6 +16041,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -15913,7 +16088,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -15969,6 +16144,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16062,6 +16238,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16155,6 +16332,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16201,7 +16379,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -16246,6 +16424,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16334,6 +16513,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16426,6 +16606,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16519,6 +16700,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16612,6 +16794,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16658,7 +16841,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -16705,6 +16888,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16751,7 +16935,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -16795,6 +16979,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16841,7 +17026,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -16885,6 +17070,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -16931,7 +17117,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -16975,6 +17161,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17021,7 +17208,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17068,6 +17255,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17114,7 +17302,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17160,6 +17348,7 @@
     "spreadsheets": [
      "xls"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17206,7 +17395,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17253,6 +17442,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17299,7 +17489,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17346,6 +17536,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17392,7 +17583,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17439,6 +17630,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17485,7 +17677,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17532,6 +17724,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17578,7 +17771,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17625,6 +17818,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17671,7 +17865,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17718,6 +17912,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17764,7 +17959,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17811,6 +18006,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17857,7 +18053,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -17904,6 +18100,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -17997,6 +18194,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18090,6 +18288,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18183,6 +18382,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18276,6 +18476,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18369,6 +18570,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18462,6 +18664,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18555,6 +18758,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18648,6 +18852,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18741,6 +18946,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18834,6 +19040,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -18927,6 +19134,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19020,6 +19228,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19113,6 +19322,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19206,6 +19416,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19296,6 +19507,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19386,6 +19598,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19476,6 +19689,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19566,6 +19780,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19656,6 +19871,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19746,6 +19962,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19836,6 +20053,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -19926,6 +20144,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20020,6 +20239,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20114,6 +20334,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20203,6 +20424,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20297,6 +20519,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20391,6 +20614,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20480,6 +20704,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20574,6 +20799,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20668,6 +20894,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20757,6 +20984,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20851,6 +21079,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -20940,6 +21169,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21034,6 +21264,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21128,6 +21359,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21222,6 +21454,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21316,6 +21549,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21410,6 +21644,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21507,6 +21742,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21604,6 +21840,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21699,6 +21936,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21794,6 +22032,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21889,6 +22128,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -21984,6 +22224,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22079,6 +22320,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22174,6 +22416,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22269,6 +22512,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22364,6 +22608,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22459,6 +22704,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22554,6 +22800,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22649,6 +22896,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22743,6 +22991,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22837,6 +23086,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -22931,6 +23181,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23025,6 +23276,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23119,6 +23371,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23208,6 +23461,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23302,6 +23556,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23396,6 +23651,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23490,6 +23746,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23584,6 +23841,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23678,6 +23936,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23772,6 +24031,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23862,6 +24122,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -23952,6 +24213,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24042,6 +24304,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24132,6 +24395,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24222,6 +24486,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24312,6 +24577,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24402,6 +24668,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24492,6 +24759,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24591,6 +24859,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24690,6 +24959,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24789,6 +25059,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24888,6 +25159,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -24987,6 +25259,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25086,6 +25359,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25185,6 +25459,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25284,6 +25559,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25386,6 +25662,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25488,6 +25765,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25590,6 +25868,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25692,6 +25971,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25794,6 +26074,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25896,6 +26177,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -25998,6 +26280,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26100,6 +26383,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26202,6 +26486,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26304,6 +26589,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26406,6 +26692,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26508,6 +26795,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26605,6 +26893,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26702,6 +26991,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26797,6 +27087,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26892,6 +27183,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -26987,6 +27279,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27082,6 +27375,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27177,6 +27471,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27272,6 +27567,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27367,6 +27663,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27462,6 +27759,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27557,6 +27855,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27652,6 +27951,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27747,6 +28047,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27793,7 +28094,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -27836,6 +28137,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27882,7 +28184,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -27925,6 +28227,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -27971,7 +28274,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28013,6 +28316,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28059,7 +28363,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28101,6 +28405,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28147,7 +28452,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28189,6 +28494,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28235,7 +28541,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28277,6 +28583,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28323,7 +28630,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28365,6 +28672,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28411,7 +28719,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28454,6 +28762,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28500,7 +28809,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28542,6 +28851,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28588,7 +28898,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28630,6 +28940,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28676,7 +28987,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28719,6 +29030,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28765,7 +29077,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28808,6 +29120,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28854,7 +29167,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28896,6 +29209,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -28942,7 +29256,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -28984,6 +29298,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29030,7 +29345,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29072,6 +29387,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29118,7 +29434,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29160,6 +29476,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29206,7 +29523,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29248,6 +29565,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29294,7 +29612,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29345,6 +29663,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29391,7 +29710,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29442,6 +29761,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29488,7 +29808,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29539,6 +29859,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29585,7 +29906,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -29636,6 +29957,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29729,6 +30051,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29819,6 +30142,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -29912,6 +30236,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30002,6 +30327,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30095,6 +30421,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30185,6 +30512,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30278,6 +30606,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30368,6 +30697,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30461,6 +30791,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30551,6 +30882,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30644,6 +30976,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30734,6 +31067,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30824,6 +31158,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -30919,6 +31254,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31014,6 +31350,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31109,6 +31446,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31204,6 +31542,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31250,7 +31589,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31292,6 +31631,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31338,7 +31678,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31380,6 +31720,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31426,7 +31767,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31468,6 +31809,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31514,7 +31856,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31556,6 +31898,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31602,7 +31945,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31644,6 +31987,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31690,7 +32034,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31732,6 +32076,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31778,7 +32123,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31820,6 +32165,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31866,7 +32212,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31908,6 +32254,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -31954,7 +32301,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -31996,6 +32343,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32042,7 +32390,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -32084,6 +32432,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32130,7 +32479,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -32172,6 +32521,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32218,7 +32568,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -32260,6 +32610,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32306,7 +32657,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -32348,6 +32699,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32394,7 +32746,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -32436,6 +32788,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32525,6 +32878,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32614,6 +32968,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32703,6 +33058,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32792,6 +33148,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32885,6 +33242,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -32974,6 +33332,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33063,6 +33422,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33156,6 +33516,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33245,6 +33606,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33334,6 +33696,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33380,7 +33743,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33422,6 +33785,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33468,7 +33832,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33510,6 +33874,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33556,7 +33921,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33598,6 +33963,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33644,7 +34010,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33686,6 +34052,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33732,7 +34099,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33774,6 +34141,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33820,7 +34188,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33862,6 +34230,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33908,7 +34277,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -33950,6 +34319,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -33996,7 +34366,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34038,6 +34408,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34084,7 +34455,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34126,6 +34497,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34172,7 +34544,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34215,6 +34587,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34261,7 +34634,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34304,6 +34677,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34350,7 +34724,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34393,6 +34767,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34439,7 +34814,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34482,6 +34857,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34528,7 +34904,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34571,6 +34947,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34617,7 +34994,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34660,6 +35037,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34706,7 +35084,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34749,6 +35127,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34795,7 +35174,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34838,6 +35217,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34884,7 +35264,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -34927,6 +35307,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -34973,7 +35354,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35016,6 +35397,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35062,7 +35444,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35105,6 +35487,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35151,7 +35534,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35194,6 +35577,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35240,7 +35624,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35283,6 +35667,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35329,7 +35714,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35372,6 +35757,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35418,7 +35804,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35461,6 +35847,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35507,7 +35894,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35550,6 +35937,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35596,7 +35984,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35639,6 +36027,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35685,7 +36074,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35728,6 +36117,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35774,7 +36164,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35817,6 +36207,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35863,7 +36254,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35906,6 +36297,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -35952,7 +36344,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -35995,6 +36387,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36041,7 +36434,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36084,6 +36477,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36130,7 +36524,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36173,6 +36567,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36219,7 +36614,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36262,6 +36657,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36308,7 +36704,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36351,6 +36747,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36397,7 +36794,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36440,6 +36837,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36486,7 +36884,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36529,6 +36927,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36575,7 +36974,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36618,6 +37017,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36664,7 +37064,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36706,6 +37106,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36752,7 +37153,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36794,6 +37195,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36840,7 +37242,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36882,6 +37284,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -36928,7 +37331,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -36970,6 +37373,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37016,7 +37420,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37058,6 +37462,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37104,7 +37509,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37147,6 +37552,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37193,7 +37599,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37236,6 +37642,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37282,7 +37689,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37325,6 +37732,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37371,7 +37779,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37413,6 +37821,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37459,7 +37868,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37501,6 +37910,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37547,7 +37957,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37589,6 +37999,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37635,7 +38046,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37677,6 +38088,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37723,7 +38135,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37765,6 +38177,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37811,7 +38224,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37854,6 +38267,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37900,7 +38314,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -37942,6 +38356,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -37988,7 +38403,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38030,6 +38445,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38076,7 +38492,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38118,6 +38534,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38164,7 +38581,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38206,6 +38623,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38252,7 +38670,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38294,6 +38712,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38340,7 +38759,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38383,6 +38802,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38429,7 +38849,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38471,6 +38891,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38517,7 +38938,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38559,6 +38980,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38605,7 +39027,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38647,6 +39069,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38693,7 +39116,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38735,6 +39158,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38781,7 +39205,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38823,6 +39247,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38869,7 +39294,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -38914,6 +39339,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -38960,7 +39386,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39002,6 +39428,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39048,7 +39475,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39090,6 +39517,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39136,7 +39564,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39178,6 +39606,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39224,7 +39653,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39267,6 +39696,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39313,7 +39743,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39355,6 +39785,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39401,7 +39832,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39443,6 +39874,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39489,7 +39921,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39532,6 +39964,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39578,7 +40011,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39620,6 +40053,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39666,7 +40100,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39708,6 +40142,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39754,7 +40189,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -39796,6 +40231,7 @@
     "spreadsheets": [
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39898,6 +40334,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -39996,6 +40433,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40094,6 +40532,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40196,6 +40635,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40242,7 +40682,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -40287,6 +40727,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40333,7 +40774,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -40378,6 +40819,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40424,7 +40866,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -40469,6 +40911,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",
@@ -40515,7 +40958,7 @@
     "retired": false
    },
    "legacy": {
-    "designerVariationCode": 1,
+    "designerVariationCode": 2,
     "margins": {
      "top": 0,
      "right": 0,
@@ -40560,6 +41003,7 @@
      "xls",
      "xlsx"
     ],
+    "designerModeRule": "print -> FullColour (code 3, proven); stamp -> Grayscale (code 2, inferred). SingleColour is never inferred.",
     "inferred": [
      "dimensions",
      "shape",

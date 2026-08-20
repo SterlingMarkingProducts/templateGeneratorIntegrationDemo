@@ -167,6 +167,56 @@ check('a synthetic id never reaches the Sterling package', () => {
   return `${inferred.partNumber} (id ${inferred.id}) -> productList []; BCDP-CM -> [6505]`;
 });
 
+check('inferred stamps are Grayscale; SingleColour is never inferred', () => {
+  const inferred = all.filter((p) => p.provenance.technicalDataStatus === 'inferred-test');
+  const stamps = inferred.filter((p) => p.productFamily === 'Stamp');
+  ok(stamps.length > 100, `expected many inferred stamps, got ${stamps.length}`);
+  stamps.forEach((p) => {
+    eq(p.legacy.designerMode, 'Grayscale', `${p.partNumber} designer mode`);
+    eq(p.legacy.designerVariationCode, 2, `${p.partNumber} variation code`);
+    eq(p.legacy.designerModeProven, false, `${p.partNumber} must not claim a proven mode`);
+  });
+  /* The policy, stated as an invariant over the WHOLE inferred set. */
+  const single = inferred.filter((p) => p.legacy.designerMode === 'SingleColour');
+  eq(single.map((p) => p.partNumber), [], 'SingleColour must never be inferred');
+  const modes = [...new Set(inferred.map((p) => p.legacy.designerMode))].sort();
+  eq(modes, ['FullColour', 'Grayscale'], 'the only inferred modes');
+  /* SingleColour remains SUPPORTED for compatibility — just never inferred. */
+  eq(C.designerModeFromCode(1), 'SingleColour', 'code 1 must still map for legacy compatibility');
+  return `${stamps.length} inferred stamps all Grayscale; 0 SingleColour; code 1 still supported`;
+});
+
+check('B1438 is the worked stamp example', () => {
+  const b = all.find((p) => p.partNumber === 'B1438');
+  ok(b, 'B1438 must be in the catalogue');
+  eq(b.productFamily, 'Stamp', 'family');
+  eq(b.legacy.designerMode, 'Grayscale', 'designerMode');
+  eq(b.provenance.authoritative, false, 'authoritative');
+  eq(b.provenance.technicalDataStatus, 'inferred-test', 'technicalDataStatus');
+  eq([b.dimensions.widthIn, b.dimensions.heightIn], [0.5, 1.5], 'inferred size');
+  eq([b.dimensions.widthPx, b.dimensions.heightPx], [48, 144], 'canvas px');
+  eq(b.legacy.isProStamp, true, 'B1438 really is a ProStamp');
+  eq(b.test.collapsedSkus, ['B14381', 'B14382', 'B14383'], 'collapsed colour variations');
+  return 'Stamp · Grayscale · inferred-test · authoritative false · 0.5×1.5in';
+});
+
+check('BCDP-CM is a business card, not a ProStamp', () => {
+  const p = all.find((x) => x.partNumber === 'BCDP-CM');
+  eq(p.legacy.isProStamp, false, 'isProStamp must be false on a business card');
+  eq(p.provenance.technicalDataStatus, 'cms-verified', 'still CMS-verified');
+  eq(p.provenance.authoritative, true, 'still authoritative');
+  eq(p.legacy.designerMode, 'FullColour', 'still FullColour');
+  eq(p.legacy.designerModeProven, true, 'code 3 still proven');
+  eq(p.id, 6505, 'id unchanged');
+  eq([p.dimensions.widthIn, p.dimensions.heightIn], [3.5, 2], 'geometry unchanged');
+  eq(p.pages, { min: 2, max: 2 }, 'pages unchanged');
+  /* maxLines 0 is "no suggested maximum" and must not affect design behaviour. */
+  eq(p.maxLines, 0, 'maxLines stays as recorded');
+  const built = pipeline(p);
+  eq(built.template.canvasProperties.isProstamp, false, 'the pushed package must not claim ProStamp');
+  return 'isProStamp false · CMS-verified · FullColour · 6505 · 3.5×2 · 2 pages';
+});
+
 /* ==================== the representative matrix ==================== */
 const area = (p) => p.dimensions.widthIn * p.dimensions.heightIn;
 const ratio = (p) => p.dimensions.widthIn / p.dimensions.heightIn;

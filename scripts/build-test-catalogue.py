@@ -386,7 +386,13 @@ def to_catalogue_record(p, index):
     is_print = not is_stamp
 
     # TEST-ONLY inference, documented in the module docstring.
-    mode = 'SingleColour' if is_stamp else 'FullColour'
+    # Stamps infer GRAYSCALE, not SingleColour. The one verified Sterling stamp
+    # we have (B1438 / ProStamp) carries a CMS designer variation of Grayscale,
+    # and no normal current Sterling product is known to use SingleColour. The
+    # Generator draws stamp artwork monochromatically and Sterling picks the ink
+    # colour downstream, so Grayscale is also the behaviour that matches what
+    # the Generator actually produces. SingleColour remains supported by the
+    # legacy adapter for compatibility; it is simply never inferred here.
     bleed = TEST_NO_BLEED_PX if is_stamp else TEST_BLEED_PX
     margin = 0 if is_stamp else TEST_MARGIN_PX
     pages = 2 if fam == 'Business Card' else DEFAULT_PAGES
@@ -412,7 +418,10 @@ def to_catalogue_record(p, index):
         'maxLines': 0,
         'status': {'active': True, 'retired': False},
         'legacy': {
-            'designerVariationCode': 3 if is_print else 1,
+            # 3 -> FullColour (PROVEN); 2 -> Grayscale (INFERRED, flagged
+            # unproven by the contract). The mode is derived from this code by
+            # the same normalizer the future API will use.
+            'designerVariationCode': 3 if is_print else 2,
             'margins': {'top': margin, 'right': margin, 'bottom': margin, 'left': margin},
             'borders': {'top': 0, 'right': 0, 'bottom': 0, 'left': 0, 'width': 0},
             'daterBox': {'width': 0, 'height': 0},
@@ -430,6 +439,9 @@ def to_catalogue_record(p, index):
             'collapsedSkuCount': p['skuCount'],
             'collapsedSkus': p['skus'],
             'spreadsheets': p['sources'],
+            'designerModeRule': 'print -> FullColour (code 3, proven); '
+                                'stamp -> Grayscale (code 2, inferred). '
+                                'SingleColour is never inferred.',
             'inferred': ['dimensions', 'shape', 'pages', 'bleed', 'margins',
                          'designerMode', 'orientation', 'id'],
         },

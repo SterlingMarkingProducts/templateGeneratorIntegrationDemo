@@ -37,7 +37,7 @@
         "margins": { "top": 6, "right": 6, "bottom": 6, "left": 6 },
         "borders": { "top": 0, "right": 0, "bottom": 0, "left": 0, "width": 0 },
         "daterBox": { "width": 0, "height": 0 },
-        "isProStamp": true,
+        "isProStamp": false,
         "greenInkAvailable": false,
         "bandString": "",
         "clipPaths": [],
@@ -54,7 +54,8 @@
         "technicalValues": "Recorded Sterling getStampInfo response for product 6505, present in this repository at realdesigner/fixtures.js and captured from the public endpoints. All 24 technical values were re-verified against the specification supplied for this milestone and matched exactly: id, partNumber, name, 3.5x2in, 336x192px, min/maxPages 2, bleed 12 all sides, margins 6 all sides, borders 0 all sides, borderWidth 0, shape rect, designerVariationCode 3.",
         "designerMode": "designerVariationCode 3 -> FullColour is PROVEN from Sterling source (oldDesigner/gettemplateJson.cfm:163-164). See integration/product-contract.js.",
         "availabilityBlock": "customizable, isAccessory and basePartForXref are not returned by getStampInfo. They come from the Sterling product spreadsheets supplied for this project, as stated in the Phase 2B specification.",
-        "notInSpecification": "isProStamp (true), greenInkAvailable (false), maxLines (0), widthDisplay ('3-1/2') and descriptionFR appear in the recorded response but were not restated in the Phase 2B specification. The recorded values are used verbatim rather than being normalised to something more expected. isProStamp true on a business card is unusual; flagged for Sterling rather than silently corrected.",
+        "notInSpecification": "greenInkAvailable (false), maxLines (0), widthDisplay ('3-1/2') and descriptionFR appear in the recorded response but were not restated in the Phase 2B specification. Those recorded values are used verbatim. maxLines 0 is read as 'no suggested maximum' and affects no design behaviour.",
+        "deliberateDepartureFromTheRecording": "isProStamp is set to FALSE here, where the recorded getStampInfo response for 6505 says true. This is the ONE value in this record that does not match the recording. BCDP-CM is a digitally printed business card and is not a ProStamp; the recorded true is stale carry-over, confirmed by Sterling for this project. Recording it as a departure rather than silently overwriting it: if a future live API read still returns true, that is a data issue to raise with Sterling, not a bug in this file.",
         "discarded": "The recorded response also carries LOWESTPRICE and three sellable VARIATIONS (BCDP-CM-100/-250/-500). Sellable variations are out of scope for the Generator and are deliberately absent from this catalogue."
       }
     }

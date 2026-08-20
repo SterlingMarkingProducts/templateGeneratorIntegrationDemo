@@ -153,14 +153,14 @@ await check('an inferred test product drives the Generator but stays non-authori
   eq(r.px, [48, 144], 'canvas px at 96dpi');
   eq(r.status, 'inferred-test', 'technicalDataStatus');
   eq(r.authoritative, false, 'must NOT be authoritative');
-  eq(r.mode, 'SingleColour', 'stamps use the monochrome mode the Generator already supports');
+  eq(r.mode, 'Grayscale', 'inferred stamps use Grayscale, never SingleColour');
   ok(r.id < 0, 'inferred ids must be synthetic and negative');
   eq(r.dims, ['0.5', '1.5'], 'the form must be driven by the inferred product');
   eq(r.ctxPart, 'B1438', 'the real part number reaches the design context');
   eq(r.ctxStatus, 'inferred-test', 'confidence travels with the context');
   ok(/is-test/.test(r.conf), 'the card must show the test-data marker');
   ok(/inferred/i.test(r.confText), `card should say the size is inferred, got "${r.confText}"`);
-  return `B1438 · 0.5×1.5in · 48×144px · SingleColour · inferred-test · id ${r.id}`;
+  return `B1438 · 0.5×1.5in · 48×144px · Grayscale · inferred-test · id ${r.id}`;
 });
 
 await check('an inferred product contributes no productList id', async () => {
