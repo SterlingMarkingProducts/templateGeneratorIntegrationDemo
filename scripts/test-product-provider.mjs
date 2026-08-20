@@ -301,6 +301,117 @@ check('adapter uses authoritative legacy mode, and falls back offline', () => {
   return 'authoritative -> product record; offline -> demo inference';
 });
 
+/* ==================== L. current-shape extras are ignored ============= *
+ * The recorded HLCBBCE fixture predates seven keys that oldDesigner's current
+ * functions.cfc::getStampInfo() now returns (see the fixture's _provenance).
+ * These checks replay the recording with those keys ADDED, to prove the
+ * normalizer is an allow-list and not a passthrough.
+ *
+ * Every value below is SYNTHETIC TEST NOISE invented solely to be findable in
+ * a serialized record. None of it is a real Sterling product value, and none of
+ * it is written back to the fixture — the recording on disk stays untouched. */
+const SYNTHETIC = {
+  /* consumed by design: bandString is an already-declared contract field */
+  BANDSTRING: 'SYNTHETIC-BAND-NOISE',
+  /* must be discarded */
+  DESCRIPTIONFR: 'SYNTHETIC-FR-NOISE',
+  PRODUCTOPTIONS: [{ CATEGORY: 'SYNTHETIC-OPTCAT-NOISE', OPTIONS: [{ DESCRIPTION: 'SYNTHETIC-OPT-NOISE', PRICE: '$99.99' }] }],
+  SAMPLEIMAGEEN: 'SYNTHETIC-SAMPLE-EN-NOISE.png',
+  SAMPLEIMAGEFR: 'SYNTHETIC-SAMPLE-FR-NOISE.png',
+  PRODUCTIMAGEEN: 'SYNTHETIC-PRODIMG-EN-NOISE.png',
+  PRODUCTIMAGEFR: 'SYNTHETIC-PRODIMG-FR-NOISE.png',
+};
+const DISCARDABLE_EXTRAS = Object.keys(SYNTHETIC).filter((k) => k !== 'BANDSTRING');
+
+/** Re-normalize the recording with extra raw keys merged in. */
+async function normalizeWithExtras(extras) {
+  const t = recordedTransport({ '/productLookup.cfm': { ...recordedStampInfo, ...extras } });
+  const p = new SterlingProductProvider({ ...CFG, fetchImpl: t, responseFormat: 'stampinfo' });
+  return p.getByPartNumber('HLCBBCE');
+}
+
+/* provenance.fetchedAt is a wall-clock stamp; compare everything else. */
+const withoutStamp = (prod) => {
+  const { provenance, ...rest } = prod;
+  const { fetchedAt, ...prov } = provenance;
+  return { ...rest, provenance: prov };
+};
+
+let extrasProduct = null, allExtrasProduct = null;
+await (async () => {
+  extrasProduct = await normalizeWithExtras(
+    DISCARDABLE_EXTRAS.reduce((a, k) => (a[k] = SYNTHETIC[k], a), {}));
+  allExtrasProduct = await normalizeWithExtras(SYNTHETIC);
+})();
+
+check('L1. the six non-contract extras leave the Product record identical', () => {
+  eq(C.validate(extrasProduct), [], 'contract validation problems');
+  eq(withoutStamp(extrasProduct), withoutStamp(stampProduct),
+     'normalized record must be byte-identical with the six extras present');
+  return DISCARDABLE_EXTRAS.length + ' extras present, record unchanged';
+});
+
+check('L2. no synthetic extra value appears anywhere in the record', () => {
+  const blob = JSON.stringify(extrasProduct);
+  ok(blob.includes('HLCBBCE'), 'sanity: the record really is the HLCBBCE product');
+  ['SYNTHETIC-FR-NOISE', 'SYNTHETIC-OPTCAT-NOISE', 'SYNTHETIC-OPT-NOISE',
+   'SYNTHETIC-SAMPLE-EN-NOISE', 'SYNTHETIC-SAMPLE-FR-NOISE',
+   'SYNTHETIC-PRODIMG-EN-NOISE', 'SYNTHETIC-PRODIMG-FR-NOISE',
+   '$99.99', '.png'].forEach((needle) => {
+    ok(!blob.includes(needle), `synthetic extra '${needle}' leaked into the Product record`);
+  });
+  /* pricing from the recording itself is still discarded with extras present */
+  ['LOWESTPRICE', 'VARIATIONS', 'HLCBBCE-500', '$1.00', 'COLOURS']
+    .forEach((n) => ok(!blob.includes(n), `commercial value '${n}' leaked`));
+  return 'descriptionFR, productOptions, sample/product images and pricing all discarded';
+});
+
+check('L3. no UPPERCASE ColdFusion key survives normalization', () => {
+  /* Walk every key at every depth: a CF key is ALLCAPS (with optional digits)
+   * and at least four characters, which no contract field is. */
+  const offenders = [];
+  (function walk(v, path) {
+    if (Array.isArray(v)) return v.forEach((x, i) => walk(x, `${path}[${i}]`));
+    if (v && typeof v === 'object') {
+      Object.keys(v).forEach((k) => {
+        if (/^[A-Z][A-Z0-9]{3,}$/.test(k)) offenders.push(`${path}.${k}`);
+        walk(v[k], `${path}.${k}`);
+      });
+    }
+  })(allExtrasProduct, '$');
+  eq(offenders, [], 'UPPERCASE CF keys leaked');
+  /* and the seven raw key names themselves must not appear as keys */
+  const blobKeys = JSON.stringify(allExtrasProduct);
+  Object.keys(SYNTHETIC).forEach((k) => {
+    ok(!blobKeys.includes('"' + k + '"'), `raw CF key '${k}' survived as a key`);
+  });
+  return '0 UPPERCASE keys at any depth';
+});
+
+check('L4. bandString is consumed by design, not accidentally', () => {
+  /* BANDSTRING is the one of the seven that the contract already declares
+   * (legacy.bandString). It must flow through — and change NOTHING else. */
+  eq(allExtrasProduct.legacy.bandString, SYNTHETIC.BANDSTRING, 'legacy.bandString');
+  eq(stampProduct.legacy.bandString, '', 'baseline had no BANDSTRING to consume');
+  const a = withoutStamp(allExtrasProduct), b = withoutStamp(stampProduct);
+  a.legacy = { ...a.legacy, bandString: '' };
+  eq(a, b, 'bandString aside, the record must be identical');
+  return 'bandString -> legacy.bandString; nothing else moved';
+});
+
+check('L5. designerVariationCode 4 is now proven, 1 and 2 are not', () => {
+  eq(C.PROVEN_MODE_CODES, [3, 4], 'proven set');
+  eq(C.designerModeFromCode(4), 'EngravedPlastic', 'code 4 mode');
+  eq(C.designerModeFromCode(3), 'FullColour', 'code 3 mode');
+  const proven = (code) => C.createProduct({ id: 1, partNumber: 'X', widthIn: 1, heightIn: 1,
+    designerVariationCode: code, designerMode: C.designerModeFromCode(code) }).legacy.designerModeProven;
+  eq(proven(3), true, 'code 3 proven');
+  eq(proven(4), true, 'code 4 proven (gettemplateJson.cfm:165-166)');
+  eq(proven(1), false, 'code 1 must stay unproven');
+  eq(proven(2), false, 'code 2 must stay unproven');
+  return 'proven {3,4}; {1,2} still flagged unproven';
+});
+
 /* ==================== K. nothing touched the network ================= */
 check('K. no request reached sterling.ca (or any network)', () => {
   eq(networkAttempts, [], 'real fetch attempts');

@@ -36,10 +36,47 @@ long-term fit:
    options and image paths that are not needed.
 3. Its `LIMIT 1` part-number resolution **silently hides ambiguity**.
 
-A small dedicated endpoint avoids all three. It can be built on the existing
-`ProductService.cfc` in `portals/Web/site/services/`, which already contains
-`getStampInfo()`, `getProductsByGroup()` and `setStampDimensions()` as clean
-private methods.
+A small dedicated endpoint avoids all three.
+
+### Correction: where the live implementation actually is
+
+An earlier draft of this document suggested building the new endpoint on
+`portals/Web/site/services/ProductService.cfc`. **That recommendation was wrong
+and is withdrawn.** A source review showed `ProductService.cfc` is **unwired
+dead code**:
+
+- `portals/Web/site/Application.cfc:180-186` instantiates the service layer at
+  application start — `functions`, `Compat`, `DataService`, `MenuService`,
+  `UserService`, `FormSecurity`, `PunchoutService`. `ProductService` and
+  `PricingService` are **not in that list**.
+- No `.cfm` page references either of them. `ProductService` is named only by
+  itself, `services/README.md`, `CODEBASE_ANALYSIS.md`, and `PricingService.cfc`
+  — which is itself unreachable.
+- Exactly one commit ever touched it (`599e17d`, 2025-12-10), and it was never
+  wired in.
+
+**The canonical live product lookup is `functions.cfc::getStampInfo()`**
+(`oldDesigner/functions.cfc:98`, reached as `application.functs.getStampInfo()`
+from `getStampInfo.cfm:6`, `gettemplateJson.cfm:148`, `getFormJson.cfm:427`,
+`getDesignJson.cfm:143`, `getDesignJsonOpt.cfm:166` and `getProof.cfm:53`).
+
+Note also that `oldDesigner` is **ahead of** the `portals` mirror for these
+files: `functions.cfc` is 2149 lines there against 1899 in `portals`, and
+`oldDesigner`'s most recent commit is far newer. `getStampInfo.cfm` itself is
+byte-identical between the two.
+
+So a future normalized Product API should take **one of two deliberate routes**:
+
+- **A — extract from the canonical implementation.** Reuse or lift the
+  read-only query logic already in `functions.cfc::getStampInfo()`, which is the
+  code actually serving requests today.
+- **B — introduce a properly wired service layer on purpose.** If Sterling wants
+  the service-layer structure, wire it in `Application.cfc` as a considered
+  decision, with the product queries moved across intentionally.
+
+**What we should not do is extend `ProductService.cfc` merely because it exists
+in the repository.** Its presence is not evidence that it works; nothing has
+ever executed it.
 
 ---
 
@@ -117,6 +154,16 @@ GET /productSearch.cfm?q=business%20card&limit=25&offset=0&siteFamilyId=<int>&li
 
 The values above are the **real recorded values** for product 8901, taken from
 `newDesignerDB/EXAMPLES/getStampInfo.cfm.json`. Only the *shape* is proposed.
+
+That recording is genuine but is an **older snapshot**. Current
+`functions.cfc::getStampInfo()` returns seven keys it does not contain:
+`BANDSTRING`, `DESCRIPTIONFR`, `PRODUCTOPTIONS`, `SAMPLEIMAGEEN`,
+`SAMPLEIMAGEFR`, `PRODUCTIMAGEEN`, `PRODUCTIMAGEFR`. **None of them affects the
+fields this contract consumes** — every product fact above is unchanged in
+current source — and six of the seven are exactly the kind of data the *must
+NOT include* list below already excludes. This is verified offline by
+`scripts/test-product-provider.mjs` (checks L1–L4), which replays the recording
+with those keys added and asserts the normalized record is identical.
 
 **Two structural requests:**
 
@@ -228,35 +275,263 @@ welcome; search should not be cached.
   `siteFamilyId` and `live` to be injected and **throws if any is missing**. No
   hostname is hardcoded anywhere.
 - It also ships an **interim** `normalizeStampInfo()` for the existing
-  `getStampInfo.cfm` shape, which discards all pricing and variation data. That
-  is a stopgap, not the target.
+  `getStampInfo.cfm` shape, which discards all pricing and variation data. It is
+  an explicit allow-list, not a passthrough: it reads named fields and builds a
+  fixed record, so keys added to the response in future are ignored rather than
+  forwarded.
 
-Both are tested offline against the recorded response for product 8901. Nothing
-calls Sterling.
+Both are tested offline against the recorded response for product 8901,
+including a replay with the seven newly-observed response keys added — using
+synthetic values — which asserts the normalized record comes out identical.
+Nothing calls Sterling.
+
+---
+
+## Established from source — no confirmation needed
+
+These were open questions in the previous draft. A read-only review of
+`portals` and `oldDesigner` settled them, so please treat them as findings
+rather than asks.
+
+### `designerVariationCode`
+
+`products.designerVariationCode` is an `int(11) DEFAULT '-1'` — a **foreign key**
+into `designervariationcodes`, whose own `designerVariationCode varchar(45)`
+column holds the human-readable string. Proven by the join in
+`templateDesigner.cfm:138-141`:
+
+```sql
+select t1.*, t2.*, t3.designerVariationCode as designerVariationCodeString
+from products t1, sitefamilyproductmap t2, designerVariationCodes t3
+...
+and t3.id = t1.designerVariationCode
+```
+
+| Code | Mode | Status |
+|---|---|---|
+| `1` | `SingleColour` | **UNPROVEN — inferred** |
+| `2` | `Grayscale` | **UNPROVEN — inferred** |
+| `3` | `FullColour` | **PROVEN** |
+| `4` | `EngravedPlastic` | **PROVEN** |
+
+Codes 3 and 4 are proven by Sterling's own code —
+`oldDesigner/gettemplateJson.cfm:163-167`, identically
+`getFormJson.cfm:444-448`:
+
+```coldfusion
+<cfif partinfo.designerVariationCode eq "3">
+    <cfset format = "FullColour">
+<cfelseif partinfo.designerVariationCode eq "4">
+    <cfset format = "EngravedPlastic">
+</cfif>
+```
+
+Codes 1 and 2 remain **unproven and are not claimed**. Those same files never
+map them: when the code is neither 3 nor 4 the mode falls back to
+`SingleColour`, or `Grayscale` when `isProStamp` is true — so the id is not
+consulted at all on that path. `templateDesigner.cfm` takes the other route and
+branches on the joined string directly, so the two paths can disagree for 1 and
+2. No `INSERT INTO designervariationcodes` exists in any Sterling repository, so
+the table's four actual rows cannot be read from source. The contract marks
+1 and 2 with `legacy.designerModeProven: false`; a request for the four rows is
+in *Open questions*.
+
+The four mode strings themselves **are** certain: `templateDesigner.cfm`
+branches on exactly `SingleColour`, `Grayscale`, `FullColour` and
+`EngravedPlastic`, the column is `UNIQUE`, and the table is
+`AUTO_INCREMENT=5` — four strings, four rows.
+
+### `siteFamilyId`
+
+Derived, not configured. `Application.cfc:158-174` looks it up from the site's
+own name at application start:
+
+```sql
+select * from sitefamilies where LOWER(siteFamilyName) = :name order by id desc limit 1
+```
+
+with `:name` = `lcase(url.sitename)`, which the URL rewrite supplies; the app
+aborts if it is missing. `application.siteFamilyId` is then that row's `id`.
+
+### `application.Live`
+
+Determined purely by hostname. `Application.cfc:6-12` sets
+`this.liveSite = findnocase("dev", cgi.SERVER_NAME) > 0 ? false : true`, and
+`INCLUDES/appSelector.cfm` copies it: `<cfset application.live = application.liveSite>`.
+`onRequestStart` then hard-redirects to `portals.sterling.ca` or
+`portals-dev.sterling.ca`, so in practice non-dev host → `live = true`, dev host
+→ `live = false`.
+
+Both values are interpolated **directly into SQL** as `#application.Live#` and
+`#application.SiteFamilyId#` (e.g. `functions.cfc:112-113`) rather than bound as
+parameters. They are internally-set integers, so this is not injectable — but it
+is why making them per-request arguments is not a one-line change, and it is
+part of why we are asking for a *new* endpoint rather than a parameterisation of
+the existing one.
+
+### `products.id` and dev/live visibility
+
+`products.id` is the `designCentral` primary key (`int(11) AUTO_INCREMENT`), and
+it is what `getStampInfo` returns as `PRODUCTIDINT` (`functions.cfc:360`,
+`local.returnStruct.productIdInt = local.searchCproduct.productid`).
+
+**Dev/live is a mapping-row flag, not a separate id space.** Every product query
+in both the dev and live code paths hardcodes `setDatasource("designCentral")`,
+and `INCLUDES/AppLive.cfm` and `INCLUDES/AppDev.cfm` are identical except for
+the punchout endpoint. Visibility is filtered per row:
+
+```sql
+... and t2.live = #application.Live# and t2.siteFamilyId = #application.SiteFamilyId#
+```
+
+on `sitefamilyproductmap` / `sitefamilyvariationmap`. **The same product row
+serves both environments; only its mapping rows differ.** Within one
+`designCentral` instance, a product id is therefore stable across dev and live
+by construction.
+
+### Canvas derivation
+
+`functions.cfc:528-535` confirms the 96-DPI convention, including for metric
+products:
+
+```coldfusion
+local.returnStruct.canvasWidth = int(local.searchCproduct.widthIn * 96);
+local.returnStruct.canvasWidth = int(local.searchCproduct.widthMM * 3.779527559);
+```
+
+`3.779527559 = 96 / 25.4`, so both branches are the same DPI. This is why the
+contract asks for **inches** and derives pixels rather than having the endpoint
+bake the convention in.
+
+---
+
+## Product identifier strategy
+
+**Primary identifier: `products.id`.** It is the `designCentral` primary key,
+it is what `getStampInfo` already returns as `PRODUCTIDINT`, and it is stable
+across dev and live within one database (above). A stored design references a
+product by this id.
+
+Retained alongside it, and not as substitutes:
+
+| Field | Why it is kept |
+|---|---|
+| `partNumber` | Human-facing, and what Marketing and operators actually say out loud. Not unique enough to be a key: resolution spans `products.product`, two `sitefamilyproductmap` columns and `products.alternatelookupcodes` — see *Ambiguity* |
+| `provenance.siteFamilyId` | The same part number resolves to different products per site family. A record without it cannot be re-resolved later |
+| `provenance.live` | Which visibility set the record was read from |
+| `provenance.source` / `fetchedAt` / `authoritative` | Whether the record came from Sterling or from the Generator's own non-authoritative defaults, and when |
+
+**We are deliberately not adding an environment qualifier to `products.id`
+itself.** Source says one is not needed, the id stays a plain integer, and the
+environment context lives in `provenance` where it can be checked without
+changing the key's type. If the infrastructure question below comes back the
+wrong way, adding a qualifier is a contract-version bump we can make then —
+whereas removing one we did not need would be a breaking change.
+
+### The one unresolved infrastructure question
+
+**Do `portals.sterling.ca` and `portals-dev.sterling.ca` map the `designCentral`
+datasource to the same physical MySQL instance?**
+
+Source proves the datasource *name* is `designCentral` on both paths, but the
+name → server mapping lives in Lucee administrator, outside every repository, so
+we cannot answer it ourselves. If the two hosts share one instance — which the
+`live` flag design strongly implies — a bare `products.id` is safe everywhere.
+If they point at separately-seeded databases, ids may collide and the identifier
+strategy needs an environment qualifier after all. This is question 3 below.
 
 ---
 
 ## Open questions
 
-1. **Where should these endpoints live**, and which `ProductService.cfc` is
-   canonical? `portals/Web/site/services/ProductService.cfc` looks newest and
-   best-factored — is it live?
-2. **Which `siteFamilyId` and `live` should the Generator use** for Marketing's
-   template work?
-3. **Is `getStampInfo.cfm` genuinely public?** The file itself has no login or
-   IP check, but its enclosing `Application.cfc` may. This affects whether the
-   interim path is usable at all.
-4. **Please confirm the `designerVariationCode` mapping.** From
-   `designervariationcodes` (4 rows) we have only **`3` → `FullColour`**
-   confirmed, from the recorded product 8901. `1`/`2`/`4` are currently inferred
-   as SingleColour / Grayscale / EngravedPlastic from the strings the legacy JS
-   branches on. The contract flags unproven codes via
-   `legacy.designerModeProven`.
-5. **Is `products.id` stable across staging and production?** If not, a stored
-   product reference needs an environment qualifier.
-6. **Real product ids for five more categories** — self-inking stamp, round
-   stamp, name badge/nameplate, sign, print. Product 8901 is currently the only
-   verified real record available to us; we will not invent the others.
-7. **Is `newDesignerDB/product-designer` (datasource `productDesigner`) the
-   replacement Designer?** If so, its catalogue may become the long-term product
-   source and this contract should be aligned with it now.
+Two questions from the previous draft have been **withdrawn**, because a source
+review answered them: *"which `ProductService.cfc` is canonical"* (answered
+above — none of them; it is dead code) and *"is `getStampInfo.cfm` genuinely
+public"* (answered below, and it turns out to be a security observation rather
+than a question). The five that remain all need **data or infrastructure facts
+that do not exist in any repository**.
+
+1. **Please run these two read-only `SELECT`s.** They settle the
+   `designerVariationCode` mapping for codes 1 and 2. Both are `SELECT`-only and
+   touch no customer or pricing data.
+
+   ```sql
+   -- the complete code -> name mapping (4 rows)
+   SELECT id, designerVariationCode
+   FROM   designervariationcodes
+   ORDER  BY id;
+
+   -- how many live products use each code
+   SELECT p.designerVariationCode AS code,
+          d.designerVariationCode AS name,
+          COUNT(*)                AS product_count
+   FROM   products p
+   LEFT   JOIN designervariationcodes d ON d.id = p.designerVariationCode
+   WHERE  p.active = 1
+   GROUP  BY p.designerVariationCode, d.designerVariationCode
+   ORDER  BY product_count DESC;
+   ```
+
+2. **Which `siteFamilyName` — and therefore `siteFamilyId` — should the
+   Generator use** for Marketing's template work? `siteFamilyId` is looked up
+   from the `sitefamilies` table by name (above), and the schema dump carries no
+   rows, so we cannot infer it. This is also a business decision, not a code
+   fact.
+
+3. **Do `portals.sterling.ca` and `portals-dev.sterling.ca` share one physical
+   `designCentral` MySQL instance?** See *Product identifier strategy* above.
+   This decides whether a stored `products.id` needs an environment qualifier.
+
+4. **Real product ids / part numbers for five more categories** — self-inking
+   stamp, round stamp, name badge or nameplate, sign, print. One each is enough.
+   Product 8901 (`HLCBBCE`) is the only genuine recorded product in any
+   repository, and we will not invent the others.
+
+5. **Is `newDesigner` / `product-designer` (datasource `productDesigner`)
+   coming back?** Its `serverFiles/schema.sql` defines a wholly separate schema
+   with a string `designer_type` column rather than designCentral's integer FK,
+   and its seeded products (`BC001`, `LH001`, …) appear nowhere in designCentral
+   — so it is not a product source we could use today. If it is intended to
+   resume, this contract should eventually align to it; if not, the
+   Designer-agnostic shape proposed here is the right long-term target.
+
+---
+
+## Security observations
+
+Raised here because they surfaced during the same review, not because they
+block this contract.
+
+### `getStampInfo.cfm` appears to be reachable from outside Sterling's network
+
+The file itself has no login check and no IP check — it is six lines that
+serialize `application.functs.getStampInfo(url.part)` straight to JSON. Its
+enclosing `Application.cfc:288-300` does contain an IP gate:
+
+```coldfusion
+if (left(cgi.remote_addr,8) != "192.168." && left(cgi.remote_addr,7) != "172.16."
+    && left(cgi.remote_addr,3) != "10." && cgi.remote_addr != "127.0.0.1") {
+    if (application.Live == true) { include "includes\liveBlocker.cfm"; }
+    else                          { include "includes\devBlocker.cfm"; }
+}
+```
+
+**but `INCLUDES/LiveBlocker.cfm` and `INCLUDES/DevBlocker.cfm` are entirely
+commented out** — the `<cfabort>` inside each is inside a `<!--- --->` block, so
+the gate is a no-op. By contrast the equivalent check at the top of
+`templateDesigner.cfm:1-3` is live and does abort, which is presumably the
+intent for both.
+
+The practical effect, if no IIS or firewall rule compensates, is that
+`getStampInfo.cfm` serves `LOWESTPRICE` and per-variation pricing to any caller
+who supplies a valid `SiteName`. **We have not tested this** — doing so would
+mean calling production — so please verify from your side rather than taking
+this as confirmed.
+
+### A shared token is committed to the repository
+
+`Web/site/INCLUDES/AppLive.cfm` and `AppDev.cfm` both hardcode the same
+`application.loginToken` literal, identical between live and dev, in version
+control. The `sitefamilies` table additionally has `punchoutSharedSecret`,
+`punchoutSharedSecretDev`, `DemoLogin` and `DemoPassword` columns. No value is
+reproduced in this document. Worth a look independently of this project.

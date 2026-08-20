@@ -52,18 +52,30 @@
   };
 
   /* The four legacy designer modes. designervariationcodes is a 4-row table
-   * (designCentral.sql, AUTO_INCREMENT=5). Only code 3 -> FullColour is proven,
-   * from the recorded HLCBBCE business-card response; the other three are
-   * INFERRED from the mode strings the legacy JS branches on
-   * (templateSMPdesigner.js:1756+). Flagged for IT confirmation — see
-   * docs/product-api-contract.md. */
+   * (designCentral.sql, AUTO_INCREMENT=5) whose `designerVariationCode` column
+   * holds the string; products.designerVariationCode is the int FK into it
+   * (proven by the join `t3.id = t1.designerVariationCode`,
+   * oldDesigner/templateDesigner.cfm:141).
+   *
+   * Codes 3 and 4 are PROVEN from Sterling's own source — oldDesigner
+   * gettemplateJson.cfm:163-167 and getFormJson.cfm:444-448 both branch:
+   *     <cfif  partinfo.designerVariationCode eq "3"> format = "FullColour"
+   *     <cfelseif partinfo.designerVariationCode eq "4"> format = "EngravedPlastic"
+   *
+   * Codes 1 and 2 are NOT proven. Those same files never map them: when the
+   * code is neither 3 nor 4 the mode falls back to SingleColour, or Grayscale
+   * if isProStamp — so the id is not consulted at all on that path. No
+   * `INSERT INTO designervariationcodes` exists in any Sterling repository, so
+   * the table's actual rows cannot be read from source. The two strings below
+   * are INFERRED from the literals the legacy Designer branches on and must be
+   * confirmed by IT — see docs/product-api-contract.md. */
   var DESIGNER_MODE_BY_CODE = {
-    1: 'SingleColour',      // inferred
-    2: 'Grayscale',         // inferred
-    3: 'FullColour',        // PROVEN (recorded response, product 8901)
-    4: 'EngravedPlastic',   // inferred
+    1: 'SingleColour',      // INFERRED — not proven
+    2: 'Grayscale',         // INFERRED — not proven
+    3: 'FullColour',        // PROVEN (gettemplateJson.cfm:163-164)
+    4: 'EngravedPlastic',   // PROVEN (gettemplateJson.cfm:165-166)
   };
-  var PROVEN_MODE_CODES = [3];
+  var PROVEN_MODE_CODES = [3, 4];
 
   function designerModeFromCode(code) {
     var n = num(code);
