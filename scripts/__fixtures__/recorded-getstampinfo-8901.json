@@ -1,0 +1,64 @@
+{
+  "_README": "Recorded Sterling response used for offline integration testing.",
+  "_provenance": {
+    "capturedFrom": "getStampInfo.cfm (live Sterling response)",
+    "copiedFrom": "newDesignerDB/EXAMPLES/getStampInfo.cfm.json",
+    "product": "id 8901 / part HLCBBCE",
+    "whyThisOne": "This is the ONLY product record in any repository that is a genuine recorded response from Sterling rather than an authored sample. The authored NAMETAG/DESKPLATE fixtures in newOldDesigner are NOT real (they use a STRING designerVariationCode where the real response uses INTEGER 3), and the DEMO-/TEST- catalogues are fictional by construction.",
+    "fieldsOmitted": "Colour arrays, product options, image paths and translated descriptions were dropped — they are not needed by the Product contract.",
+    "fieldsKeptDeliberately": "LOWESTPRICE and VARIATIONS are retained ONLY so a test can prove the normalizer DISCARDS commercial data. They must never appear in a normalized Product record.",
+    "doNotEdit": "Treat these values as recorded evidence. Do not adjust them to make a test pass, and do not add invented products beside them."
+  },
+
+  "PRODUCTIDINT": 8901,
+  "PARTNUMBER": "HLCBBCE",
+  "DESCRIPTION": "Hearing Life Co Branded Business Card - English",
+
+  "WIDTH": 3.5,
+  "HEIGHT": 2,
+  "WIDTHDISPLAY": 3.5,
+  "HEIGHTDISPLAY": 2,
+  "DISPLAYUNIT": "in",
+  "CANVASWIDTH": 336.0,
+  "CANVASHEIGHT": 192.0,
+
+  "SHAPE": "rect",
+  "MINPAGES": 2,
+  "MAXPAGES": 2,
+  "MAXLINES": 3,
+  "DESIGNERVARIATIONCODE": 3,
+
+  "BLEEDTOP": 12,
+  "BLEEDRIGHT": 12,
+  "BLEEDBOTTOM": 12,
+  "BLEEDLEFT": 12,
+
+  "MARGINTOP": 6,
+  "MARGINRIGHT": 6,
+  "MARGINBOTTOM": 6,
+  "MARGINLEFT": 6,
+  "TOPMARGIN": 6,
+  "SIDEMARGIN": 6,
+
+  "BORDERTOP": 0,
+  "BORDERRIGHT": 0,
+  "BORDERBOTTOM": 0,
+  "BORDERLEFT": 0,
+  "TOPBORDER": 0,
+  "SIDEBORDER": 0,
+  "BORDERWIDTH": 2,
+
+  "DATERBOXHEIGHT": 0,
+  "DATERBOXWIDTH": 0,
+  "ISPROSTAMP": false,
+  "GREENINKAVAILABLE": true,
+
+  "CLIPPATHS": [],
+  "CLIPPATHOVERLAYS": [],
+  "COLOURS": [],
+
+  "LOWESTPRICE": 1,
+  "VARIATIONS": [
+    { "PART": "HLCBBCE-500", "DESCRIPTION": "500 Lot", "LOT": 500, "PRICE": "$1.00" }
+  ]
+}

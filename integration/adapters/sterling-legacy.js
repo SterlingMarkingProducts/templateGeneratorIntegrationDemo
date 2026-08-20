@@ -196,9 +196,19 @@
     }
 
     var prov = doc.provenance || {};
+
+    /* designerVariationCode is a LEGACY-DESIGNER fact, so it is read from the
+     * product record's `legacy` block when an authoritative product is
+     * available, and only otherwise from the demo provider's template-type
+     * inference. The fallback is what keeps the Generator fully usable offline
+     * with no Sterling API at all — that is a requirement, not a convenience. */
+    var authoritativeLegacy = (pc.authoritative && pc.product && pc.product.legacy) || null;
+    var designerMode = (authoritativeLegacy && authoritativeLegacy.designerMode)
+      || pc.designerMode || 'FullColour';
+
     var canvasProperties = {
       width: trimW, height: trimH, dpi: d.dpi, shape: pc.shape || 'rect', angle: 0,
-      designerVariationCode: pc.designerMode || 'FullColour',
+      designerVariationCode: designerMode,
       bleedTop: bleedPx, bleedRight: bleedPx, bleedBottom: bleedPx, bleedLeft: bleedPx, bleedMargin: 0,
       borderTop: 0, borderRight: 0, borderBottom: 0, borderLeft: 0, borderWidth: 2,
       marginTop: 0, marginRight: 0, marginBottom: 0, marginLeft: 0,
