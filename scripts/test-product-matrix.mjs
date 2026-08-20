@@ -186,6 +186,30 @@ check('inferred stamps are Grayscale; SingleColour is never inferred', () => {
   return `${stamps.length} inferred stamps all Grayscale; 0 SingleColour; code 1 still supported`;
 });
 
+check('stamp mode agrees with and without a selected Sterling product', () => {
+  /* WITHOUT a product: the standalone template-type path. */
+  const standalone = P.resolve({ templateType: 'Stamp', doubleSided: false });
+  eq(standalone.designerMode, 'Grayscale', 'standalone stamp mode');
+  eq(standalone.authoritative, false, 'standalone is still non-authoritative');
+  eq(new P.DemoProductProvider().designerModeFor('Stamp'), 'Grayscale', 'demo provider stamp mode');
+
+  /* WITH a product: the Sterling-product path. */
+  const b = all.find((p) => p.partNumber === 'B1438');
+  const withProduct = P.resolve({ templateType: 'Stamp', doubleSided: false, product: b });
+  eq(withProduct.designerMode, 'Grayscale', 'selected-product stamp mode');
+
+  /* The point of the correction: the two paths must not disagree. */
+  eq(standalone.designerMode, withProduct.designerMode,
+     'a stamp must resolve the same way whether or not a product is selected');
+
+  /* And SingleColour is nowhere a default, while staying supported. */
+  ['Business Card', 'Poster', 'Sign', 'Brochure', 'Stamp', 'Nameplate', 'Name Badge']
+    .forEach((t) => ok(P.resolve({ templateType: t }).designerMode !== 'SingleColour',
+      `template type '${t}' must not default to SingleColour`));
+  eq(C.designerModeFromCode(1), 'SingleColour', 'code 1 still maps, for legacy compatibility');
+  return 'standalone Grayscale === selected-product Grayscale; 0 SingleColour defaults';
+});
+
 check('B1438 is the worked stamp example', () => {
   const b = all.find((p) => p.partNumber === 'B1438');
   ok(b, 'B1438 must be in the catalogue');

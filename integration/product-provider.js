@@ -55,12 +55,22 @@
   var BLEED_IN = 0.125;
   var BLEED_PRODUCTS = ['Business Card', 'Poster', 'Brochure'];
 
+  /* Stamps are GRAYSCALE, not SingleColour, on this standalone path too.
+   * The Generator draws stamp artwork monochromatically and Sterling picks the
+   * ink colour downstream; the one verified Sterling stamp (B1438 / ProStamp)
+   * carries a CMS designer variation of Grayscale; and the spreadsheet-derived
+   * catalogue infers Grayscale. Keeping this fallback on SingleColour would
+   * mean a stamp behaved differently depending on whether a Sterling product
+   * happened to be selected — the two paths must agree.
+   *
+   * SingleColour is still SUPPORTED (contract code 1, and the legacy adapter
+   * handles it); it is simply never the default anywhere in the Generator. */
   var MODE_BY_TEMPLATE_TYPE = {
     'Business Card': 'FullColour',
     'Poster': 'FullColour',
     'Sign': 'FullColour',
     'Brochure': 'FullColour',
-    'Stamp': 'SingleColour',
+    'Stamp': 'Grayscale',
     'Nameplate': 'EngravedPlastic',
     'Name Badge': 'EngravedPlastic',
   };

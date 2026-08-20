@@ -82,6 +82,12 @@ check('A. DemoProductProvider unchanged', () => {
   eq(d.bleedPxFor('Stamp'), 0, 'stamp bleed');
   eq(d.designerModeFor('Business Card'), 'FullColour', 'card mode');
   eq(d.designerModeFor('Name Badge'), 'EngravedPlastic', 'badge mode');
+  /* Stamps are Grayscale on the standalone path, matching the Sterling-product
+   * path. SingleColour is never the default anywhere in the Generator. */
+  eq(d.designerModeFor('Stamp'), 'Grayscale', 'stamp mode');
+  const demoModes = ['Business Card', 'Poster', 'Sign', 'Brochure', 'Stamp', 'Nameplate', 'Name Badge']
+    .map((t) => d.designerModeFor(t));
+  ok(!demoModes.includes('SingleColour'), 'SingleColour must never be a demo default');
   const r = d.resolve({ templateType: 'Business Card', doubleSided: true });
   eq(r.pageCount, 2, 'page count');
   eq(r.authoritative, false, 'demo must never claim authority');
