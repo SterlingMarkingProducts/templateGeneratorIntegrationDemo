@@ -1322,3 +1322,93 @@ html, body {
 }
 .push-designer-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232, 89, 12, 0.45); }
 .push-designer-btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
+
+/* ── Sterling Product selection (Phase 2B) ──────────────────
+   Uses the panel's existing tokens throughout so the control reads as part of
+   the form, not bolted onto it. Deliberately quieter than the creative
+   controls below it: no accent fill, no shadow, one hairline border. */
+.sterling-product-group { position: relative; }
+
+.sp-search-wrap { position: relative; display: flex; align-items: center; }
+.sp-search-icon {
+  position: absolute; left: 10px; color: var(--text-muted);
+  pointer-events: none;
+}
+.sp-search { padding-left: 30px; }
+.sp-search:disabled { color: var(--text-muted); cursor: not-allowed; }
+
+.sp-results {
+  position: absolute; z-index: 40; left: 0; right: 0; top: 100%; margin-top: 4px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(16, 18, 23, 0.12);
+  max-height: 260px; overflow-y: auto; padding: 4px;
+}
+.sp-result {
+  display: grid; gap: 1px; width: 100%; text-align: left;
+  padding: 7px 9px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; cursor: pointer; font-family: var(--font);
+  transition: background var(--transition);
+}
+.sp-result:hover, .sp-result:focus-visible { background: var(--card); }
+.sp-result-part {
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.sp-result-name {
+  font-size: 11.5px; color: var(--text-sec);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sp-result-spec {
+  font-size: 11px; color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.sp-empty { padding: 10px; font-size: 12px; color: var(--text-muted); }
+
+.sp-card {
+  margin-top: 8px; padding: 9px 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.sp-card-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.sp-part {
+  font-size: 12px; font-weight: 700; color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.sp-clear {
+  border: 0; background: transparent; padding: 0; cursor: pointer;
+  font-family: var(--font); font-size: 11px; color: var(--text-muted);
+  text-decoration: underline; text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+.sp-clear:hover { color: var(--text-primary); }
+.sp-name {
+  margin-top: 2px; font-size: 11.5px; line-height: 1.35; color: var(--text-sec);
+}
+.sp-spec {
+  margin-top: 4px; font-size: 11px; color: var(--text-primary);
+  font-variant-numeric: tabular-nums; font-weight: 500;
+}
+.sp-status.is-error { color: var(--danger); }
+.sp-hint { margin-top: 6px; }
+.sterling-product-group.has-product .sp-hint { display: none; }
+
+/* Controls whose value is being supplied by the selected Sterling product.
+   The badge is the only new visual element in the creative controls, and it
+   exists to stop the product and the canvas silently disagreeing. */
+.product-locked-badge {
+  display: inline-flex; align-items: center;
+  margin-left: 6px; padding: 1px 6px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.03em;
+  text-transform: uppercase; white-space: nowrap;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid var(--border); border-radius: 20px;
+  vertical-align: middle; flex: none;
+}
+.field-group.is-product-driven .form-input[readonly],
+.field-group.is-product-driven .form-select[disabled] {
+  background: var(--card); color: var(--text-sec); cursor: not-allowed;
+}
+.field-group.is-product-driven .unit-btn { pointer-events: none; opacity: 0.55; }
+.field-group.is-product-driven .unit-btn.active { opacity: 1; }

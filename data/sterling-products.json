@@ -1,0 +1,62 @@
+{
+  "_README": "Verified Sterling product catalogue used by CatalogueProductProvider. Every record here is a REAL current Sterling product. Nothing in this file is invented.",
+  "_provenance": {
+    "status": "Verified local catalogue. NOT a live API read.",
+    "howRecordsAreAdded": "A product may be added ONLY if its technical values come from (a) a genuine recorded Sterling response, or (b) the Sterling product spreadsheets supplied for this project. Never from a guess, never from a template-type assumption, and never from a DEMO/TEST/SAMPLE fixture.",
+    "whyItExists": "Phase 2B needs a working product-selection experience before the read-only Sterling product API exists (see docs/product-api-contract.md). This catalogue is consumed through the SAME normalizer the future API will use, so replacing it with a live endpoint is a provider swap and changes no Generator code.",
+    "onDelivery": "When IT provisions the endpoint, point SterlingProductProvider at it and retire this file. The normalized records must come out identical.",
+    "shape": "Each entry follows the clean product-API response specified in docs/product-api-contract.md, so catalogue records and future API records normalize through one code path.",
+    "excluded": "Pricing, sellable variations, colours, product options and image paths are deliberately absent — the Generator has no use for them and a public browser app should not carry them."
+  },
+
+  "products": [
+    {
+      "id": 6505,
+      "partNumber": "BCDP-CM",
+      "name": "Vibrant Colour Business Cards - Classic Matte",
+      "productFamily": "Business Cards",
+
+      "dimensions": {
+        "widthIn": 3.5,
+        "heightIn": 2,
+        "dpi": 96,
+        "displayUnit": "in",
+        "widthDisplay": "3-1/2",
+        "heightDisplay": "2"
+      },
+
+      "bleed": { "top": 12, "right": 12, "bottom": 12, "left": 12 },
+      "pages": { "min": 2, "max": 2 },
+      "shape": "rect",
+      "orientation": { "landscapeAvailable": true, "portraitAvailable": true },
+      "maxLines": 0,
+      "status": { "active": true, "retired": false },
+
+      "legacy": {
+        "designerVariationCode": 3,
+        "margins": { "top": 6, "right": 6, "bottom": 6, "left": 6 },
+        "borders": { "top": 0, "right": 0, "bottom": 0, "left": 0, "width": 0 },
+        "daterBox": { "width": 0, "height": 0 },
+        "isProStamp": true,
+        "greenInkAvailable": false,
+        "bandString": "",
+        "clipPaths": [],
+        "clipPathOverlays": []
+      },
+
+      "availability": {
+        "customizable": true,
+        "isAccessory": false,
+        "basePartForXref": "880-1"
+      },
+
+      "_provenance": {
+        "technicalValues": "Recorded Sterling getStampInfo response for product 6505, present in this repository at realdesigner/fixtures.js and captured from the public endpoints. All 24 technical values were re-verified against the specification supplied for this milestone and matched exactly: id, partNumber, name, 3.5x2in, 336x192px, min/maxPages 2, bleed 12 all sides, margins 6 all sides, borders 0 all sides, borderWidth 0, shape rect, designerVariationCode 3.",
+        "designerMode": "designerVariationCode 3 -> FullColour is PROVEN from Sterling source (oldDesigner/gettemplateJson.cfm:163-164). See integration/product-contract.js.",
+        "availabilityBlock": "customizable, isAccessory and basePartForXref are not returned by getStampInfo. They come from the Sterling product spreadsheets supplied for this project, as stated in the Phase 2B specification.",
+        "notInSpecification": "isProStamp (true), greenInkAvailable (false), maxLines (0), widthDisplay ('3-1/2') and descriptionFR appear in the recorded response but were not restated in the Phase 2B specification. The recorded values are used verbatim rather than being normalised to something more expected. isProStamp true on a business card is unusual; flagged for Sterling rather than silently corrected.",
+        "discarded": "The recorded response also carries LOWESTPRICE and three sellable VARIATIONS (BCDP-CM-100/-250/-500). Sellable variations are out of scope for the Generator and are deliberately absent from this catalogue."
+      }
+    }
+  ]
+}

@@ -340,6 +340,130 @@
     });
   };
 
+  /* ================================================================== *
+   * CatalogueProductProvider — verified Sterling products, served locally.
+   *
+   * Phase 2B needs a working product-selection experience before the
+   * read-only Sterling API exists. This provider serves records from a
+   * verified catalogue (data/sterling-products.json) through the SAME
+   * normalizer SterlingProductProvider uses for the clean API shape, so the
+   * normalized output is identical either way and swapping to the live API is
+   * a provider swap with no Generator change.
+   *
+   * The catalogue is INJECTED, never imported: this file contains no product
+   * data, no hostname and no path. Anything that can produce clean-shaped
+   * records — a local file, a spreadsheet export, the future API — can back it.
+   *
+   *   new CatalogueProductProvider({ records, source, siteFamilyId, live })
+   * ================================================================== */
+
+  function CatalogueProductProvider(config) {
+    config = config || {};
+    if (!Array.isArray(config.records)) {
+      throw new Error('CatalogueProductProvider requires an explicit records array. '
+        + 'Product data is never embedded in the provider.');
+    }
+    this.source = config.source || 'sterling-catalogue-local';
+    /* Context is carried so a catalogue record and an API record describe the
+     * same provenance fields. null means "this catalogue did not say". */
+    this.siteFamilyId = config.siteFamilyId === undefined ? null : config.siteFamilyId;
+    this.live = typeof config.live === 'boolean' ? config.live : null;
+    this.records = config.records.filter(function (r) { return r && typeof r === 'object'; });
+  }
+
+  CatalogueProductProvider.prototype.id = 'catalogue-provider';
+
+  /** A product the Generator must refuse to design on. */
+  function isSelectable(raw) {
+    var st = raw.status || {}, av = raw.availability || {};
+    if (st.active === false || st.retired === true) return false;
+    /* Absent means the catalogue did not say; only an explicit false blocks. */
+    if (av.customizable === false) return false;
+    if (av.isAccessory === true) return false;
+    return true;
+  }
+
+  CatalogueProductProvider.prototype.normalize = function (raw) {
+    /* Reuses the clean-API normalizer verbatim — one code path, so a catalogue
+     * record and a future API record can never diverge. */
+    var product = SterlingProductProvider.prototype.normalizeCleanApi.call(this, raw);
+    product.provenance.source = this.source;
+    product.provenance.note = 'Verified Sterling product served from a local catalogue. '
+      + 'Technical values are real; this is not a live API read.';
+    var problems = C().validate(product);
+    if (problems.length) {
+      throw ProductSourceError('invalid-record',
+        'Catalogue record failed contract validation: ' + problems.join('; '), problems);
+    }
+    return product;
+  };
+
+  CatalogueProductProvider.prototype.getById = function (id) {
+    var self = this;
+    return new Promise(function (resolve) {
+      var n = Number(id);
+      if (!isFinite(n)) throw ProductSourceError('bad-request', 'Product id must be numeric.');
+      var hit = self.records.filter(function (r) { return Number(r.id) === n; });
+      if (!hit.length) throw ProductSourceError('not-found', 'No catalogue product with id ' + n + '.');
+      if (!isSelectable(hit[0])) {
+        throw ProductSourceError('not-found',
+          'Product ' + n + ' is not available for design (inactive, retired, non-customizable or an accessory).');
+      }
+      resolve(self.normalize(hit[0]));
+    });
+  };
+
+  CatalogueProductProvider.prototype.getByPartNumber = function (part) {
+    var self = this;
+    return new Promise(function (resolve) {
+      var q = String(part == null ? '' : part).trim().toUpperCase();
+      if (!q) throw ProductSourceError('bad-request', 'A part number is required.');
+      var hit = self.records.filter(function (r) {
+        return String(r.partNumber || '').toUpperCase() === q;
+      });
+      if (!hit.length) throw ProductSourceError('not-found', 'No catalogue product matches part ' + q + '.');
+      /* Ambiguity is surfaced, never silently resolved by picking the first —
+       * the behaviour docs/product-api-contract.md asks the real API for. */
+      if (hit.length > 1) {
+        throw ProductSourceError('ambiguous', hit.length + ' catalogue products match part ' + q + '.',
+          { candidates: hit.map(function (r) { return r.id; }) });
+      }
+      if (!isSelectable(hit[0])) {
+        throw ProductSourceError('not-found', 'Product ' + q + ' is not available for design.');
+      }
+      resolve(self.normalize(hit[0]));
+    });
+  };
+
+  /** Lightweight summaries for a picker. Same shape as the API's search(). */
+  CatalogueProductProvider.prototype.search = function (query, opts) {
+    var self = this;
+    opts = opts || {};
+    return new Promise(function (resolve) {
+      var q = String(query == null ? '' : query).trim().toLowerCase();
+      var limit = opts.limit === undefined ? 25 : Number(opts.limit);
+      var matches = self.records.filter(isSelectable).filter(function (r) {
+        if (!q) return true;
+        return [r.partNumber, r.name, r.productFamily, String(r.id)]
+          .some(function (f) { return String(f || '').toLowerCase().indexOf(q) >= 0; });
+      });
+      resolve({
+        results: matches.slice(0, limit).map(function (r) {
+          var d = r.dimensions || {}, pg = r.pages || {};
+          return {
+            id: r.id, partNumber: r.partNumber, name: r.name,
+            productFamily: r.productFamily,
+            widthIn: d.widthIn, heightIn: d.heightIn, unit: d.displayUnit || 'in',
+            pages: pg.min || 1,
+          };
+        }),
+        total: matches.length,
+        limit: limit,
+        offset: 0,
+      });
+    });
+  };
+
   /* Active provider. Swapping implementations is a one-line change here (or a
    * call to setProvider) and touches nothing else. The DEMO provider stays the
    * default so the Generator keeps working with no Sterling API at all. */
@@ -348,6 +472,7 @@
   root.SMPProductProvider = {
     DemoProductProvider: DemoProductProvider,
     SterlingProductProvider: SterlingProductProvider,
+    CatalogueProductProvider: CatalogueProductProvider,
     ProductSourceError: ProductSourceError,
     get: function () { return active; },
     setProvider: function (p) { active = p; return active; },
@@ -363,9 +488,33 @@
       return typeof active.designerModeFor === 'function'
         ? active.designerModeFor(t) : new DemoProductProvider().designerModeFor(t);
     },
+    /* THE PRODUCT-FACT FUNNEL.
+     *
+     * When the Generator has an authoritative Sterling product selected, that
+     * product decides the technical document settings — geometry, bleed, page
+     * count, shape, designer mode. A template-type guess must never be able to
+     * override a real product record, so the selected product is checked FIRST
+     * and returns before any inference runs.
+     *
+     * With no product selected the Generator stays a standalone design tool and
+     * falls back to the demo inference exactly as before. */
     resolve: function (payload) {
+      var selected = payload && payload.product;
+      if (selected && selected.contractVersion && selected.provenance
+          && selected.provenance.authoritative) {
+        return C().toDesignProductContext(selected);
+      }
       return typeof active.resolve === 'function'
         ? active.resolve(payload) : new DemoProductProvider().resolve(payload);
+    },
+
+    /* Bleed for the CURRENT payload. Product first, template type second — the
+     * same precedence as resolve(), so the on-screen bleed overlay and the
+     * transferred design can never disagree about a selected product. */
+    bleedPxForPayload: function (payload) {
+      var selected = payload && payload.product;
+      if (selected && selected.bleed) return selected.bleed.top;
+      return this.bleedPxFor(payload && payload.templateType);
     },
   };
 })(typeof window !== 'undefined' ? window : globalThis);

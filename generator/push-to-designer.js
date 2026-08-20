@@ -801,16 +801,43 @@ function buildSterlingTemplate(pages, payload) {
    * of being inferred from the template-type dropdown.
    */
   const N = window.SMPNormalized;
-  const productContext = window.SMPProductProvider.resolve(payload);
+
+  /* The selected Sterling product is a DOCUMENT setting, not a generation-time
+   * input, so it is read live rather than trusted to be on `payload` — sample
+   * designs build their own payload and never go through buildPayload(). */
+  const selected = payload.product
+    || (window.SMPProductSelection && window.SMPProductSelection.get())
+    || null;
+
+  const trimW = Math.round(toPx(payload.width, payload.unit));
+  const trimH = Math.round(toPx(payload.height, payload.unit));
+
+  /* A selected product and the canvas must never disagree in silence. The
+   * Generator locks Dimensions while a product is selected, so this can only
+   * happen if a design of a different size was loaded afterwards (a sample,
+   * say). Fail loudly rather than emit a package that claims product 6505 at
+   * the wrong size — a wrongly sized package is a wrongly printed job. */
+  if (selected) {
+    const pw = selected.dimensions.widthPx, ph = selected.dimensions.heightPx;
+    if (pw !== trimW || ph !== trimH) {
+      throw new Error(
+        `The design is ${trimW}×${trimH}px but the selected Sterling product `
+        + `${selected.partNumber} is ${pw}×${ph}px. Regenerate the design with the `
+        + `product selected, or clear the product, before pushing to the Designer.`);
+    }
+  }
+
+  const productContext = window.SMPProductProvider.resolve(
+    Object.assign({}, payload, { product: selected }));
 
   const doc = N.createDocument({
-    trimWidthPx: Math.round(toPx(payload.width, payload.unit)),
-    trimHeightPx: Math.round(toPx(payload.height, payload.unit)),
+    trimWidthPx: trimW,
+    trimHeightPx: trimH,
     bleedPx: productContext.bleedPx,
     dpi: 96,
     unit: payload.unit,
-    widthIn: round2(Math.round(toPx(payload.width, payload.unit)) / 96),
-    heightIn: round2(Math.round(toPx(payload.height, payload.unit)) / 96),
+    widthIn: round2(trimW / 96),
+    heightIn: round2(trimH / 96),
     productContext,
     pages: pages.map((pg, i) => ({
       index: i,

@@ -235,7 +235,11 @@
       templateKey: 'TG-' + Date.now().toString(36).toUpperCase(),
       version: 1.2,
       canvasProperties: canvasProperties,
-      productList: [],
+      /* Sterling's own recorded templates carry the product id here
+       * (e.g. "productList":[6505] for BCDP-CM). It stays empty when no
+       * authoritative product is selected, because the demo provider
+       * deliberately invents no id. */
+      productList: pc.productId === null || pc.productId === undefined ? [] : [pc.productId],
       pages: pageObjects.map(function (pg, i) {
         return {
           page: i,

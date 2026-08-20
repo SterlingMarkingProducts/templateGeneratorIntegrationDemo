@@ -32,6 +32,22 @@
     <aside class="form-panel" id="form-panel">
       <div class="form-scroll">
 
+        <!-- Sterling Product (Phase 2B) -->
+        <div class="field-group sterling-product-group" id="sterlingProductGroup">
+          <label class="field-label" for="productSearch">
+            Sterling Product
+            <span class="optional-tag">optional</span>
+          </label>
+          <div class="sp-search-wrap">
+            <svg class="sp-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="productSearch" class="form-input sp-search" placeholder="Loading catalogue…" autocomplete="off" disabled />
+          </div>
+          <div class="sp-results hidden" id="productResults" role="listbox"></div>
+          <p class="field-hint sp-status hidden" id="productStatus"></p>
+          <div class="sp-card hidden" id="productSelectedCard"></div>
+          <p class="field-hint sp-hint">Leave empty to use the Generator standalone.</p>
+        </div>
+
         <!-- Template Type -->
         <div class="field-group required-group">
           <label class="field-label" for="templateType">
@@ -424,6 +440,7 @@
   <script src="app.js?v=tier1-30"></script>
   <script src="product-compat.js?v=tier1-30"></script>
   <script src="push-to-designer.js?v=tier1-30"></script>
+  <script src="product-select.js?v=p2b1"></script>
   <script src="demo-samples.js?v=tier1-30"></script>
 </body>
 </html>

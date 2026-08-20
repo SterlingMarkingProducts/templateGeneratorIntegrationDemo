@@ -125,7 +125,12 @@ function bleedPxFor(type) {
    * and swapping in CMS-backed product data later changes nothing here.
    * The inline constants below remain the fallback if the integration layer
    * is not loaded (e.g. the Generator opened standalone). */
-  if (window.SMPProductProvider) return window.SMPProductProvider.bleedPxFor(type);
+  if (window.SMPProductProvider) {
+    /* A selected Sterling product outranks the template-type guess. */
+    const picked = window.SMPProductSelection?.get?.() || null;
+    if (picked) return window.SMPProductProvider.bleedPxForPayload({ product: picked });
+    return window.SMPProductProvider.bleedPxFor(type);
+  }
   return BLEED_PRODUCTS.includes(type) ? Math.round(BLEED_IN * 96) : 0;
 }
 
@@ -159,6 +164,78 @@ templateType.addEventListener('change', () => {
     productNote.textContent = '';
     productNote.classList.add('hidden');
   }
+});
+
+/* ── Sterling product → technical document settings ──
+ *
+ * When a Sterling product is selected it OWNS the technical settings: size,
+ * unit and the creative template family. Those inputs are populated from the
+ * product and made read-only, with a small badge saying where the value came
+ * from — so the selected product and the canvas geometry cannot silently
+ * disagree, and it is obvious which controls are no longer free.
+ *
+ * Clearing the product restores every input to normal. Nothing creative is
+ * touched either way. */
+const PRODUCT_DRIVEN_GROUPS = () => [
+  templateType?.closest('.field-group'),
+  dimWidth?.closest('.field-group'),
+].filter(Boolean);
+
+function setProductBadge(group, on) {
+  if (!group) return;
+  const label = group.querySelector('.field-label');
+  if (!label) return;
+  let badge = label.querySelector('.product-locked-badge');
+  if (on && !badge) {
+    badge = document.createElement('span');
+    badge.className = 'product-locked-badge';
+    badge.textContent = 'Set by product';
+    label.appendChild(badge);
+  } else if (!on && badge) {
+    badge.remove();
+  }
+}
+
+function applyProductToForm(product) {
+  const groups = PRODUCT_DRIVEN_GROUPS();
+
+  if (!product) {
+    groups.forEach(g => { g.classList.remove('is-product-driven'); setProductBadge(g, false); });
+    dimWidth.readOnly = false;
+    dimHeight.readOnly = false;
+    templateType.disabled = false;
+    return;
+  }
+
+  /* Geometry straight from the product record — never from a preset. */
+  dimWidth.value  = product.dimensions.widthIn;
+  dimHeight.value = product.dimensions.heightIn;
+  selectedUnit = 'in';
+  unitToggle.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  unitToggle.querySelector('[data-unit="in"]')?.classList.add('active');
+
+  /* Creative family, if this product maps to one the Generator knows. */
+  const tt = window.SMPProductSelection?.templateTypeFor(product) || '';
+  if (tt && templateType.querySelector(`option[value="${tt}"]`)) {
+    templateType.value = tt;
+    /* Re-run the Generator's own hint logic, then re-apply product geometry —
+     * the preset must not win over the real product. */
+    templateType.dispatchEvent(new Event('change'));
+    dimWidth.value  = product.dimensions.widthIn;
+    dimHeight.value = product.dimensions.heightIn;
+    selectedUnit = 'in';
+    unitToggle.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+    unitToggle.querySelector('[data-unit="in"]')?.classList.add('active');
+  }
+
+  dimWidth.readOnly = true;
+  dimHeight.readOnly = true;
+  templateType.disabled = true;
+  groups.forEach(g => { g.classList.add('is-product-driven'); setProductBadge(g, true); });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.SMPProductSelection?.onChange(applyProductToForm);
 });
 
 /* ── Default product type ──────────────────────────── */
@@ -529,8 +606,24 @@ function buildPayload() {
     referenceMode:       referenceMode?.value || 'recreate',
     svgContent:          svgPaste.value.trim(),
     specialInstructions: specialInstr.value.trim(),
-    doubleSided:         DOUBLE_SIDED_PRODUCTS.includes(templateType.value),
+    /* The selected Sterling product, or null when the Generator is used
+     * standalone. Downstream, SMPProductProvider.resolve() checks this FIRST,
+     * so a real product record can never be overridden by a template-type
+     * assumption. */
+    product:             window.SMPProductSelection?.get?.() || null,
+    /* Page count is a product fact when a product is selected — BCDP-CM is
+     * min 2 / max 2, so it produces a front and a back. Only without a
+     * product does the Generator fall back to its own double-sided list. */
+    doubleSided:         productPageCount() !== null
+                           ? productPageCount() > 1
+                           : DOUBLE_SIDED_PRODUCTS.includes(templateType.value),
   };
+}
+
+/** Pages required by the selected Sterling product, or null if none selected. */
+function productPageCount() {
+  const p = window.SMPProductSelection?.get?.();
+  return p && p.pages ? p.pages.min : null;
 }
 
 /* ── Validate ──────────────────────────────────────── */
