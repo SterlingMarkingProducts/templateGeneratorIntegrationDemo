@@ -3,3 +3,6 @@ package-lock.json
 scripts/_shot_*.png
 scripts/_ui*.png
 scripts/_*.mjs
+__pycache__/
+*.pyc
+scripts/_shot-*.png

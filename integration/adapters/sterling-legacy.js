@@ -239,7 +239,12 @@
        * (e.g. "productList":[6505] for BCDP-CM). It stays empty when no
        * authoritative product is selected, because the demo provider
        * deliberately invents no id. */
-      productList: pc.productId === null || pc.productId === undefined ? [] : [pc.productId],
+      /* Only a REAL designCentral id may travel. Spreadsheet-inferred test
+       * products carry a synthetic negative id, which must never be presented
+       * to Sterling as a product id — their real part number still travels in
+       * canvasProperties.productNumber. */
+      productList: (pc.authoritative && typeof pc.productId === 'number' && pc.productId > 0)
+        ? [pc.productId] : [],
       pages: pageObjects.map(function (pg, i) {
         return {
           page: i,

@@ -368,10 +368,54 @@
      * same provenance fields. null means "this catalogue did not say". */
     this.siteFamilyId = config.siteFamilyId === undefined ? null : config.siteFamilyId;
     this.live = typeof config.live === 'boolean' ? config.live : null;
-    this.records = config.records.filter(function (r) { return r && typeof r === 'object'; });
+    /* Deduplicate by part number. The two catalogues overlap — BCDP-CM exists
+     * both as the CMS-verified record and as a spreadsheet-inferred one — and
+     * the verified record must always win, whatever order they were loaded in.
+     * Records without a part number are kept as-is; they cannot collide. */
+    var seen = {};
+    this.records = [];
+    this.duplicatesDropped = 0;
+    config.records
+      .filter(function (r) { return r && typeof r === 'object'; })
+      .slice()
+      .sort(function (a, b) {
+        var av = confidenceOf(a) === 'cms-verified' ? 0 : 1;
+        var bv = confidenceOf(b) === 'cms-verified' ? 0 : 1;
+        return av - bv;                        // verified first, otherwise stable
+      })
+      .forEach(function (r) {
+        var k = String(r.partNumber || '').toUpperCase();
+        if (k && seen[k]) { this.duplicatesDropped++; return; }
+        if (k) seen[k] = true;
+        this.records.push(r);
+      }, this);
+
+    /* Search index, built once. Thousands of records must stay responsive, so
+     * the per-keystroke path is a substring scan over pre-lowercased strings
+     * rather than repeated toLowerCase() and property walks. */
+    var self = this;
+    this.index = this.records.map(function (r, i) {
+      var part = String(r.partNumber || '');
+      return { i: i, part: part.toLowerCase(),
+               hay: [part, r.name, r.productFamily, r.id].join(' ~ ').toLowerCase() };
+    });
+    this.byPart = {};
+    this.byId = {};
+    this.records.forEach(function (r) {
+      var k = String(r.partNumber || '').toUpperCase();
+      if (k) (self.byPart[k] = self.byPart[k] || []).push(r);
+      if (r.id !== undefined && r.id !== null) {
+        (self.byId[String(r.id)] = self.byId[String(r.id)] || []).push(r);
+      }
+    });
   }
 
   CatalogueProductProvider.prototype.id = 'catalogue-provider';
+
+  /** How far a record's TECHNICAL values can be trusted. */
+  function confidenceOf(raw) {
+    return (raw && raw.test && raw.test.technicalDataStatus) || 'cms-verified';
+  }
 
   /** A product the Generator must refuse to design on. */
   function isSelectable(raw) {
@@ -387,9 +431,22 @@
     /* Reuses the clean-API normalizer verbatim — one code path, so a catalogue
      * record and a future API record can never diverge. */
     var product = SterlingProductProvider.prototype.normalizeCleanApi.call(this, raw);
+    var confidence = confidenceOf(raw);
+    var inferred = confidence === 'inferred-test';
+
     product.provenance.source = this.source;
-    product.provenance.note = 'Verified Sterling product served from a local catalogue. '
-      + 'Technical values are real; this is not a live API read.';
+    product.provenance.technicalDataStatus = confidence;
+    /* THE HONESTY SWITCH. An inferred-test record may drive this development
+     * build, but it must never claim to be a Sterling specification. */
+    product.provenance.authoritative = !inferred;
+    product.provenance.note = inferred
+      ? 'SPREADSHEET-INFERRED TEST RECORD. The part number and description are real Sterling '
+        + 'data; the dimensions, shape, pages, bleed, margins, designer mode and id are '
+        + 'inferred by test-only rules and are NOT Sterling specifications.'
+      : 'CMS-verified Sterling product served from a local catalogue. Technical values are '
+        + 'real; this is not a live API read.';
+    /* Test-only detail travels alongside the contract, never inside it. */
+    if (raw.test) product.test = raw.test;
     var problems = C().validate(product);
     if (problems.length) {
       throw ProductSourceError('invalid-record',
@@ -403,7 +460,7 @@
     return new Promise(function (resolve) {
       var n = Number(id);
       if (!isFinite(n)) throw ProductSourceError('bad-request', 'Product id must be numeric.');
-      var hit = self.records.filter(function (r) { return Number(r.id) === n; });
+      var hit = self.byId[String(n)] || [];
       if (!hit.length) throw ProductSourceError('not-found', 'No catalogue product with id ' + n + '.');
       if (!isSelectable(hit[0])) {
         throw ProductSourceError('not-found',
@@ -418,9 +475,7 @@
     return new Promise(function (resolve) {
       var q = String(part == null ? '' : part).trim().toUpperCase();
       if (!q) throw ProductSourceError('bad-request', 'A part number is required.');
-      var hit = self.records.filter(function (r) {
-        return String(r.partNumber || '').toUpperCase() === q;
-      });
+      var hit = self.byPart[q] || [];
       if (!hit.length) throw ProductSourceError('not-found', 'No catalogue product matches part ' + q + '.');
       /* Ambiguity is surfaced, never silently resolved by picking the first —
        * the behaviour docs/product-api-contract.md asks the real API for. */
@@ -442,11 +497,21 @@
     return new Promise(function (resolve) {
       var q = String(query == null ? '' : query).trim().toLowerCase();
       var limit = opts.limit === undefined ? 25 : Number(opts.limit);
-      var matches = self.records.filter(isSelectable).filter(function (r) {
-        if (!q) return true;
-        return [r.partNumber, r.name, r.productFamily, String(r.id)]
-          .some(function (f) { return String(f || '').toLowerCase().indexOf(q) >= 0; });
-      });
+      /* Ranked, and it stops early: an exact part-number hit wins outright,
+       * then part-number prefixes, then anything containing the query. The scan
+       * walks the pre-built index and bails once enough hits are ranked, so
+       * typing stays responsive over thousands of records. */
+      var exact = [], prefix = [], contains = [];
+      for (var k = 0; k < self.index.length; k++) {
+        var e = self.index[k], r = self.records[e.i];
+        if (!isSelectable(r)) continue;
+        if (!q) contains.push(r);
+        else if (e.part === q) exact.push(r);
+        else if (e.part.indexOf(q) === 0) prefix.push(r);
+        else if (e.hay.indexOf(q) >= 0) contains.push(r);
+        if (exact.length + prefix.length + contains.length >= limit * 4) break;
+      }
+      var matches = exact.concat(prefix, contains);
       resolve({
         results: matches.slice(0, limit).map(function (r) {
           var d = r.dimensions || {}, pg = r.pages || {};
@@ -455,6 +520,8 @@
             productFamily: r.productFamily,
             widthIn: d.widthIn, heightIn: d.heightIn, unit: d.displayUnit || 'in',
             pages: pg.min || 1,
+            shape: r.shape || 'rect',
+            technicalDataStatus: confidenceOf(r),
           };
         }),
         total: matches.length,
@@ -463,6 +530,18 @@
       });
     });
   };
+
+  /* Is this a normalized Product record, rather than an arbitrary object a
+   * caller happened to hang on the payload? Checked structurally, so a junk
+   * value can never be mistaken for a product and silently resize a design. */
+  function isProductRecord(v) {
+    return !!(v && typeof v === 'object'
+      && v.contractVersion && v.partNumber
+      && v.dimensions && v.dimensions.widthIn > 0 && v.dimensions.heightIn > 0
+      && v.bleed && v.pages && v.pages.min >= 1
+      && v.legacy && v.provenance
+      && typeof v.provenance.authoritative === 'boolean');
+  }
 
   /* Active provider. Swapping implementations is a one-line change here (or a
    * call to setProvider) and touches nothing else. The DEMO provider stays the
@@ -500,10 +579,15 @@
      * falls back to the demo inference exactly as before. */
     resolve: function (payload) {
       var selected = payload && payload.product;
-      if (selected && selected.contractVersion && selected.provenance
-          && selected.provenance.authoritative) {
-        return C().toDesignProductContext(selected);
-      }
+      /* Any CONTRACT-VALID product record wins, whether its technical values
+       * are CMS-verified or spreadsheet-inferred. Confidence is reported, not
+       * used as a gate: this development build is meant to be driven by the
+       * inferred test inventory, and gating on `authoritative` here would have
+       * silently dropped every test product back to a template-type guess.
+       * What confidence DOES gate is the synthetic id — see
+       * integration/adapters/sterling-legacy.js, which refuses to put a
+       * non-authoritative id into productList. */
+      if (isProductRecord(selected)) return C().toDesignProductContext(selected);
       return typeof active.resolve === 'function'
         ? active.resolve(payload) : new DemoProductProvider().resolve(payload);
     },
@@ -513,7 +597,7 @@
      * transferred design can never disagree about a selected product. */
     bleedPxForPayload: function (payload) {
       var selected = payload && payload.product;
-      if (selected && selected.bleed) return selected.bleed.top;
+      if (isProductRecord(selected)) return selected.bleed.top;
       return this.bleedPxFor(payload && payload.templateType);
     },
   };

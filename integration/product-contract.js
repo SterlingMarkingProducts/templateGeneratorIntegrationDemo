@@ -171,6 +171,13 @@
       provenance: {
         source: str(o.source, 'unknown'),
         authoritative: bool(o.authoritative, false),
+        /* How much to trust the TECHNICAL values (size, bleed, pages, mode):
+         *   'cms-verified'  — read from Sterling's own data
+         *   'inferred-test' — inferred by a test-only rule from a spreadsheet
+         *   'demo-assumed'  — the Generator's own template-type assumption
+         * Never let an inferred record be presented as a Sterling specification. */
+        technicalDataStatus: str(o.technicalDataStatus,
+          bool(o.authoritative, false) ? 'cms-verified' : 'demo-assumed'),
         fetchedAt: o.fetchedAt || null,
         siteFamilyId: o.siteFamilyId === undefined ? null : o.siteFamilyId,
         live: o.live === undefined ? null : o.live,
@@ -226,6 +233,9 @@
     return {
       productId: p.id,
       productNumber: p.partNumber,
+      /* How far the technical values below can be trusted. Travels with the
+       * context so downstream code never has to guess. */
+      technicalDataStatus: (p.provenance && p.provenance.technicalDataStatus) || 'demo-assumed',
       productFamily: p.productFamily,
       templateType: p.productFamily || '',
       designerMode: (p.legacy && p.legacy.designerMode) || 'FullColour',

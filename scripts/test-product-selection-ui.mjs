@@ -94,23 +94,101 @@ await check('Sterling Product control renders and starts unselected', async () =
 });
 
 /* ---- search finds only verified products ------------------------- */
-await check('search returns BCDP-CM and never the retired HLCBBCE', async () => {
+await check('search ranks the verified BCDP-CM first, never shows HLCBBCE', async () => {
   await page.fill('#productSearch', 'business');
   await page.waitForTimeout(500);
   const rows = await page.evaluate(() => [...document.querySelectorAll('.sp-result')].map((b) => ({
-    id: b.dataset.id, part: b.querySelector('.sp-result-part').textContent,
-    spec: b.querySelector('.sp-result-spec').textContent })));
-  eq(rows.length, 1, 'result count');
-  eq(rows[0].id, '6505', 'result id');
+    id: b.dataset.id, part: b.dataset.part,
+    spec: b.querySelector('.sp-result-spec').textContent,
+    verified: !!b.querySelector('.sp-dot.is-verified'),
+    test: !!b.querySelector('.sp-dot.is-test') })));
+  ok(rows.length > 1, 'the large catalogue should return many business-card matches');
+  ok(rows.length <= 25, 'results must stay capped for a large catalogue');
+  eq(rows[0].id, '6505', 'the CMS-verified record must rank first');
   eq(rows[0].part, 'BCDP-CM', 'result part');
   eq(rows[0].spec, '3.5 × 2 in · 2 pages', 'result summary');
+  ok(rows[0].verified, 'BCDP-CM must be flagged CMS-verified');
+  ok(rows.slice(1).every((r) => r.test), 'every other match must be flagged as test data');
+  eq(rows.filter((r) => r.part === 'BCDP-CM').length, 1, 'BCDP-CM must be de-duplicated');
   const body = await page.evaluate(() => document.body.innerText);
   ok(!body.includes('HLCBBCE'), 'HLCBBCE must never appear in the Generator');
-  return rows[0].part + ' · ' + rows[0].spec;
+  return `${rows.length} matches, ${rows[0].part} first (verified), rest flagged test`;
+});
+
+await check('the catalogue is large and searchable by part and description', async () => {
+  const size = await page.evaluate(() => window.SMPProductSelection.catalogueSize());
+  ok(size > 300, `expected a large catalogue, got ${size}`);
+  const exact = await page.evaluate(() => window.SMPProductSelection.search('B1438', { limit: 25 }));
+  eq(exact.results[0].partNumber, 'B1438', 'exact part number must rank first');
+  ok(!exact.results.some((r) => /^B1438[123]$/.test(r.partNumber)),
+     'collapsed colour variations must not be selectable');
+  const partial = await page.evaluate(() => window.SMPProductSelection.search('BCDP', { limit: 25 }));
+  ok(partial.results.length > 1, 'partial part number should match several');
+  ok(partial.results.every((r) => /BCDP/i.test(r.partNumber + r.name)), 'partial matches must contain the query');
+  const byName = await page.evaluate(() => window.SMPProductSelection.search('banner', { limit: 25 }));
+  ok(byName.total > 10, `description search should find many banners, got ${byName.total}`);
+  return `${size} products · exact B1438 first · ${partial.results.length} BCDP* · ${byName.total} banners`;
+});
+
+await check('an inferred test product drives the Generator but stays non-authoritative', async () => {
+  const r = await page.evaluate(async () => {
+    const p = await window.SMPProductSelection.selectByPartNumber('B1438');
+    const ctx = window.SMPProductProvider.resolve({
+      templateType: 'Business Card', doubleSided: false, product: p });
+    return {
+      id: p.id, part: p.partNumber,
+      inches: [p.dimensions.widthIn, p.dimensions.heightIn],
+      px: [p.dimensions.widthPx, p.dimensions.heightPx],
+      status: p.provenance.technicalDataStatus,
+      authoritative: p.provenance.authoritative,
+      mode: p.legacy.designerMode,
+      ctxId: ctx.productId, ctxPart: ctx.productNumber, ctxStatus: ctx.technicalDataStatus,
+      dims: [document.getElementById('dimWidth').value, document.getElementById('dimHeight').value],
+      conf: document.querySelector('#productSelectedCard .sp-conf')?.className || '',
+      confText: document.querySelector('#productSelectedCard .sp-conf')?.textContent || '',
+    };
+  });
+  eq(r.part, 'B1438', 'part');
+  eq(r.inches, [0.5, 1.5], 'B1438 inferred size');
+  eq(r.px, [48, 144], 'canvas px at 96dpi');
+  eq(r.status, 'inferred-test', 'technicalDataStatus');
+  eq(r.authoritative, false, 'must NOT be authoritative');
+  eq(r.mode, 'SingleColour', 'stamps use the monochrome mode the Generator already supports');
+  ok(r.id < 0, 'inferred ids must be synthetic and negative');
+  eq(r.dims, ['0.5', '1.5'], 'the form must be driven by the inferred product');
+  eq(r.ctxPart, 'B1438', 'the real part number reaches the design context');
+  eq(r.ctxStatus, 'inferred-test', 'confidence travels with the context');
+  ok(/is-test/.test(r.conf), 'the card must show the test-data marker');
+  ok(/inferred/i.test(r.confText), `card should say the size is inferred, got "${r.confText}"`);
+  return `B1438 · 0.5×1.5in · 48×144px · SingleColour · inferred-test · id ${r.id}`;
+});
+
+await check('an inferred product contributes no productList id', async () => {
+  await loadSample('Business card');
+  const r = await page.evaluate(async () => {
+    await window.SMPProductSelection.selectByPartNumber('BCLST-E');   // 3.5x2 inferred card
+    try {
+      const { template } = await window.SMPPush.convertCurrentDesign();
+      return { productList: template.productList,
+               productNumber: template.canvasProperties.productNumber };
+    } catch (e) { return { error: e.message }; }
+  });
+  ok(!r.error, 'conversion should succeed: ' + r.error);
+  eq(r.productList, [], 'a synthetic negative id must never reach productList');
+  eq(r.productNumber, 'BCLST-E', 'the REAL part number must still travel');
+  await page.evaluate(() => window.SMPProductSelection.selectByPartNumber('BCDP-CM'));
+  await page.waitForTimeout(400);
+  return 'productList [] · productNumber BCLST-E';
 });
 
 /* ---- selecting drives the technical settings --------------------- */
 await check('selecting BCDP-CM drives the technical document settings', async () => {
+  /* Self-contained: re-open the picker and click the real first result, so this
+   * check does not depend on dropdown state left behind by earlier checks. */
+  await page.evaluate(() => window.SMPProductSelection.clear());
+  await page.fill('#productSearch', '');
+  await page.fill('#productSearch', 'BCDP-CM');
+  await page.waitForSelector('.sp-result', { timeout: 10000 });
   await page.click('.sp-result');
   await page.waitForTimeout(900);
   const s = await page.evaluate(() => {

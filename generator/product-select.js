@@ -39,11 +39,26 @@
     'nameplate': 'Nameplate',
     'name badges': 'Name Badge',
     'name badge': 'Name Badge',
+    /* Families the test inventory adds. Each maps to the nearest creative
+     * template the Generator already knows how to design for. */
+    'banner': 'Poster',
+    'decal': 'Sign',
+    'label': 'Name Badge',
+    'magnet': 'Sign',
+    'postcard': 'Business Card',
   };
 
-  var CATALOGUE_URL = '../data/sterling-products.json';
+  /* Two catalogues, one picker. The CMS-verified records load first so an
+   * exact part number always resolves to the verified record when both
+   * contain it. Both are FETCHED, exactly as the future API provider will
+   * obtain records — nothing is embedded here. */
+  var CATALOGUE_URLS = [
+    '../data/sterling-products.json',        // CMS-verified
+    '../data/sterling-test-catalogue.json',  // spreadsheet-inferred TEST inventory
+  ];
 
   var selected = null;      // normalized Product record, or null
+  var catalogueSize = 0;
   var provider = null;
   var listeners = [];
 
@@ -88,6 +103,7 @@
       return;
     }
     var p = selected;
+    var verified = p.provenance.technicalDataStatus === 'cms-verified';
     cardEl.classList.remove('hidden');
     cardEl.innerHTML =
       '<div class="sp-card-head">' +
@@ -95,7 +111,16 @@
         '<button type="button" class="sp-clear" id="spClear" title="Clear the selected product">Clear</button>' +
       '</div>' +
       '<div class="sp-name">' + esc(p.name) + '</div>' +
-      '<div class="sp-spec">' + esc(summaryLine(p)) + '</div>';
+      '<div class="sp-spec">' + esc(summaryLine(p)) + '</div>' +
+      /* Where these numbers came from. Quiet, but never absent: an inferred
+       * size must not be mistaken for a Sterling specification. */
+      '<div class="sp-conf ' + (verified ? 'is-verified' : 'is-test') + '" ' +
+        'title="' + (verified
+          ? 'Technical values read from Sterling CMS data.'
+          : 'Dimensions and print settings inferred from the product spreadsheets for testing. Not Sterling specifications.') + '">' +
+        '<span class="sp-conf-dot"></span>' +
+        (verified ? 'CMS-verified' : 'Test data &mdash; inferred size') +
+      '</div>';
     if (groupEl) groupEl.classList.add('has-product');
     var btn = $('spClear');
     if (btn) btn.addEventListener('click', function () { select(null); });
@@ -132,16 +157,28 @@
     }
     resultsEl.innerHTML = list.map(function (r) {
       var pages = r.pages === 1 ? '1 page' : r.pages + ' pages';
-      return '<button type="button" class="sp-result" data-id="' + esc(r.id) + '">' +
-        '<span class="sp-result-part">' + esc(r.partNumber) + '</span>' +
+      var verified = r.technicalDataStatus === 'cms-verified';
+      var round = r.shape === 'circle' ? ' · round' : '';
+      return '<button type="button" class="sp-result" data-id="' + esc(r.id) + '" ' +
+        'data-part="' + esc(r.partNumber) + '">' +
+        '<span class="sp-result-part">' + esc(r.partNumber) +
+          '<span class="sp-dot ' + (verified ? 'is-verified' : 'is-test') + '" title="' +
+          (verified ? 'CMS-verified' : 'Test data — inferred size') + '"></span></span>' +
         '<span class="sp-result-name">' + esc(r.name) + '</span>' +
-        '<span class="sp-result-spec">' + esc(num(r.widthIn) + ' × ' + num(r.heightIn) + ' ' + r.unit + ' · ' + pages) + '</span>' +
+        '<span class="sp-result-spec">' + esc(num(r.widthIn) + ' × ' + num(r.heightIn) + ' ' + r.unit + ' · ' + pages + round) + '</span>' +
         '</button>';
     }).join('');
     resultsEl.classList.remove('hidden');
     resultsEl.querySelectorAll('.sp-result').forEach(function (b) {
       b.addEventListener('click', function () { choose(b.dataset.id); });
     });
+    if (lastTotal > list.length) {
+      var more = document.createElement('div');
+      more.className = 'sp-empty';
+      more.textContent = 'Showing ' + list.length + ' of ' + lastTotal
+        + ' matches — keep typing to narrow.';
+      resultsEl.appendChild(more);
+    }
   }
 
   function choose(id) {
@@ -152,6 +189,7 @@
     });
   }
 
+  var lastTotal = 0;
   var searchTimer = null;
   function onSearchInput() {
     clearTimeout(searchTimer);
@@ -162,7 +200,7 @@
     if (!provider) return;
     setStatus('');
     provider.search(input.value, { limit: 25 })
-      .then(function (r) { renderResults(r.results); })
+      .then(function (r) { lastTotal = r.total; renderResults(r.results); })
       .catch(function (e) { setStatus(e.message || 'Product search failed.', true); });
   }
 
@@ -186,21 +224,30 @@
 
     /* The catalogue is FETCHED, not embedded — the same way the future API
      * provider will obtain records. */
-    fetch(CATALOGUE_URL)
-      .then(function (r) { return r.json(); })
-      .then(function (doc) {
-        provider = new window.SMPProductProvider.CatalogueProductProvider({
-          records: doc.products || [],
-          source: 'sterling-catalogue-local',
+    Promise.all(CATALOGUE_URLS.map(function (u) {
+      return fetch(u).then(function (r) { return r.json(); })
+        .catch(function (e) {
+          console.warn('[product-select] catalogue unavailable: ' + u, e);
+          return { products: [] };
         });
-        input.disabled = false;
-        input.placeholder = 'Search or select Sterling product…';
-      })
-      .catch(function (e) {
-        input.disabled = true;
-        setStatus('Product catalogue unavailable — the Generator still works without a product.', true);
-        console.warn('[product-select] catalogue load failed', e);
+    })).then(function (docs) {
+      var records = docs.reduce(function (all, d) {
+        return all.concat((d && d.products) || []);
+      }, []);
+      if (!records.length) throw new Error('no catalogue records');
+      provider = new window.SMPProductProvider.CatalogueProductProvider({
+        records: records,
+        source: 'sterling-catalogue-local',
       });
+      /* After de-duplication, not before — the two catalogues overlap. */
+      catalogueSize = provider.records.length;
+      input.disabled = false;
+      input.placeholder = 'Search ' + catalogueSize + ' Sterling products…';
+    }).catch(function (e) {
+      input.disabled = true;
+      setStatus('Product catalogue unavailable — the Generator still works without a product.', true);
+      console.warn('[product-select] catalogue load failed', e);
+    });
   }
 
   window.SMPProductSelection = {
@@ -221,6 +268,13 @@
     clear: function () { select(null); },
     /** Exposed so tests can assert which source is backing the picker. */
     providerId: function () { return provider ? provider.id : null; },
+    /** Number of records the picker is searching. */
+    catalogueSize: function () { return catalogueSize; },
+    /** Raw search passthrough, for tests and the preview harness. */
+    search: function (q, opts) {
+      return provider ? provider.search(q, opts)
+        : Promise.reject(new Error('Product catalogue not loaded yet.'));
+    },
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
