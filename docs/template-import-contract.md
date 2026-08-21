@@ -58,10 +58,19 @@ Content-Type: multipart/form-data
     "application": "templateGenerator",
     "version": 1,
     "partNumberSeenByClient": "BCDP-CM",
-    "technicalDataStatus": "cms-verified"
+    "technicalDataStatus": "cms-verified",
+    "orientationRequested": "landscape"
   }
 }
 ```
+
+`orientationRequested` (`"landscape"` | `"portrait"` | absent) is orientation
+INTENT, not geometry. The server should validate that the product supports the
+requested orientation (its own `landscapeAvailable` / `portraitAvailable`
+columns) and derive the oriented width/height itself from its own product
+record — orientation only ever swaps the two dimensions of the same physical
+product. Like everything else in `source`, it is never a trusted technical
+value.
 
 ### What the client deliberately does NOT send
 

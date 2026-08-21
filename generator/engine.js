@@ -854,6 +854,7 @@ async function handleGenerate(body, send) {
     referenceImage,
     referenceImageUrl,
     referenceMode,
+    orientation,
   } = body;
 
   if (!templateType) { send({ error: 'Template type is required.' }); return; }
@@ -866,9 +867,17 @@ async function handleGenerate(body, send) {
   const canvasWpx = trimWpx + bleedPx * 2;
   const canvasHpx = trimHpx + bleedPx * 2;
 
-  const dimensions = bleedPx > 0
+  /* Orientation is stated explicitly, and the width/height passed in are
+   * already ordered for it — the composition is CREATED for this orientation,
+   * never generated one way and rotated afterwards. */
+  const orientationWord = orientation === 'portrait' ? 'PORTRAIT (vertical)'
+    : orientation === 'landscape' ? 'LANDSCAPE (horizontal)'
+    : (trimHpx > trimWpx ? 'PORTRAIT (vertical)' : 'LANDSCAPE (horizontal)');
+  const orientationNote = ` — ${orientationWord} orientation: compose FOR this `
+    + `aspect; width and height above are final and must not be swapped`;
+  const dimensions = (bleedPx > 0
     ? `${canvasWpx} x ${canvasHpx} px (includes ${BLEED_IN}" bleed on all sides; trim/finished size ${trimWpx} x ${trimHpx} px)`
-    : `${width} x ${height} ${unit || 'px'}`;
+    : `${width} x ${height} ${unit || 'px'}`) + orientationNote;
 
   const colorParts = [];
   const colorLabels = ['Primary', 'Secondary', 'Tertiary', 'Quaternary'];

@@ -171,14 +171,23 @@ await check('every stored page is under the 60,000-byte TEXT limit', async () =>
 });
 
 await check('no authoritative product facts are sent to the server', async () => {
-  const blob = JSON.stringify(e2e.manifest);
+  /* source.orientationRequested is the ONE sanctioned orientation field: it is
+   * INTENT ('landscape'|'portrait'|null) for the server to validate, never a
+   * trusted dimension. It is removed before the fact scan so the scan still
+   * catches any other appearance of "orientation" as a technical value. */
+  const scanned = JSON.parse(JSON.stringify(e2e.manifest));
+  const intent = scanned.source.orientationRequested;
+  ok(intent === null || intent === 'landscape' || intent === 'portrait',
+     `orientationRequested must be intent-only, got ${JSON.stringify(intent)}`);
+  delete scanned.source.orientationRequested;
+  const blob = JSON.stringify(scanned);
   ['widthIn', 'heightIn', 'widthPx', 'heightPx', 'bleed', 'margins', 'shape',
    'designerMode', 'designerVariationCode', 'minPages', 'maxPages', 'orientation']
     .forEach((k) => ok(!blob.includes(k), `manifest must not carry the product fact "${k}"`));
   eq(Object.keys(e2e.manifest).sort(), ['assets', 'contractVersion', 'pages', 'productId', 'source'],
      'manifest top-level keys');
   ok(!('canvasProperties' in e2e.manifest.pages[0]), 'page canvasProperties are not sent');
-  return 'only productId, pages, assets and non-authoritative source metadata travel';
+  return 'only productId, pages, assets, orientation intent and audit metadata travel';
 });
 
 /* ==================== failure modes ==================== */

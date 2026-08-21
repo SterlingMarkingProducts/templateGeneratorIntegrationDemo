@@ -818,11 +818,21 @@ function buildSterlingTemplate(pages, payload) {
    * say). Fail loudly rather than emit a package that claims product 6505 at
    * the wrong size — a wrongly sized package is a wrongly printed job. */
   if (selected) {
-    const pw = selected.dimensions.widthPx, ph = selected.dimensions.heightPx;
+    /* The product's pixel size, ordered for the orientation this design was
+     * composed in. Orientation only ever SWAPS the two numbers — the check
+     * itself stays exact, so a real size disagreement is refused as loudly as
+     * before. */
+    const ov = (window.SMPOrientation && payload.orientation)
+      ? window.SMPOrientation.orientProduct(selected, payload.orientation)
+      : null;
+    const pw = ov ? ov.widthPx : selected.dimensions.widthPx;
+    const ph = ov ? ov.heightPx : selected.dimensions.heightPx;
     if (pw !== trimW || ph !== trimH) {
       throw new Error(
         `The design is ${trimW}×${trimH}px but the selected Sterling product `
-        + `${selected.partNumber} is ${pw}×${ph}px. Regenerate the design with the `
+        + `${selected.partNumber} is ${pw}×${ph}px`
+        + (ov ? ` in ${ov.orientation} orientation` : '')
+        + `. Regenerate the design with the `
         + `product selected, or clear the product, before pushing to the Designer.`);
     }
   }
@@ -847,6 +857,13 @@ function buildSterlingTemplate(pages, payload) {
     provenance: {
       sourceApplication: 'templateGenerator',
       sourceVersion: 1,
+      /* Orientation INTENT. The oriented geometry above already reflects it;
+       * this states it explicitly so the future Sterling import endpoint can
+       * validate that the product supports this orientation and derive the
+       * authoritative oriented geometry itself — client values stay untrusted. */
+      orientation: (window.SMPOrientation && window.SMPOrientation.isOrientation(payload.orientation))
+        ? payload.orientation
+        : (trimH > trimW ? 'portrait' : 'landscape'),
       businessName: payload.businessName || '',
     },
   });

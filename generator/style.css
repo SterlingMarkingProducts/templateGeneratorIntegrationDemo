@@ -447,6 +447,55 @@ html, body {
   color: #fff;
 }
 
+/* ── Orientation ───────────────────────────────────── */
+.orientation-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+/* Segmented buttons in the Generator's existing control language: same card
+   surface, border, radius and accent fill as the unit toggle, sized for a
+   label beside its glyph. */
+.orient-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition);
+}
+
+.orient-btn svg { flex-shrink: 0; }
+
+.orient-btn:hover:not(.active):not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.orient-btn.active {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* A product that supports only one orientation locks the other out. It stays
+   visible so the constraint is legible, rather than silently disappearing. */
+.orient-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ── Colour scheme ─────────────────────────────────── */
 .color-grid {
   display: grid;

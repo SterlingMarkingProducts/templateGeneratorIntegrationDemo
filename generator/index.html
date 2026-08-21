@@ -94,6 +94,31 @@
           </div>
         </div>
 
+        <!-- Orientation -->
+        <div class="field-group">
+          <label class="field-label" id="orientationLabel">Orientation</label>
+          <div class="orientation-toggle" id="orientationToggle" role="radiogroup"
+               aria-labelledby="orientationLabel">
+            <button type="button" class="orient-btn" data-orientation="landscape"
+                    role="radio" aria-checked="true">
+              <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true">
+                <rect x="0.75" y="0.75" width="18.5" height="12.5" rx="1.5"
+                      fill="none" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Horizontal
+            </button>
+            <button type="button" class="orient-btn" data-orientation="portrait"
+                    role="radio" aria-checked="false">
+              <svg width="14" height="20" viewBox="0 0 14 20" aria-hidden="true">
+                <rect x="0.75" y="0.75" width="12.5" height="18.5" rx="1.5"
+                      fill="none" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Vertical
+            </button>
+          </div>
+          <p class="field-hint hidden" id="orientationNote"></p>
+        </div>
+
         <!-- Industry -->
         <div class="field-group">
           <label class="field-label" for="industry">Industry <span class="optional-tag">optional</span></label>
@@ -439,6 +464,7 @@
        Loaded before the app so the Generator can delegate product facts
        and Sterling translation without knowing either. -->
   <script src="../integration/product-contract.js?v=int2"></script>
+  <script src="../integration/orientation.js?v=p3d1"></script>
   <script src="../integration/normalized-design.js?v=int1"></script>
   <script src="../integration/product-provider.js?v=int1"></script>
   <script src="../integration/adapters/sterling-legacy.js?v=int1"></script>
@@ -447,11 +473,11 @@
   <script src="../integration/adapters/transport-import.js?v=p3b1"></script>
   <script src="engine.js?v=tier1-30"></script>
   <script src="browser-api.js?v=tier1-30"></script>
-  <script src="app.js?v=p3c1"></script>
+  <script src="app.js?v=p3d1"></script>
   <script src="product-compat.js?v=tier1-30"></script>
-  <script src="push-to-designer.js?v=tier1-30"></script>
-  <script src="product-select.js?v=p3c1"></script>
-  <script src="blank-artboard.js?v=p3c1"></script>
-  <script src="demo-samples.js?v=p3c1"></script>
+  <script src="push-to-designer.js?v=p3d1"></script>
+  <script src="product-select.js?v=p3d1"></script>
+  <script src="blank-artboard.js?v=p3d1"></script>
+  <script src="demo-samples.js?v=p3d1"></script>
 </body>
 </html>

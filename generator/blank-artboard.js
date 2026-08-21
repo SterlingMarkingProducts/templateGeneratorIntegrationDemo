@@ -113,20 +113,31 @@
   /* ── Public API ──────────────────────────────────────── */
 
   /* Called with the normalized Product record, or null to clear. Reads only
-   * geometry and page count — no creative or print settings are derived here. */
-  function setProduct(product) {
+   * geometry and page count — no creative or print settings are derived here.
+   * `orientation` ('landscape'|'portrait') orders the SAME physical size; the
+   * physical dimensions and page count are untouched. */
+  function setProduct(product, orientation) {
     if (!product) {
       current = null;
       render();
       return null;
     }
     var d = product.dimensions || {};
+    var w = Number(d.widthIn) || 0, h = Number(d.heightIn) || 0;
+    var o = (typeof window !== 'undefined') && window.SMPOrientation;
+    if (o && o.isOrientation(orientation)) {
+      var od = o.orientDimensions({ widthIn: w, heightIn: h }, orientation);
+      w = od.widthIn; h = od.heightIn;
+    }
     var pages = (product.pages && product.pages.min) || 1;
     current = {
       partNumber: product.partNumber || '',
       name: product.name || '',
-      widthIn: Number(d.widthIn) || 0,
-      heightIn: Number(d.heightIn) || 0,
+      widthIn: w,
+      heightIn: h,
+      orientation: (o && o.isOrientation(orientation))
+        ? orientation
+        : (h > w ? 'portrait' : 'landscape'),
       pages: Math.max(1, Math.min(12, pages)),
     };
     if (!current.widthIn || !current.heightIn) { current = null; }

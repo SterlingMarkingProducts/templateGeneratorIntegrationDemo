@@ -163,7 +163,10 @@ await check('an inferred test product drives the Generator but stays non-authori
   eq(r.authoritative, false, 'must NOT be authoritative');
   eq(r.mode, 'Grayscale', 'inferred stamps use Grayscale, never SingleColour');
   ok(r.id < 0, 'inferred ids must be synthetic and negative');
-  eq(r.dims, ['0.5', '1.5'], 'the form must be driven by the inferred product');
+  /* Stamps default to LANDSCAPE (orientation milestone), so the form shows the
+   * same physical 0.5x1.5 size ordered 1.5 wide x 0.5 tall. The record above is
+   * untouched — orientation only reorders, never resizes. */
+  eq(r.dims, ['1.5', '0.5'], 'the form is driven by the product, ordered landscape');
   eq(r.ctxPart, 'B1438', 'the real part number reaches the design context');
   eq(r.ctxStatus, 'inferred-test', 'confidence travels with the context');
   ok(/is-test/.test(r.conf), 'the card must show the test-data marker');
@@ -262,7 +265,9 @@ await check('a product/canvas size disagreement is refused loudly', async () => 
     catch (e) { return { threw: true, message: e.message }; }
   });
   ok(r.threw, 'a mismatched package must not be produced');
-  ok(/1152×1536/.test(r.message) && /336×192/.test(r.message) && /BCDP-CM/.test(r.message),
+  /* The 12x16 sample declares itself portrait, so the guard names BCDP-CM's
+   * size in that orientation (192×336) — same physical card, same refusal. */
+  ok(/1152×1536/.test(r.message) && /(192×336|336×192)/.test(r.message) && /BCDP-CM/.test(r.message),
      'the error must name both sizes and the product: ' + r.message);
   return 'refused: ' + r.message.slice(0, 72) + '…';
 });

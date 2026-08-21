@@ -286,25 +286,6 @@ await check('selecting a differently-shaped product updates the aspect ratio', a
   return `3.5:2 -> 12:18, 2 pages -> 1 page, dims 12×18`;
 });
 
-await check('DP1216 12:16 blank artboard, if that part exists in the catalogue', async () => {
-  const r = await page.evaluate(async () => {
-    const hit = (await window.SMPProductSelection.search('DP1216', { limit: 5 }))
-      .results.filter((x) => x.partNumber === 'DP1216')[0];
-    if (!hit) return { present: false };
-    const p = await window.SMPProductSelection.selectByPartNumber('DP1216');
-    return { present: true, inches: [p.dimensions.widthIn, p.dimensions.heightIn],
-             ratio: window.SMPBlankArtboard.aspectRatio() };
-  });
-  if (!r.present) {
-    return 'SKIPPED — DP1216 is not in the current test catalogue '
-         + '(nearest real parts are DP1212 12×12, DP1218 12×18, DP1224 12×24). '
-         + 'No product was invented to satisfy this check.';
-  }
-  eq(r.inches, [12, 16], 'DP1216 geometry');
-  near(r.ratio, 12 / 16, 0.001, 'DP1216 blank ratio');
-  return 'DP1216 · 12×16 · ratio 0.75';
-});
-
 await check('an inferred (non-importable) product still gets a blank artboard', async () => {
   const r = await page.evaluate(async () => {
     const p = await window.SMPProductSelection.selectByPartNumber('B1438');

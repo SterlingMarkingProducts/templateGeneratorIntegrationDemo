@@ -38,6 +38,8 @@ const thumbBackFrame  = document.getElementById('thumbBackFrame');
 
 const emptyState      = document.getElementById('emptyState');
 const blankState      = document.getElementById('blankState');
+const orientationToggle = document.getElementById('orientationToggle');
+const orientationNote   = document.getElementById('orientationNote');
 const loadingState    = document.getElementById('loadingState');
 const resultState     = document.getElementById('resultState');
 
@@ -165,6 +167,13 @@ templateType.addEventListener('change', () => {
     productNote.textContent = '';
     productNote.classList.add('hidden');
   }
+  /* Standalone only: choosing a template type establishes that family's
+   * default orientation (the preset dimensions are then ordered for it).
+   * With a Sterling product selected the product owns orientation, and this
+   * change event is its own re-dispatch — leave it alone. */
+  if (!window.SMPProductSelection?.get?.()) {
+    resetOrientationToDefault();
+  }
 });
 
 /* ── Sterling product → technical document settings ──
@@ -197,6 +206,133 @@ function setProductBadge(group, on) {
   }
 }
 
+/* ── Orientation ───────────────────────────────────── */
+/* Which way round the design is composed. This is a real document setting, not
+ * a view transform: it reorders the SAME physical dimensions and feeds the form,
+ * the blank artboard, the generation context and the pushed package. It never
+ * changes the product, its id, its physical size, DPI, bleed amounts or
+ * production settings. */
+let orientation = 'landscape';
+/* Set once the user picks an orientation themselves. A manual choice survives
+ * unrelated form edits; only a product change or a demo load may re-establish a
+ * default. */
+let orientationTouched = false;
+
+const O = () => window.SMPOrientation;
+
+/** The subject orientation rules apply to: the selected product, else the
+ *  template type the Generator is standing alone with. */
+function orientationSubject() {
+  const p = window.SMPProductSelection?.get?.() || null;
+  if (p) return p;
+  const t = templateType?.value || '';
+  return t ? { templateType: t, productFamily: t } : null;
+}
+
+function orientationCaps() {
+  const o = O();
+  return o ? o.capabilitiesOf(orientationSubject()) : { landscape: true, portrait: true, locked: false };
+}
+
+function renderOrientationControl() {
+  if (!orientationToggle) return;
+  const caps = orientationCaps();
+  orientationToggle.querySelectorAll('.orient-btn').forEach(b => {
+    const v = b.dataset.orientation;
+    const allowed = v === 'landscape' ? caps.landscape : caps.portrait;
+    b.disabled = !allowed;
+    b.classList.toggle('active', v === orientation);
+    b.setAttribute('aria-checked', String(v === orientation));
+  });
+  if (!orientationNote) return;
+  if (caps.locked) {
+    const only = caps.lockedTo === 'portrait' ? 'vertical' : 'horizontal';
+    orientationNote.textContent = caps.restrictionSource === 'cms-verified'
+      ? `This Sterling product is only available ${only}.`
+      : `The test data for this product lists ${only} only.`;
+    orientationNote.classList.remove('hidden');
+  } else {
+    orientationNote.textContent = '';
+    orientationNote.classList.add('hidden');
+  }
+}
+
+/** Write the oriented dimensions into the form. The physical size is unchanged;
+ *  only the ordering of width and height can differ. With a product selected
+ *  the product's inch dimensions are authoritative; standalone, the user's own
+ *  numbers are swapped in place, in whatever unit they typed them. */
+function applyOrientationToDimensions() {
+  const o = O();
+  if (!o) return;
+  const p = window.SMPProductSelection?.get?.() || null;
+  if (p) {
+    const d = o.orientDimensions(p.dimensions, orientation);
+    setDimensionsIn(d.widthIn, d.heightIn);
+    return;
+  }
+  const w = parseFloat(dimWidth.value), h = parseFloat(dimHeight.value);
+  if (!w || !h) return;
+  /* A swap is unit-agnostic: the two numbers trade places, the unit stays. */
+  const d = o.orientDimensions({ widthIn: w, heightIn: h }, orientation);
+  dimWidth.value = d.widthIn;
+  dimHeight.value = d.heightIn;
+}
+
+/** Both dimension inputs, in inches, with the unit toggle pinned to inches. */
+function setDimensionsIn(widthIn, heightIn) {
+  dimWidth.value = widthIn;
+  dimHeight.value = heightIn;
+  selectedUnit = 'in';
+  unitToggle.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  unitToggle.querySelector('[data-unit="in"]')?.classList.add('active');
+}
+
+/**
+ * Set the orientation.
+ *   source 'user'    — a deliberate click; remembered across unrelated edits.
+ *   source 'default' — a product change, demo load or template-type change may
+ *                      establish a default, but must not overwrite a choice the
+ *                      user already made unless `force` is set.
+ */
+function setOrientation(next, source, force) {
+  const o = O();
+  if (!o) return orientation;
+  const caps = orientationCaps();
+  let want = o.isOrientation(next) ? next : orientation;
+  if (caps.locked) want = caps.lockedTo;
+  else if (want === 'landscape' && !caps.landscape) want = 'portrait';
+  else if (want === 'portrait' && !caps.portrait) want = 'landscape';
+
+  if (source === 'default' && orientationTouched && !force) {
+    /* Keep the user's choice, but it still has to be legal for this product. */
+    if (!caps.locked) { renderOrientationControl(); return orientation; }
+  }
+  orientation = want;
+  if (source === 'user') orientationTouched = true;
+  if (force) orientationTouched = false;
+  renderOrientationControl();
+  applyOrientationToDimensions();
+  syncBlankArtboard(window.SMPProductSelection?.get?.() || null);
+  return orientation;
+}
+
+/** Re-establish the default orientation for the current subject. Used when the
+ *  product changes, a demo loads, or the product is cleared. */
+function resetOrientationToDefault(preferred) {
+  const o = O();
+  if (!o) return orientation;
+  const subject = orientationSubject();
+  const next = (o.isOrientation(preferred) ? preferred : null)
+    || o.defaultOrientationFor(subject) || orientation;
+  return setOrientation(next, 'default', true);
+}
+
+orientationToggle?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.orient-btn');
+  if (!btn || btn.disabled) return;
+  setOrientation(btn.dataset.orientation, 'user');
+});
+
 function applyProductToForm(product) {
   const groups = PRODUCT_DRIVEN_GROUPS();
 
@@ -210,15 +346,22 @@ function applyProductToForm(product) {
     dimWidth.readOnly = false;
     dimHeight.readOnly = false;
     templateType.disabled = false;
+    /* No stale product orientation state: fall back to the template-type
+     * default (or keep landscape if there is no subject at all). */
+    resetOrientationToDefault();
     return;
   }
 
-  /* Geometry straight from the product record — never from a preset. */
-  dimWidth.value  = product.dimensions.widthIn;
-  dimHeight.value = product.dimensions.heightIn;
-  selectedUnit = 'in';
-  unitToggle.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
-  unitToggle.querySelector('[data-unit="in"]')?.classList.add('active');
+  /* A product change establishes ITS default orientation (family rule, or the
+   * product's native ordering for unlisted families). This deliberately
+   * overrides a manual choice made for the PREVIOUS product. Locked products
+   * clamp inside setOrientation. */
+  resetOrientationToDefault(pendingDemoOrientation);
+  pendingDemoOrientation = null;
+
+  /* Geometry straight from the product record, ordered for the orientation —
+   * the same physical size either way. */
+  applyOrientationToDimensions();
 
   /* Creative family, if this product maps to one the Generator knows. */
   const tt = window.SMPProductSelection?.templateTypeFor(product) || '';
@@ -227,11 +370,7 @@ function applyProductToForm(product) {
     /* Re-run the Generator's own hint logic, then re-apply product geometry —
      * the preset must not win over the real product. */
     templateType.dispatchEvent(new Event('change'));
-    dimWidth.value  = product.dimensions.widthIn;
-    dimHeight.value = product.dimensions.heightIn;
-    selectedUnit = 'in';
-    unitToggle.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
-    unitToggle.querySelector('[data-unit="in"]')?.classList.add('active');
+    applyOrientationToDimensions();
   }
 
   dimWidth.readOnly = true;
@@ -240,12 +379,17 @@ function applyProductToForm(product) {
   groups.forEach(g => { g.classList.add('is-product-driven'); setProductBadge(g, true); });
 }
 
+/* A demo may carry its own preferred orientation; the demo loader parks it here
+ * just before selecting the product, and applyProductToForm consumes it. */
+let pendingDemoOrientation = null;
+function setPendingDemoOrientation(o) { pendingDemoOrientation = o || null; }
+
 /* Refresh the product-driven blank artboard. It is shown only while there is
  * nothing generated to show: once a real design exists the result state owns
  * the preview and the blank state stays hidden. Passing null clears it, so no
  * stale product geometry survives a product change or a Clear. */
 function syncBlankArtboard(product) {
-  const shown = window.SMPBlankArtboard?.setProduct(product || null) || null;
+  const shown = window.SMPBlankArtboard?.setProduct(product || null, orientation) || null;
   const hasResult = !resultState.classList.contains('hidden');
   const isLoading = !loadingState.classList.contains('hidden');
   if (hasResult || isLoading) return;
@@ -610,9 +754,14 @@ function getColors() {
 function buildPayload() {
   return {
     templateType: templateType.value,
+    /* width/height are already ORIENTED — the form fields hold the physical
+     * size ordered for the selected orientation, so generation composes for
+     * the canvas the user actually chose. `orientation` travels alongside so
+     * the engine and the import pipeline can state the intent explicitly. */
     width:        parseFloat(dimWidth.value) || null,
     height:       parseFloat(dimHeight.value) || null,
     unit:         selectedUnit,
+    orientation:  orientation,
     industry:     industry.value.trim(),
     businessName: businessName.value.trim(),
     colors:       getColors(),
@@ -689,7 +838,7 @@ function showPanel(name) {
  * data exists yet. */
 function showIdlePanel() {
   const p = window.SMPProductSelection?.get?.() || null;
-  const shown = window.SMPBlankArtboard?.setProduct(p) || null;
+  const shown = window.SMPBlankArtboard?.setProduct(p, orientation) || null;
   showPanel(shown ? 'blank' : 'empty');
 }
 

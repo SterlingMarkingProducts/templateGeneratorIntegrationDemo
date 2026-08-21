@@ -8,7 +8,12 @@
  * data/test-templates.json:
  *
  *     "shortcut": true,
- *     "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "..." }
+ *     "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "..." },
+ *     "orientation": "landscape"        // optional per-demo preference
+ *
+ * A demo may name its own preferred orientation; without one, the bound
+ * product's family default applies (BCDP-CM -> landscape). Nothing here says
+ * "demos are landscape" globally.
  *
  * There is deliberately no global "all demos are BCDP-CM" rule. A demo names
  * the Sterling product it belongs to, or names none and stays standalone; a
@@ -30,6 +35,12 @@
   function bindProduct(sample) {
     var part = sample.product && sample.product.partNumber;
     if (!part || !window.SMPProductSelection) return Promise.resolve(null);
+    /* A demo's own orientation preference, if it declares one, is consumed by
+     * the product-selection handler; otherwise the product's family default
+     * applies there. */
+    if (typeof setPendingDemoOrientation === 'function') {
+      setPendingDemoOrientation(sample.orientation || null);
+    }
     return window.SMPProductSelection.selectByPartNumber(part)
       .catch(function (e) {
         console.warn('[demo-samples] product ' + part + ' unavailable for '
@@ -43,6 +54,9 @@
     lastPayload = {
       templateType: sample.templateType,
       width: sample.width, height: sample.height, unit: 'in',
+      /* The orientation this sample's HTML was authored in. */
+      orientation: sample.orientation
+        || (sample.height > sample.width ? 'portrait' : 'landscape'),
       doubleSided: !!sample.doubleSided,
       businessName: sample.businessName || 'Demo Co',
     };

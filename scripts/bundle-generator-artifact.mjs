@@ -118,10 +118,6 @@ const strip = `<style>
   #pvBar button:hover { background: #212932; border-color: #3d4854; }
   #pvBar button:focus-visible { outline: 2px solid var(--pv-live); outline-offset: 2px; }
   #pvStatus { color: var(--pv-live); font-weight: 600; }
-  #pvBar .pvNote {
-    margin-left: auto; max-width: 44ch;
-    color: var(--pv-mute); font-weight: 400; font-size: 11px; line-height: 1.45;
-  }
   @media (prefers-reduced-motion: reduce) {
     #pvBar button { transition: none; }
   }
@@ -133,14 +129,13 @@ const strip = `<style>
 </style>
 <div id="pvBar">
   <span class="pvLabel">Preview steps</span>
-  <button data-step="A">A · Initial</button>
-  <button data-step="B">B · Select BCDP-CM</button>
-  <button data-step="C">C · Select DP1218 (12×18)</button>
-  <button data-step="D">D · Click Axiom demo</button>
-  <button data-step="E">E · Shortcut list</button>
+  <button data-step="A">A · Select BCDP-CM</button>
+  <button data-step="B">B · BCDP-CM → Vertical</button>
+  <button data-step="D">D · Select 212-C sign</button>
+  <button data-step="E">E · 212-C → Horizontal</button>
+  <button data-step="F">F · Select 212B23 banner</button>
+  <button data-step="H">H · Click Axiom demo</button>
   <span id="pvStatus" role="status" aria-live="polite"></span>
-  <span class="pvNote">Drives the real Generator below through its own public APIs.
-    DP1216 is not in the test catalogue, so C uses the real DP1218 (12&nbsp;×&nbsp;18).</span>
 </div>
 <script>
 (function () {
@@ -160,41 +155,53 @@ const strip = `<style>
   }
   var STEPS = {
     A: function () {
-      window.SMPProductSelection.clear();
-      var r = document.getElementById('resetBtn');
-      if (r) r.click();
-      st('A — no product selected, standalone empty state');
+      window.SMPProductSelection.selectByPartNumber('BCDP-CM').then(function (p) {
+        st('A — ' + p.partNumber + ' · ' + p.dimensions.widthIn + '×' + p.dimensions.heightIn
+           + 'in · ' + p.pages.min + ' pages · ' + currentOrientation());
+      });
     },
     B: function () {
-      window.SMPProductSelection.selectByPartNumber('BCDP-CM').then(function (p) {
-        st('B — ' + p.partNumber + ' · ' + p.dimensions.widthIn + '×' + p.dimensions.heightIn
-           + 'in · ' + p.pages.min + ' blank pages');
-      });
-    },
-    C: function () {
-      window.SMPProductSelection.selectByPartNumber('DP1218').then(function (p) {
-        st('C — ' + p.partNumber + ' · ' + p.dimensions.widthIn + '×' + p.dimensions.heightIn
-           + 'in · ' + p.pages.min + ' blank page');
-      });
+      clickOrientation('portrait');
+      st('B — BCDP-CM vertical · ' + formDims());
     },
     D: function () {
+      window.SMPProductSelection.selectByPartNumber('212-C').then(function () {
+        st('D — 212-C · ' + formDims() + ' · ' + currentOrientation());
+      });
+    },
+    E: function () {
+      clickOrientation('landscape');
+      st('E — 212-C horizontal · ' + formDims());
+    },
+    F: function () {
+      window.SMPProductSelection.selectByPartNumber('212B23').then(function () {
+        st('F — 212B23 · ' + formDims() + ' · ' + currentOrientation());
+      });
+    },
+    H: function () {
       var b = [].slice.call(document.querySelectorAll('button')).filter(function (x) {
         return x.textContent.trim().indexOf('Load sample: Axiom') === 0; })[0];
       if (!b) return st('Axiom shortcut not found');
       b.click();
       setTimeout(function () {
         var p = window.SMPProductSelection.get();
-        st('D — Axiom loaded; product auto-selected: ' + (p ? p.partNumber + ' / id ' + p.id : 'none'));
+        st('H — Axiom · ' + (p ? p.partNumber + ' / id ' + p.id : 'no product')
+           + ' · ' + currentOrientation());
       }, 1200);
     },
-    E: function () {
-      var names = window.SMPDemoSamples.list().map(function (s) { return s.name; });
-      st('E — ' + names.length + ' shortcuts: ' + names.join(' · '));
-      var el = document.querySelector('#generateBtn');
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
-    },
   };
+  function currentOrientation() {
+    var b = document.querySelector('#orientationToggle .orient-btn.active');
+    return b ? b.textContent.trim().toLowerCase() : '?';
+  }
+  function formDims() {
+    return document.getElementById('dimWidth').value + '×'
+         + document.getElementById('dimHeight').value + 'in';
+  }
+  function clickOrientation(o) {
+    var b = document.querySelector('#orientationToggle [data-orientation="' + o + '"]');
+    if (b && !b.disabled) b.click();
+  }
   document.getElementById('pvBar').addEventListener('click', function (e) {
     var s = e.target && e.target.getAttribute && e.target.getAttribute('data-step');
     if (s && STEPS[s]) whenReady(STEPS[s]);
@@ -207,8 +214,7 @@ const strip = `<style>
   window.addEventListener('resize', sizeBar);
   sizeBar();
   setTimeout(sizeBar, 300);
-  whenReady(function () { st('ready — ' + window.SMPProductSelection.catalogueSize()
-    + ' products, ' + window.SMPDemoSamples.list().length + ' demo shortcuts'); });
+  whenReady(function () { st('ready'); });
 })();
 </script>`;
 

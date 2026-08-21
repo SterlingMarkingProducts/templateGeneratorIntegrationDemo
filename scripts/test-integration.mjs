@@ -83,6 +83,8 @@ ctx.on('request', (r) => {
 const VOLATILE = new Set([
   'templateKey',      // 'TG-' + Date.now().toString(36)
   'sourceHtml',       // provenance blob, only present after Generate JSON
+  'orientation',      // documented additive field (canvasProperties.sourceMeta);
+                      // goldens predate it. Covered by scripts/test-orientation.mjs.
 ]);
 
 /* Embedded raster payloads are ~99% of a captured design (one Art-Deco card is

@@ -131,6 +131,15 @@
          * server must not read a technical value from here. */
         partNumberSeenByClient: product.partNumber,
         technicalDataStatus: product.provenance.technicalDataStatus,
+        /* Orientation INTENT ('landscape'|'portrait'). The server validates
+         * that the product supports it and derives the authoritative oriented
+         * geometry itself — this never carries trusted dimensions. Read from
+         * the template's own sourceMeta so the intent and the geometry cannot
+         * disagree in transit. */
+        orientationRequested:
+          (template.canvasProperties
+            && template.canvasProperties.sourceMeta
+            && template.canvasProperties.sourceMeta.orientation) || null,
       },
     };
 

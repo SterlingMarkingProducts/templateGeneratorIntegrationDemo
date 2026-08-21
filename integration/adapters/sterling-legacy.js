@@ -226,6 +226,11 @@
         templateType: pc.templateType || '',
         widthIn: d.widthIn,
         heightIn: d.heightIn,
+        /* Which way round this design was composed. Intent only: geometry above
+         * is already oriented, and the server side remains authoritative for
+         * technical product values. */
+        orientation: prov.orientation
+          || (trimH > trimW ? 'portrait' : 'landscape'),
         businessName: prov.businessName || '',
       },
     };
