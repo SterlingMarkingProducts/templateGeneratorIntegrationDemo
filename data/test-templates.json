@@ -4,6 +4,8 @@
   {
    "id": "sample-axiom",
    "name": "Axiom (Neo-Brutalism)",
+   "shortcut": true,
+   "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "Vibrant Colour Business Cards - Classic Matte" },
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -14,6 +16,8 @@
   {
    "id": "sample-standout",
    "name": "Stand Out (Blue Wave)",
+   "shortcut": true,
+   "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "Vibrant Colour Business Cards - Classic Matte" },
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -24,6 +28,8 @@
   {
    "id": "sample-averywillow",
    "name": "Avery Willow (Concrete Gold)",
+   "shortcut": true,
+   "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "Vibrant Colour Business Cards - Classic Matte" },
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -34,6 +40,7 @@
   {
    "id": "sample-business-card",
    "name": "Business card 3.5\" x 2\"",
+   "shortcut": false,
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -44,6 +51,7 @@
   {
    "id": "sample-sign",
    "name": "Sign 12\" x 16\"",
+   "shortcut": false,
    "templateType": "Sign",
    "width": 12,
    "height": 16,
@@ -54,6 +62,8 @@
   {
    "id": "sample-studionorth",
    "name": "Studio North (Primary Pop)",
+   "shortcut": true,
+   "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "Vibrant Colour Business Cards - Classic Matte" },
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -64,6 +74,8 @@
   {
    "id": "sample-solco",
    "name": "Sol & Co. (Playful)",
+   "shortcut": true,
+   "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "Vibrant Colour Business Cards - Classic Matte" },
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,
@@ -74,6 +86,7 @@
   {
    "id": "sample-artdeco",
    "name": "Atelier Noir (Art Deco)",
+   "shortcut": false,
    "templateType": "Business Card",
    "width": 3.5,
    "height": 2,

@@ -37,6 +37,7 @@ const thumbFrontFrame = document.getElementById('thumbFrontFrame');
 const thumbBackFrame  = document.getElementById('thumbBackFrame');
 
 const emptyState      = document.getElementById('emptyState');
+const blankState      = document.getElementById('blankState');
 const loadingState    = document.getElementById('loadingState');
 const resultState     = document.getElementById('resultState');
 
@@ -199,6 +200,11 @@ function setProductBadge(group, on) {
 function applyProductToForm(product) {
   const groups = PRODUCT_DRIVEN_GROUPS();
 
+  /* Presentation only. Keeps the blank artboard in step with the selected
+   * product — including clearing it — but never disturbs a design that has
+   * already been generated. */
+  syncBlankArtboard(product);
+
   if (!product) {
     groups.forEach(g => { g.classList.remove('is-product-driven'); setProductBadge(g, false); });
     dimWidth.readOnly = false;
@@ -232,6 +238,18 @@ function applyProductToForm(product) {
   dimHeight.readOnly = true;
   templateType.disabled = true;
   groups.forEach(g => { g.classList.add('is-product-driven'); setProductBadge(g, true); });
+}
+
+/* Refresh the product-driven blank artboard. It is shown only while there is
+ * nothing generated to show: once a real design exists the result state owns
+ * the preview and the blank state stays hidden. Passing null clears it, so no
+ * stale product geometry survives a product change or a Clear. */
+function syncBlankArtboard(product) {
+  const shown = window.SMPBlankArtboard?.setProduct(product || null) || null;
+  const hasResult = !resultState.classList.contains('hidden');
+  const isLoading = !loadingState.classList.contains('hidden');
+  if (hasResult || isLoading) return;
+  showPanel(shown ? 'blank' : 'empty');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -661,6 +679,18 @@ function showPanel(name) {
   emptyState.classList.toggle('hidden',   name !== 'empty');
   loadingState.classList.toggle('hidden', name !== 'loading');
   resultState.classList.toggle('hidden',  name !== 'result');
+  blankState?.classList.toggle('hidden',  name !== 'blank');
+  if (name === 'blank') window.SMPBlankArtboard?.relayout?.();
+}
+
+/* The pre-generation state. With a Sterling product selected the preview shows
+ * that product's blank artboard; with no product it is the standalone empty
+ * state exactly as before. Either way this is presentation only — no design
+ * data exists yet. */
+function showIdlePanel() {
+  const p = window.SMPProductSelection?.get?.() || null;
+  const shown = window.SMPBlankArtboard?.setProduct(p) || null;
+  showPanel(shown ? 'blank' : 'empty');
 }
 
 /* ── Subline cycling ───────────────────────────────── */
@@ -1305,7 +1335,7 @@ async function generate(payload) {
 
   } catch (err) {
     showError(err.message || 'Something went wrong. Please try again.');
-    showPanel('empty');
+    showIdlePanel();
   } finally {
     stopSublineCycle();
     clearInterval(progressInterval);
@@ -1365,7 +1395,7 @@ resetBtn.addEventListener('click', () => {
 
   setJsonState('generate');
   resetProgress();
-  showPanel('empty');
+  showIdlePanel();
   hideError();
 });
 

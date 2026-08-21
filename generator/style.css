@@ -765,6 +765,81 @@ html, body {
   color: var(--accent-2);
 }
 
+/* ── Product blank artboard (presentation only) ────── */
+.blank-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px 28px;
+  min-height: 0;
+  text-align: center;
+  animation: fade-in 0.35s ease;
+}
+
+.blank-stage {
+  --ba-gap: 18px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ba-gap);
+}
+
+.ba-page {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The artboard itself: blank white paper at the product's aspect ratio.
+   Its pixel size is set by blank-artboard.js (scaled to fit, never native). */
+.ba-board {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.13), 0 1px 3px rgba(0, 0, 0, 0.09);
+}
+
+.ba-label {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.blank-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font);
+  font-size: 12px;
+}
+
+.ba-part {
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.ba-dims { color: var(--text-muted); }
+
+.blank-hint {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 42ch;
+}
+
 /* ── Loading state ─────────────────────────────────── */
 .loading-state {
   flex: 1;

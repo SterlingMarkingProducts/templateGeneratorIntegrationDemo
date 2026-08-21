@@ -305,6 +305,14 @@
         </ul>
       </div>
 
+      <!-- Product-driven blank artboard. PRESENTATION ONLY: plain DOM, never
+           part of the design model, the adapter, asset extraction or export. -->
+      <div class="blank-state hidden" id="blankState">
+        <div class="blank-stage" id="blankStage"></div>
+        <div class="blank-caption" id="blankCaption"></div>
+        <p class="blank-hint">Blank artboard at this product’s size. Click <strong>Generate Design</strong> to fill it.</p>
+      </div>
+
       <!-- Loading state -->
       <div class="loading-state hidden" id="loadingState">
         <div class="loading-progress-wrap">
@@ -439,10 +447,11 @@
   <script src="../integration/adapters/transport-import.js?v=p3b1"></script>
   <script src="engine.js?v=tier1-30"></script>
   <script src="browser-api.js?v=tier1-30"></script>
-  <script src="app.js?v=tier1-30"></script>
+  <script src="app.js?v=p3c1"></script>
   <script src="product-compat.js?v=tier1-30"></script>
   <script src="push-to-designer.js?v=tier1-30"></script>
-  <script src="product-select.js?v=p2b1"></script>
-  <script src="demo-samples.js?v=tier1-30"></script>
+  <script src="product-select.js?v=p3c1"></script>
+  <script src="blank-artboard.js?v=p3c1"></script>
+  <script src="demo-samples.js?v=p3c1"></script>
 </body>
 </html>

@@ -57,9 +57,17 @@ const load = async () => {
   await page.goto(`${base}/generator/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(3000);
 };
-const loadSample = async (prefix) => {
-  await page.evaluate((p) => [...document.querySelectorAll('button')]
-    .find((b) => b.textContent.trim().startsWith('Load sample: ' + p))?.click(), prefix);
+/* Design-only load by fixture id. Three of these designs are no longer
+ * user-facing shortcuts, and loading design-only leaves whatever product the
+ * test has selected untouched — which is exactly what these checks assert on.
+ * The demo shortcut's own product binding is covered by
+ * scripts/test-demo-product-binding.mjs. */
+const loadSample = async (id) => {
+  await page.waitForFunction(
+    (sid) => (window.SMPDemoSamples?.all?.() || []).some((s) => s.id === sid),
+    id, { timeout: 15000 },
+  );
+  await page.evaluate((sid) => window.SMPDemoSamples.loadDesignOnly(sid), id);
   await page.waitForTimeout(3000);
 };
 const convert = () => page.evaluate(async () => {
@@ -164,7 +172,7 @@ await check('an inferred test product drives the Generator but stays non-authori
 });
 
 await check('an inferred product contributes no productList id', async () => {
-  await loadSample('Business card');
+  await loadSample('sample-business-card');
   const r = await page.evaluate(async () => {
     await window.SMPProductSelection.selectByPartNumber('BCLST-E');   // 3.5x2 inferred card
     try {
@@ -235,7 +243,7 @@ await check('selecting BCDP-CM drives the technical document settings', async ()
 
 /* ---- the pushed package carries the product ---------------------- */
 await check('the pushed package identifies products.id 6505 / BCDP-CM', async () => {
-  await loadSample('Axiom');
+  await loadSample('sample-axiom');
   const t = await convert();
   eq(t.productList, [6505], 'productList');
   eq(t.productNumber, 'BCDP-CM', 'canvasProperties.productNumber');
@@ -248,7 +256,7 @@ await check('the pushed package identifies products.id 6505 / BCDP-CM', async ()
 
 /* ---- mismatched geometry is refused, never silently shipped ------ */
 await check('a product/canvas size disagreement is refused loudly', async () => {
-  await loadSample('Sign');            // 12×16in, while BCDP-CM is 3.5×2in
+  await loadSample('sample-sign');            // 12×16in, while BCDP-CM is 3.5×2in
   const r = await page.evaluate(async () => {
     try { await window.SMPPush.convertCurrentDesign(); return { threw: false }; }
     catch (e) { return { threw: true, message: e.message }; }
@@ -276,7 +284,7 @@ await check('clearing the product restores standalone behaviour', async () => {
   eq(s.badges, 0, 'badges removed');
 
   /* and the package goes back to carrying no product identity */
-  await loadSample('Axiom');
+  await loadSample('sample-axiom');
   const t = await convert();
   eq(t.productList, [], 'productList empty with no product selected');
   eq(t.productNumber, '', 'productNumber empty with no product selected');

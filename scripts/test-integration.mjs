@@ -35,6 +35,17 @@ const SAMPLES = [
   'Sign 12" x 16"',
 ];
 
+/* Sample name -> the id used by the Generator's fixture loader. Three of these
+ * designs are no longer user-facing demo shortcuts; they remain regression
+ * fixtures and are loaded by id. Golden-master filenames stay name-derived, so
+ * the existing goldens are unaffected. */
+const SAMPLE_IDS = {
+  'Axiom (Neo-Brutalism)':    'sample-axiom',
+  'Atelier Noir (Art Deco)':  'sample-artdeco',
+  'Business card 3.5" x 2"':  'sample-business-card',
+  'Sign 12" x 16"':           'sample-sign',
+};
+
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
   '.json': 'application/json', '.svg': 'image/svg+xml', '.woff2': 'font/woff2',
@@ -130,22 +141,17 @@ function diff(a, b, path = '', out = []) {
 async function generateAndConvert(page, sampleName) {
   await page.goto(`${base}/generator/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => !!window.SMPPush?.convertCurrentDesign, { timeout: 15000 });
-  /* Click the Generator's OWN sample button — same state a real generation
-   * reaches. Matched by exact textContent because several sample names contain
-   * double quotes (e.g. 'Business card 3.5" x 2"'), which break text selectors. */
+  /* Load through the Generator's OWN sample path — the same state a real
+   * generation reaches — but WITHOUT the demo's product binding, so the golden
+   * masters keep comparing design conversion alone. Per-demo product binding
+   * is covered by scripts/test-demo-product-binding.mjs. */
+  const id = SAMPLE_IDS[sampleName];
+  if (!id) throw new Error(`no fixture id for sample: ${sampleName}`);
   await page.waitForFunction(
-    (name) => [...document.querySelectorAll('button')]
-      .some((b) => b.textContent.trim() === 'Load sample: ' + name),
-    sampleName, { timeout: 15000 },
+    (sid) => (window.SMPDemoSamples?.all?.() || []).some((s) => s.id === sid),
+    id, { timeout: 15000 },
   );
-  const clicked = await page.evaluate((name) => {
-    const b = [...document.querySelectorAll('button')]
-      .find((x) => x.textContent.trim() === 'Load sample: ' + name);
-    if (!b) return false;
-    b.click();
-    return true;
-  }, sampleName);
-  if (!clicked) throw new Error(`sample button not found: ${sampleName}`);
+  await page.evaluate((sid) => window.SMPDemoSamples.loadDesignOnly(sid), id);
   /* `generatedHtml` is a script-scoped `let` in app.js, so it is NOT a window
    * property. The Generator's own readiness signal is the result panel. */
   await page.waitForSelector('#resultState:not(.hidden)', { timeout: 15000 });

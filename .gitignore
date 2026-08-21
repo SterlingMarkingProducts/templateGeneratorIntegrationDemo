@@ -6,3 +6,4 @@ scripts/_*.mjs
 __pycache__/
 *.pyc
 scripts/_shot-*.png
+scripts/__reports__/generator-artifact.html

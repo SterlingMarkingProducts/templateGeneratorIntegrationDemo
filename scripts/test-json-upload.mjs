@@ -23,7 +23,8 @@ const check=(n,c,d='')=>{ (c?pass++:fail++); console.log(`${c?'PASS':'FAIL'}  ${
 
 await page.goto(`${base}/generator/index.html`, { waitUntil:'domcontentloaded' });
 await page.waitForTimeout(1500);
-await page.getByRole('button', { name:/Load sample: Business card/i }).click();
+await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0, { timeout: 15000 });
+await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-business-card'));
 await page.waitForTimeout(2500);
 
 // 1) Download JSON: click builds the template (loading→download), then inspect generatedJson

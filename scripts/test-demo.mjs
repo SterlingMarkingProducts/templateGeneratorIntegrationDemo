@@ -93,10 +93,11 @@ check('No API key shipped in demo', !apiSrc.includes('DEFAULT_KEY_PARTS') && api
 // 3. "Generate" a sample design (no API key)
 const sampleBtns = await page.evaluate(() =>
   [...document.querySelectorAll('button')].filter(b => b.textContent.startsWith('Load sample:')).map(b => b.textContent));
-check('3. Sample-design shortcuts present', sampleBtns.length >= 8, sampleBtns.length + ' shortcuts');
-await page.evaluate(() => {
-  [...document.querySelectorAll('button')].find(b => b.textContent.includes('Business card')).click();
-});
+check('3. Sample-design shortcuts present', sampleBtns.length === 5, sampleBtns.length + ' shortcuts');
+/* The 'Business card 3.5" x 2"' sample is no longer a user-facing shortcut; it
+   remains a regression fixture, loaded here through the fixture API. */
+await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0, { timeout: 15000 });
+await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-business-card'));
 await page.waitForTimeout(900);
 check('Sample design renders in preview', await page.evaluate(() => {
   const f = document.getElementById('previewFrame');
@@ -199,9 +200,9 @@ const designerText = await designer.evaluate(() => document.body.innerText);
 await designer.close();
 await realPage.close(); // popup windows are name-reused; close so the next push emits a fresh page event
 await page.bringToFront();
-await page.evaluate(() => {
-  [...document.querySelectorAll('button')].find(b => b.textContent.includes('Sign')).click();
-});
+/* The 12x16 Sign sample is no longer a user-facing shortcut; it stays a
+   regression fixture and is loaded here through the fixture API. */
+await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-sign'));
 await page.waitForTimeout(900);
 const [realPage2] = await Promise.all([ctx.waitForEvent('page'), page.click('#pushToDesignerBtn')]);
 await realPage2.waitForLoadState('domcontentloaded');

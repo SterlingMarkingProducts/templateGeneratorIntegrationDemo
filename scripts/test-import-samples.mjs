@@ -47,12 +47,21 @@ await page.waitForTimeout(3000);
 await page.addScriptTag({ url: '/integration/adapters/mock-template-import.js' });
 await page.waitForTimeout(200);
 
-const SAMPLES = ['Axiom', 'Atelier Noir', 'Business card', 'Sign 12'];
+/* Loaded by fixture id: only Axiom is still a user-facing demo shortcut, the
+ * other three remain regression fixtures. Design-only load — this test clears
+ * and re-selects the product itself below. */
+const SAMPLES = [
+  ['Axiom',        'sample-axiom'],
+  ['Atelier Noir', 'sample-artdeco'],
+  ['Business card', 'sample-business-card'],
+  ['Sign 12',      'sample-sign'],
+];
 const rows = [];
 
-for (const sample of SAMPLES) {
-  await page.evaluate((s) => [...document.querySelectorAll('button')]
-    .find((b) => b.textContent.trim().startsWith('Load sample: ' + s))?.click(), sample);
+await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0, { timeout: 15000 });
+
+for (const [sample, sampleId] of SAMPLES) {
+  await page.evaluate((sid) => window.SMPDemoSamples.loadDesignOnly(sid), sampleId);
   await page.waitForTimeout(3000);
 
   const r = await page.evaluate(async (name) => {

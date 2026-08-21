@@ -3,11 +3,40 @@
  * Lets anyone exercise the full Push to Designer workflow with NO API key —
  * it loads a pre-built sample design (fetched from ../data/test-templates.json)
  * into the same state the generator reaches after a real AI generation.
+ *
+ * Each sample carries its OWN optional product binding in
+ * data/test-templates.json:
+ *
+ *     "shortcut": true,
+ *     "product": { "id": 6505, "partNumber": "BCDP-CM", "name": "..." }
+ *
+ * There is deliberately no global "all demos are BCDP-CM" rule. A demo names
+ * the Sterling product it belongs to, or names none and stays standalone; a
+ * future poster or stamp demo only has to add its own product block. Samples
+ * with "shortcut": false stay in the file for regression fixtures and tests
+ * but get no user-facing button.
  */
 (function () {
   'use strict';
 
-  let samples = [];
+  let samples = [];      // user-facing shortcut buttons
+  let allSamples = [];   // every sample in the file, shortcuts or not
+
+  /* Select the Sterling product this demo is bound to, if it names one, and
+   * resolve only once the picker has really applied it — the product must be
+   * live application state (geometry, page count, productId carried through
+   * Push to Designer), not a cosmetic dropdown change. A demo with no product
+   * block, or a part number the catalogue does not carry, loads standalone. */
+  function bindProduct(sample) {
+    var part = sample.product && sample.product.partNumber;
+    if (!part || !window.SMPProductSelection) return Promise.resolve(null);
+    return window.SMPProductSelection.selectByPartNumber(part)
+      .catch(function (e) {
+        console.warn('[demo-samples] product ' + part + ' unavailable for '
+          + sample.name + ': ' + (e && e.message));
+        return null;
+      });
+  }
 
   function loadSample(sample) {
     // Same state transition the app performs after generating
@@ -18,9 +47,16 @@
       businessName: sample.businessName || 'Demo Co',
     };
     generatedHtml = sample.html;
-    document.getElementById('emptyState').classList.add('hidden');
-    document.getElementById('loadingState').classList.add('hidden');
-    document.getElementById('resultState').classList.remove('hidden');
+    /* Use the app's own panel switch so every pre-generation state — including
+     * the product blank artboard — is hidden when the design appears. */
+    if (typeof showPanel === 'function') {
+      showPanel('result');
+    } else {
+      document.getElementById('emptyState').classList.add('hidden');
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('blankState')?.classList.add('hidden');
+      document.getElementById('resultState').classList.remove('hidden');
+    }
 
     const widthPx = Math.round(toPx(sample.width, 'in'));
     const heightPx = Math.round(toPx(sample.height, 'in'));
@@ -78,17 +114,56 @@
       b.type = 'button';
       b.textContent = 'Load sample: ' + sample.name;
       b.style.cssText = 'display:block;width:100%;margin:4px 0;padding:7px 10px;border:1px solid #e8590c;border-radius:6px;background:#fff4ec;color:#c04a08;font-weight:600;cursor:pointer;font-size:12px;text-align:left;';
-      b.addEventListener('click', () => loadSample(sample));
+      b.addEventListener('click', () => bindProduct(sample).then(() => loadSample(sample)));
       list.appendChild(b);
     });
     anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
   }
 
+  function byId(id) {
+    return allSamples.filter(function (x) { return x.id === id; })[0] || null;
+  }
+
+  /* Test / preview surface. `list` is what a user can click; `all` includes the
+   * samples kept only as regression fixtures, so tests that still need those
+   * designs can load them without a user-facing button existing. */
+  window.SMPDemoSamples = {
+    /** The samples offered as user-facing shortcut buttons. */
+    list: function () { return samples.slice(); },
+    /** Every sample in the file, including non-shortcut regression fixtures. */
+    all: function () { return allSamples.slice(); },
+    /** Product this demo is bound to, or null when it is standalone. */
+    productFor: function (id) {
+      var s = byId(id);
+      return (s && s.product) ? s.product : null;
+    },
+    /** Select the demo's bound product (if any) and load it — the button path. */
+    load: function (id) {
+      var s = byId(id);
+      if (!s) return Promise.reject(new Error('No such demo sample: ' + id));
+      return bindProduct(s).then(function () { loadSample(s); return s; });
+    },
+    /** Load a sample WITHOUT touching product selection — fixture path only. */
+    loadDesignOnly: function (id) {
+      var s = byId(id);
+      if (!s) return Promise.reject(new Error('No such demo sample: ' + id));
+      loadSample(s);
+      return Promise.resolve(s);
+    },
+  };
+
   // Cache-bust the sample data by build stamp — otherwise the browser serves a
   // stale test-templates.json (sample edits wouldn't show even on a new build).
   const v = (typeof window !== 'undefined' && window.DEMO_BUILD) ? window.DEMO_BUILD : Date.now();
+
   fetch('../data/test-templates.json?v=' + encodeURIComponent(v))
     .then(r => r.json())
-    .then(data => { samples = data.samples; buildUi(); })
+    .then(data => {
+      // Samples without "shortcut": true remain available as regression
+      // fixtures but are not offered as user-facing demo buttons.
+      allSamples = data.samples || [];
+      samples = allSamples.filter(s => s.shortcut === true);
+      buildUi();
+    })
     .catch(err => console.warn('Demo samples unavailable:', err.message));
 })();

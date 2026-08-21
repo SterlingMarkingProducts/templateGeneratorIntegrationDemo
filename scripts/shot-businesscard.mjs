@@ -22,7 +22,8 @@ const errors=[]; page.on('pageerror',e=>errors.push(e.message));
 await page.goto(`${base}/generator/index.html`, { waitUntil:'domcontentloaded' });
 await page.waitForTimeout(1500);
 // click the first "Load sample" button (Business card)
-await page.getByRole('button', { name:/Load sample: Business card/i }).click();
+await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0, { timeout: 15000 });
+await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-business-card'));
 await page.waitForTimeout(2500);
 // screenshot the preview
 await page.screenshot({ path: join(ROOT,'scripts/_shot_gen.png') });
