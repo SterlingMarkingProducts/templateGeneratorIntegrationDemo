@@ -1088,6 +1088,38 @@ async function pushToDesigner() {
   btn.disabled = true;
   btn.textContent = 'Transferring…';
   try {
+    /* Import mode: the design goes through the REAL server endpoint and the
+       created draft is opened. Configured by web03-dev-bootstrap.js only when
+       this build is served from the web03 dev clone; every other deployment
+       falls straight through to the existing local hand-off below. It never
+       falls back — a failed import must surface as a failure, not quietly
+       become a localStorage transfer. */
+    if (transportMode === 'import') {
+      btn.textContent = 'Importing…';
+      const { response } = await pushViaImport();
+      const templateId = Number(response && response.templateId);
+      if (!Number.isInteger(templateId) || templateId <= 0) {
+        throw new Error('The import succeeded but returned no numeric templateId.');
+      }
+      const product = window.SMPProductSelection && window.SMPProductSelection.get
+        ? window.SMPProductSelection.get() : null;
+      const productId = Number(product && product.id);
+      const dev = window.SMPWeb03Dev;
+      if (!dev || !dev.designerPage || !Number.isInteger(productId)) {
+        throw new Error('Import mode is configured without a Template Designer target.');
+      }
+      /* Built from the id the SERVER returned — never a stale hardcoded one,
+         and never response.openUrl, which points at the production page. */
+      const url = dev.designerPage
+        + '?template=' + encodeURIComponent(templateId)
+        + '&product=' + encodeURIComponent(productId);
+      showError('Draft ' + templateId + ' created (not live, no mappings). '
+        + 'Opening the Template Designer…');
+      const opened = window.open(url, 'sterlingTemplateDesigner');
+      if (!opened) { window.location.assign(url); }   // popup blocked
+      return;
+    }
+
     const { template, substitutions } = await convertCurrentDesign();
     let url;
     if (SMP_CONFIG.transferEndpoint) {
@@ -1102,7 +1134,10 @@ async function pushToDesigner() {
     }
     window.open(url, 'sterlingDesignerTest');
   } catch (err) {
-    showError(`Push to Designer failed: ${err.message}`);
+    /* Stay in the Generator and surface what actually happened, including the
+       real HTTP status when the endpoint gave one. */
+    const status = err && err.detail && err.detail.status ? ` (HTTP ${err.detail.status})` : '';
+    showError(`Push to Designer failed${status}: ${err.message}`);
   } finally {
     pushInFlight = false;
     btn.disabled = false;
