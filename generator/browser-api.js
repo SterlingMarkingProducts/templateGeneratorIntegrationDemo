@@ -13,9 +13,23 @@
 (() => {
 'use strict';
 
-const STATIC_MODE =
-  location.protocol === 'file:' ||
-  !/^(localhost|127\.|\[::1\])/.test(location.hostname);
+const IS_LOCALHOST = /^(localhost|127\.|\[::1\])/.test(location.hostname);
+
+/* Served from anywhere other than localhost (GitHub Pages, file://): the app
+   runs entirely in the browser and the visitor supplies their own key. */
+const STATIC_MODE = location.protocol === 'file:' || !IS_LOCALHOST;
+
+/* Served from localhost by local-ai-server.mjs: same in-browser engine, but
+   the Anthropic call goes through the local proxy, which adds the API key
+   server-side from .env. No key is ever handled by the browser here. */
+const LOCAL_PROXY_MODE = IS_LOCALHOST && location.protocol !== 'file:';
+
+/* engine.js runs in the browser in BOTH modes; only the transport differs. */
+const ENGINE_MODE = STATIC_MODE || LOCAL_PROXY_MODE;
+
+const ANTHROPIC_ENDPOINT = LOCAL_PROXY_MODE
+  ? '/local-api/anthropic'
+  : 'https://api.anthropic.com/v1/messages';
 
 const API_KEY_STORAGE = 'anthropic_api_key';
 
@@ -55,6 +69,9 @@ function ensureApiKey() {
 }
 
 function anthropicHeaders() {
+  /* Through the local proxy the browser sends no credentials at all — the
+     server attaches the key it read from .env. */
+  if (LOCAL_PROXY_MODE) return { 'content-type': 'application/json' };
   return {
     'content-type': 'application/json',
     'x-api-key': ensureApiKey(),
@@ -84,7 +101,7 @@ async function readAnthropicError(res) {
 const anthropic = {
   messages: {
     async create(params) {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(ANTHROPIC_ENDPOINT, {
         method: 'POST',
         headers: anthropicHeaders(),
         body: JSON.stringify(params),
@@ -97,7 +114,7 @@ const anthropic = {
     // (engine.js only consumes content_block_delta / text_delta events).
     stream(params) {
       return (async function* () {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch(ANTHROPIC_ENDPOINT, {
           method: 'POST',
           headers: anthropicHeaders(),
           body: JSON.stringify({ ...params, stream: true }),
@@ -179,7 +196,7 @@ async function localJsonResponse(init) {
   }
 }
 
-if (STATIC_MODE) {
+if (ENGINE_MODE) {
   const realFetch = window.fetch.bind(window);
   window.fetch = (input, init) => {
     const url = typeof input === 'string' ? input : input?.url || '';

@@ -7,3 +7,7 @@ __pycache__/
 *.pyc
 scripts/_shot-*.png
 scripts/__reports__/generator-artifact.html
+
+# local-only secrets — never commit
+.env
+.env.local
