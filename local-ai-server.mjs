@@ -140,6 +140,48 @@ async function proxyAnthropic(req, res) {
   res.end();
 }
 
+/* ── local E2E: forward to the local Lucee templateImport endpoint ───────
+   Used only by the local end-to-end harness. The Generator page is served
+   from :4000 and Lucee runs on :8888, so a direct browser POST would be
+   cross-origin; forwarding here keeps the real endpoint's security intact
+   instead of opening CORS on a write endpoint. Off unless LUCEE_BASE is set. */
+const LUCEE_BASE = process.env.LUCEE_BASE || '';
+
+async function proxyLucee(req, res, path) {
+  if (!LUCEE_BASE) {
+    res.writeHead(404, { 'Content-Type': 'application/json' })
+       .end(JSON.stringify({ error: { message: 'Local Lucee forwarding is not enabled.' } }));
+    return;
+  }
+  const target = LUCEE_BASE.replace(/\/+$/, '') + path.replace('/local-api/lucee', '');
+  const chunks = [];
+  for await (const c of req) chunks.push(c);
+  const headers = {};
+  for (const h of ['content-type', 'x-csrf-token']) {
+    if (req.headers[h]) headers[h] = req.headers[h];
+  }
+  let upstream;
+  try {
+    upstream = await fetch(target, {
+      method: req.method,
+      headers,
+      body: chunks.length ? Buffer.concat(chunks) : undefined,
+    });
+  } catch (err) {
+    console.error(`  ! lucee forward failed: ${err?.message || err}`);
+    res.writeHead(502, { 'Content-Type': 'application/json' })
+       .end(JSON.stringify({ error: { message: 'Could not reach the local Lucee server.' } }));
+    return;
+  }
+  const body = Buffer.from(await upstream.arrayBuffer());
+  console.log(`  -> lucee ${upstream.status} ${target}`);
+  res.writeHead(upstream.status, {
+    'Content-Type': upstream.headers.get('content-type') || 'application/json',
+    'Cache-Control': 'no-store',
+  });
+  res.end(body);
+}
+
 /* ── server ─────────────────────────────────────────────────────────────── */
 const server = http.createServer((req, res) => {
   const path = req.url.split('?')[0];
@@ -153,9 +195,18 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+  if (path.startsWith('/local-api/lucee/')) {
+    proxyLucee(req, res, path).catch((err) => {
+      console.error(`  ! lucee proxy error: ${err?.message || err}`);
+      if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: { message: 'Local Lucee proxy error.' } }));
+    });
+    return;
+  }
   if (path === '/local-api/status') {
     res.writeHead(200, { 'Content-Type': 'application/json' })
-       .end(JSON.stringify({ ok: true, apiKeyLoaded: Boolean(API_KEY) }));  // boolean only
+       .end(JSON.stringify({ ok: true, apiKeyLoaded: Boolean(API_KEY),
+         luceeForwarding: Boolean(LUCEE_BASE) }));  // booleans only, never the key
     return;
   }
   serveStatic(req, res).catch(() => { res.writeHead(500).end('error'); });
