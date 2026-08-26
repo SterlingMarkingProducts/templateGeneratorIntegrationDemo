@@ -35,6 +35,96 @@
   var path = (window.location && window.location.pathname) || '';
   if (path.indexOf(CLONE_FOLDER) === -1) { return; }   // not the dev clone — do nothing
 
+  /* ── data/*.json over HTTP ───────────────────────────────────────────────
+   *
+   * product-select.js and demo-samples.js each fetch a file from ../data/.
+   * On web03 those three requests fail, and both features fail silently as a
+   * result: the picker reports "Product catalogue unavailable", and the demo
+   * shortcuts — Axiom included — are never built at all, because demo-samples.js
+   * builds them inside the fetch's .then.
+   *
+   * The files are present in the clone (they are committed, plain, and not LFS
+   * pointers), so this is the server declining to serve them, not the build.
+   * Rather than guess at web03's IIS static-file configuration from here, the
+   * dev clone stops depending on it: the real fetch is still tried FIRST and
+   * still wins whenever it works, and only a failed or non-JSON response falls
+   * back to the copy in web03-dev-data.js.
+   *
+   * Only ../data/<name>.json requests for files we actually embed are touched.
+   * Every other request — the import POST included — goes straight through. */
+  var DATA_RE = /(?:^|\/)data\/([A-Za-z0-9._-]+\.json)(?:\?|$)/;
+  var dataFallback = [];   // {file, reason} for anything that had to fall back
+
+  function embeddedFor(url) {
+    var store = window.SMPWeb03DevData;
+    if (!store) { return null; }
+    var m = DATA_RE.exec(String(url));
+    return (m && Object.prototype.hasOwnProperty.call(store, m[1]))
+      ? { name: m[1], body: store[m[1]] } : null;
+  }
+
+  function embeddedResponse(hit, reason) {
+    dataFallback.push({ file: hit.name, reason: reason });
+    renderFallbackNote();
+    return new Response(JSON.stringify(hit.body), {
+      status: 200, headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  /* Say plainly, in the picker's OWN status line — the same element that would
+   * otherwise read "Product catalogue unavailable" — that the catalogue came
+   * from this clone, so a shorter product list reads as expected rather than
+   * as a failure. Deferred, because the fetches resolve after DOMContentLoaded
+   * and the element does not exist while this file first runs. */
+  function renderFallbackNote() {
+    var draw = function () {
+      var status = document.getElementById('productStatus');
+      if (!status || !dataFallback.length) { return; }
+      status.textContent = 'Dev clone: web03 did not serve '
+        + dataFallback.map(function (f) { return f.file + ' (' + f.reason + ')'; }).join(', ')
+        + ' \u2014 using this clone\u2019s embedded copy. BCDP-CM is available.';
+      status.classList.remove('hidden');
+      status.classList.remove('is-error');
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(draw, 0); });
+    } else {
+      setTimeout(draw, 0);
+    }
+  }
+
+  function installDataFallback() {
+    if (typeof window.fetch !== 'function' || typeof Response !== 'function') { return; }
+    var nativeFetch = window.fetch.bind(window);
+    window.fetch = function (input, init) {
+      var url = (typeof input === 'string') ? input : (input && input.url) || '';
+      var hit = embeddedFor(url);
+      if (!hit) { return nativeFetch(input, init); }
+      return nativeFetch(input, init).then(function (res) {
+        if (!res || !res.ok) {
+          return embeddedResponse(hit, 'HTTP ' + (res ? res.status : 'no response'));
+        }
+        /* A server can answer 200 with an error page. Only trust it if it
+         * really parses as JSON; the clone leaves the original readable. */
+        return res.clone().json().then(
+          function () { return res; },
+          function () { return embeddedResponse(hit, 'response was not JSON'); }
+        );
+      }, function (e) {
+        return embeddedResponse(hit, (e && e.message) || 'request failed');
+      });
+    };
+  }
+
+  /* This script runs before product-select.js and demo-samples.js, so the
+   * fallback data has to be in place before either of them fetches. A
+   * parser-inserted document.write is the one way to load it synchronously at
+   * this point — and it keeps the public build from downloading it at all. */
+  function loadFallbackData() {
+    if (window.SMPWeb03DevData || document.readyState !== 'loading') { return; }
+    document.write('<scr' + 'ipt src="web03-dev-data.js?v=w03d1"></scr' + 'ipt>');
+  }
+
   function configure() {
     var Import = window.SMPTransportImport;
     if (!Import || !Import.TemplateImportTransport || !window.SMPPush) { return false; }
@@ -62,10 +152,16 @@
     window.SMPWeb03Dev = {
       active: true,
       designerPage: DEV.designerPage,
-      importBase: DEV.importBase
+      importBase: DEV.importBase,
+      /* Empty when the server served ../data/*.json itself; otherwise one
+       * entry per file that fell back, with the real reason it did. */
+      dataFallback: dataFallback
     };
     return true;
   }
+
+  installDataFallback();
+  loadFallbackData();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', configure);

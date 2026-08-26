@@ -67,6 +67,30 @@ outcome — for example `Push to Designer failed (HTTP 403): missing or invalid
 CSRF token`. It never falls back to the localStorage hand-off: a failed import
 has to read as a failure.
 
+## If web03 will not serve `../data/*.json`
+
+`product-select.js` and `demo-samples.js` each fetch a file from the clone's
+`data/` folder. On web03 those requests fail, and both features fail quietly as
+a result: the picker falls into its own catch and reads "Product catalogue
+unavailable", and the demo shortcuts — Axiom included — are never built at all,
+because `demo-samples.js` builds them inside the fetch's `.then`.
+
+The files are committed, plain and present in the clone, so this is the server
+declining to serve them rather than a build problem. Instead of guessing at
+web03's static-file configuration, the dev clone stops depending on it: the real
+fetch is still tried first and still wins whenever it works, and only a failed
+or non-JSON response falls back to `generator/web03-dev-data.js`, generated from
+those same committed files by `scripts/build-web03-dev-data.mjs`.
+
+When that happens the picker's own status line says so, and it will hold the one
+CMS-verified record — BCDP-CM / 6505 — rather than the full list. The 800 KB
+spreadsheet-inferred TEST inventory is deliberately not embedded; it is not
+needed to select BCDP-CM. `window.SMPWeb03Dev.dataFallback` names each file that
+fell back and the real reason.
+
+Off the dev clone folder none of this runs and the fallback file is never even
+downloaded.
+
 ## No API key
 
 Nothing in this path calls Anthropic. The Axiom demo is a committed sample, so
