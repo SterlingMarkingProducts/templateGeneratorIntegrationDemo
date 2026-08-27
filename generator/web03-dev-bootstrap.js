@@ -127,6 +127,17 @@
     document.write('<scr' + 'ipt src="web03-dev-data.js?v=w03d1"></scr' + 'ipt>');
   }
 
+  /* The DEV-ONLY Anthropic key, fetched ONLY on this clone — see
+   * web03-dev-api-key.js for what pasting a key there means. browser-api.js
+   * reads window.SMPWeb03DevApiKey when it posts to the proxy, and the proxy
+   * only uses it when no server-side key is configured. Loaded the same
+   * synchronous way as the data fallback so it is defined before the first
+   * generate, and never downloaded by any other deployment. */
+  function loadDevApiKey() {
+    if (typeof window.SMPWeb03DevApiKey === 'string' || document.readyState !== 'loading') { return; }
+    document.write('<scr' + 'ipt src="web03-dev-api-key.js?v=w03k1"></scr' + 'ipt>');
+  }
+
   function configure() {
     var Import = window.SMPTransportImport;
     if (!Import || !Import.TemplateImportTransport || !window.SMPPush) { return false; }
@@ -168,6 +179,7 @@
 
   installDataFallback();
   loadFallbackData();
+  loadDevApiKey();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', configure);

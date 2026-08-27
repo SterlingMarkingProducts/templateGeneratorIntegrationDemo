@@ -143,10 +143,29 @@ it never reaches the browser, localStorage, a URL or a log. Full rules, and
 every fail-closed branch, are in `tests/web03-dev-e2e/README.md` in the
 oldDesigner repository.
 
-If the server has no key configured the proxy answers `503` with
-`"code": "no-api-key"` and names the variable to set. That is configuration
-missing, not a broken build — the demo shortcuts and Push to Designer keep
-working either way.
+### Making it work right now — the DEV key file
+
+Configuring `ANTHROPIC_API_KEY` on the Lucee service needs someone with access
+to that service. Until then, paste a key into **one line** of
+
+```
+generator/web03-dev-api-key.js      →   window.SMPWeb03DevApiKey = '';
+```
+
+and the Generator sends it to the proxy in an `X-Dev-Anthropic-Key` header. The
+proxy uses it **only** when the server has no key of its own, so configuring the
+service later switches this off automatically.
+
+Understand the trade before pasting: a key in that file is **committed to this
+repository** and is **downloaded by the browser** on the dev clone, so anyone
+with repo access or with the page open can read it. Use a key you are willing
+to expose and revoke it when the dev work is finished. That file is fetched only
+on this clone, and must never be merged to `main`.
+
+With neither a server key nor a pasted one, the proxy answers `503` with
+`"code": "no-api-key"` and names both options. That is configuration missing,
+not a broken build — the demo shortcuts and Push to Designer keep working
+either way.
 
 Every other deployment is untouched: the public build still offers its own
 "Set API key" button and calls Anthropic directly, and localhost still uses

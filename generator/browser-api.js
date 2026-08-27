@@ -88,12 +88,23 @@ function ensureApiKey() {
 }
 
 function anthropicHeaders() {
-  /* Through either proxy the browser sends NO credentials at all — the server
-     attaches the key it read from its own configuration. The web03 proxy also
-     wants the published dev token, which is not a secret and grants nothing:
-     it is there so the endpoint's own check runs rather than being bypassed. */
+  /* Through either proxy the browser normally sends NO credentials at all — the
+     server attaches the key it read from its own configuration. The web03 proxy
+     also wants the published dev token, which is not a secret and grants
+     nothing: it is there so the endpoint's own check runs rather than being
+     bypassed. */
   if (WEB03_PROXY_MODE) {
-    return { 'content-type': 'application/json', 'X-CSRF-Token': WEB03_DEV_TOKEN };
+    const headers = { 'content-type': 'application/json', 'X-CSRF-Token': WEB03_DEV_TOKEN };
+    /* DEV ONLY, and only on this clone. When web03 has no server-side
+       ANTHROPIC_API_KEY configured, the dev clone may supply one so live
+       generation works without touching the Lucee service. The proxy PREFERS
+       its own server-side key and falls back to this only when it has none.
+       See generator/web03-dev-api-key.js for what that trade means — that file
+       is fetched on this clone alone, and is empty unless someone pasted a key. */
+    const devKey = typeof window.SMPWeb03DevApiKey === 'string'
+      ? window.SMPWeb03DevApiKey.trim() : '';
+    if (devKey) { headers['X-Dev-Anthropic-Key'] = devKey; }
+    return headers;
   }
   if (LOCAL_PROXY_MODE) return { 'content-type': 'application/json' };
   return {
