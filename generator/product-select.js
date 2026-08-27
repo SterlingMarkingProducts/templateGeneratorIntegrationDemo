@@ -257,28 +257,62 @@
     '57PCSGR-CG', '57PCSGR-EG', 'TBDP-CG', 'S203PB', 'S203B', 'DS22436',
     '212B26', 'HB2436DS', 'DE33', 'RE33', 'B1438', '214-13',
   ];
-  var PRIORITY_RANK = (function () {
-    var rank = {};
-    /* DS21824 is listed twice; the first position wins. */
-    EMPTY_SEARCH_PRIORITY.forEach(function (part, i) {
+  /* De-duplicated, order preserved. DS21824 is listed twice; the first wins. */
+  var PRIORITY_PARTS = (function () {
+    var seen = {}, out = [];
+    EMPTY_SEARCH_PRIORITY.forEach(function (part) {
       var k = String(part).toUpperCase();
-      if (!Object.prototype.hasOwnProperty.call(rank, k)) { rank[k] = i; }
+      if (!Object.prototype.hasOwnProperty.call(seen, k)) { seen[k] = true; out.push(k); }
     });
-    return rank;
+    return out;
   }());
 
-  function prioritise(list) {
-    var at = function (r) {
-      var k = String(r.partNumber || '').toUpperCase();
-      return Object.prototype.hasOwnProperty.call(PRIORITY_RANK, k)
-        ? PRIORITY_RANK[k] : Number.MAX_SAFE_INTEGER;
-    };
-    /* Stable: everything not on the list keeps the provider's own order. */
-    return list.map(function (r, i) { return { r: r, i: i, p: at(r) }; })
-      .sort(function (a, b) { return (a.p - b.p) || (a.i - b.i); })
-      .map(function (x) { return x.r; });
+  /* Which of the requested parts this catalogue actually has. Filled by the
+   * first browse and published, so the answer comes from the live catalogue
+   * rather than from anyone's assumption about it. */
+  var priorityPresent = null;
+
+  /* LOOK EACH PART UP. Sorting a page of results cannot work here: an empty
+   * query makes the provider walk its index in order and stop early, so with a
+   * large catalogue the window it returns is simply the first N parts —
+   * "1000", "1003", "1212D"… — and the requested parts are never in it to be
+   * sorted. Asking for each part by name is independent of catalogue size and
+   * of where the part sits in the index.
+   *
+   * An exact part number outranks everything else in the provider's own search,
+   * so this reuses that ranking rather than reaching past it; a part the
+   * catalogue does not contain simply resolves to nothing. */
+  function browseResults() {
+    return Promise.all(PRIORITY_PARTS.map(function (part) {
+      return provider.search(part, { limit: 5 }).then(function (r) {
+        for (var i = 0; i < r.results.length; i++) {
+          if (String(r.results[i].partNumber || '').toUpperCase() === part) return r.results[i];
+        }
+        return null;
+      }, function () { return null; });
+    })).then(function (found) {
+      var head = found.filter(Boolean);
+      priorityPresent = head.map(function (r) { return r.partNumber; });
+      if (priorityPresent.length !== PRIORITY_PARTS.length) {
+        console.info('[product-select] requested browse parts present: '
+          + (priorityPresent.join(', ') || 'none') + ' | missing: '
+          + PRIORITY_PARTS.filter(function (p) {
+              return head.every(function (r) {
+                return String(r.partNumber || '').toUpperCase() !== p;
+              });
+            }).join(', '));
+      }
+      var taken = {};
+      head.forEach(function (r) { taken[String(r.id)] = true; });
+      /* The rest of the browse, in the provider's own order, behind them. */
+      return provider.search('', { limit: BROWSE_LIMIT + head.length }).then(function (r) {
+        var tail = r.results.filter(function (x) { return !taken[String(x.id)]; });
+        return { results: head.concat(tail).slice(0, BROWSE_LIMIT), total: r.total };
+      });
+    });
   }
 
+  var BROWSE_LIMIT = 25;
   var lastTotal = 0;
   var lastQuery = '';
   var searchTimer = null;
@@ -291,16 +325,15 @@
     if (!provider) return;
     setStatus('');
     var q = (input.value || '').trim();
-    var browsing = !q && IMPORTABLE_ONLY;
-    /* Browsing asks for more than it shows: the priority parts have to be
-     * reachable before the list is cut to 25, or ordering the first 25 the
-     * provider happened to return would order the wrong 25. */
-    provider.search(input.value, { limit: browsing ? 500 : 25 })
-      .then(function (r) {
+    /* Typed: the provider's own ranking, untouched. Empty, on the dev clone:
+     * the requested browse order. */
+    var run = (!q && IMPORTABLE_ONLY)
+      ? browseResults()
+      : provider.search(input.value, { limit: BROWSE_LIMIT });
+    run.then(function (r) {
         lastTotal = r.total;
         lastQuery = q;
-        /* Typed: the provider's ranking, untouched. Empty: the browse order. */
-        renderResults(browsing ? prioritise(r.results).slice(0, 25) : r.results);
+        renderResults(r.results);
       })
       .catch(function (e) { setStatus(e.message || 'Product search failed.', true); });
   }
@@ -439,6 +472,16 @@
     importableOnly: function () { return IMPORTABLE_ONLY; },
     /** Where the records actually came from, as the provider records it. */
     sourceId: function () { return provider ? provider.source : null; },
+    /** Which requested browse parts this catalogue has, and which it does not.
+     *  null until the first empty-box browse has run. */
+    priorityStatus: function () {
+      if (priorityPresent === null) return null;
+      var have = priorityPresent.map(function (p) { return String(p).toUpperCase(); });
+      return {
+        present: priorityPresent.slice(),
+        missing: PRIORITY_PARTS.filter(function (p) { return have.indexOf(p) === -1; }),
+      };
+    },
     /** Raw search passthrough, for tests and the preview harness. */
     search: function (q, opts) {
       return provider ? provider.search(q, opts)
