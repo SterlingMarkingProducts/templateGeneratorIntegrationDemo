@@ -557,198 +557,7 @@ const CHIP_DENSITY = {
   'WPA Travel': 'rich', 'Swiss Exhibition': 'balanced', 'Event Summit': 'balanced',
 };
 
-
-/* ── DESIGN FINGERPRINT ────────────────────────────────────────────────────
- *
- * A direction says WHAT KIND of design this is. It does not say how the canvas
- * is divided, where the weight sits, whether the type is enormous or small and
- * precise, or whether there is a monogram at all — so two runs of the same
- * brief kept arriving as the same arrangement with different words in it.
- *
- * The fingerprint is those remaining decisions, chosen fresh for every
- * generation: nine compatible axes, one option each. It is NOT randomness for
- * its own sake — every option is filtered against the direction's density
- * contract and against the direction itself, so a restrained brief can draw
- * "typography carries it, one hairline" but never "four saturated fields", and
- * a dark direction never draws a paper-light palette.
- *
- * Colour is ONE of the nine. Changing only the palette is what "another version
- * of the same design" looks like, and that is the thing this replaces. */
-
-const FINGERPRINT_AXES = [
-  {
-    axis: 'Composition', options: [
-      { id: 'asym-thirds', density: ['restrained', 'balanced', 'rich'],
-        text: 'asymmetric — the content sits off the optical centre, weight gathered into one third and the rest left deliberately open' },
-      { id: 'vertical-split', density: ['balanced', 'rich'],
-        text: 'a vertical split — the canvas divided into two unequal fields, type living entirely in one of them' },
-      { id: 'horizontal-band', density: ['balanced', 'rich'],
-        text: 'a horizontal band structure — a full-width field across the top or bottom third, everything else quiet' },
-      { id: 'diagonal', density: ['rich'],
-        text: 'a diagonal seam cutting the canvas, with the composition organised on either side of it' },
-      { id: 'strict-grid', density: ['restrained', 'balanced', 'rich'],
-        text: 'a strict modular grid — everything aligned to a visible underlying column and baseline structure' },
-      { id: 'centred-axis', density: ['restrained', 'balanced'],
-        text: 'a centred axis — classically symmetrical, balanced around a single vertical spine' },
-      { id: 'corner-anchor', density: ['restrained', 'balanced'],
-        text: 'corner-anchored — the content held in one corner with a long empty diagonal running away from it' },
-      { id: 'edge-bleed', density: ['rich'], never: ['clean-corporate'],
-        text: 'edge-bleeding — the hero element runs off one edge of the canvas rather than sitting inside it' },
-    ],
-  },
-  {
-    axis: 'Alignment', options: [
-      { id: 'left', density: ['restrained', 'balanced', 'rich'], text: 'left-aligned throughout — a single hard left edge for every line' },
-      { id: 'centred', density: ['restrained', 'balanced'], text: 'centred — every line optically centred on one axis' },
-      { id: 'right', density: ['restrained', 'balanced', 'rich'], text: 'right-aligned — a single hard right edge, unusual and deliberate' },
-      { id: 'mixed-opposed', density: ['balanced', 'rich'], text: 'opposed — the name aligned one way and the contact block the other, creating tension across the canvas' },
-      { id: 'justified-block', density: ['balanced', 'rich'], text: 'block-set — the wordmark tracked out to span a fixed measure exactly, edge to edge' },
-    ],
-  },
-  {
-    axis: 'Typographic voice', options: [
-      { id: 'oversized', density: ['balanced', 'rich'], text: 'oversized — the wordmark is enormous and unapologetic, filling its zone' },
-      { id: 'small-precise', density: ['restrained', 'balanced'], text: 'small and precise — modest type set immaculately, confidence through restraint rather than scale' },
-      { id: 'tracked-caps', density: ['restrained', 'balanced'], text: 'widely tracked capitals — the name spread across a measure, letterspacing doing the work' },
-      { id: 'stacked', density: ['balanced', 'rich'], text: 'stacked — the name broken across two or three lines set tight, read as a block' },
-      { id: 'two-voice', density: ['balanced', 'rich'], text: 'two contrasting families in tension — a display voice against a quiet utility voice' },
-      { id: 'single-voice', density: ['restrained', 'balanced'], text: 'one family only, distinguished by weight and size alone' },
-    ],
-  },
-  {
-    axis: 'Scale contrast', options: [
-      { id: 'dramatic', density: ['balanced', 'rich'], text: 'dramatic — the hero is many times the size of everything else' },
-      { id: 'measured', density: ['restrained', 'balanced', 'rich'], text: 'measured — a clear but civilised step between levels' },
-      { id: 'close', density: ['restrained'], text: 'close — the levels sit near each other in size and separate by weight, colour and space instead' },
-    ],
-  },
-  {
-    axis: 'Shape language', options: [
-      { id: 'type-only', density: ['restrained', 'balanced'], text: 'typography only — no decorative shapes at all; the letterforms and the field are the entire design' },
-      { id: 'rules', density: ['restrained', 'balanced'], text: 'a rule system — hairlines and one weight of divider, nothing filled' },
-      { id: 'geometric', density: ['balanced', 'rich'], text: 'hard geometry — circles, rectangles, arcs and bars as a deliberate compositional system' },
-      { id: 'organic', density: ['balanced', 'rich'], never: ['bold-modernist', 'clean-corporate'], text: 'soft organic forms — curves, blobs and arcs rather than corners' },
-      { id: 'colour-block', density: ['balanced', 'rich'], text: 'colour-blocking — flat fields of colour ARE the graphics; no separate ornament' },
-      { id: 'pattern', density: ['rich'], text: 'a repeating pattern field — a motif tiled or scattered across part of the ground' },
-    ],
-  },
-  {
-    axis: 'Signature element', options: [
-      { id: 'large-monogram', density: ['balanced', 'rich'], text: 'a large monogram or initial as a graphic in its own right' },
-      { id: 'small-mark', density: ['restrained', 'balanced', 'rich'], text: 'one small precise mark or lockup, quietly placed' },
-      { id: 'frame', density: ['restrained', 'balanced', 'rich'], text: 'a frame or border system — an inset rule, a corner bracket set, or a full enclosing edge' },
-      { id: 'watermark', density: ['balanced', 'rich'], text: 'a tone-on-tone watermark sitting in the ground behind everything, barely there' },
-      { id: 'none', density: ['restrained', 'balanced'], text: 'no mark and no frame at all — the wordmark alone carries the identity' },
-    ],
-  },
-  {
-    axis: 'Whitespace strategy', options: [
-      { id: 'generous-open', density: ['restrained', 'balanced'], text: 'generous and open — well over half the canvas deliberately empty, the emptiness composed' },
-      { id: 'one-void', density: ['restrained', 'balanced', 'rich'], text: 'one large void — the content compressed so a single unbroken empty region can exist' },
-      { id: 'even-margins', density: ['restrained', 'balanced', 'rich'], text: 'even and architectural — a consistent margin all round, the field inside worked precisely' },
-      { id: 'tight-full', density: ['rich'], text: 'tight — the canvas worked close to its edges, space used rather than reserved' },
-      { id: 'asym-margins', density: ['restrained', 'balanced', 'rich'], text: 'asymmetric margins — one side markedly wider than the other, on purpose' },
-    ],
-  },
-  {
-    axis: 'Palette family', options: [
-      { id: 'paper-light', text: 'paper-light — a warm off-white or bone ground with ink and one accent' },
-      { id: 'soft-muted', text: 'soft and muted — low-contrast tones sitting close together, nothing saturated' },
-      { id: 'warm-earth', text: 'warm earth — clay, terracotta, oat, olive and sand' },
-      { id: 'cool-professional', text: 'cool and professional — graphite, slate and a considered blue or teal' },
-      { id: 'saturated-duo', text: 'two saturated hues in confident opposition, plus a neutral' },
-      { id: 'multi-bright', text: 'multi-colour and bright — three or more happy saturated hues held together by alignment' },
-      { id: 'deep-ground', text: 'a deep ground — near-black, ink, forest or aubergine — with one restrained accent' },
-      { id: 'mono-tonal', text: 'monochrome or near-monochrome — one hue at several values, contrast from tone alone' },
-      { id: 'jewel-metal', text: 'a jewel tone with a single metallic or bone accent' },
-    ],
-  },
-  {
-    axis: 'Front/back relationship', options: [
-      { id: 'inverted', text: 'inverted — the back reverses the front’s ground and text colours' },
-      { id: 'quiet-back', text: 'a quiet back — the front carries the design, the back is calm and mostly information' },
-      { id: 'continuation', text: 'continuous — a shape or field runs off the front and resolves on the back' },
-      { id: 'mark-back', text: 'a mark-only back — the back is the logo or monogram alone at scale on a plain ground' },
-      { id: 'mirror', text: 'mirrored — the same structure as the front with the emphasis swapped' },
-    ],
-  },
-];
-
-/* Palette families each direction may draw from. Explicit, because this is the
- * axis most likely to fight the direction: dark luxe must never come back
- * paper-light, and playful must never come back deep-ground. */
-const DIRECTION_PALETTES = {
-  'editorial-minimal':    ['paper-light', 'soft-muted', 'mono-tonal', 'cool-professional'],
-  'modern-luxury':        ['paper-light', 'soft-muted', 'mono-tonal', 'jewel-metal', 'deep-ground'],
-  'bold-modernist':       ['paper-light', 'saturated-duo', 'mono-tonal', 'cool-professional'],
-  'playful-contemporary': ['multi-bright', 'saturated-duo', 'paper-light'],
-  'organic-botanical':    ['warm-earth', 'soft-muted', 'paper-light', 'mono-tonal'],
-  'elegant-serif':        ['paper-light', 'soft-muted', 'mono-tonal', 'jewel-metal'],
-  'clean-corporate':      ['cool-professional', 'paper-light', 'mono-tonal', 'soft-muted'],
-  'colourful-expressive': ['multi-bright', 'saturated-duo', 'warm-earth'],
-  'collage-editorial':    ['warm-earth', 'saturated-duo', 'paper-light', 'mono-tonal'],
-  'soft-sophisticated':   ['soft-muted', 'paper-light', 'warm-earth', 'mono-tonal'],
-  'dark-luxe':            ['deep-ground', 'jewel-metal', 'mono-tonal'],
-  'retro-futurist':       ['deep-ground', 'saturated-duo', 'jewel-metal'],
-};
-
-function fingerprintOptions(axis, directionKey, density) {
-  return axis.options.filter((o) => {
-    if (axis.axis === 'Palette family' && directionKey && DIRECTION_PALETTES[directionKey]) {
-      return DIRECTION_PALETTES[directionKey].indexOf(o.id) !== -1;
-    }
-    if (o.density && o.density.indexOf(density) === -1) return false;
-    if (o.never && directionKey && o.never.indexOf(directionKey) !== -1) return false;
-    return true;
-  });
-}
-
-function rollFingerprint(directionKey, density, doubleSided) {
-  const picks = [];
-  for (const axis of FINGERPRINT_AXES) {
-    if (axis.axis === 'Front/back relationship' && !doubleSided) continue;
-    const pool = fingerprintOptions(axis, directionKey, density);
-    if (!pool.length) continue;
-    picks.push({ axis: axis.axis, ...pool[Math.floor(Math.random() * pool.length)] });
-  }
-  return picks;
-}
-
-const signatureOf = (picks) => picks.map((p) => p.id).join('|');
-
-/* One entry per distinct brief. Regenerate sends the SAME payload, so without
- * this the roll could legitimately land on the arrangement just used — which is
- * exactly what "it looks the same again" means to the person clicking it. */
-const lastFingerprints = new Map();
-
-function chooseFingerprint(directionKey, density, doubleSided, variationKey) {
-  const previous = lastFingerprints.get(variationKey) || {};
-  let picks = rollFingerprint(directionKey, density, doubleSided);
-  /* Re-roll while the whole arrangement, or its three most visible axes, repeat
-   * the last one for this brief. Bounded: with a small compatible pool an exact
-   * repeat can be unavoidable, and a design is better than a hang. */
-  const headOf = (p) => p.slice(0, 3).map((x) => x.id).join('|');
-  for (let i = 0; i < 12; i++) {
-    const same = signatureOf(picks) === previous.signature || headOf(picks) === previous.head;
-    if (!same) break;
-    picks = rollFingerprint(directionKey, density, doubleSided);
-  }
-  lastFingerprints.set(variationKey, { signature: signatureOf(picks), head: headOf(picks),
-    direction: directionKey });
-  return picks;
-}
-
-function renderFingerprint(picks) {
-  return 'DESIGN FINGERPRINT — binding compositional decisions for THIS generation only:\n'
-    + picks.map((p) => `- ${p.axis}: ${p.text}`).join('\n')
-    + '\n\nEvery one of these is compatible with the direction above — they describe WHICH arrangement of '
-    + 'that direction to build, not a different direction. Follow them: they are why two runs of the same '
-    + 'brief must not look alike. If one seems to fight the direction, you have misread it as a style '
-    + 'instruction; it is a compositional one.';
-}
-
-function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided) {
+function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -757,9 +566,7 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   if (isStamp) {
     const archetype = STAMP_ARCHETYPES[Math.floor(Math.random() * STAMP_ARCHETYPES.length)];
     const moment    = STAMP_CREATIVE_MOMENTS[Math.floor(Math.random() * STAMP_CREATIVE_MOMENTS.length)];
-    /* No fingerprint on stamps: its axes describe composition, colour and
-       ornament that the stamp rules below forbid outright. */
-    return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, fingerprint: [] };
+    return `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`;
   }
 
   const isLargeFormat = /poster|sign/i.test(templateType || '');
@@ -767,22 +574,12 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
     ? 'Design at true poster scale — monumental display type (120px+), one dominant visual covering ≥40% of the canvas, edge-to-edge composition. A poster, not a scaled-up business card.'
     : 'Design at portfolio quality — one clear idea, real craft, and a print-shop finish appropriate to this direction.';
 
-  const key = variationKey || `${templateType}|${raw}|${industry}`;
-
-  const compose = (brief, density, reference, directionKey) => {
-    const picks = chooseFingerprint(directionKey, density, !!doubleSided, key);
-    return {
-      text: [
-        brief,
-        reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
-        DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
-        renderFingerprint(picks),
-        `${formatNote} ${creativityDirective}`,
-      ].filter(Boolean).join('\n\n'),
-      direction: directionKey,
-      fingerprint: picks,
-    };
-  };
+  const compose = (brief, density, reference) => [
+    brief,
+    reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
+    DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
+    `${formatNote} ${creativityDirective}`,
+  ].filter(Boolean).join('\n\n');
 
   // ── An explicit, non-generic style direction: the user's words lead ──────
   if (raw && !GENERIC_STYLE.test(raw)) {
@@ -793,29 +590,13 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
      * carrying a dominant monogram or a neon field. */
     const reference = pickFromStyleRoute(raw, templateType)
       || pickFromStyleRoute(expanded, templateType);
-    /* An explicitly chosen style is not re-rolled — the user asked for it. The
-       fingerprint is what varies between runs here. */
-    return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference, null);
+    return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference);
   }
 
   // ── Generic or empty: intent first, then a balanced draw ─────────────────
   const keys = intentKeysFor(raw) || intentKeysFor(industry);
-  /* Avoid repeating the direction used for this same brief last time, when the
-     candidate set is big enough to allow it. Two clicks of Regenerate should
-     not open on the same direction AND the same arrangement. */
-  const previousKey = (lastFingerprints.get(key) || {}).direction;
-  const candidates = (keys && keys.length ? keys : DESIGN_DIRECTIONS.map((d) => d.key));
-  const fresh = candidates.length > 1 && previousKey
-    ? candidates.filter((k) => k !== previousKey) : candidates;
-  const direction = pickDirection(fresh);
-  return compose(direction.brief, direction.density, null, direction.key);
-}
-
-/* The string form, for callers that only need the prompt text. */
-function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided) {
-  return chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided).text;
+  const direction = pickDirection(keys);
+  return compose(direction.brief, direction.density, null);
 }
 
 
@@ -1001,7 +782,7 @@ User SVG: {{SVG_CONTENT}}
 
 HOW TO APPROACH THIS:
 1. Start with ONE idea. Before anything else, decide the single memorable concept that drives this piece — something you could say in one sentence, specific to THIS business, not a generic template. Every field below serves it. This is the most important decision.
-2. Honor the Style Direction — it is the primary creative driver, and it carries a DESIGN DENSITY contract and (except on stamps) a DESIGN FINGERPRINT. Both are binding: the density contract sets HOW MUCH is on the canvas, the fingerprint sets HOW IT IS ARRANGED — composition, alignment, typographic voice, scale contrast, shape language, signature element, whitespace, palette family, and the front/back relationship. Build the fingerprint you were given rather than the arrangement you would reach for by default; it is what makes two runs of the same brief different designs. Choose typography that belongs to that direction rather than a habitual favourite. (Editorial/luxury/elegant → Cormorant, Playfair Display, EB Garamond, Bodoni Moda, Fraunces, DM Serif Display; Swiss/Bauhaus/modernist → Space Grotesk, Barlow, Archivo, Work Sans; clean corporate → Inter, Manrope, IBM Plex Sans; organic/craft → Nunito, Quicksand, Lato; playful → Fredoka, Poppins, Baloo 2; retro-future/technical → Orbitron, Exo 2, Space Mono.) Size display type for the direction — dramatic where that is the point, restrained where it is not — and always within the safe width given in the layout budget, reducing size or breaking to two lines rather than clipping.
+2. Honor the Style Direction — it is the primary creative driver, and it includes a DESIGN DENSITY contract you must follow. Choose typography that belongs to that direction rather than a habitual favourite. (Editorial/luxury/elegant → Cormorant, Playfair Display, EB Garamond, Bodoni Moda, Fraunces, DM Serif Display; Swiss/Bauhaus/modernist → Space Grotesk, Barlow, Archivo, Work Sans; clean corporate → Inter, Manrope, IBM Plex Sans; organic/craft → Nunito, Quicksand, Lato; playful → Fredoka, Poppins, Baloo 2; retro-future/technical → Orbitron, Exo 2, Space Mono.) Size display type for the direction — dramatic where that is the point, restrained where it is not — and always within the safe width given in the layout budget, reducing size or breaking to two lines rather than clipping.
 3. Pick a distinctive palette that genuinely fits this business, this industry and this direction. If Colors is empty, invent one — light, warm, soft, saturated, deep or metallic, whichever the direction calls for, and a considered professional blue when that is the right answer. What to avoid is the unconsidered default: the same palette reached for regardless of brief. The background must suit the direction (dark directions → dark ground; restrained directions → a calm or paper ground; bold directions → saturated).
 4. Compose with intent — asymmetry, strict grid, or diagonal as the concept demands; never a centered stack on a flat fill. Keep decorative shapes out of the text-safe zone.
 5. Build the design at the DENSITY the Style Direction's contract specifies. A rich contract wants a layered background and 4–6 integrated graphic elements; a restrained contract wants a calm ground, 1–3 precise elements, and whitespace composed with real tension. Either way the craft is the same: a dominant hero, a real hierarchy, and nothing present merely to fill space.
@@ -1065,8 +846,6 @@ const HTML_PROMPT = `You are an elite front-end developer AND award-winning grap
 
 DESIGN SPEC
 {{DESIGN_SPEC}}
-
-The Style Direction below carries a DESIGN FINGERPRINT (except on stamps). The spec above was written to it; implement that arrangement — composition, alignment, typographic voice, scale contrast, shape language, signature element, whitespace and palette family — rather than substituting a more familiar layout.
 
 INPUTS
 Product: {{PRODUCT_TYPE}}
@@ -1262,20 +1041,7 @@ async function handleGenerate(body, send) {
         : getColorGuidance(industry));
 
   // Resolve creative direction — replace generic "corporate" with portfolio archetypes
-  /* Identifies THIS brief, so a Regenerate — which resends the identical
-     payload — is recognised as a repeat and gets a fresh direction and a fresh
-     fingerprint rather than another version of the same composition. */
-  const variationKey = JSON.stringify([
-    templateType, industry || '', businessName || '', styleDirection || '',
-    specialInstructions || '', colors || null, !!doubleSided, orientation || '',
-  ]);
-  const creative = chooseCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey, doubleSided);
-  let styleDirFinal = creative.text;
-  if (creative.fingerprint && creative.fingerprint.length) {
-    console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
-      + ' | fingerprint: ' + creative.fingerprint.map((f) => f.id).join(' / '));
-  }
+  let styleDirFinal = resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel);
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;
   const hasRefUrl = (referenceImageUrl || '').trim();
