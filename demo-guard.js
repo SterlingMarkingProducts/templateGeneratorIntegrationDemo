@@ -161,9 +161,41 @@
     if (document.getElementById('demo-banner')) return;
     var b = document.createElement('div');
     b.id = 'demo-banner';
-    b.textContent = "TEST DEMONSTRATION — NOT CONNECTED TO STERLING'S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM · build " + window.DEMO_BUILD;
-    b.style.cssText = 'position:sticky;top:0;left:0;right:0;z-index:99999;background:repeating-linear-gradient(45deg,#e8590c,#e8590c 14px,#b74708 14px,#b74708 28px);color:#fff;font:700 12px/1.5 Arial,sans-serif;text-align:center;padding:7px 10px;letter-spacing:.04em';
+    var devBanner = null;
+
+    /* On the web03 dev clones the hazard-striped sticky banner was the wrong
+     * instrument: everyone using those URLs already knows it is a dev
+     * environment, and a sticky bar sat over the Generator's own controls.
+     * A quiet line in normal document flow says the same thing and takes
+     * nothing away — NOT sticky, NOT fixed, NOT absolute, no z-index, so it
+     * can never overlap the page. Every other deployment keeps the loud
+     * banner unchanged: there it is a real warning to a real visitor. */
+    if (devCloneRoot()) {
+      b.textContent = 'DEV TEST ENVIRONMENT \u00b7 designCentral-dev \u00b7 Not Production'
+        + (window.DEMO_BUILD ? ' \u00b7 build ' + window.DEMO_BUILD : '');
+      b.style.cssText = 'position:static;background:#f2f2f4;color:#5b5b66;'
+        + 'font:500 11px/1.4 system-ui,-apple-system,Segoe UI,Arial,sans-serif;'
+        + 'text-align:center;padding:4px 10px;letter-spacing:.06em;'
+        + 'border-bottom:1px solid #e2e2e6;';
+      devBanner = b;
+    } else {
+      b.textContent = "TEST DEMONSTRATION — NOT CONNECTED TO STERLING'S LIVE DESIGNER, DATABASE, CART, OR ORDERING SYSTEM · build " + window.DEMO_BUILD;
+      b.style.cssText = 'position:sticky;top:0;left:0;right:0;z-index:99999;background:repeating-linear-gradient(45deg,#e8590c,#e8590c 14px,#b74708 14px,#b74708 28px);color:#fff;font:700 12px/1.5 Arial,sans-serif;text-align:center;padding:7px 10px;letter-spacing:.04em';
+    }
     document.body.insertBefore(b, document.body.firstChild);
+
+    /* The Generator's own header is position:fixed, so an in-flow line at the
+     * top of <body> would sit UNDER it and be unreadable. The banner stays in
+     * flow — it pushes the page down by its own height — and the fixed header
+     * is moved down by exactly that much, so the two sit one above the other
+     * with nothing overlapping and no gap. Presentation only, dev clones only. */
+    if (devBanner) {
+      var drop = Math.round(devBanner.getBoundingClientRect().height);
+      var header = document.querySelector('header');
+      if (drop > 0 && header && getComputedStyle(header).position === 'fixed') {
+        header.style.top = drop + 'px';
+      }
+    }
   }
 
   if (document.readyState === 'loading') {
