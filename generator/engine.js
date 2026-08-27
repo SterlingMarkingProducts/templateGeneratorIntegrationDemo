@@ -557,7 +557,42 @@ const CHIP_DENSITY = {
   'WPA Travel': 'rich', 'Swiss Exhibition': 'balanced', 'Event Summit': 'balanced',
 };
 
-function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel) {
+/* ── Direction rotation for the DEFAULT path ───────────────────────────────
+ *
+ * A direction is a complete, internally coherent concept — its typography,
+ * palette, density and composition language all belong to it. Repeated clicks
+ * were free to land on the same one, so the same brief kept producing the same
+ * concept. Rotation happens at the CONCEPT level and nowhere else: nothing
+ * inside a direction is randomised, and a direction the user chose explicitly
+ * is never rotated away from.
+ *
+ * Regenerate resends an identical payload, so the memory is keyed on the brief
+ * itself. Up to three recent directions are remembered per brief; the next draw
+ * excludes as many of them as it can while still leaving a real choice — three,
+ * then two, then just the immediately previous one. */
+const RECENT_LIMIT = 3;
+const recentDirections = new Map();
+
+function rotateDirection(candidates, memoryKey) {
+  const recent = recentDirections.get(memoryKey) || [];
+  let pool = candidates;
+  /* Widen the exclusion only while at least two options survive it, so a
+   * narrow intent set (say "elegant" -> four directions) still rotates instead
+   * of collapsing onto one. */
+  for (let depth = Math.min(RECENT_LIMIT, recent.length); depth >= 1; depth--) {
+    const avoid = recent.slice(0, depth);
+    const filtered = candidates.filter((k) => avoid.indexOf(k) === -1);
+    if (filtered.length >= 2) { pool = filtered; break; }
+    if (depth === 1 && filtered.length === 1) { pool = filtered; }
+  }
+  const direction = pickDirection(pool);
+  recentDirections.set(memoryKey,
+    [direction.key].concat(recent.filter((k) => k !== direction.key)).slice(0, RECENT_LIMIT));
+  return direction;
+}
+
+function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel,
+    variationKey) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -593,9 +628,11 @@ function resolveCreativeDirection(styleDirection, industry, templateType, creati
     return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference);
   }
 
-  // ── Generic or empty: intent first, then a balanced draw ─────────────────
+  // ── Generic or empty: intent first, then a rotated draw ──────────────────
   const keys = intentKeysFor(raw) || intentKeysFor(industry);
-  const direction = pickDirection(keys);
+  const candidates = (keys && keys.length) ? keys : DESIGN_DIRECTIONS.map((d) => d.key);
+  const direction = rotateDirection(candidates,
+    variationKey || `${templateType}|${raw}|${industry}`);
   return compose(direction.brief, direction.density, null);
 }
 
@@ -1041,7 +1078,15 @@ async function handleGenerate(body, send) {
         : getColorGuidance(industry));
 
   // Resolve creative direction — replace generic "corporate" with portfolio archetypes
-  let styleDirFinal = resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel);
+  /* Identifies THIS brief. Regenerate resends the identical payload, so this is
+     what lets the default path recognise a repeat and rotate to a different
+     concept instead of drawing the same one again. */
+  const variationKey = JSON.stringify([
+    templateType, industry || '', businessName || '', styleDirection || '',
+    specialInstructions || '', colors || null, !!doubleSided, orientation || '',
+  ]);
+  let styleDirFinal = resolveCreativeDirection(styleDirection, industry, templateType,
+    creativityLevel, variationKey);
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;
   const hasRefUrl = (referenceImageUrl || '').trim();
