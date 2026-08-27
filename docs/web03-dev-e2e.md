@@ -136,39 +136,63 @@ Anthropic requests **same-origin, with no credentials**, to
 /git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm
 ```
 
-which adds the key server-side. The key is read only from the Lucee service's
-own configuration — `ANTHROPIC_API_KEY`, the `anthropic.api.key` JVM property,
-or a file named by `ANTHROPIC_API_KEY_FILE` — never from this repository, and
-it never reaches the browser, localStorage, a URL or a log. Full rules, and
+which adds the key server-side. A server key is read only from the Lucee
+service's own configuration — `ANTHROPIC_API_KEY`, the `anthropic.api.key` JVM
+property, or a file named by `ANTHROPIC_API_KEY_FILE` — never from this
+repository, and it never reaches the browser, a URL or a log. It always wins;
+the DEV fallback below applies only where the server has none. Full rules, and
 every fail-closed branch, are in `tests/web03-dev-e2e/README.md` in the
 oldDesigner repository.
 
-### Making it work right now — the DEV key in localStorage
+### Making it work right now — the DEV key dialog
 
 Configuring `ANTHROPIC_API_KEY` on the Lucee service needs someone with access to
-that service. Until then, give the key to **your browser only**. Open the dev
-Generator, open the console, and run once:
+that service. Until then, give the key to **your browser only** — and the clone
+asks you for it itself. No console, no file, no command.
 
-```js
-localStorage.setItem('SMP_WEB03_DEV_ANTHROPIC_API_KEY', 'sk-ant-…')
-```
+On first load the dev Generator asks the server one question, at
+`aiKeyStatus.cfm`: does it have a key of its own? It answers a boolean and
+nothing else, and makes no upstream call. If the server has a key you are never
+asked. If it does not, a small **Dev API Setup** dialog appears with a
+password-style field and one button, **Save & Continue**, under the line
+*Stored only in this browser for development.*
 
-Reload. The Generator sends it to the proxy in an `X-Dev-Anthropic-Key` header,
-and the proxy uses it **only** when the server has no key of its own — so
-configuring the service later switches this off automatically.
+Paste the key once. From then on the Generator sends it to the proxy in an
+`X-Dev-Anthropic-Key` header, and the proxy uses it **only** when the server has
+no key of its own — so configuring the service later switches this off
+automatically.
+
+The dialog can be dismissed with **Not now**, Escape, or a click outside it. The
+key is needed for design generation and nothing else, so the demo shortcuts and
+Push to Designer stay usable without one; the next generation attempt brings the
+dialog straight back.
+
+If Anthropic refuses the key, the Generator says exactly that — *"Anthropic
+rejected this API key. Enter a different key."* — drops the stored value and
+reopens the dialog. No status codes, hashes or diagnostics reach the UI.
+
+**Where it is kept, and why in two places.** `localStorage`, under
+`SMP_WEB03_DEV_ANTHROPIC_API_KEY`, mirrored into a host-scoped cookie
+`smp_web03_dev_anthropic_key`. Nothing in the Generator clears `localStorage`,
+yet a key set by hand still disappeared, because `localStorage` has two ways of
+vanishing that no application code can see: `http://web03…` and `https://web03…`
+are **different origins with separate stores**, and the preview renders in
+sandboxed `srcdoc` iframes, which are separate storage contexts of their own. A
+cookie is scoped to the host rather than the scheme or the frame, so it survives
+both; a read that finds only the cookie repairs `localStorage` from it.
 
 **Why not a file.** It used to be a committed constant in
 `generator/web03-dev-api-key.js`. That file is gone. GitHub's secret scanning
 reports any key pushed to a repository, Anthropic revokes it automatically, and
-two keys died that way within minutes of being committed. A key in localStorage
-is never written to a file, so there is nothing to commit and nothing to scan.
-It stays in that one browser profile, survives reloads, and clearing site data
-removes it.
+two keys died that way within minutes of being committed. A key entered in the
+dialog is never written to a file, so there is nothing to commit and nothing to
+scan. It stays in that one browser profile, survives reloads, and clearing site
+data removes it.
 
-With neither a server key nor a pasted one, the proxy answers `503` with
-`"code": "no-api-key"` and names both options. That is configuration missing,
-not a broken build — the demo shortcuts and Push to Designer keep working
-either way.
+With neither a server key nor an entered one, the proxy answers `503` with
+`"code": "no-api-key"`. The Generator turns that into the dialog rather than a
+message to read. That is configuration missing, not a broken build — the demo
+shortcuts and Push to Designer keep working either way.
 
 Every other deployment is untouched: the public build still offers its own
 "Set API key" button and calls Anthropic directly, and localhost still uses

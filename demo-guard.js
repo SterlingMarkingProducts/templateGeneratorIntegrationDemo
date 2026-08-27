@@ -39,6 +39,12 @@
   /* The same-origin AI proxy. It adds the Anthropic key server-side, so the
    * request that reaches it carries no credentials — exactly like the import. */
   var DEV_AI_PROXY_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
+  /* The proxy's read-only companion. It answers one question — does this server
+   * hold an Anthropic key of its own — with a boolean, makes no upstream call
+   * and returns nothing derived from a key. Without this exception the dev
+   * clone cannot ask, so it would prompt for a key even where the server
+   * already has one. */
+  var DEV_AI_STATUS_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiKeyStatus.cfm';
   var DEV_DATA_FILE    = /^[A-Za-z0-9._-]+\.json$/;
 
   /* The clone directory this page is being served from, or null when it is not
@@ -68,6 +74,12 @@
     return u.pathname === DEV_AI_PROXY_PATH;
   }
 
+  /* The key-status probe, and only it. Same shape and same reasoning as the
+   * proxy exception above: one exact path, fixed in source. */
+  function isDevAiKeyStatus(u) {
+    return u.pathname === DEV_AI_STATUS_PATH;
+  }
+
   /* The clone's OWN committed catalogue and demo files, read from its own
    * directory. product-select.js and demo-samples.js fetch these; on web03 the
    * clone is served from web03.sterling.ca, so the guard was refusing the page
@@ -85,7 +97,8 @@
     var root = devCloneRoot();
     if (!root || u.origin !== window.location.origin) return false;
     return isDevCloneData(u, root)
-      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)));
+      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)
+                             || isDevAiKeyStatus(u)));
   }
 
   function isBlocked(url, allowDevImport) {

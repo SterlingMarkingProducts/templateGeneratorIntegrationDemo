@@ -25,28 +25,23 @@ const WEB03_PROXY_ENDPOINT = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm
    sends. Not a secret; it exists so the proxy's own check is exercised. */
 const WEB03_DEV_TOKEN = 'web03-dev-e2e-token';
 
+const WEB03_PROXY_MODE = location.protocol !== 'file:'
+  && location.pathname.indexOf(WEB03_DEV_CLONE) !== -1;
+
 /* ── the DEV key, kept OUT of git ──────────────────────────────────────────
    A key committed to a file was the wrong answer: GitHub's secret scanning
    reports it to Anthropic, which revokes it automatically. Two keys died that
-   way. The key now lives in this browser's localStorage and is never written to
-   a file, so nothing to commit and nothing to scan.
+   way. The key is asked for once, in the page, by web03-dev-key.js, and kept in
+   this browser — never written to a file, so nothing to commit and nothing to
+   scan. No console, no DevTools.
 
-   Set it once, in the browser console on the dev Generator page:
-
-     localStorage.setItem('SMP_WEB03_DEV_ANTHROPIC_API_KEY', 'sk-ant-…')
-
-   A server-side ANTHROPIC_API_KEY on web03 still wins over this — aiProxy.cfm
-   only falls back to what the browser sends when it has none of its own. */
-const WEB03_DEV_KEY_STORAGE = 'SMP_WEB03_DEV_ANTHROPIC_API_KEY';
-
+   A server-side ANTHROPIC_API_KEY on web03 still wins: aiProxy.cfm falls back
+   to what the browser sends only when it has none of its own, and the dialog is
+   never shown when the server reports one. */
 function getWeb03DevKey() {
-  if (!WEB03_PROXY_MODE) return '';
-  try {
-    return (localStorage.getItem(WEB03_DEV_KEY_STORAGE) || '').trim();
-  } catch { return ''; }   /* storage disabled — behave as if unset */
+  if (!WEB03_PROXY_MODE || !window.SMPDevKey) return '';
+  return window.SMPDevKey.get();
 }
-const WEB03_PROXY_MODE = location.protocol !== 'file:'
-  && location.pathname.indexOf(WEB03_DEV_CLONE) !== -1;
 
 /* Served from anywhere other than localhost or that clone (GitHub Pages,
    file://): the app runs entirely in the browser and the visitor supplies
@@ -120,8 +115,7 @@ function anthropicHeaders() {
        ANTHROPIC_API_KEY configured, this browser supplies one so live
        generation works without touching the Lucee service. The proxy PREFERS
        its own server-side key and falls back to this only when it has none.
-       Read from localStorage, never from a committed file — see
-       WEB03_DEV_KEY_STORAGE above. */
+       Held by web03-dev-key.js, never in a committed file. */
     const devKey = getWeb03DevKey();
     if (devKey) { headers['X-Dev-Anthropic-Key'] = devKey; }
     return headers;
@@ -164,17 +158,21 @@ async function readAnthropicError(res) {
     message = data?.error?.message || message;
     diagnostic = data?.error?.diagnostic || null;
   } catch { /* non-JSON body */ }
-  if (res.status === 401) { logDevKeyHash(diagnostic); }
+  if (res.status === 401) { logDevKeyHash(diagnostic); }   /* console only */
   if (SERVER_PROXY_MODE) {
     /* No key button is involved on this side, so never send the operator to
-       one. On the dev clone, a "no key" refusal has one specific remedy — say
-       exactly what to run rather than leaving the proxy's generic wording. */
-    if (WEB03_PROXY_MODE && res.status === 503 && !getWeb03DevKey()) {
-      return new Error(
-        'No Anthropic key is available. Set one for this browser only — open the '
-        + 'console and run:  localStorage.setItem(\'' + WEB03_DEV_KEY_STORAGE
-        + '\', \'sk-ant-…\')  then reload. It is never written to a file, so it '
-        + 'cannot be committed or picked up by secret scanning.');
+       one. On the dev clone a "no key" refusal has one remedy, and it is a
+       thing to DO rather than a thing to read: reopen the setup dialog. */
+    if (WEB03_PROXY_MODE && res.status === 503 && window.SMPDevKey) {
+      window.SMPDevKey.open('');
+      return new Error('Enter your Anthropic API key to enable live generation.');
+    }
+    /* Anthropic refused the key this browser holds. Say so plainly and ask for
+       another — no status codes, no hashes, no diagnostics in the UI. */
+    if (WEB03_PROXY_MODE && res.status === 401 && window.SMPDevKey
+        && window.SMPDevKey.get()) {
+      window.SMPDevKey.rejected();
+      return new Error('Anthropic rejected this API key. Enter a different key.');
     }
     return new Error(message);
   }
