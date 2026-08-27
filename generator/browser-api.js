@@ -115,12 +115,37 @@ function anthropicHeaders() {
   };
 }
 
+/* DEV diagnostics for a 401, on the web03 clone only. Logs the SHA-256 of the
+   key this page holds — never the key — next to the hash the proxy reports for
+   the key it actually used. Matching hashes prove the value crossed intact, so
+   a 401 is the credential itself and not the transport. */
+async function logDevKeyHash(diagnostic) {
+  if (!WEB03_PROXY_MODE || !window.crypto || !crypto.subtle) return;
+  const key = typeof window.SMPWeb03DevApiKey === 'string'
+    ? window.SMPWeb03DevApiKey.trim() : '';
+  if (!key) return;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key));
+  const hash = Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0')).join('');
+  console.warn('[DEV KEY CHECK] browser key: length ' + key.length + ', sha256 ' + hash);
+  if (diagnostic) {
+    console.warn('[DEV KEY CHECK] proxy used : source ' + diagnostic.keySource
+      + ', length ' + diagnostic.keyLength + ', sha256 ' + diagnostic.keySha256);
+    console.warn('[DEV KEY CHECK] hashes ' + (diagnostic.keySha256 === hash
+      ? 'MATCH — the key reached Anthropic unaltered, so this 401 is the credential itself.'
+      : 'DIFFER — the proxy used a different key than this page holds.'));
+  }
+}
+
 async function readAnthropicError(res) {
   let message = `Anthropic API request failed (${res.status}).`;
+  let diagnostic = null;
   try {
     const data = await res.json();
     message = data?.error?.message || message;
+    diagnostic = data?.error?.diagnostic || null;
   } catch { /* non-JSON body */ }
+  if (res.status === 401) { logDevKeyHash(diagnostic); }
   if (SERVER_PROXY_MODE) {
     /* No key is involved on this side, so never send the operator to the key
        button. The proxy's own message already says what is wrong. */
