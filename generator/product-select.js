@@ -243,74 +243,12 @@
     });
   }
 
-  /* ── the empty-box order, web03 DEV only ─────────────────────────────────
-   *
-   * With nothing typed the picker used to show whatever the provider returned
-   * first. These are the parts Sterling wants to reach without searching, in
-   * this order. It is a DISPLAY ORDER and nothing more: a part that the live
-   * verified catalogue does not contain is simply not there, nothing is
-   * invented, and the moment anything is typed the provider's own ranking takes
-   * over untouched. */
-  var EMPTY_SEARCH_PRIORITY = [
-    'BCDP-CG', 'BCDP-CM', 'BCFCR-CG', 'BCFCR-EG', 'BCSGR-CG', 'BCSGR-EG',
-    'BCFCUV-CG', 'BCFCUV-EG', 'DS21824', 'DS21218', '57PCDP-CG', '57PCDP-CM',
-    '57PCSGR-CG', '57PCSGR-EG', 'TBDP-CG', 'S203PB', 'S203B', 'DS22436',
-    '212B26', 'HB2436DS', 'DE33', 'RE33', 'B1438', '214-13',
-  ];
-  /* De-duplicated, order preserved. DS21824 is listed twice; the first wins. */
-  var PRIORITY_PARTS = (function () {
-    var seen = {}, out = [];
-    EMPTY_SEARCH_PRIORITY.forEach(function (part) {
-      var k = String(part).toUpperCase();
-      if (!Object.prototype.hasOwnProperty.call(seen, k)) { seen[k] = true; out.push(k); }
-    });
-    return out;
-  }());
-
-  /* Which of the requested parts this catalogue actually has. Filled by the
-   * first browse and published, so the answer comes from the live catalogue
-   * rather than from anyone's assumption about it. */
-  var priorityPresent = null;
-
-  /* LOOK EACH PART UP. Sorting a page of results cannot work here: an empty
-   * query makes the provider walk its index in order and stop early, so with a
-   * large catalogue the window it returns is simply the first N parts —
-   * "1000", "1003", "1212D"… — and the requested parts are never in it to be
-   * sorted. Asking for each part by name is independent of catalogue size and
-   * of where the part sits in the index.
-   *
-   * An exact part number outranks everything else in the provider's own search,
-   * so this reuses that ranking rather than reaching past it; a part the
-   * catalogue does not contain simply resolves to nothing. */
-  function browseResults() {
-    return Promise.all(PRIORITY_PARTS.map(function (part) {
-      return provider.search(part, { limit: 5 }).then(function (r) {
-        for (var i = 0; i < r.results.length; i++) {
-          if (String(r.results[i].partNumber || '').toUpperCase() === part) return r.results[i];
-        }
-        return null;
-      }, function () { return null; });
-    })).then(function (found) {
-      var head = found.filter(Boolean);
-      priorityPresent = head.map(function (r) { return r.partNumber; });
-      if (priorityPresent.length !== PRIORITY_PARTS.length) {
-        console.info('[product-select] requested browse parts present: '
-          + (priorityPresent.join(', ') || 'none') + ' | missing: '
-          + PRIORITY_PARTS.filter(function (p) {
-              return head.every(function (r) {
-                return String(r.partNumber || '').toUpperCase() !== p;
-              });
-            }).join(', '));
-      }
-      var taken = {};
-      head.forEach(function (r) { taken[String(r.id)] = true; });
-      /* The rest of the browse, in the provider's own order, behind them. */
-      return provider.search('', { limit: BROWSE_LIMIT + head.length }).then(function (r) {
-        var tail = r.results.filter(function (x) { return !taken[String(x.id)]; });
-        return { results: head.concat(tail).slice(0, BROWSE_LIMIT), total: r.total };
-      });
-    });
-  }
+  /* THE BROWSE ORDER IS THE SERVER'S. devProductCatalogue.cfm returns the
+   * requested parts first, after its own templateImport eligibility filtering,
+   * and the picker renders what it is given in the order it is given. There is
+   * deliberately no list of part numbers on this side any more: two copies of
+   * an ordering rule is one too many, and the client copy could only ever
+   * reorder the window the provider happened to return. */
 
   var BROWSE_LIMIT = 25;
   var lastTotal = 0;
@@ -325,12 +263,8 @@
     if (!provider) return;
     setStatus('');
     var q = (input.value || '').trim();
-    /* Typed: the provider's own ranking, untouched. Empty, on the dev clone:
-     * the requested browse order. */
-    var run = (!q && IMPORTABLE_ONLY)
-      ? browseResults()
-      : provider.search(input.value, { limit: BROWSE_LIMIT });
-    run.then(function (r) {
+    provider.search(input.value, { limit: BROWSE_LIMIT })
+      .then(function (r) {
         lastTotal = r.total;
         lastQuery = q;
         renderResults(r.results);
@@ -472,16 +406,6 @@
     importableOnly: function () { return IMPORTABLE_ONLY; },
     /** Where the records actually came from, as the provider records it. */
     sourceId: function () { return provider ? provider.source : null; },
-    /** Which requested browse parts this catalogue has, and which it does not.
-     *  null until the first empty-box browse has run. */
-    priorityStatus: function () {
-      if (priorityPresent === null) return null;
-      var have = priorityPresent.map(function (p) { return String(p).toUpperCase(); });
-      return {
-        present: priorityPresent.slice(),
-        missing: PRIORITY_PARTS.filter(function (p) { return have.indexOf(p) === -1; }),
-      };
-    },
     /** Raw search passthrough, for tests and the preview harness. */
     search: function (q, opts) {
       return provider ? provider.search(q, opts)
