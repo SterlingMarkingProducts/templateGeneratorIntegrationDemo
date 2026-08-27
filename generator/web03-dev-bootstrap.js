@@ -155,6 +155,10 @@
       active: true,
       designerPage: DEV.designerPage,
       importBase: DEV.importBase,
+      /* Where browser-api.js sends Anthropic requests on this clone. Published
+       * for diagnostics only — browser-api.js holds its own constant, and the
+       * demo guard a third, so all three have to agree. */
+      aiProxy: '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm',
       /* Empty when the server served ../data/*.json itself; otherwise one
        * entry per file that fell back, with the real reason it did. */
       dataFallback: dataFallback

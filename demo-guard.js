@@ -36,6 +36,9 @@
    * unconditional guard. */
   var DEV_CLONE_FOLDER = '/generator-web03-dev-e2e/';
   var DEV_IMPORT_PATH  = '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm';
+  /* The same-origin AI proxy. It adds the Anthropic key server-side, so the
+   * request that reaches it carries no credentials — exactly like the import. */
+  var DEV_AI_PROXY_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
   var DEV_DATA_FILE    = /^[A-Za-z0-9._-]+\.json$/;
 
   /* The clone directory this page is being served from, or null when it is not
@@ -56,6 +59,15 @@
     return u.pathname === DEV_IMPORT_PATH;
   }
 
+  /* The AI proxy, and only it. Same shape as the import exception: the page
+   * must be the dev clone, the request must be same-origin, and the path must
+   * match this constant exactly. It is checked WITHOUT requiring the bootstrap,
+   * because browser-api.js issues its request from the page's own load path and
+   * the two constants are independent by design. */
+  function isDevAiProxy(u) {
+    return u.pathname === DEV_AI_PROXY_PATH;
+  }
+
   /* The clone's OWN committed catalogue and demo files, read from its own
    * directory. product-select.js and demo-samples.js fetch these; on web03 the
    * clone is served from web03.sterling.ca, so the guard was refusing the page
@@ -72,7 +84,8 @@
   function isDevAllowed(u, allowDevImport) {
     var root = devCloneRoot();
     if (!root || u.origin !== window.location.origin) return false;
-    return isDevCloneData(u, root) || (allowDevImport && isDevImportEndpoint(u, root));
+    return isDevCloneData(u, root)
+      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)));
   }
 
   function isBlocked(url, allowDevImport) {

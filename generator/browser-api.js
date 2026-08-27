@@ -15,21 +15,40 @@
 
 const IS_LOCALHOST = /^(localhost|127\.|\[::1\])/.test(location.hostname);
 
-/* Served from anywhere other than localhost (GitHub Pages, file://): the app
-   runs entirely in the browser and the visitor supplies their own key. */
-const STATIC_MODE = location.protocol === 'file:' || !IS_LOCALHOST;
+/* Served from the web03 dev clone folder: the Anthropic call goes through a
+   same-origin CFML proxy in the sibling oldDesigner clone, which adds the API
+   key server-side. The browser holds no key and is never asked for one.
+   Detected from this page's OWN path, so no other deployment can enter it. */
+const WEB03_DEV_CLONE = '/generator-web03-dev-e2e/';
+const WEB03_PROXY_ENDPOINT = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
+/* The dev endpoints' published test token — the same one the import transport
+   sends. Not a secret; it exists so the proxy's own check is exercised. */
+const WEB03_DEV_TOKEN = 'web03-dev-e2e-token';
+const WEB03_PROXY_MODE = location.protocol !== 'file:'
+  && location.pathname.indexOf(WEB03_DEV_CLONE) !== -1;
+
+/* Served from anywhere other than localhost or that clone (GitHub Pages,
+   file://): the app runs entirely in the browser and the visitor supplies
+   their own key. */
+const STATIC_MODE = !WEB03_PROXY_MODE
+  && (location.protocol === 'file:' || !IS_LOCALHOST);
 
 /* Served from localhost by local-ai-server.mjs: same in-browser engine, but
    the Anthropic call goes through the local proxy, which adds the API key
    server-side from .env. No key is ever handled by the browser here. */
 const LOCAL_PROXY_MODE = IS_LOCALHOST && location.protocol !== 'file:';
 
-/* engine.js runs in the browser in BOTH modes; only the transport differs. */
-const ENGINE_MODE = STATIC_MODE || LOCAL_PROXY_MODE;
+/* Both proxy modes share one rule: the browser sends NO credentials, and never
+   prompts for a key. Only the URL differs. */
+const SERVER_PROXY_MODE = LOCAL_PROXY_MODE || WEB03_PROXY_MODE;
 
-const ANTHROPIC_ENDPOINT = LOCAL_PROXY_MODE
-  ? '/local-api/anthropic'
-  : 'https://api.anthropic.com/v1/messages';
+/* engine.js runs in the browser in every mode; only the transport differs. */
+const ENGINE_MODE = STATIC_MODE || SERVER_PROXY_MODE;
+
+const ANTHROPIC_ENDPOINT = WEB03_PROXY_MODE
+  ? WEB03_PROXY_ENDPOINT
+  : (LOCAL_PROXY_MODE ? '/local-api/anthropic'
+                      : 'https://api.anthropic.com/v1/messages');
 
 const API_KEY_STORAGE = 'anthropic_api_key';
 
@@ -69,8 +88,13 @@ function ensureApiKey() {
 }
 
 function anthropicHeaders() {
-  /* Through the local proxy the browser sends no credentials at all — the
-     server attaches the key it read from .env. */
+  /* Through either proxy the browser sends NO credentials at all — the server
+     attaches the key it read from its own configuration. The web03 proxy also
+     wants the published dev token, which is not a secret and grants nothing:
+     it is there so the endpoint's own check runs rather than being bypassed. */
+  if (WEB03_PROXY_MODE) {
+    return { 'content-type': 'application/json', 'X-CSRF-Token': WEB03_DEV_TOKEN };
+  }
   if (LOCAL_PROXY_MODE) return { 'content-type': 'application/json' };
   return {
     'content-type': 'application/json',
@@ -86,6 +110,11 @@ async function readAnthropicError(res) {
     const data = await res.json();
     message = data?.error?.message || message;
   } catch { /* non-JSON body */ }
+  if (SERVER_PROXY_MODE) {
+    /* No key is involved on this side, so never send the operator to the key
+       button. The proxy's own message already says what is wrong. */
+    return new Error(message);
+  }
   if (res.status === 401 || res.status === 403) {
     if (getStoredApiKey()) {
       localStorage.removeItem(API_KEY_STORAGE);

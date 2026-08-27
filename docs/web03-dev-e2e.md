@@ -126,7 +126,29 @@ own status line says which file and why, and
 `window.SMPWeb03Dev.dataFallback` records it. Off the dev clone folder the file
 is never even downloaded.
 
-## No API key
+## Live AI generation — no API key to set
 
-Nothing in this path calls Anthropic. The Axiom demo is a committed sample, so
-the whole walkthrough runs with no key configured anywhere.
+On this clone the Generator generates for real, and nobody clicks "Set API
+key". `browser-api.js` detects the `/generator-web03-dev-e2e/` path and sends
+Anthropic requests **same-origin, with no credentials**, to
+
+```
+/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm
+```
+
+which adds the key server-side. The key is read only from the Lucee service's
+own configuration — `ANTHROPIC_API_KEY`, the `anthropic.api.key` JVM property,
+or a file named by `ANTHROPIC_API_KEY_FILE` — never from this repository, and
+it never reaches the browser, localStorage, a URL or a log. Full rules, and
+every fail-closed branch, are in `tests/web03-dev-e2e/README.md` in the
+oldDesigner repository.
+
+If the server has no key configured the proxy answers `503` with
+`"code": "no-api-key"` and names the variable to set. That is configuration
+missing, not a broken build — the demo shortcuts and Push to Designer keep
+working either way.
+
+Every other deployment is untouched: the public build still offers its own
+"Set API key" button and calls Anthropic directly, and localhost still uses
+`local-ai-server.mjs`.
+
