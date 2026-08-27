@@ -25,7 +25,9 @@
   var DEV = {
     /* TemplateImportTransport appends /templateImport.cfm to this. */
     importBase:   '/git/web03-dev-e2e/tests/web03-dev-e2e',
-    designerPage: '/git/web03-dev-e2e/tests/web03-dev-e2e/templateDesignerDev.cfm',
+    /* The FULL-UI dev clone: it runs the real templateDesigner.cfm and shows its
+     * real toolbar, menus and controls. Not the earlier canvas-only harness. */
+    designerPage: '/git/web03-dev-e2e/tests/web03-dev-e2e/templateDesignerFullDev.cfm',
     /* The published dev-only test token from web03DevSecurity.cfc. Not a
      * secret: it exists so the real endpoint's CSRF check is exercised rather
      * than bypassed, and it grants nothing anywhere else. */

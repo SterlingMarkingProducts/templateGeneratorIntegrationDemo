@@ -50,8 +50,13 @@ Both clones must be present, because the Generator posts to the other one:
    `/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm` — the real
    endpoint, with its internal-IP gate, its security provider and its CSRF
    check all still in force.
-5. On HTTP 201 the DEV Template Designer opens automatically at
-   `templateDesignerDev.cfm?template=<the id the server returned>&product=6505`.
+5. On HTTP 201 the FULL-UI dev Template Designer opens automatically at
+   `templateDesignerFullDev.cfm?template=<the id the server returned>&product=6505`.
+   That page runs Sterling's real `templateDesigner.cfm` — its own toolbar,
+   menus and controls — rebased for the `/git/` clone and bound to
+   `designCentral-dev`. Publishing, mapping, upload and ordering fail closed
+   there; see `RELEASE-READINESS.md` and `tests/web03-dev-e2e/README.md` in the
+   oldDesigner repository.
 
 The draft is created with `live = 0` and no rows in `productTemplateMap`,
 `siteFamilyTemplateMap` or `verticalTemplateMap`, so it is structurally
