@@ -84,9 +84,18 @@
    * There is deliberately NO fallback to the files: a dev picker that silently
    * reverts to synthetic ids is exactly what this replaces. If the endpoint
    * cannot be reached the picker says so and stays empty. */
-  var DEV_CLONE_FOLDER = '/generator-web03-dev-e2e/';
-  var IMPORTABLE_ONLY =
-    ((window.location && window.location.pathname) || '').indexOf(DEV_CLONE_FOLDER) !== -1;
+  /* The cfGitPuller folders that get dev behaviour. The approved integration
+   * clone, and the experimental design-quality clone alongside it, so the two
+   * can be compared on web03 without either one being redeployed over the
+   * other. Longest first, and each is matched with its trailing slash, so
+   * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
+   * These are CONSTANTS: nothing is read from the URL or the query string, so
+   * no crafted link can turn dev behaviour on anywhere else. */
+  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+  var IMPORTABLE_ONLY = (function () {
+    var here = (window.location && window.location.pathname) || '';
+    return DEV_CLONE_FOLDERS.some(function (f) { return here.indexOf(f) !== -1; });
+  }());
   /* A CONSTANT, like every other dev endpoint in this build. Nothing is read
    * from the URL or the page, and demo-guard.js holds the same path a second
    * time so both have to agree. */

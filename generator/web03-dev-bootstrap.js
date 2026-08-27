@@ -19,8 +19,21 @@
 (function () {
   'use strict';
 
-  /* The cfGitPuller folder this build is deployed into. */
-  var CLONE_FOLDER = '/generator-web03-dev-e2e/';
+  /* The cfGitPuller folders that get dev behaviour. The approved integration
+   * clone, and the experimental design-quality clone alongside it, so the two
+   * can be compared on web03 without either one being redeployed over the
+   * other. Longest first, and each is matched with its trailing slash, so
+   * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
+   * These are CONSTANTS: nothing is read from the URL or the query string, so
+   * no crafted link can turn dev behaviour on anywhere else. */
+  var CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+
+  function inDevClone(path) {
+    for (var i = 0; i < CLONE_FOLDERS.length; i++) {
+      if (String(path || '').indexOf(CLONE_FOLDERS[i]) !== -1) { return CLONE_FOLDERS[i]; }
+    }
+    return null;
+  }
 
   var DEV = {
     /* TemplateImportTransport appends /templateImport.cfm to this. */
@@ -35,7 +48,7 @@
   };
 
   var path = (window.location && window.location.pathname) || '';
-  if (path.indexOf(CLONE_FOLDER) === -1) { return; }   // not the dev clone — do nothing
+  if (!inDevClone(path)) { return; }   // not a dev clone — do nothing
 
   /* ── data/*.json over HTTP ───────────────────────────────────────────────
    *

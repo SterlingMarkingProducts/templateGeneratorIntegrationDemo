@@ -34,7 +34,14 @@
    * this. Every other sterling.ca request — from this clone included — stays
    * blocked, and the exception is fetch-only: XHR and sendBeacon keep the
    * unconditional guard. */
-  var DEV_CLONE_FOLDER = '/generator-web03-dev-e2e/';
+  /* The cfGitPuller folders that get dev behaviour. The approved integration
+   * clone, and the experimental design-quality clone alongside it, so the two
+   * can be compared on web03 without either one being redeployed over the
+   * other. Longest first, and each is matched with its trailing slash, so
+   * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
+   * These are CONSTANTS: nothing is read from the URL or the query string, so
+   * no crafted link can turn dev behaviour on anywhere else. */
+  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
   var DEV_IMPORT_PATH  = '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm';
   /* The same-origin AI proxy. It adds the Anthropic key server-side, so the
    * request that reaches it carries no credentials — exactly like the import. */
@@ -57,8 +64,11 @@
    * it cannot be pointed anywhere else. */
   function devCloneRoot() {
     var here = window.location.pathname;
-    var at = here.indexOf(DEV_CLONE_FOLDER);
-    return at === -1 ? null : here.slice(0, at + DEV_CLONE_FOLDER.length);
+    for (var i = 0; i < DEV_CLONE_FOLDERS.length; i++) {
+      var at = here.indexOf(DEV_CLONE_FOLDERS[i]);
+      if (at !== -1) { return here.slice(0, at + DEV_CLONE_FOLDERS[i].length); }
+    }
+    return null;
   }
 
   /* The verified dev import endpoint, and only it. Two independent constants —

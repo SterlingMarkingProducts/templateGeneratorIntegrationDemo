@@ -26,8 +26,16 @@
 (function () {
   'use strict';
 
-  var CLONE_FOLDER = '/generator-web03-dev-e2e/';
-  if ((window.location.pathname || '').indexOf(CLONE_FOLDER) === -1) { return; }
+  /* The cfGitPuller folders that get dev behaviour. The approved integration
+   * clone, and the experimental design-quality clone alongside it, so the two
+   * can be compared on web03 without either one being redeployed over the
+   * other. Longest first, and each is matched with its trailing slash, so
+   * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
+   * These are CONSTANTS: nothing is read from the URL or the query string, so
+   * no crafted link can turn dev behaviour on anywhere else. */
+  var CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+  var here = window.location.pathname || '';
+  if (!CLONE_FOLDERS.some(function (f) { return here.indexOf(f) !== -1; })) { return; }
 
   var STORAGE_KEY = 'SMP_WEB03_DEV_ANTHROPIC_API_KEY';
   var COOKIE_NAME = 'smp_web03_dev_anthropic_key';

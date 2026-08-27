@@ -19,14 +19,17 @@ const IS_LOCALHOST = /^(localhost|127\.|\[::1\])/.test(location.hostname);
    same-origin CFML proxy in the sibling oldDesigner clone, which adds the API
    key server-side. The browser holds no key and is never asked for one.
    Detected from this page's OWN path, so no other deployment can enter it. */
-const WEB03_DEV_CLONE = '/generator-web03-dev-e2e/';
+/* Both dev clone folders: the approved integration clone and the experimental
+   design-quality clone beside it. Longest first, and each carries its trailing
+   slash, so the plain folder cannot match the '-phase1' one by accident. */
+const WEB03_DEV_CLONES = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
 const WEB03_PROXY_ENDPOINT = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
 /* The dev endpoints' published test token — the same one the import transport
    sends. Not a secret; it exists so the proxy's own check is exercised. */
 const WEB03_DEV_TOKEN = 'web03-dev-e2e-token';
 
 const WEB03_PROXY_MODE = location.protocol !== 'file:'
-  && location.pathname.indexOf(WEB03_DEV_CLONE) !== -1;
+  && WEB03_DEV_CLONES.some((f) => location.pathname.indexOf(f) !== -1);
 
 /* ── the DEV key, kept OUT of git ──────────────────────────────────────────
    A key committed to a file was the wrong answer: GitHub's secret scanning
