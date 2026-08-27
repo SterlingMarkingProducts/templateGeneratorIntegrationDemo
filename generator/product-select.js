@@ -66,28 +66,34 @@
    * all if the catalogue does not contain it. */
   var DEFAULT_PRODUCT_ID = 6505;
 
-  /* ── web03 DEV only: hide what cannot be pushed ──────────────────────────
+  /* ── web03 DEV only: the LIVE designCentral-dev catalogue ────────────────
    *
-   * The picker searches both catalogues, and the spreadsheet-inferred TEST
-   * inventory carries SYNTHETIC ids — "1-31" and its 443 neighbours have a real
-   * Sterling part number but no authoritative designCentral products.id. Push
-   * to Designer already knows this: sterling-legacy.js refuses to put such an
-   * id in productList, so those products reach the Template Designer with no
-   * product at all. On the dev clone they are therefore offered but not
-   * pushable, which is worse than not offering them.
+   * Off the dev clone the picker searches the two files above, and that is
+   * unchanged. On the dev clone it searches designCentral-dev itself, through a
+   * read-only endpoint in the oldDesigner dev folder.
    *
-   * So this filter applies the SAME rule, one step earlier — at the picker
-   * instead of at the push. Nothing is invented, nothing is mapped: a record
-   * either already carries a real positive numeric id and is not flagged
-   * inferred, or it is hidden.
+   * WHY. The spreadsheet-inferred TEST inventory carries SYNTHETIC ids — "1-31"
+   * and its 443 neighbours have a real Sterling part number but no
+   * authoritative designCentral products.id. Push to Designer already knew it:
+   * sterling-legacy.js refuses to put such an id in productList, so those
+   * products reached the Template Designer with no product at all. The live
+   * endpoint returns only products designCentral-dev really holds, with the
+   * values it really holds, so anything offered here can complete the workflow
+   * with its own id.
    *
-   * DEV CLONE ONLY. Every other deployment keeps the full catalogue, because
-   * the test inventory is exactly what that build is meant to be driven by. */
+   * There is deliberately NO fallback to the files: a dev picker that silently
+   * reverts to synthetic ids is exactly what this replaces. If the endpoint
+   * cannot be reached the picker says so and stays empty. */
   var DEV_CLONE_FOLDER = '/generator-web03-dev-e2e/';
   var IMPORTABLE_ONLY =
     ((window.location && window.location.pathname) || '').indexOf(DEV_CLONE_FOLDER) !== -1;
+  /* A CONSTANT, like every other dev endpoint in this build. Nothing is read
+   * from the URL or the page, and demo-guard.js holds the same path a second
+   * time so both have to agree. */
+  var LIVE_CATALOGUE_URL = '/git/web03-dev-e2e/tests/web03-dev-e2e/devProductCatalogue.cfm';
 
-  /* The rule sterling-legacy.js applies before an id may travel:
+  /* Belt and braces over the live source. The rule sterling-legacy.js applies
+   * before an id may travel:
    *   productList: (pc.authoritative && typeof pc.productId === 'number'
    *                 && pc.productId > 0) ? [pc.productId] : []
    * read here against the RAW catalogue record, where `authoritative` is
@@ -249,6 +255,40 @@
       .catch(function (e) { setStatus(e.message || 'Product search failed.', true); });
   }
 
+  /* The two committed catalogue files: every deployment except the dev clone. */
+  function loadFileRecords() {
+    return Promise.all(CATALOGUE_URLS.map(function (u) {
+      return fetch(u).then(function (r) { return r.json(); })
+        .catch(function (e) {
+          console.warn('[product-select] catalogue unavailable: ' + u, e);
+          return { products: [] };
+        });
+    })).then(function (docs) {
+      return {
+        source: 'sterling-catalogue-local',
+        records: docs.reduce(function (all, d) {
+          return all.concat((d && d.products) || []);
+        }, []),
+      };
+    });
+  }
+
+  /* designCentral-dev itself, read-only. No fallback on purpose — see above. */
+  function loadLiveRecords() {
+    return fetch(LIVE_CATALOGUE_URL, { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('live catalogue HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (doc) {
+        var records = (doc && doc.products) || [];
+        console.info('[product-select] web03 dev: ' + records.length
+          + ' live products from ' + ((doc && doc.datasource) || 'designCentral-dev')
+          + (doc && doc.truncated ? ' (TRUNCATED at the endpoint row cap)' : ''));
+        return { source: 'sterling-designcentral-dev', records: records };
+      });
+  }
+
   /* ── Boot ────────────────────────────────────────────── */
   function boot() {
     groupEl   = $('sterlingProductGroup');
@@ -269,43 +309,35 @@
 
     /* The catalogue is FETCHED, not embedded — the same way the future API
      * provider will obtain records. */
-    Promise.all(CATALOGUE_URLS.map(function (u) {
-      return fetch(u).then(function (r) { return r.json(); })
-        .catch(function (e) {
-          console.warn('[product-select] catalogue unavailable: ' + u, e);
-          return { products: [] };
-        });
-    })).then(function (docs) {
-      var records = docs.reduce(function (all, d) {
-        return all.concat((d && d.products) || []);
-      }, []);
+    var loadRecords = IMPORTABLE_ONLY ? loadLiveRecords() : loadFileRecords();
+
+    loadRecords.then(function (loaded) {
+      var records = loaded.records;
       if (!records.length) throw new Error('no catalogue records');
-      var beforeFilter = records.length;
       if (IMPORTABLE_ONLY) {
         records = records.filter(hasAuthoritativeProductId);
         if (!records.length) throw new Error('no importable catalogue records');
-        console.info('[product-select] web03 dev: ' + records.length + ' of ' + beforeFilter
-          + ' catalogue records carry an authoritative designCentral products.id; '
-          + 'the rest are hidden because Push to Designer could not carry their id.');
       }
       provider = new window.SMPProductProvider.CatalogueProductProvider({
         records: records,
-        source: 'sterling-catalogue-local',
+        source: loaded.source,
       });
       /* After de-duplication, not before — the two catalogues overlap. */
       catalogueSize = provider.records.length;
       input.disabled = false;
       input.placeholder = 'Search ' + catalogueSize + ' Sterling products…';
       if (IMPORTABLE_ONLY) {
-        /* Say why the list is short, in the picker's own status line, so it
-         * reads as the intended filter rather than a broken catalogue. */
-        setStatus('Dev clone: showing only products with an authoritative '
-          + 'designCentral products.id — the ones Push to Designer can carry.');
+        /* Say where the list came from, in the picker's own status line, so a
+         * shorter list reads as the live dev database rather than a failure. */
+        setStatus('Dev clone: ' + catalogueSize + ' live product'
+          + (catalogueSize === 1 ? '' : 's') + ' from designCentral-dev.');
       }
       applyDefaultSelection();
     }).catch(function (e) {
       input.disabled = true;
-      setStatus('Product catalogue unavailable — the Generator still works without a product.', true);
+      setStatus(IMPORTABLE_ONLY
+        ? 'Live designCentral-dev catalogue unavailable — no products can be offered.'
+        : 'Product catalogue unavailable — the Generator still works without a product.', true);
       console.warn('[product-select] catalogue load failed', e);
     });
   }
@@ -350,10 +382,13 @@
     providerId: function () { return provider ? provider.id : null; },
     /** Number of records the picker is searching. */
     catalogueSize: function () { return catalogueSize; },
-    /** True where the picker is limited to records Push to Designer can carry
-     *  an id for (web03 dev clone only). Published so a test asserts the real
-     *  gate rather than repeating the path. */
+    /** True where the picker reads designCentral-dev live and is limited to
+     *  records Push to Designer can carry an id for (web03 dev clone only).
+     *  Published so a test asserts the real gate rather than repeating the
+     *  path. */
     importableOnly: function () { return IMPORTABLE_ONLY; },
+    /** Where the records actually came from, as the provider records it. */
+    sourceId: function () { return provider ? provider.source : null; },
     /** Raw search passthrough, for tests and the preview harness. */
     search: function (q, opts) {
       return provider ? provider.search(q, opts)

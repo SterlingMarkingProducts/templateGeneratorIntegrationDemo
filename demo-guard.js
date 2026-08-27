@@ -45,6 +45,11 @@
    * clone cannot ask, so it would prompt for a key even where the server
    * already has one. */
   var DEV_AI_STATUS_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiKeyStatus.cfm';
+  /* The dev product picker's source: designCentral-dev, read-only, SELECT only.
+   * The clone reads its own product catalogue from it instead of the
+   * spreadsheet files, so without this exception the picker has no source at
+   * all when the clone is served from web03.sterling.ca. */
+  var DEV_CATALOGUE_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/devProductCatalogue.cfm';
   var DEV_DATA_FILE    = /^[A-Za-z0-9._-]+\.json$/;
 
   /* The clone directory this page is being served from, or null when it is not
@@ -80,6 +85,12 @@
     return u.pathname === DEV_AI_STATUS_PATH;
   }
 
+  /* The live product catalogue, and only it. Same shape as the two above: one
+   * exact path, fixed in source. */
+  function isDevCatalogue(u) {
+    return u.pathname === DEV_CATALOGUE_PATH;
+  }
+
   /* The clone's OWN committed catalogue and demo files, read from its own
    * directory. product-select.js and demo-samples.js fetch these; on web03 the
    * clone is served from web03.sterling.ca, so the guard was refusing the page
@@ -98,7 +109,7 @@
     if (!root || u.origin !== window.location.origin) return false;
     return isDevCloneData(u, root)
       || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)
-                             || isDevAiKeyStatus(u)));
+                             || isDevAiKeyStatus(u) || isDevCatalogue(u)));
   }
 
   function isBlocked(url, allowDevImport) {
