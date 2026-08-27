@@ -1,5 +1,14 @@
 # Running the Generator against the web03 dev endpoint
 
+> **Validated.** This flow was completed in a real browser on web03 and created
+> draft `templates.id 37509` in `designCentral-dev`. The release-readiness
+> closeout — validated SHAs, what ships, what must not, the remaining Sterling
+> configuration, deployment order and rollback points — lives in the
+> `oldDesigner` repository as `RELEASE-READINESS.md` on branch
+> `claude/web03-dev-e2e`. Nothing in *this* repository is production Sterling
+> code.
+
+
 One URL on web03 takes a design from the real Generator, through the real
 `templateImport.cfm`, into a new draft in `designCentral-dev`, and opens that
 draft in the DEV Template Designer.
