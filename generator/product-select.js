@@ -66,6 +66,38 @@
    * all if the catalogue does not contain it. */
   var DEFAULT_PRODUCT_ID = 6505;
 
+  /* ── web03 DEV only: hide what cannot be pushed ──────────────────────────
+   *
+   * The picker searches both catalogues, and the spreadsheet-inferred TEST
+   * inventory carries SYNTHETIC ids — "1-31" and its 443 neighbours have a real
+   * Sterling part number but no authoritative designCentral products.id. Push
+   * to Designer already knows this: sterling-legacy.js refuses to put such an
+   * id in productList, so those products reach the Template Designer with no
+   * product at all. On the dev clone they are therefore offered but not
+   * pushable, which is worse than not offering them.
+   *
+   * So this filter applies the SAME rule, one step earlier — at the picker
+   * instead of at the push. Nothing is invented, nothing is mapped: a record
+   * either already carries a real positive numeric id and is not flagged
+   * inferred, or it is hidden.
+   *
+   * DEV CLONE ONLY. Every other deployment keeps the full catalogue, because
+   * the test inventory is exactly what that build is meant to be driven by. */
+  var DEV_CLONE_FOLDER = '/generator-web03-dev-e2e/';
+  var IMPORTABLE_ONLY =
+    ((window.location && window.location.pathname) || '').indexOf(DEV_CLONE_FOLDER) !== -1;
+
+  /* The rule sterling-legacy.js applies before an id may travel:
+   *   productList: (pc.authoritative && typeof pc.productId === 'number'
+   *                 && pc.productId > 0) ? [pc.productId] : []
+   * read here against the RAW catalogue record, where `authoritative` is
+   * product-provider.js's own honesty switch — false exactly when the record is
+   * flagged 'inferred-test'. */
+  function hasAuthoritativeProductId(raw) {
+    var inferred = !!(raw && raw.test && raw.test.technicalDataStatus === 'inferred-test');
+    return !inferred && typeof raw.id === 'number' && isFinite(raw.id) && raw.id > 0;
+  }
+
   var selected = null;      // normalized Product record, or null
   var catalogueSize = 0;
   var provider = null;
@@ -248,6 +280,14 @@
         return all.concat((d && d.products) || []);
       }, []);
       if (!records.length) throw new Error('no catalogue records');
+      var beforeFilter = records.length;
+      if (IMPORTABLE_ONLY) {
+        records = records.filter(hasAuthoritativeProductId);
+        if (!records.length) throw new Error('no importable catalogue records');
+        console.info('[product-select] web03 dev: ' + records.length + ' of ' + beforeFilter
+          + ' catalogue records carry an authoritative designCentral products.id; '
+          + 'the rest are hidden because Push to Designer could not carry their id.');
+      }
       provider = new window.SMPProductProvider.CatalogueProductProvider({
         records: records,
         source: 'sterling-catalogue-local',
@@ -256,6 +296,12 @@
       catalogueSize = provider.records.length;
       input.disabled = false;
       input.placeholder = 'Search ' + catalogueSize + ' Sterling products…';
+      if (IMPORTABLE_ONLY) {
+        /* Say why the list is short, in the picker's own status line, so it
+         * reads as the intended filter rather than a broken catalogue. */
+        setStatus('Dev clone: showing only products with an authoritative '
+          + 'designCentral products.id — the ones Push to Designer can carry.');
+      }
       applyDefaultSelection();
     }).catch(function (e) {
       input.disabled = true;
@@ -304,6 +350,10 @@
     providerId: function () { return provider ? provider.id : null; },
     /** Number of records the picker is searching. */
     catalogueSize: function () { return catalogueSize; },
+    /** True where the picker is limited to records Push to Designer can carry
+     *  an id for (web03 dev clone only). Published so a test asserts the real
+     *  gate rather than repeating the path. */
+    importableOnly: function () { return IMPORTABLE_ONLY; },
     /** Raw search passthrough, for tests and the preview harness. */
     search: function (q, opts) {
       return provider ? provider.search(q, opts)
