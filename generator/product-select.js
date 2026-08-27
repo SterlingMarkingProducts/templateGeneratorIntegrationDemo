@@ -57,10 +57,22 @@
     '../data/sterling-test-catalogue.json',  // spreadsheet-inferred TEST inventory
   ];
 
+  /* The approved default product: BCDP-CM, products.id 6505. The Generator
+   * opens on it so the artboard size, orientation options, product context and
+   * Push-to-Designer productId are right without anyone searching first.
+   *
+   * It is a REAL catalogue id, resolved through the SAME provider call a manual
+   * pick makes, so no product fact is invented here and nothing is selected at
+   * all if the catalogue does not contain it. */
+  var DEFAULT_PRODUCT_ID = 6505;
+
   var selected = null;      // normalized Product record, or null
   var catalogueSize = 0;
   var provider = null;
   var listeners = [];
+  /* Set the moment a person picks, clears, or a caller selects explicitly.
+   * The default below never overrides any of those. */
+  var userChose = false;
 
   /* ── DOM ─────────────────────────────────────────────── */
   var input, resultsEl, cardEl, clearBtn, statusEl, groupEl;
@@ -123,7 +135,7 @@
       '</div>';
     if (groupEl) groupEl.classList.add('has-product');
     var btn = $('spClear');
-    if (btn) btn.addEventListener('click', function () { select(null); });
+    if (btn) btn.addEventListener('click', function () { userChose = true; select(null); });
   }
 
   function select(product) {
@@ -182,6 +194,7 @@
   }
 
   function choose(id) {
+    userChose = true;
     setStatus('');
     provider.getById(id).then(select).catch(function (e) {
       setStatus(e.message || 'Could not load that product.', true);
@@ -243,10 +256,27 @@
       catalogueSize = provider.records.length;
       input.disabled = false;
       input.placeholder = 'Search ' + catalogueSize + ' Sterling products…';
+      applyDefaultSelection();
     }).catch(function (e) {
       input.disabled = true;
       setStatus('Product catalogue unavailable — the Generator still works without a product.', true);
       console.warn('[product-select] catalogue load failed', e);
+    });
+  }
+
+  /* Open on BCDP-CM. Runs once, only after the catalogue is really available,
+   * and only into an EMPTY selection: if a person picked something while the
+   * catalogue was loading, or a demo shortcut bound its own product first,
+   * whoever got there first keeps it. Failure is a console warning and no
+   * selection — never an invented product. */
+  function applyDefaultSelection() {
+    if (!provider || userChose || selected) return;
+    provider.getById(DEFAULT_PRODUCT_ID).then(function (p) {
+      if (userChose || selected) return;   // re-checked: getById is async
+      select(p);                           // the same call a manual pick makes
+    }).catch(function (e) {
+      console.warn('[product-select] default product ' + DEFAULT_PRODUCT_ID
+        + ' is not in this catalogue — opening with no product selected', e);
     });
   }
 
@@ -263,9 +293,13 @@
     /** Programmatic selection by part number — used by tests and previews. */
     selectByPartNumber: function (part) {
       if (!provider) return Promise.reject(new Error('Product catalogue not loaded yet.'));
+      userChose = true;
       return provider.getByPartNumber(part).then(function (p) { select(p); return p; });
     },
-    clear: function () { select(null); },
+    clear: function () { userChose = true; select(null); },
+    /** The product the Generator opens on. Published so a test asserts the
+     *  real constant rather than repeating the number. */
+    defaultProductId: function () { return DEFAULT_PRODUCT_ID; },
     /** Exposed so tests can assert which source is backing the picker. */
     providerId: function () { return provider ? provider.id : null; },
     /** Number of records the picker is searching. */

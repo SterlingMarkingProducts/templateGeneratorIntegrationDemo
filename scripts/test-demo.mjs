@@ -201,7 +201,13 @@ await designer.close();
 await realPage.close(); // popup windows are name-reused; close so the next push emits a fresh page event
 await page.bringToFront();
 /* The 12x16 Sign sample is no longer a user-facing shortcut; it stays a
-   regression fixture and is loaded here through the fixture API. */
+   regression fixture and is loaded here through the fixture API.
+   loadDesignOnly() loads the DESIGN only and deliberately leaves the product
+   alone, so the Generator's default BCDP-CM (3.5x2) would still be selected
+   under a 12x16 Sign. Clear it first: this fixture is a standalone design with
+   no product, which is exactly the state this section has always tested. */
+await page.evaluate(() => window.SMPProductSelection.clear());
+await page.waitForTimeout(300);
 await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-sign'));
 await page.waitForTimeout(900);
 const [realPage2] = await Promise.all([ctx.waitForEvent('page'), page.click('#pushToDesignerBtn')]);

@@ -80,8 +80,33 @@ const convert = () => page.evaluate(async () => {
 
 await load();
 
-/* ---- the control exists and starts empty ------------------------- */
-await check('Sterling Product control renders and starts unselected', async () => {
+/* ---- the control exists, opens on the default, and clears ---------
+ *
+ * The Generator now OPENS on the approved default product, BCDP-CM / 6505, so
+ * the artboard, orientation options and Push-to-Designer productId are right
+ * without anyone searching first. The unselected state is still real and still
+ * correct — it is what Clear returns to — so both are asserted here, and the
+ * rest of this file continues from the cleared state it always did. */
+await check('Sterling Product control opens on BCDP-CM and Clear unselects it', async () => {
+  await page.waitForFunction(() => window.SMPProductSelection.get() !== null, { timeout: 20000 });
+  const opened = await page.evaluate(() => ({
+    id: window.SMPProductSelection.get().id,
+    part: window.SMPProductSelection.get().partNumber,
+    defaultId: window.SMPProductSelection.defaultProductId(),
+    cardShown: !document.getElementById('productSelectedCard').classList.contains('hidden'),
+    dimsLocked: document.getElementById('dimWidth').readOnly,
+    w: document.getElementById('dimWidth').value,
+    h: document.getElementById('dimHeight').value,
+  }));
+  eq(String(opened.id), '6505', 'the default selection is the real catalogue id');
+  eq(opened.part, 'BCDP-CM', 'default part number');
+  eq(opened.defaultId, 6505, 'the published default constant');
+  ok(opened.cardShown, 'the picker must visibly show the default product');
+  ok(opened.dimsLocked, 'the default selection must drive the document settings');
+  eq([opened.w, opened.h], ['3.5', '2'], 'default product dimensions');
+
+  await page.evaluate(() => window.SMPProductSelection.clear());
+  await page.waitForTimeout(300);
   const s = await page.evaluate(() => ({
     hasInput: !!document.getElementById('productSearch'),
     hasGroup: !!document.getElementById('sterlingProductGroup'),
@@ -97,8 +122,8 @@ await check('Sterling Product control renders and starts unselected', async () =
   ok(s.cardHidden, 'no product card before selection');
   eq(s.selection, null, 'initial selection');
   eq(s.provider, 'catalogue-provider', 'provider id');
-  ok(s.dimsFree && s.ttFree, 'controls must be free with no product selected');
-  return 'catalogue-provider backing an empty selection';
+  ok(s.dimsFree && s.ttFree, 'controls must be free once the product is cleared');
+  return 'opens on BCDP-CM (6505); catalogue-provider backing an empty selection after Clear';
 });
 
 /* ---- search finds only verified products ------------------------- */

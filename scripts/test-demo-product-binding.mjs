@@ -200,8 +200,25 @@ const reload = async () => {
     && window.SMPProductSelection?.catalogueSize() > 0, { timeout: 20000 });
 };
 
-await check('with no product the Generator shows its standalone empty state', async () => {
+/* The Generator now OPENS on the approved default product, BCDP-CM / 6505, so
+   the artboard is right without anyone searching first. The standalone empty
+   state is still reachable and still correct — it is what Clear returns to —
+   so both are asserted here rather than one replacing the other. */
+await check('the Generator opens on BCDP-CM, and Clear still restores the empty state', async () => {
   await reload();
+  await page.waitForFunction(() => window.SMPProductSelection.get() !== null, { timeout: 20000 });
+  const opened = await page.evaluate(() => ({
+    id: window.SMPProductSelection.get().id,
+    part: window.SMPProductSelection.get().partNumber,
+    blank: !document.getElementById('blankState').classList.contains('hidden'),
+    boards: window.SMPBlankArtboard.pageCount(),
+  }));
+  eq(String(opened.id), '6505', 'the default selection is the real catalogue id');
+  eq(opened.part, 'BCDP-CM', 'default part number');
+  ok(opened.blank && opened.boards === 2, 'the default selection drew its 2-page artboard');
+
+  await page.evaluate(() => window.SMPProductSelection.clear());
+  await page.waitForTimeout(300);
   const s = await page.evaluate(() => ({
     empty: !document.getElementById('emptyState').classList.contains('hidden'),
     blank: !document.getElementById('blankState').classList.contains('hidden'),
@@ -209,9 +226,9 @@ await check('with no product the Generator shows its standalone empty state', as
     boards: window.SMPBlankArtboard.pageCount(),
   }));
   ok(s.empty, 'empty state must show');
-  ok(!s.blank && !s.result, 'no blank artboard and no result before anything is selected');
+  ok(!s.blank && !s.result, 'no blank artboard and no result once the product is cleared');
   eq(s.boards, 0, 'no artboards');
-  return 'standalone empty state preserved';
+  return 'opens on BCDP-CM (6505); standalone empty state preserved behind Clear';
 });
 
 await check('selecting BCDP-CM immediately shows a 2-page blank preview', async () => {
