@@ -1,0 +1,2698 @@
+{
+ "library": "Sterling Design Asset Library",
+ "version": 1,
+ "file_count": 80,
+ "base_path": "generator/assets/design-library/",
+ "source_audit": "audited file by file in Phase 2 planning; see the library summary for the full write-up",
+ "selection_contract": {
+  "level": "families first, then a file inside the family \u2014 so one design can never draw two colour variants of the same idea",
+  "gated_families": [
+   "figurative",
+   "floral-cluster",
+   "newsprint",
+   "postal",
+   "promo"
+  ],
+  "gated_note": "these are only offered when the brief or the chosen style explicitly calls for them; a direction alone never draws one",
+  "behind_text_max_opacity": "a ceiling for assets cleared to sit under type; assets with null are never placed behind text"
+ },
+ "families": {
+  "botanical-spray": [
+   "02_Soft_Green_Foliage_Spray.png",
+   "12_Neutral_Pampas_Grass_Spray.png"
+  ],
+  "brushstroke": [
+   "14_Cobalt_Blue_Ink_Swatch.png",
+   "16_Metallic_Gold_Paint_Stroke.png",
+   "28_Black_Dry_Ink_Stroke.png",
+   "55_Black_Diagonal_Stripe_Cluster.png",
+   "63_Black_Ink_Splatter.png"
+  ],
+  "doodle": [
+   "18_Sunny_Yellow_Painted_Squiggle.png",
+   "19_Coral_Dot_Cluster.png",
+   "20_Pink_Sparkle_Cluster.png",
+   "47_Pink_Heart_Doodle_Cluster.png",
+   "80_Colorful_Painted_Squiggle_Cluster.png"
+  ],
+  "figurative": [
+   "29_Vintage_Halftone_Eye.png",
+   "34_Classical_White_Plaster_Bust.png",
+   "39_Minimal_Black_Line_Art_Face.png"
+  ],
+  "flat-blob": [
+   "05_Playful_Colorful_Blob_Composition.png",
+   "17_Hot_Pink_Organic_Blob.png",
+   "41_Sunny_Yellow_Organic_Blob.png",
+   "42_Cobalt_Blue_Organic_Blob.png",
+   "43_Teal_Organic_Blob.png"
+  ],
+  "floral-cluster": [
+   "01_Pink_Peony_Floral_Cluster.png",
+   "09_Playful_Floral_Doodle.png",
+   "11_Blue_Hydrangea_Cluster.png"
+  ],
+  "geometric-solid": [
+   "48_Coral_Gradient_Arch.png",
+   "49_Red_Textured_Circle.png",
+   "50_Cobalt_Blue_Rounded_Block.png",
+   "51_Powder_Blue_Geometric_Triangle.png",
+   "52_Deep_Navy_Modernist_Arch.png",
+   "53_Bright_Orange_Geometric_Square.png",
+   "54_Sunny_Yellow_Semicircle.png"
+  ],
+  "geometric-system": [
+   "06_Modernist_Arch_Geometric_Shapes.png",
+   "10_Modernist_Transparent_Geometry.png",
+   "40_Black_Layered_Arch_Lines.png",
+   "44_Modernist_Overlapping_Color_Circles.png",
+   "79_Coral_Navy_Modernist_Geometry.png"
+  ],
+  "glossy-3d": [
+   "04_Iridescent_Liquid_Ribbon.png",
+   "21_Glossy_Purple_Gradient_Wave.png",
+   "22_Aqua_Liquid_Ribbon_Curl.png",
+   "23_Clear_Glass_Sphere.png",
+   "24_Iridescent_Pearl_Orb.png",
+   "65_Hot_Pink_Glossy_Wave.png",
+   "66_Electric_Blue_Glossy_Wave.png",
+   "68_Pearlescent_Glossy_Capsule.png",
+   "69_Coral_Peach_Gradient_Mesh_Blob.png",
+   "70_Holographic_Figure_Eight_Loop.png",
+   "78_Neutral_Pearl_Gradient_Blob.png"
+  ],
+  "gold-frame": [
+   "08_Gold_Botanical_Oval_Frame.png",
+   "35_Ornate_Gold_Oval_Frame.png",
+   "36_Ornate_Gold_Rectangle_Frame.png",
+   "37_Ornate_Gold_Corner_Filigree.png",
+   "38_Elegant_Gold_Divider.png"
+  ],
+  "newsprint": [
+   "32_Torn_Newspaper_Collage_Scrap.png"
+  ],
+  "postal": [
+   "31_Vintage_Postal_Wave_Lines.png"
+  ],
+  "promo": [
+   "45_Bright_Orange_Starburst.png"
+  ],
+  "ring-frame": [
+   "30_Red_Editorial_Stamp_Ring.png",
+   "67_Iridescent_Glass_Ring.png",
+   "76_Charcoal_Scribble_Circle.png",
+   "77_Metallic_Gold_Brush_Ring.png"
+  ],
+  "tape": [
+   "27_Neutral_Masking_Tape_Strip.png",
+   "60_Beige_Grid_Masking_Tape.png",
+   "73_Cobalt_Blue_Masking_Tape.png"
+  ],
+  "texture-neutral": [
+   "33_Soft_Black_Grain_Texture.png",
+   "46_Cobalt_Blue_Halftone_Dot_Grid.png",
+   "56_Charcoal_Minimal_Dot_Grid.png",
+   "64_White_Paint_Splatter.png",
+   "74_Cream_Linen_Organic_Arch.png",
+   "75_White_Gray_Marble_Fragment.png"
+  ],
+  "torn-paper": [
+   "07_Layered_Torn_Paper_Collage.png",
+   "25_Torn_White_Paper_Scrap.png",
+   "26_Torn_Cobalt_Blue_Paper.png",
+   "57_Torn_Orange_Paper_Scrap.png",
+   "58_Torn_Black_Paper_Scrap.png",
+   "59_White_Wrinkled_Paper_Scrap.png",
+   "71_Torn_Kraft_Paper_Strip.png",
+   "72_Powder_Blue_Handmade_Paper_Square.png"
+  ],
+  "watercolour-wash": [
+   "03_Multicolor_Watercolor_Wash.png",
+   "13_Sage_Green_Watercolor_Wash.png",
+   "15_Blush_Pink_Watercolor_Wash.png",
+   "61_Peach_Apricot_Watercolor_Wash.png",
+   "62_Lavender_Watercolor_Wash.png"
+  ]
+ },
+ "assets": [
+  {
+   "filename": "01_Pink_Peony_Floral_Cluster.png",
+   "url": "assets/design-library/01_Pink_Peony_Floral_Cluster.png",
+   "family": "floral-cluster",
+   "family_role": "a dense floral hero at one corner",
+   "requires_explicit_brief": true,
+   "category": "floral",
+   "visual_style": "painterly watercolour botanical",
+   "density": "high",
+   "likely_placement": "corner or one edge, cropped",
+   "colour_family": "pink / rose / green",
+   "mood": "romantic, feminine, traditional",
+   "use_cases": [
+    "wedding",
+    "florist",
+    "salon",
+    "boutique",
+    "invitations"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.51,
+    "mean_luminance": 0.643,
+    "edge_share": 0.416,
+    "dominant_hues": [
+     "red",
+     "orange",
+     "green"
+    ]
+   }
+  },
+  {
+   "filename": "02_Soft_Green_Foliage_Spray.png",
+   "url": "assets/design-library/02_Soft_Green_Foliage_Spray.png",
+   "family": "botanical-spray",
+   "family_role": "a botanical accent at one corner or edge",
+   "requires_explicit_brief": false,
+   "category": "floral",
+   "visual_style": "watercolour foliage spray",
+   "density": "medium",
+   "likely_placement": "corner or side spray",
+   "colour_family": "green / sage / cream",
+   "mood": "fresh, natural, calm",
+   "use_cases": [
+    "wellness",
+    "garden",
+    "eco",
+    "spa",
+    "organic food"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.364,
+    "mean_luminance": 0.467,
+    "edge_share": 0.386,
+    "dominant_hues": [
+     "green",
+     "yellow",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "03_Multicolor_Watercolor_Wash.png",
+   "url": "assets/design-library/03_Multicolor_Watercolor_Wash.png",
+   "family": "watercolour-wash",
+   "family_role": "a soft colour ground or band",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "loose watercolour wash",
+   "density": "medium",
+   "likely_placement": "band, edge bleed or full soft background",
+   "colour_family": "peach / mauve / terracotta",
+   "mood": "soft, artistic, warm",
+   "use_cases": [
+    "creative studio",
+    "therapy",
+    "boutique",
+    "artisan"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.495,
+    "mean_luminance": 0.713,
+    "edge_share": 0.39,
+    "dominant_hues": [
+     "red",
+     "orange",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "04_Iridescent_Liquid_Ribbon.png",
+   "url": "assets/design-library/04_Iridescent_Liquid_Ribbon.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D iridescent liquid ribbon",
+   "density": "low",
+   "likely_placement": "centred accent or diagonal sweep",
+   "colour_family": "iridescent violet / cyan",
+   "mood": "futuristic, glossy, premium-tech",
+   "use_cases": [
+    "tech",
+    "beauty-tech",
+    "events",
+    "nightlife"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.221,
+    "mean_luminance": 0.711,
+    "edge_share": 0.396,
+    "dominant_hues": [
+     "blue",
+     "purple",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "05_Playful_Colorful_Blob_Composition.png",
+   "url": "assets/design-library/05_Playful_Colorful_Blob_Composition.png",
+   "family": "flat-blob",
+   "family_role": "a flat colour anchor behind or beside the type",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "flat painterly blob composition",
+   "density": "high",
+   "likely_placement": "corner cluster or offset anchor",
+   "colour_family": "coral / yellow / cobalt / green",
+   "mood": "playful, energetic, contemporary",
+   "use_cases": [
+    "kids",
+    "creative agency",
+    "food truck",
+    "events"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.526,
+    "mean_luminance": 0.549,
+    "edge_share": 0.423,
+    "dominant_hues": [
+     "red",
+     "orange",
+     "gold"
+    ]
+   }
+  },
+  {
+   "filename": "06_Modernist_Arch_Geometric_Shapes.png",
+   "url": "assets/design-library/06_Modernist_Arch_Geometric_Shapes.png",
+   "family": "geometric-system",
+   "family_role": "a small system of shapes forming the composition",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "mid-century modernist arch stack",
+   "density": "high",
+   "likely_placement": "corner block or side column",
+   "colour_family": "navy / terracotta / mustard / sand",
+   "mood": "architectural, retro-modern, confident",
+   "use_cases": [
+    "architecture",
+    "design studio",
+    "furniture",
+    "gallery"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.522,
+    "mean_luminance": 0.484,
+    "edge_share": 0.479,
+    "dominant_hues": [
+     "orange",
+     "blue",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "07_Layered_Torn_Paper_Collage.png",
+   "url": "assets/design-library/07_Layered_Torn_Paper_Collage.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn paper + ink collage fragment",
+   "density": "medium",
+   "likely_placement": "centred accent or offset patch",
+   "colour_family": "black / cream / blush",
+   "mood": "editorial, raw, hand-made",
+   "use_cases": [
+    "zine",
+    "editorial",
+    "music",
+    "art director"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.378,
+    "mean_luminance": 0.482,
+    "edge_share": 0.213,
+    "dominant_hues": [
+     "orange",
+     "grey",
+     "black"
+    ]
+   }
+  },
+  {
+   "filename": "08_Gold_Botanical_Oval_Frame.png",
+   "url": "assets/design-library/08_Gold_Botanical_Oval_Frame.png",
+   "family": "gold-frame",
+   "family_role": "frame or divider around the content",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "fine gold botanical wreath frame",
+   "density": "low",
+   "likely_placement": "full frame around content",
+   "colour_family": "gold / tan",
+   "mood": "elegant, ceremonial, classic",
+   "use_cases": [
+    "wedding",
+    "luxury",
+    "awards",
+    "boutique",
+    "invitations"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.213,
+    "mean_luminance": 0.521,
+    "edge_share": 0.833,
+    "dominant_hues": [
+     "orange",
+     "tan",
+     "gold"
+    ]
+   }
+  },
+  {
+   "filename": "09_Playful_Floral_Doodle.png",
+   "url": "assets/design-library/09_Playful_Floral_Doodle.png",
+   "family": "floral-cluster",
+   "family_role": "a dense floral hero at one corner",
+   "requires_explicit_brief": true,
+   "category": "floral",
+   "visual_style": "flat illustrated floral sweep",
+   "density": "medium",
+   "likely_placement": "top or bottom edge sweep",
+   "colour_family": "coral / teal / mustard / violet",
+   "mood": "cheerful, folk, friendly",
+   "use_cases": [
+    "childcare",
+    "cafe",
+    "craft",
+    "gift",
+    "community"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.317,
+    "mean_luminance": 0.517,
+    "edge_share": 0.49,
+    "dominant_hues": [
+     "red",
+     "teal",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "10_Modernist_Transparent_Geometry.png",
+   "url": "assets/design-library/10_Modernist_Transparent_Geometry.png",
+   "family": "geometric-system",
+   "family_role": "a small system of shapes forming the composition",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "overlapping transparent shapes + line",
+   "density": "medium",
+   "likely_placement": "corner or offset anchor",
+   "colour_family": "navy / orange / mustard",
+   "mood": "modernist, considered, gallery",
+   "use_cases": [
+    "design studio",
+    "gallery",
+    "consultancy",
+    "architecture"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.429,
+    "mean_luminance": 0.363,
+    "edge_share": 0.336,
+    "dominant_hues": [
+     "orange",
+     "red",
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "11_Blue_Hydrangea_Cluster.png",
+   "url": "assets/design-library/11_Blue_Hydrangea_Cluster.png",
+   "family": "floral-cluster",
+   "family_role": "a dense floral hero at one corner",
+   "requires_explicit_brief": true,
+   "category": "floral",
+   "visual_style": "painterly watercolour botanical",
+   "density": "high",
+   "likely_placement": "corner or one edge, cropped",
+   "colour_family": "blue / green",
+   "mood": "fresh, romantic, garden",
+   "use_cases": [
+    "florist",
+    "wedding",
+    "garden",
+    "boutique",
+    "spa"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.561,
+    "mean_luminance": 0.565,
+    "edge_share": 0.461,
+    "dominant_hues": [
+     "blue",
+     "green",
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "12_Neutral_Pampas_Grass_Spray.png",
+   "url": "assets/design-library/12_Neutral_Pampas_Grass_Spray.png",
+   "family": "botanical-spray",
+   "family_role": "a botanical accent at one corner or edge",
+   "requires_explicit_brief": false,
+   "category": "floral",
+   "visual_style": "dried-grass botanical spray",
+   "density": "medium",
+   "likely_placement": "side spray or corner",
+   "colour_family": "cream / oat / tan",
+   "mood": "neutral, boho, calm, editorial",
+   "use_cases": [
+    "interiors",
+    "wellness",
+    "wedding",
+    "lifestyle brand"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.385,
+    "mean_luminance": 0.779,
+    "edge_share": 0.37,
+    "dominant_hues": [
+     "orange",
+     "white",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "13_Sage_Green_Watercolor_Wash.png",
+   "url": "assets/design-library/13_Sage_Green_Watercolor_Wash.png",
+   "family": "watercolour-wash",
+   "family_role": "a soft colour ground or band",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "soft watercolour wash",
+   "density": "medium",
+   "likely_placement": "band, edge bleed or full soft background",
+   "colour_family": "sage green",
+   "mood": "calm, natural, restorative",
+   "use_cases": [
+    "wellness",
+    "therapy",
+    "garden",
+    "organic",
+    "yoga"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.607,
+    "mean_luminance": 0.714,
+    "edge_share": 0.49,
+    "dominant_hues": [
+     "green",
+     "yellow",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "14_Cobalt_Blue_Ink_Swatch.png",
+   "url": "assets/design-library/14_Cobalt_Blue_Ink_Swatch.png",
+   "family": "brushstroke",
+   "family_role": "a stroke used as an underline, banner or bar",
+   "requires_explicit_brief": false,
+   "category": "brushstroke",
+   "visual_style": "saturated ink brush swatch",
+   "density": "medium",
+   "likely_placement": "banner behind a word, or bar",
+   "colour_family": "cobalt blue",
+   "mood": "bold, confident, graphic",
+   "use_cases": [
+    "consulting",
+    "sport",
+    "editorial",
+    "agency"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.45,
+    "mean_luminance": 0.236,
+    "edge_share": 0.348,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "15_Blush_Pink_Watercolor_Wash.png",
+   "url": "assets/design-library/15_Blush_Pink_Watercolor_Wash.png",
+   "family": "watercolour-wash",
+   "family_role": "a soft colour ground or band",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "pale watercolour wash",
+   "density": "low",
+   "likely_placement": "full soft background or band",
+   "colour_family": "blush pink",
+   "mood": "soft, gentle, feminine",
+   "use_cases": [
+    "beauty",
+    "salon",
+    "therapy",
+    "boutique",
+    "wedding"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.382,
+    "mean_luminance": 0.863,
+    "edge_share": 0.26,
+    "dominant_hues": [
+     "red",
+     "white",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "16_Metallic_Gold_Paint_Stroke.png",
+   "url": "assets/design-library/16_Metallic_Gold_Paint_Stroke.png",
+   "family": "brushstroke",
+   "family_role": "a stroke used as an underline, banner or bar",
+   "requires_explicit_brief": false,
+   "category": "brushstroke",
+   "visual_style": "metallic gold paint stroke",
+   "density": "low",
+   "likely_placement": "underline, banner or accent bar",
+   "colour_family": "gold",
+   "mood": "luxurious, celebratory, warm",
+   "use_cases": [
+    "luxury",
+    "beauty",
+    "jewellery",
+    "events",
+    "hospitality"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.249,
+    "mean_luminance": 0.56,
+    "edge_share": 0.188,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "17_Hot_Pink_Organic_Blob.png",
+   "url": "assets/design-library/17_Hot_Pink_Organic_Blob.png",
+   "family": "flat-blob",
+   "family_role": "a flat colour anchor behind or beside the type",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "flat painterly blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or behind a monogram",
+   "colour_family": "hot pink / magenta",
+   "mood": "bold, playful, modern",
+   "use_cases": [
+    "beauty",
+    "fashion",
+    "events",
+    "youth brand"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.309,
+    "mean_luminance": 0.365,
+    "edge_share": 0.275,
+    "dominant_hues": [
+     "magenta",
+     "pink"
+    ]
+   }
+  },
+  {
+   "filename": "18_Sunny_Yellow_Painted_Squiggle.png",
+   "url": "assets/design-library/18_Sunny_Yellow_Painted_Squiggle.png",
+   "family": "doodle",
+   "family_role": "a small hand-drawn accent",
+   "requires_explicit_brief": false,
+   "category": "doodle",
+   "visual_style": "hand-painted squiggle line",
+   "density": "low",
+   "likely_placement": "underline, divider or accent",
+   "colour_family": "yellow / gold",
+   "mood": "upbeat, casual, friendly",
+   "use_cases": [
+    "cafe",
+    "kids",
+    "creative",
+    "events"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.164,
+    "mean_luminance": 0.748,
+    "edge_share": 0.226,
+    "dominant_hues": [
+     "gold",
+     "orange",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "19_Coral_Dot_Cluster.png",
+   "url": "assets/design-library/19_Coral_Dot_Cluster.png",
+   "family": "doodle",
+   "family_role": "a small hand-drawn accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "painted dot cluster",
+   "density": "medium",
+   "likely_placement": "corner scatter or accent cluster",
+   "colour_family": "coral / orange / plum",
+   "mood": "warm, lively, contemporary",
+   "use_cases": [
+    "creative studio",
+    "cafe",
+    "festival",
+    "wellness"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.284,
+    "mean_luminance": 0.547,
+    "edge_share": 0.256,
+    "dominant_hues": [
+     "orange",
+     "red",
+     "pink"
+    ]
+   }
+  },
+  {
+   "filename": "20_Pink_Sparkle_Cluster.png",
+   "url": "assets/design-library/20_Pink_Sparkle_Cluster.png",
+   "family": "doodle",
+   "family_role": "a small hand-drawn accent",
+   "requires_explicit_brief": false,
+   "category": "doodle",
+   "visual_style": "four-point sparkle cluster",
+   "density": "low",
+   "likely_placement": "scattered accent",
+   "colour_family": "pink / rose",
+   "mood": "magical, celebratory, feminine",
+   "use_cases": [
+    "beauty",
+    "salon",
+    "kids",
+    "events",
+    "gift"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.111,
+    "mean_luminance": 0.554,
+    "edge_share": 0.172,
+    "dominant_hues": [
+     "pink",
+     "red",
+     "magenta"
+    ]
+   }
+  },
+  {
+   "filename": "21_Glossy_Purple_Gradient_Wave.png",
+   "url": "assets/design-library/21_Glossy_Purple_Gradient_Wave.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D glossy gradient wave",
+   "density": "low",
+   "likely_placement": "horizontal accent or divider",
+   "colour_family": "purple / magenta",
+   "mood": "glossy, futuristic, premium",
+   "use_cases": [
+    "tech",
+    "beauty",
+    "nightlife",
+    "digital product"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.165,
+    "mean_luminance": 0.561,
+    "edge_share": 0.241,
+    "dominant_hues": [
+     "purple",
+     "magenta",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "22_Aqua_Liquid_Ribbon_Curl.png",
+   "url": "assets/design-library/22_Aqua_Liquid_Ribbon_Curl.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D liquid glass ribbon",
+   "density": "low",
+   "likely_placement": "centred accent or corner sweep",
+   "colour_family": "aqua / cyan",
+   "mood": "fluid, clean, futuristic",
+   "use_cases": [
+    "tech",
+    "water",
+    "wellness",
+    "cosmetics"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.261,
+    "mean_luminance": 0.662,
+    "edge_share": 0.639,
+    "dominant_hues": [
+     "blue",
+     "teal",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "23_Clear_Glass_Sphere.png",
+   "url": "assets/design-library/23_Clear_Glass_Sphere.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "photoreal glass sphere",
+   "density": "medium",
+   "likely_placement": "centred accent or corner",
+   "colour_family": "pale blue / white",
+   "mood": "clean, clinical, premium",
+   "use_cases": [
+    "tech",
+    "optics",
+    "science",
+    "skincare"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.419,
+    "mean_luminance": 0.774,
+    "edge_share": 0.27,
+    "dominant_hues": [
+     "blue",
+     "white",
+     "light-grey"
+    ]
+   }
+  },
+  {
+   "filename": "24_Iridescent_Pearl_Orb.png",
+   "url": "assets/design-library/24_Iridescent_Pearl_Orb.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "photoreal iridescent bubble",
+   "density": "medium",
+   "likely_placement": "centred accent or corner",
+   "colour_family": "iridescent pastel",
+   "mood": "dreamy, glossy, playful-premium",
+   "use_cases": [
+    "beauty",
+    "events",
+    "nightlife",
+    "digital"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.393,
+    "mean_luminance": 0.719,
+    "edge_share": 0.233,
+    "dominant_hues": [
+     "blue",
+     "teal",
+     "purple"
+    ]
+   }
+  },
+  {
+   "filename": "25_Torn_White_Paper_Scrap.png",
+   "url": "assets/design-library/25_Torn_White_Paper_Scrap.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn paper edge",
+   "density": "medium",
+   "likely_placement": "edge band or text platform",
+   "colour_family": "white / light grey",
+   "mood": "tactile, editorial, honest",
+   "use_cases": [
+    "editorial",
+    "stationery",
+    "craft",
+    "packaging"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.526,
+    "mean_luminance": 0.889,
+    "edge_share": 0.464,
+    "dominant_hues": [
+     "white",
+     "light-grey",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "26_Torn_Cobalt_Blue_Paper.png",
+   "url": "assets/design-library/26_Torn_Cobalt_Blue_Paper.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn coloured paper",
+   "density": "medium",
+   "likely_placement": "edge band or accent strip",
+   "colour_family": "cobalt blue",
+   "mood": "graphic, punchy, hand-made",
+   "use_cases": [
+    "zine",
+    "agency",
+    "music",
+    "streetwear"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.407,
+    "mean_luminance": 0.334,
+    "edge_share": 0.379,
+    "dominant_hues": [
+     "blue",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "27_Neutral_Masking_Tape_Strip.png",
+   "url": "assets/design-library/27_Neutral_Masking_Tape_Strip.png",
+   "family": "tape",
+   "family_role": "a tape strip fastening a corner or label",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "masking tape strip",
+   "density": "low",
+   "likely_placement": "corner fastener or label holder",
+   "colour_family": "tan / cream",
+   "mood": "crafty, informal, scrapbook",
+   "use_cases": [
+    "craft",
+    "studio",
+    "cafe",
+    "workshop",
+    "market"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.203,
+    "mean_luminance": 0.792,
+    "edge_share": 0.221,
+    "dominant_hues": [
+     "orange",
+     "tan",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "28_Black_Dry_Ink_Stroke.png",
+   "url": "assets/design-library/28_Black_Dry_Ink_Stroke.png",
+   "family": "brushstroke",
+   "family_role": "a stroke used as an underline, banner or bar",
+   "requires_explicit_brief": false,
+   "category": "brushstroke",
+   "visual_style": "dry black ink stroke",
+   "density": "medium",
+   "likely_placement": "underline, banner or bar",
+   "colour_family": "black",
+   "mood": "raw, expressive, editorial",
+   "use_cases": [
+    "art",
+    "music",
+    "editorial",
+    "tattoo",
+    "agency"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.334,
+    "mean_luminance": 0.123,
+    "edge_share": 0.36,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "29_Vintage_Halftone_Eye.png",
+   "url": "assets/design-library/29_Vintage_Halftone_Eye.png",
+   "family": "figurative",
+   "family_role": "a figurative image as the hero subject",
+   "requires_explicit_brief": true,
+   "category": "figurative",
+   "visual_style": "halftone photo fragment (eye)",
+   "density": "high",
+   "likely_placement": "centred collage element",
+   "colour_family": "greyscale",
+   "mood": "surreal, editorial, provocative",
+   "use_cases": [
+    "art",
+    "music",
+    "zine",
+    "film",
+    "fashion"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.65,
+    "mean_luminance": 0.458,
+    "edge_share": 0.524,
+    "dominant_hues": [
+     "grey",
+     "light-grey",
+     "black"
+    ]
+   }
+  },
+  {
+   "filename": "30_Red_Editorial_Stamp_Ring.png",
+   "url": "assets/design-library/30_Red_Editorial_Stamp_Ring.png",
+   "family": "ring-frame",
+   "family_role": "a ring to hold a monogram or initial",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "rough stamped ring",
+   "density": "low",
+   "likely_placement": "circular frame around a mark",
+   "colour_family": "red",
+   "mood": "editorial, urgent, hand-stamped",
+   "use_cases": [
+    "zine",
+    "market",
+    "music",
+    "streetwear",
+    "promo"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.122,
+    "mean_luminance": 0.202,
+    "edge_share": 0.849,
+    "dominant_hues": [
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "31_Vintage_Postal_Wave_Lines.png",
+   "url": "assets/design-library/31_Vintage_Postal_Wave_Lines.png",
+   "family": "postal",
+   "family_role": "a vintage postal mark",
+   "requires_explicit_brief": true,
+   "category": "texture",
+   "visual_style": "postal cancellation wave lines",
+   "density": "low",
+   "likely_placement": "edge band or corner mark",
+   "colour_family": "black / grey",
+   "mood": "vintage, postal, archival",
+   "use_cases": [
+    "stationery",
+    "travel",
+    "heritage",
+    "packaging"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "back",
+   "metrics": {
+    "coverage": 0.21,
+    "mean_luminance": 0.245,
+    "edge_share": 0.376,
+    "dominant_hues": [
+     "grey",
+     "black",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "32_Torn_Newspaper_Collage_Scrap.png",
+   "url": "assets/design-library/32_Torn_Newspaper_Collage_Scrap.png",
+   "family": "newsprint",
+   "family_role": "a newsprint fragment in a collage layer",
+   "requires_explicit_brief": true,
+   "category": "collage",
+   "visual_style": "torn newsprint fragment",
+   "density": "high",
+   "likely_placement": "corner patch or background layer",
+   "colour_family": "newsprint grey / tan",
+   "mood": "retro, editorial, gritty",
+   "use_cases": [
+    "zine",
+    "music",
+    "vintage",
+    "editorial"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "back",
+   "metrics": {
+    "coverage": 0.555,
+    "mean_luminance": 0.582,
+    "edge_share": 0.447,
+    "dominant_hues": [
+     "orange",
+     "grey",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "33_Soft_Black_Grain_Texture.png",
+   "url": "assets/design-library/33_Soft_Black_Grain_Texture.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "texture",
+   "visual_style": "soft grain / dust cloud",
+   "density": "medium",
+   "likely_placement": "full-bleed background texture",
+   "colour_family": "black / grey",
+   "mood": "moody, atmospheric, cinematic",
+   "use_cases": [
+    "music",
+    "film",
+    "fashion",
+    "dark editorial"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.507,
+    "mean_luminance": 0.307,
+    "edge_share": 0.404,
+    "dominant_hues": [
+     "grey",
+     "black",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "34_Classical_White_Plaster_Bust.png",
+   "url": "assets/design-library/34_Classical_White_Plaster_Bust.png",
+   "family": "figurative",
+   "family_role": "a figurative image as the hero subject",
+   "requires_explicit_brief": true,
+   "category": "figurative",
+   "visual_style": "photoreal classical bust",
+   "density": "high",
+   "likely_placement": "centred or offset hero object",
+   "colour_family": "cream / white",
+   "mood": "classical, artistic, museum",
+   "use_cases": [
+    "gallery",
+    "art school",
+    "luxury editorial",
+    "fashion"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.508,
+    "mean_luminance": 0.649,
+    "edge_share": 0.453,
+    "dominant_hues": [
+     "orange",
+     "white",
+     "light-grey"
+    ]
+   }
+  },
+  {
+   "filename": "35_Ornate_Gold_Oval_Frame.png",
+   "url": "assets/design-library/35_Ornate_Gold_Oval_Frame.png",
+   "family": "gold-frame",
+   "family_role": "frame or divider around the content",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "fine gold oval frame",
+   "density": "low",
+   "likely_placement": "full frame around content",
+   "colour_family": "gold",
+   "mood": "refined, ceremonial, classic",
+   "use_cases": [
+    "wedding",
+    "luxury",
+    "awards",
+    "boutique",
+    "invitations"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.087,
+    "mean_luminance": 0.634,
+    "edge_share": 0.991,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "36_Ornate_Gold_Rectangle_Frame.png",
+   "url": "assets/design-library/36_Ornate_Gold_Rectangle_Frame.png",
+   "family": "gold-frame",
+   "family_role": "frame or divider around the content",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "fine gold rectangle frame",
+   "density": "low",
+   "likely_placement": "full inset frame",
+   "colour_family": "gold",
+   "mood": "refined, formal, classic",
+   "use_cases": [
+    "luxury",
+    "legal",
+    "wedding",
+    "hospitality",
+    "certificates"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.075,
+    "mean_luminance": 0.515,
+    "edge_share": 1.0,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "37_Ornate_Gold_Corner_Filigree.png",
+   "url": "assets/design-library/37_Ornate_Gold_Corner_Filigree.png",
+   "family": "gold-frame",
+   "family_role": "frame or divider around the content",
+   "requires_explicit_brief": false,
+   "category": "corner",
+   "visual_style": "baroque gold corner filigree",
+   "density": "medium",
+   "likely_placement": "single corner ornament",
+   "colour_family": "gold",
+   "mood": "opulent, baroque, ceremonial",
+   "use_cases": [
+    "luxury",
+    "wedding",
+    "heritage",
+    "fine dining"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.131,
+    "mean_luminance": 0.553,
+    "edge_share": 0.788,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "38_Elegant_Gold_Divider.png",
+   "url": "assets/design-library/38_Elegant_Gold_Divider.png",
+   "family": "gold-frame",
+   "family_role": "frame or divider around the content",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "fine gold rule with centre motif",
+   "density": "low",
+   "likely_placement": "divider between text blocks",
+   "colour_family": "gold",
+   "mood": "elegant, restrained, formal",
+   "use_cases": [
+    "wedding",
+    "luxury",
+    "legal",
+    "hospitality",
+    "menus"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.05,
+    "mean_luminance": 0.497,
+    "edge_share": 0.225,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "39_Minimal_Black_Line_Art_Face.png",
+   "url": "assets/design-library/39_Minimal_Black_Line_Art_Face.png",
+   "family": "figurative",
+   "family_role": "a figurative image as the hero subject",
+   "requires_explicit_brief": true,
+   "category": "figurative",
+   "visual_style": "single-line portrait",
+   "density": "low",
+   "likely_placement": "corner or offset accent",
+   "colour_family": "black",
+   "mood": "modern, artful, boutique",
+   "use_cases": [
+    "salon",
+    "beauty",
+    "fashion",
+    "wellness",
+    "studio"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.156,
+    "mean_luminance": 0.139,
+    "edge_share": 0.533,
+    "dominant_hues": [
+     "black",
+     "orange",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "40_Black_Layered_Arch_Lines.png",
+   "url": "assets/design-library/40_Black_Layered_Arch_Lines.png",
+   "family": "geometric-system",
+   "family_role": "a small system of shapes forming the composition",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "layered concentric arch lines",
+   "density": "low",
+   "likely_placement": "bottom or corner anchor",
+   "colour_family": "black / grey",
+   "mood": "architectural, retro-modern, calm",
+   "use_cases": [
+    "architecture",
+    "interiors",
+    "gallery",
+    "consultancy"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.17,
+    "mean_luminance": 0.255,
+    "edge_share": 0.719,
+    "dominant_hues": [
+     "grey",
+     "yellow",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "41_Sunny_Yellow_Organic_Blob.png",
+   "url": "assets/design-library/41_Sunny_Yellow_Organic_Blob.png",
+   "family": "flat-blob",
+   "family_role": "a flat colour anchor behind or beside the type",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "flat painterly blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or behind a mark",
+   "colour_family": "yellow / gold",
+   "mood": "optimistic, playful, warm",
+   "use_cases": [
+    "cafe",
+    "kids",
+    "creative",
+    "events",
+    "retail"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.436,
+    "mean_luminance": 0.801,
+    "edge_share": 0.355,
+    "dominant_hues": [
+     "gold",
+     "tan",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "42_Cobalt_Blue_Organic_Blob.png",
+   "url": "assets/design-library/42_Cobalt_Blue_Organic_Blob.png",
+   "family": "flat-blob",
+   "family_role": "a flat colour anchor behind or beside the type",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "flat painterly blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or behind a mark",
+   "colour_family": "cobalt blue",
+   "mood": "confident, modern, graphic",
+   "use_cases": [
+    "consulting",
+    "tech",
+    "sport",
+    "agency"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.328,
+    "mean_luminance": 0.265,
+    "edge_share": 0.395,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "43_Teal_Organic_Blob.png",
+   "url": "assets/design-library/43_Teal_Organic_Blob.png",
+   "family": "flat-blob",
+   "family_role": "a flat colour anchor behind or beside the type",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "flat painterly blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or behind a mark",
+   "colour_family": "teal",
+   "mood": "calm, fresh, contemporary",
+   "use_cases": [
+    "wellness",
+    "clinic",
+    "eco",
+    "spa"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.326,
+    "mean_luminance": 0.631,
+    "edge_share": 0.268,
+    "dominant_hues": [
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "44_Modernist_Overlapping_Color_Circles.png",
+   "url": "assets/design-library/44_Modernist_Overlapping_Color_Circles.png",
+   "family": "geometric-system",
+   "family_role": "a small system of shapes forming the composition",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "overlapping translucent circles",
+   "density": "medium",
+   "likely_placement": "corner pair or centred accent",
+   "colour_family": "yellow / blue / green",
+   "mood": "Bauhaus, optimistic, systematic",
+   "use_cases": [
+    "design studio",
+    "education",
+    "science",
+    "festival"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.627,
+    "mean_luminance": 0.483,
+    "edge_share": 0.506,
+    "dominant_hues": [
+     "blue",
+     "gold",
+     "green"
+    ]
+   }
+  },
+  {
+   "filename": "45_Bright_Orange_Starburst.png",
+   "url": "assets/design-library/45_Bright_Orange_Starburst.png",
+   "family": "promo",
+   "family_role": "a promotional burst or badge",
+   "requires_explicit_brief": true,
+   "category": "geometric",
+   "visual_style": "hard-edged starburst",
+   "density": "medium",
+   "likely_placement": "badge or corner burst",
+   "colour_family": "orange / red",
+   "mood": "loud, promotional, retro",
+   "use_cases": [
+    "retail",
+    "promo",
+    "market",
+    "festival",
+    "sale"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.36,
+    "mean_luminance": 0.522,
+    "edge_share": 0.227,
+    "dominant_hues": [
+     "orange",
+     "red",
+     "gold"
+    ]
+   }
+  },
+  {
+   "filename": "46_Cobalt_Blue_Halftone_Dot_Grid.png",
+   "url": "assets/design-library/46_Cobalt_Blue_Halftone_Dot_Grid.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "texture",
+   "visual_style": "halftone dot gradient disc",
+   "density": "low",
+   "likely_placement": "corner or edge texture field",
+   "colour_family": "cobalt blue",
+   "mood": "print-craft, retro, graphic",
+   "use_cases": [
+    "print shop",
+    "agency",
+    "editorial",
+    "music"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "back",
+   "metrics": {
+    "coverage": 0.212,
+    "mean_luminance": 0.189,
+    "edge_share": 0.135,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "47_Pink_Heart_Doodle_Cluster.png",
+   "url": "assets/design-library/47_Pink_Heart_Doodle_Cluster.png",
+   "family": "doodle",
+   "family_role": "a small hand-drawn accent",
+   "requires_explicit_brief": false,
+   "category": "doodle",
+   "visual_style": "marker heart doodles",
+   "density": "medium",
+   "likely_placement": "scattered accent",
+   "colour_family": "pink / coral",
+   "mood": "affectionate, casual, youthful",
+   "use_cases": [
+    "gift",
+    "kids",
+    "cafe",
+    "valentine promo",
+    "salon"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.244,
+    "mean_luminance": 0.473,
+    "edge_share": 0.466,
+    "dominant_hues": [
+     "red",
+     "pink",
+     "magenta"
+    ]
+   }
+  },
+  {
+   "filename": "48_Coral_Gradient_Arch.png",
+   "url": "assets/design-library/48_Coral_Gradient_Arch.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "gradient arch / portal shape",
+   "density": "medium",
+   "likely_placement": "bottom-anchored shape or photo mask",
+   "colour_family": "coral / peach",
+   "mood": "warm, modern, soft-geometric",
+   "use_cases": [
+    "wellness",
+    "cafe",
+    "studio",
+    "beauty"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.456,
+    "mean_luminance": 0.736,
+    "edge_share": 0.322,
+    "dominant_hues": [
+     "orange",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "49_Red_Textured_Circle.png",
+   "url": "assets/design-library/49_Red_Textured_Circle.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "textured solid circle",
+   "density": "medium",
+   "likely_placement": "behind a monogram, or dot accent",
+   "colour_family": "red",
+   "mood": "bold, primary, direct",
+   "use_cases": [
+    "agency",
+    "sport",
+    "food",
+    "promo"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.348,
+    "mean_luminance": 0.346,
+    "edge_share": 0.157,
+    "dominant_hues": [
+     "red",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "50_Cobalt_Blue_Rounded_Block.png",
+   "url": "assets/design-library/50_Cobalt_Blue_Rounded_Block.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "solid rounded block",
+   "density": "medium",
+   "likely_placement": "side panel or text platform",
+   "colour_family": "cobalt blue",
+   "mood": "structured, modern, corporate-bold",
+   "use_cases": [
+    "consulting",
+    "tech",
+    "finance",
+    "sport"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.426,
+    "mean_luminance": 0.262,
+    "edge_share": 0.273,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "51_Powder_Blue_Geometric_Triangle.png",
+   "url": "assets/design-library/51_Powder_Blue_Geometric_Triangle.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "soft-textured triangle",
+   "density": "low",
+   "likely_placement": "corner anchor",
+   "colour_family": "powder blue",
+   "mood": "calm, light, geometric",
+   "use_cases": [
+    "clinic",
+    "education",
+    "tech",
+    "wellness"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.274,
+    "mean_luminance": 0.821,
+    "edge_share": 0.219,
+    "dominant_hues": [
+     "blue",
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "52_Deep_Navy_Modernist_Arch.png",
+   "url": "assets/design-library/52_Deep_Navy_Modernist_Arch.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "solid arch / portal shape",
+   "density": "medium",
+   "likely_placement": "bottom-anchored shape or photo mask",
+   "colour_family": "navy",
+   "mood": "serious, architectural, premium",
+   "use_cases": [
+    "architecture",
+    "law",
+    "finance",
+    "hotel"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.399,
+    "mean_luminance": 0.126,
+    "edge_share": 0.228,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "53_Bright_Orange_Geometric_Square.png",
+   "url": "assets/design-library/53_Bright_Orange_Geometric_Square.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "solid rounded square",
+   "density": "medium",
+   "likely_placement": "colour block or text platform",
+   "colour_family": "orange",
+   "mood": "energetic, direct, modern",
+   "use_cases": [
+    "retail",
+    "food",
+    "agency",
+    "logistics"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.399,
+    "mean_luminance": 0.487,
+    "edge_share": 0.225,
+    "dominant_hues": [
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "54_Sunny_Yellow_Semicircle.png",
+   "url": "assets/design-library/54_Sunny_Yellow_Semicircle.png",
+   "family": "geometric-solid",
+   "family_role": "a flat shape used as a colour block, platform or photo mask",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "painterly semicircle / rising sun",
+   "density": "medium",
+   "likely_placement": "bottom-edge anchor",
+   "colour_family": "yellow / gold",
+   "mood": "optimistic, warm, friendly",
+   "use_cases": [
+    "cafe",
+    "wellness",
+    "kids",
+    "community",
+    "travel"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.4,
+    "mean_luminance": 0.77,
+    "edge_share": 0.272,
+    "dominant_hues": [
+     "gold",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "55_Black_Diagonal_Stripe_Cluster.png",
+   "url": "assets/design-library/55_Black_Diagonal_Stripe_Cluster.png",
+   "family": "brushstroke",
+   "family_role": "a stroke used as an underline, banner or bar",
+   "requires_explicit_brief": false,
+   "category": "brushstroke",
+   "visual_style": "dry diagonal stripe cluster",
+   "density": "medium",
+   "likely_placement": "corner or edge hatch",
+   "colour_family": "black",
+   "mood": "raw, energetic, editorial",
+   "use_cases": [
+    "music",
+    "streetwear",
+    "agency",
+    "sport"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.324,
+    "mean_luminance": 0.173,
+    "edge_share": 0.315,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "56_Charcoal_Minimal_Dot_Grid.png",
+   "url": "assets/design-library/56_Charcoal_Minimal_Dot_Grid.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "texture",
+   "visual_style": "fine dot grid",
+   "density": "low",
+   "likely_placement": "corner field or full background at low opacity",
+   "colour_family": "charcoal",
+   "mood": "precise, systematic, minimal",
+   "use_cases": [
+    "architecture",
+    "consulting",
+    "tech",
+    "stationery"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.054,
+    "mean_luminance": 0.159,
+    "edge_share": 0.297,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "yellow"
+    ]
+   }
+  },
+  {
+   "filename": "57_Torn_Orange_Paper_Scrap.png",
+   "url": "assets/design-library/57_Torn_Orange_Paper_Scrap.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn coloured paper",
+   "density": "high",
+   "likely_placement": "edge band or colour block",
+   "colour_family": "orange",
+   "mood": "punchy, hand-made, graphic",
+   "use_cases": [
+    "zine",
+    "market",
+    "music",
+    "promo"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.667,
+    "mean_luminance": 0.486,
+    "edge_share": 0.538,
+    "dominant_hues": [
+     "orange",
+     "white",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "58_Torn_Black_Paper_Scrap.png",
+   "url": "assets/design-library/58_Torn_Black_Paper_Scrap.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn coloured paper",
+   "density": "high",
+   "likely_placement": "edge band or colour block",
+   "colour_family": "black",
+   "mood": "stark, hand-made, graphic",
+   "use_cases": [
+    "zine",
+    "music",
+    "streetwear",
+    "editorial"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.589,
+    "mean_luminance": 0.201,
+    "edge_share": 0.474,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "light-grey"
+    ]
+   }
+  },
+  {
+   "filename": "59_White_Wrinkled_Paper_Scrap.png",
+   "url": "assets/design-library/59_White_Wrinkled_Paper_Scrap.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "crumpled white paper",
+   "density": "high",
+   "likely_placement": "full background texture or platform",
+   "colour_family": "white / light grey",
+   "mood": "tactile, raw, honest",
+   "use_cases": [
+    "stationery",
+    "craft",
+    "packaging",
+    "editorial"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "back",
+   "metrics": {
+    "coverage": 0.72,
+    "mean_luminance": 0.843,
+    "edge_share": 0.565,
+    "dominant_hues": [
+     "white",
+     "light-grey",
+     "grey"
+    ]
+   }
+  },
+  {
+   "filename": "60_Beige_Grid_Masking_Tape.png",
+   "url": "assets/design-library/60_Beige_Grid_Masking_Tape.png",
+   "family": "tape",
+   "family_role": "a tape strip fastening a corner or label",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "grid-printed tape strip",
+   "density": "medium",
+   "likely_placement": "corner fastener or label holder",
+   "colour_family": "beige / cream",
+   "mood": "stationery, crafty, studious",
+   "use_cases": [
+    "stationery",
+    "craft",
+    "workshop",
+    "planner",
+    "market"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.44,
+    "mean_luminance": 0.793,
+    "edge_share": 0.38,
+    "dominant_hues": [
+     "orange",
+     "tan",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "61_Peach_Apricot_Watercolor_Wash.png",
+   "url": "assets/design-library/61_Peach_Apricot_Watercolor_Wash.png",
+   "family": "watercolour-wash",
+   "family_role": "a soft colour ground or band",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "soft watercolour wash",
+   "density": "medium",
+   "likely_placement": "band, edge bleed or full soft background",
+   "colour_family": "peach / apricot",
+   "mood": "warm, gentle, inviting",
+   "use_cases": [
+    "beauty",
+    "cafe",
+    "therapy",
+    "boutique"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.426,
+    "mean_luminance": 0.797,
+    "edge_share": 0.293,
+    "dominant_hues": [
+     "orange",
+     "red",
+     "gold"
+    ]
+   }
+  },
+  {
+   "filename": "62_Lavender_Watercolor_Wash.png",
+   "url": "assets/design-library/62_Lavender_Watercolor_Wash.png",
+   "family": "watercolour-wash",
+   "family_role": "a soft colour ground or band",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "soft watercolour wash",
+   "density": "medium",
+   "likely_placement": "band, edge bleed or full soft background",
+   "colour_family": "lavender / violet",
+   "mood": "calm, soft, restorative",
+   "use_cases": [
+    "spa",
+    "therapy",
+    "beauty",
+    "wellness"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.48,
+    "mean_luminance": 0.761,
+    "edge_share": 0.363,
+    "dominant_hues": [
+     "purple",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "63_Black_Ink_Splatter.png",
+   "url": "assets/design-library/63_Black_Ink_Splatter.png",
+   "family": "brushstroke",
+   "family_role": "a stroke used as an underline, banner or bar",
+   "requires_explicit_brief": false,
+   "category": "brushstroke",
+   "visual_style": "ink splatter burst",
+   "density": "medium",
+   "likely_placement": "corner burst or accent",
+   "colour_family": "black",
+   "mood": "explosive, raw, expressive",
+   "use_cases": [
+    "art",
+    "music",
+    "tattoo",
+    "streetwear"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.337,
+    "mean_luminance": 0.137,
+    "edge_share": 0.223,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "64_White_Paint_Splatter.png",
+   "url": "assets/design-library/64_White_Paint_Splatter.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "texture",
+   "visual_style": "soft white splatter / mist",
+   "density": "medium",
+   "likely_placement": "overlay on a dark ground",
+   "colour_family": "white",
+   "mood": "airy, atmospheric, textural",
+   "use_cases": [
+    "dark-ground designs",
+    "music",
+    "fashion",
+    "winter promo"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.384,
+    "mean_luminance": 0.829,
+    "edge_share": 0.276,
+    "dominant_hues": [
+     "light-grey",
+     "white",
+     "grey"
+    ]
+   }
+  },
+  {
+   "filename": "65_Hot_Pink_Glossy_Wave.png",
+   "url": "assets/design-library/65_Hot_Pink_Glossy_Wave.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D glossy gradient wave",
+   "density": "low",
+   "likely_placement": "horizontal accent or divider",
+   "colour_family": "hot pink",
+   "mood": "vivid, glossy, energetic",
+   "use_cases": [
+    "beauty",
+    "events",
+    "nightlife",
+    "fashion"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.189,
+    "mean_luminance": 0.614,
+    "edge_share": 0.231,
+    "dominant_hues": [
+     "pink",
+     "magenta",
+     "red"
+    ]
+   }
+  },
+  {
+   "filename": "66_Electric_Blue_Glossy_Wave.png",
+   "url": "assets/design-library/66_Electric_Blue_Glossy_Wave.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D glossy gradient wave",
+   "density": "low",
+   "likely_placement": "horizontal accent or divider",
+   "colour_family": "electric blue",
+   "mood": "fluid, clean, tech-modern",
+   "use_cases": [
+    "tech",
+    "water",
+    "sport",
+    "digital"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.208,
+    "mean_luminance": 0.634,
+    "edge_share": 0.335,
+    "dominant_hues": [
+     "blue",
+     "teal",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "67_Iridescent_Glass_Ring.png",
+   "url": "assets/design-library/67_Iridescent_Glass_Ring.png",
+   "family": "ring-frame",
+   "family_role": "a ring to hold a monogram or initial",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "3D iridescent glass ring",
+   "density": "low",
+   "likely_placement": "circular frame around a mark",
+   "colour_family": "iridescent pastel",
+   "mood": "futuristic, glossy, premium",
+   "use_cases": [
+    "tech",
+    "beauty",
+    "events",
+    "digital product"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.226,
+    "mean_luminance": 0.748,
+    "edge_share": 0.597,
+    "dominant_hues": [
+     "orange",
+     "blue",
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "68_Pearlescent_Glossy_Capsule.png",
+   "url": "assets/design-library/68_Pearlescent_Glossy_Capsule.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D pearlescent capsule",
+   "density": "low",
+   "likely_placement": "small centred accent",
+   "colour_family": "pearl / peach",
+   "mood": "soft-futuristic, cosmetic, clean",
+   "use_cases": [
+    "cosmetics",
+    "wellness",
+    "tech",
+    "jewellery"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.307,
+    "mean_luminance": 0.82,
+    "edge_share": 0.183,
+    "dominant_hues": [
+     "orange",
+     "red",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "69_Coral_Peach_Gradient_Mesh_Blob.png",
+   "url": "assets/design-library/69_Coral_Peach_Gradient_Mesh_Blob.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "3D gradient mesh blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or behind a mark",
+   "colour_family": "coral / peach",
+   "mood": "soft-modern, glossy, warm",
+   "use_cases": [
+    "beauty",
+    "tech",
+    "wellness",
+    "digital"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.486,
+    "mean_luminance": 0.663,
+    "edge_share": 0.414,
+    "dominant_hues": [
+     "red",
+     "orange",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "70_Holographic_Figure_Eight_Loop.png",
+   "url": "assets/design-library/70_Holographic_Figure_Eight_Loop.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "abstract",
+   "visual_style": "3D holographic loop",
+   "density": "medium",
+   "likely_placement": "centred accent",
+   "colour_family": "holographic pastel",
+   "mood": "futuristic, premium, glossy",
+   "use_cases": [
+    "tech",
+    "events",
+    "beauty",
+    "digital product"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.464,
+    "mean_luminance": 0.731,
+    "edge_share": 0.547,
+    "dominant_hues": [
+     "blue",
+     "white",
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "71_Torn_Kraft_Paper_Strip.png",
+   "url": "assets/design-library/71_Torn_Kraft_Paper_Strip.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "torn kraft paper strip",
+   "density": "medium",
+   "likely_placement": "edge band or label strip",
+   "colour_family": "kraft tan",
+   "mood": "rustic, honest, artisanal",
+   "use_cases": [
+    "bakery",
+    "market",
+    "craft",
+    "packaging",
+    "farm"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.504,
+    "mean_luminance": 0.668,
+    "edge_share": 0.406,
+    "dominant_hues": [
+     "orange",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "72_Powder_Blue_Handmade_Paper_Square.png",
+   "url": "assets/design-library/72_Powder_Blue_Handmade_Paper_Square.png",
+   "family": "torn-paper",
+   "family_role": "a torn edge, band or text platform",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "deckle-edged handmade paper",
+   "density": "high",
+   "likely_placement": "text platform or card-within-card",
+   "colour_family": "powder blue",
+   "mood": "tactile, boutique, letterpress",
+   "use_cases": [
+    "stationery",
+    "wedding",
+    "boutique",
+    "studio"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.656,
+    "mean_luminance": 0.828,
+    "edge_share": 0.528,
+    "dominant_hues": [
+     "blue",
+     "white",
+     "teal"
+    ]
+   }
+  },
+  {
+   "filename": "73_Cobalt_Blue_Masking_Tape.png",
+   "url": "assets/design-library/73_Cobalt_Blue_Masking_Tape.png",
+   "family": "tape",
+   "family_role": "a tape strip fastening a corner or label",
+   "requires_explicit_brief": false,
+   "category": "collage",
+   "visual_style": "coloured tape strip",
+   "density": "low",
+   "likely_placement": "corner fastener or label holder",
+   "colour_family": "cobalt blue",
+   "mood": "crafty, graphic, informal",
+   "use_cases": [
+    "studio",
+    "workshop",
+    "market",
+    "promo"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.309,
+    "mean_luminance": 0.381,
+    "edge_share": 0.358,
+    "dominant_hues": [
+     "blue"
+    ]
+   }
+  },
+  {
+   "filename": "74_Cream_Linen_Organic_Arch.png",
+   "url": "assets/design-library/74_Cream_Linen_Organic_Arch.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "background accent",
+   "visual_style": "linen-textured arch panel",
+   "density": "high",
+   "likely_placement": "full text platform or side panel",
+   "colour_family": "cream / oat",
+   "mood": "natural, tactile, calm",
+   "use_cases": [
+    "wellness",
+    "interiors",
+    "boutique",
+    "wedding"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.736,
+    "mean_luminance": 0.817,
+    "edge_share": 0.579,
+    "dominant_hues": [
+     "orange",
+     "white",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "75_White_Gray_Marble_Fragment.png",
+   "url": "assets/design-library/75_White_Gray_Marble_Fragment.png",
+   "family": "texture-neutral",
+   "family_role": "a material texture for the ground or a panel",
+   "requires_explicit_brief": false,
+   "category": "texture",
+   "visual_style": "photoreal marble fragment",
+   "density": "high",
+   "likely_placement": "corner slab or text platform",
+   "colour_family": "white / grey / tan",
+   "mood": "luxurious, cool, architectural",
+   "use_cases": [
+    "luxury",
+    "interiors",
+    "beauty",
+    "real estate"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.585,
+    "mean_luminance": 0.764,
+    "edge_share": 0.472,
+    "dominant_hues": [
+     "light-grey",
+     "orange",
+     "white"
+    ]
+   }
+  },
+  {
+   "filename": "76_Charcoal_Scribble_Circle.png",
+   "url": "assets/design-library/76_Charcoal_Scribble_Circle.png",
+   "family": "ring-frame",
+   "family_role": "a ring to hold a monogram or initial",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "scribbled pencil circle",
+   "density": "low",
+   "likely_placement": "circular frame around a mark",
+   "colour_family": "charcoal",
+   "mood": "hand-drawn, informal, artful",
+   "use_cases": [
+    "studio",
+    "craft",
+    "cafe",
+    "illustrator"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.22,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.3,
+    "mean_luminance": 0.131,
+    "edge_share": 0.911,
+    "dominant_hues": [
+     "black",
+     "grey",
+     "orange"
+    ]
+   }
+  },
+  {
+   "filename": "77_Metallic_Gold_Brush_Ring.png",
+   "url": "assets/design-library/77_Metallic_Gold_Brush_Ring.png",
+   "family": "ring-frame",
+   "family_role": "a ring to hold a monogram or initial",
+   "requires_explicit_brief": false,
+   "category": "border",
+   "visual_style": "gold brush ring",
+   "density": "low",
+   "likely_placement": "circular frame around a mark",
+   "colour_family": "gold",
+   "mood": "luxurious, celebratory, hand-made",
+   "use_cases": [
+    "luxury",
+    "beauty",
+    "events",
+    "jewellery",
+    "hospitality"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.35,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.244,
+    "mean_luminance": 0.65,
+    "edge_share": 0.947,
+    "dominant_hues": [
+     "orange",
+     "gold",
+     "tan"
+    ]
+   }
+  },
+  {
+   "filename": "78_Neutral_Pearl_Gradient_Blob.png",
+   "url": "assets/design-library/78_Neutral_Pearl_Gradient_Blob.png",
+   "family": "glossy-3d",
+   "family_role": "a rendered 3D object as a single focal accent",
+   "requires_explicit_brief": false,
+   "category": "organic",
+   "visual_style": "3D pearl gradient blob",
+   "density": "medium",
+   "likely_placement": "corner anchor or soft background shape",
+   "colour_family": "pearl / cream",
+   "mood": "soft, premium, neutral",
+   "use_cases": [
+    "beauty",
+    "wellness",
+    "jewellery",
+    "boutique"
+   ],
+   "card_background_safe": true,
+   "behind_text_max_opacity": 0.55,
+   "preferred_side": "either",
+   "metrics": {
+    "coverage": 0.441,
+    "mean_luminance": 0.822,
+    "edge_share": 0.406,
+    "dominant_hues": [
+     "orange",
+     "white",
+     "light-grey"
+    ]
+   }
+  },
+  {
+   "filename": "79_Coral_Navy_Modernist_Geometry.png",
+   "url": "assets/design-library/79_Coral_Navy_Modernist_Geometry.png",
+   "family": "geometric-system",
+   "family_role": "a small system of shapes forming the composition",
+   "requires_explicit_brief": false,
+   "category": "geometric",
+   "visual_style": "paper-textured modernist shapes",
+   "density": "medium",
+   "likely_placement": "corner composition",
+   "colour_family": "coral / navy / powder blue",
+   "mood": "Bauhaus, considered, editorial",
+   "use_cases": [
+    "design studio",
+    "gallery",
+    "education",
+    "publisher"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.414,
+    "mean_luminance": 0.384,
+    "edge_share": 0.294,
+    "dominant_hues": [
+     "blue",
+     "red",
+     "black"
+    ]
+   }
+  },
+  {
+   "filename": "80_Colorful_Painted_Squiggle_Cluster.png",
+   "url": "assets/design-library/80_Colorful_Painted_Squiggle_Cluster.png",
+   "family": "doodle",
+   "family_role": "a small hand-drawn accent",
+   "requires_explicit_brief": false,
+   "category": "doodle",
+   "visual_style": "thick painted squiggle cluster",
+   "density": "high",
+   "likely_placement": "corner cluster or edge band",
+   "colour_family": "blue / magenta / yellow",
+   "mood": "exuberant, playful, artistic",
+   "use_cases": [
+    "kids",
+    "festival",
+    "creative agency",
+    "food",
+    "events"
+   ],
+   "card_background_safe": false,
+   "behind_text_max_opacity": null,
+   "preferred_side": "front",
+   "metrics": {
+    "coverage": 0.471,
+    "mean_luminance": 0.469,
+    "edge_share": 0.429,
+    "dominant_hues": [
+     "blue",
+     "magenta",
+     "yellow"
+    ]
+   }
+  }
+ ]
+}

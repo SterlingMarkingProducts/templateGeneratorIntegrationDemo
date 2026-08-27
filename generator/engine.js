@@ -557,6 +557,196 @@ const CHIP_DENSITY = {
   'WPA Travel': 'rich', 'Swiss Exhibition': 'balanced', 'Event Summit': 'balanced',
 };
 
+/* ── DESIGN ASSET LIBRARY (Phase 2A) ───────────────────────────────────────
+ *
+ * 80 audited PNGs live in generator/assets/design-library/ and are described by
+ * generator/assets/design-asset-manifest.json. This picks AT MOST a couple of
+ * them for a generation, or — often — none at all.
+ *
+ * Three rules shape everything below:
+ *
+ *   1. An asset REPLACES a generated decorative element. It is not an extra.
+ *      The density contract already says how much may be on the canvas; using
+ *      an asset spends one of those slots, and the prompt says so explicitly.
+ *   2. Selection is by FAMILY first, then a file inside it. The library is
+ *      ~18 ideas in 80 files (five watercolour washes, four blobs, three
+ *      tapes…), so picking files directly would keep producing the same idea
+ *      in a different colour.
+ *   3. Plenty of generations must use nothing. A restrained direction is
+ *      usually finished without one, and forcing an asset in to create variety
+ *      is exactly the over-decoration this is meant to avoid.
+ *
+ * The whole-direction rotation from Phase 1 remains the primary variety system.
+ * Nothing here changes it. */
+
+/* Which families each direction may draw from, in preference order. A direction
+ * absent from this table gets no assets at all. */
+const DIRECTION_ASSET_FAMILIES = {
+  'editorial-minimal':    ['texture-neutral', 'gold-frame'],
+  'modern-luxury':        ['gold-frame', 'ring-frame', 'texture-neutral'],
+  'elegant-serif':        ['gold-frame', 'ring-frame', 'texture-neutral'],
+  'soft-sophisticated':   ['watercolour-wash', 'texture-neutral', 'botanical-spray'],
+  'organic-botanical':    ['botanical-spray', 'watercolour-wash', 'texture-neutral', 'flat-blob'],
+  'collage-editorial':    ['torn-paper', 'tape', 'brushstroke', 'texture-neutral'],
+  'bold-modernist':       ['geometric-solid', 'geometric-system', 'brushstroke'],
+  'playful-contemporary': ['flat-blob', 'doodle', 'geometric-solid'],
+  'colourful-expressive': ['flat-blob', 'geometric-solid', 'brushstroke', 'doodle'],
+  'dark-luxe':            ['gold-frame', 'ring-frame', 'texture-neutral'],
+  'retro-futurist':       ['glossy-3d', 'geometric-system', 'texture-neutral'],
+  /* Clean Corporate is deliberately near-empty: a considered texture at most,
+   * and usually nothing. A corporate card earns its credibility from the grid
+   * and the typography, not from decoration. */
+  'clean-corporate':      ['texture-neutral'],
+};
+
+/* How likely an asset is at all, and how many. Read as cumulative thresholds
+ * against one random draw. The counts are the brief's own words: restrained
+ * usually none and never more than one; balanced none or one, occasionally two;
+ * rich one or two, three only rarely. */
+const ASSET_BUDGET = {
+  restrained: { none: 0.75, one: 1.00, two: 1.00, max: 1 },
+  balanced:   { none: 0.45, one: 0.90, two: 1.00, max: 2 },
+  rich:       { none: 0.15, one: 0.65, two: 0.95, max: 3 },
+};
+/* Clean Corporate and Editorial Minimal are quieter still, whatever their
+ * contract says — these are the two directions where decoration is most likely
+ * to cheapen the result. */
+const ASSET_NONE_OVERRIDE = { 'clean-corporate': 0.90, 'editorial-minimal': 0.80 };
+
+/* A gated family is only reachable when the brief actually asks for it. */
+const GATED_FAMILY_TRIGGERS = {
+  'floral-cluster': /floral|flower|peony|hydrangea|botanic|wedding|bridal|florist|garden|bouquet/i,
+  'figurative':     /portrait|figure|face|classical|bust|sculpture|editorial|fashion|gallery|art\b/i,
+  'promo':          /promo|sale|discount|burst|badge|offer|market|clearance/i,
+  'postal':         /postal|stamp|vintage|travel|archive|philatel/i,
+  'newsprint':      /newsprint|newspaper|collage|zine|cut.?up|editorial/i,
+};
+
+let assetLibrary = null;          // { assets, families } once loaded
+let assetLibraryLoading = null;   // in-flight promise, so it loads once
+
+function loadAssetLibrary() {
+  if (assetLibrary) return Promise.resolve(assetLibrary);
+  if (assetLibraryLoading) return assetLibraryLoading;
+  assetLibraryLoading = fetch('assets/design-asset-manifest.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+    .then((doc) => {
+      const byFamily = {};
+      (doc.assets || []).forEach((a) => { (byFamily[a.family] = byFamily[a.family] || []).push(a); });
+      assetLibrary = { assets: doc.assets || [], byFamily: byFamily };
+      return assetLibrary;
+    })
+    .catch((e) => {
+      /* No library is a perfectly good outcome — the Generator worked without
+         one for its whole life. Never fail a generation over decoration. */
+      console.info('[generator] design asset library unavailable; generating without it', e && e.message);
+      assetLibrary = { assets: [], byFamily: {} };
+      return assetLibrary;
+    });
+  return assetLibraryLoading;
+}
+
+/* Families used by the last generations of THIS brief, so a Regenerate does not
+ * come back with the same idea in a different colour. */
+const recentAssetFamilies = new Map();
+const ASSET_FAMILY_MEMORY = 3;
+
+function assetCountFor(density, directionKey) {
+  const b = ASSET_BUDGET[density] || ASSET_BUDGET.balanced;
+  const none = ASSET_NONE_OVERRIDE[directionKey] !== undefined
+    ? ASSET_NONE_OVERRIDE[directionKey] : b.none;
+  const r = Math.random();
+  if (r < none) return 0;
+  if (r < none + (b.one - b.none)) return 1;
+  if (r < none + (b.two - b.none)) return 2;
+  return Math.min(3, b.max);
+}
+
+function gatedFamilyAllowed(family, brief) {
+  const re = GATED_FAMILY_TRIGGERS[family];
+  return re ? re.test(brief || '') : true;
+}
+
+/* The families this brief may draw from, most preferred first, with the ones
+ * used recently for this same brief pushed to the back. */
+function candidateFamilies(directionKey, brief, memoryKey) {
+  const base = (DIRECTION_ASSET_FAMILIES[directionKey] || []).slice();
+  /* A brief that names a gated family goes to the FRONT, not the back: the user
+     asked for it, and with a budget of one asset anything appended after the
+     direction's own preferences would never be reached. */
+  Object.keys(GATED_FAMILY_TRIGGERS).forEach((f) => {
+    if (!gatedFamilyAllowed(f, brief)) return;
+    const at = base.indexOf(f);
+    if (at !== -1) base.splice(at, 1);
+    base.unshift(f);
+  });
+  const usable = base.filter((f) => gatedFamilyAllowed(f, brief));
+  const recent = recentAssetFamilies.get(memoryKey) || [];
+  const fresh = usable.filter((f) => recent.indexOf(f) === -1);
+  return fresh.length ? fresh : usable;
+}
+
+function pickAssets(directionKey, density, brief, memoryKey, doubleSided) {
+  const lib = assetLibrary;
+  if (!lib || !lib.assets.length) return [];
+  if (!DIRECTION_ASSET_FAMILIES[directionKey]
+      && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))) {
+    return [];
+  }
+  let want = assetCountFor(density, directionKey);
+  /* A generation that uses nothing must NOT wipe the memory — otherwise the run
+     after it is free to repeat the family used two runs ago. */
+  if (!want) return [];
+
+  const families = candidateFamilies(directionKey, brief, memoryKey);
+  const chosen = [];
+  const usedFamilies = [];
+  for (const family of families) {
+    if (chosen.length >= want) break;
+    const pool = (lib.byFamily[family] || []).filter((a) => {
+      if (!doubleSided && a.preferred_side === 'back') return false;
+      return true;
+    });
+    if (!pool.length) continue;
+    /* Two assets must not do the same job — the second one has to earn its
+       place by being a different kind of thing. */
+    chosen.push(pool[Math.floor(Math.random() * pool.length)]);
+    usedFamilies.push(family);
+  }
+  if (chosen.length) {
+    const recent = recentAssetFamilies.get(memoryKey) || [];
+    recentAssetFamilies.set(memoryKey,
+      usedFamilies.concat(recent.filter((f) => usedFamilies.indexOf(f) === -1))
+        .slice(0, ASSET_FAMILY_MEMORY));
+  }
+  return chosen;
+}
+
+/* Only the chosen assets reach the model — never the library. */
+function renderAssetBlock(assets, density) {
+  if (!assets.length) return '';
+  const budget = { restrained: '1–3', balanced: '2–4', rich: '4–6' }[density] || '2–4';
+  const lines = assets.map((a) => {
+    const behind = a.card_background_safe
+      ? `MAY sit behind text, at no more than ${Math.round(a.behind_text_max_opacity * 100)}% opacity, and only if every line stays crisply legible`
+      : 'must NOT sit behind text — keep it in a corner, at an edge, in a margin, or in its own clear zone';
+    return `- ${a.filename}\n`
+      + `    use as: ${a.family_role}\n`
+      + `    src: ${a.url}  (a real file — reference it with <img src="${a.url}"> exactly as written)\n`
+      + `    placement: ${a.likely_placement}\n`
+      + `    colour: ${a.colour_family} · reads as: ${a.mood}\n`
+      + `    behind text: ${behind}`;
+  }).join('\n');
+  return `SUPPLIED DESIGN ASSET${assets.length > 1 ? 'S' : ''} — ${assets.length} file${assets.length > 1 ? 's' : ''} `
+    + `chosen for this direction:\n${lines}\n\n`
+    + `HOW TO USE ${assets.length > 1 ? 'THEM' : 'IT'}:\n`
+    + `- ${assets.length === 1 ? 'It REPLACES one' : 'They REPLACE ' + assets.length + ' of the'} graphic element${assets.length > 1 ? 's' : ''} you would otherwise have drawn. `
+    + `The density contract still governs the total: build ${budget} elements INCLUDING the supplied file${assets.length > 1 ? 's' : ''}, not on top of ${assets.length > 1 ? 'them' : 'it'}.\n`
+    + `- Integrate ${assets.length > 1 ? 'them' : 'it'} — crop, mask, tint, overlap or clip as the composition needs. A PNG dropped in as a plain rectangle is a failure.\n`
+    + `- Keep the text-safe zone clear. Nothing supplied may cross a glyph.\n`
+    + `- USING ${assets.length > 1 ? 'THEM IS' : 'IT IS'} OPTIONAL. If the design is genuinely better without, leave ${assets.length > 1 ? 'them' : 'it'} out and build the element${assets.length > 1 ? 's' : ''} yourself. Do not force ${assets.length > 1 ? 'them' : 'it'} in.`;
+}
+
 /* ── Direction rotation for the DEFAULT path ───────────────────────────────
  *
  * A direction is a complete, internally coherent concept — its typography,
@@ -591,8 +781,8 @@ function rotateDirection(candidates, memoryKey) {
   return direction;
 }
 
-function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey) {
+function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
+    variationKey, doubleSided) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -601,7 +791,9 @@ function resolveCreativeDirection(styleDirection, industry, templateType, creati
   if (isStamp) {
     const archetype = STAMP_ARCHETYPES[Math.floor(Math.random() * STAMP_ARCHETYPES.length)];
     const moment    = STAMP_CREATIVE_MOMENTS[Math.floor(Math.random() * STAMP_CREATIVE_MOMENTS.length)];
-    return `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`;
+    /* No library asset on a stamp: the stamp rules below forbid colour,
+       imagery and overlapping shapes outright. */
+    return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [] };
   }
 
   const isLargeFormat = /poster|sign/i.test(templateType || '');
@@ -609,12 +801,21 @@ function resolveCreativeDirection(styleDirection, industry, templateType, creati
     ? 'Design at true poster scale — monumental display type (120px+), one dominant visual covering ≥40% of the canvas, edge-to-edge composition. A poster, not a scaled-up business card.'
     : 'Design at portfolio quality — one clear idea, real craft, and a print-shop finish appropriate to this direction.';
 
-  const compose = (brief, density, reference) => [
-    brief,
-    reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
-    DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
-    `${formatNote} ${creativityDirective}`,
-  ].filter(Boolean).join('\n\n');
+  const memoryKey = variationKey || `${templateType}|${raw}|${industry}`;
+  const briefText = [raw, industry, templateType].filter(Boolean).join(' ');
+
+  const compose = (brief, density, reference, directionKey) => {
+    const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided);
+    return { text: [
+      brief,
+      reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
+      DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
+      renderAssetBlock(assets, density),
+      `${formatNote} ${creativityDirective}`,
+    ].filter(Boolean).join('\n\n'), direction: directionKey, assets: assets };
+  };
+
+
 
   // ── An explicit, non-generic style direction: the user's words lead ──────
   if (raw && !GENERIC_STYLE.test(raw)) {
@@ -625,15 +826,23 @@ function resolveCreativeDirection(styleDirection, industry, templateType, creati
      * carrying a dominant monogram or a neon field. */
     const reference = pickFromStyleRoute(raw, templateType)
       || pickFromStyleRoute(expanded, templateType);
-    return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference);
+    /* An explicitly chosen style keeps its own density; it draws assets only
+       through the gated triggers, since it has no direction key of its own. */
+    return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference, null);
   }
 
   // ── Generic or empty: intent first, then a rotated draw ──────────────────
   const keys = intentKeysFor(raw) || intentKeysFor(industry);
   const candidates = (keys && keys.length) ? keys : DESIGN_DIRECTIONS.map((d) => d.key);
-  const direction = rotateDirection(candidates,
-    variationKey || `${templateType}|${raw}|${industry}`);
-  return compose(direction.brief, direction.density, null);
+  const direction = rotateDirection(candidates, memoryKey);
+  return compose(direction.brief, direction.density, null, direction.key);
+}
+
+/* The string form, for callers and tests that only need the prompt text. */
+function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel,
+    variationKey, doubleSided) {
+  return chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
+    variationKey, doubleSided).text;
 }
 
 
@@ -862,7 +1071,7 @@ HERO MOMENT
 [The one unforgettable element that embodies the CONCEPT — its shape/type, exact size, fill treatment, and position. On posters it should command ≥40% of the canvas; on cards it is typically ≥30%, though a restrained direction may instead make a perfectly set wordmark the hero at a smaller footprint. This is what a viewer remembers.]
 
 SUPPORTING ELEMENTS
-[The concrete, placed graphic elements around the hero — geometric systems, ornament, iconography, rules, framing, patterns, motifs — each specific (e.g. "circular SVG icon row for contact, bottom-left" not "some icons"). HOW MANY is set by the density contract: 4–6 for a rich direction, 2–4 for balanced, 1–3 for restrained. Listing fewer because the direction is restrained is correct, not a shortfall.]
+[The concrete, placed graphic elements around the hero — INCLUDING any design asset supplied in the Style Direction, described by filename and exact placement if you use it — geometric systems, ornament, iconography, rules, framing, patterns, motifs — each specific (e.g. "circular SVG icon row for contact, bottom-left" not "some icons"). HOW MANY is set by the density contract: 4–6 for a rich direction, 2–4 for balanced, 1–3 for restrained. Listing fewer because the direction is restrained is correct, not a shortfall.]
 
 CSS TECHNIQUES
 [Only the techniques this design actually uses — from: clip-path, conic-gradient, radial-gradient, multi-stop linear-gradient, mix-blend-mode, inline SVG path, CSS filter, multi-layer box-shadow, backdrop-filter, ::before/::after shapes]
@@ -924,11 +1133,19 @@ TECHNICAL REQUIREMENTS
 - CSS custom properties (--var) for every color, font stack, and key measurement from the spec
 - Google Fonts @import in <head> for all fonts named in TYPOGRAPHY
 - @media print: margin:0; and @page { size: [W]px [H]px; margin: 0; }
-- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed.
+- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL and for any supplied design asset, and for nothing else.
 - Implement the techniques listed under CSS TECHNIQUES in the spec
 - Large-scale shapes MUST be built with CSS clip-path, SVG path elements, or pure CSS geometry
 - Typography MUST match the spec font exactly — do not substitute a different font family
 - The layout MUST honor the LAYOUT direction from the spec — do not default to centered-text stacks
+
+SUPPLIED DESIGN ASSETS — when the Style Direction lists one:
+- Reference it with <img src="[the exact src given]"> — the path is relative to this page and resolves as written. Do not rename it, do not inline it, do not invent a different file
+- It counts AGAINST the density contract, it does not extend it — one supplied asset means one fewer element you draw
+- Integrate it: crop with clip-path, mask, tint with a filter or a blended overlay, overlap a colour field, or bleed it off an edge. Never a plain unstyled rectangle
+- Behind text ONLY if the Style Direction says it may, and then at or below the opacity it names, with every line still crisply legible
+- Otherwise keep it in a corner, at an edge, in a margin, or in its own clear zone, never crossing a glyph
+- Leaving it out is a legitimate choice if the composition is genuinely better without it
 
 EXTERNAL IMAGES — when an Image URL is provided:
 - Use <img src="URL"> for that user-provided image (this overrides the default no-external-images rule)
@@ -1085,8 +1302,15 @@ async function handleGenerate(body, send) {
     templateType, industry || '', businessName || '', styleDirection || '',
     specialInstructions || '', colors || null, !!doubleSided, orientation || '',
   ]);
-  let styleDirFinal = resolveCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey);
+  /* The library loads once and never blocks a generation: if the manifest
+     cannot be fetched, pickAssets() simply returns nothing. */
+  await loadAssetLibrary();
+  const creative = chooseCreativeDirection(styleDirection, industry, templateType,
+    creativityLevel, variationKey, doubleSided);
+  let styleDirFinal = creative.text;
+  const chosenAssets = creative.assets || [];
+  console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
+    + ' | assets: ' + (chosenAssets.map((a) => a.family + '/' + a.filename).join(', ') || 'none'));
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;
   const hasRefUrl = (referenceImageUrl || '').trim();
