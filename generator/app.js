@@ -766,7 +766,12 @@ function buildPayload() {
     businessName: businessName.value.trim(),
     colors:       getColors(),
     styleDirection:      styleDirection.value.trim(),
-    creativityLevel:     creativityLevel?.value || 'bold',
+    /* There is no #creativityLevel control in the UI, so this optional chain
+       always resolves to the fallback. It read 'bold', which silently forced
+       PORTFOLIO BOLD on to every generation and left the balanced branch of
+       getCreativityDirective() unreachable. 'balanced' is the intended
+       default; adding a real control is a later phase. */
+    creativityLevel:     creativityLevel?.value || 'balanced',
     imageUrl:            designPhotoData ? UPLOADED_PHOTO_URL : imageUrl.value.trim(),
     referenceImage:      referenceImageData,
     referenceImageUrl:   referenceImageUrl?.value.trim() || '',
@@ -902,12 +907,21 @@ function updateStreamProgress(charCount) {
 }
 
 /* ── Layout safety for generated iframe HTML ─────────── */
+/* These preview caps were tuned while creativityLevel was ALWAYS 'bold' — the
+ * #creativityLevel control does not exist, so the `?? 'bold'` fallback decided
+ * it on every run. Phase 1 changes that fallback to 'balanced' for the PROMPT
+ * ambition only. The preview caps stay pinned where they were tuned so the
+ * approved preview behaviour does not change as a side effect — and, in
+ * particular, so the hairline rules that restrained directions rely on are not
+ * stripped out of the preview. Deliberately decoupled from creativityLevel. */
+const PREVIEW_GENEROUS_CAPS = true;
+
 function resolveTextZoneCollisions(root, cardHeight, bottomPad) {
   const card = root.querySelector?.('.card') || root.querySelector?.('[class*="card"]') || (root.classList?.contains('card') ? root : null);
   if (!card) return null;
 
-  const minScale = lastPayload?.creativityLevel === 'bold' ? 0.6 : 0.45;
-  const hideRules = lastPayload?.creativityLevel !== 'bold';
+  const minScale = PREVIEW_GENEROUS_CAPS ? 0.6 : 0.45;
+  const hideRules = !PREVIEW_GENEROUS_CAPS;
 
   const copy = card.querySelector('.zone-copy');
   const contact = card.querySelector('.zone-contact');
@@ -1072,7 +1086,7 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
       : DESIGNER_FONTS_LINK + html;
   }
   const isLargeFormat = /poster|sign/i.test(templateType || '') || heightPx > 600;
-  const isBold = creativityLevel === 'bold';
+  const isBold = PREVIEW_GENEROUS_CAPS;   // see PREVIEW_GENEROUS_CAPS above
 
   /* The preview iframe is sized to the full bleed canvas (trim + bleed), but
    * designs are authored at trim size and would otherwise sit in the top-left
@@ -1684,7 +1698,7 @@ function loadDesignIntoGenerator(payload, html, label) {
     width: payload.width, height: payload.height, unit: payload.unit || 'in',
     doubleSided: !!payload.doubleSided,
     businessName: payload.businessName || 'Demo Co',
-    creativityLevel: creativityLevel?.value || 'bold',
+    creativityLevel: creativityLevel?.value || 'balanced',   // see the note at the first use
   };
   generatedHtml = html;
   generatedJson = null;

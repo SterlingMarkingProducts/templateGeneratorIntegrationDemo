@@ -117,10 +117,10 @@ const SYSTEM_DESIGNER = `You are a world-class graphic designer and creative dir
 
 Your work has been recognized at Cannes Lions, D&AD Yellow Pencil, and AIGA, and featured in Eye Magazine, PRINT, Wallpaper*, and It's Nice That.
 
-You are, simply, the best in the world at this — the senior designer whose work clients wait months for. Every piece begins with a strong, specific creative CONCEPT (one you could name in a sentence — "a business card that IS a live analytics dashboard", "an Art Deco monogram built from stepped gold rays"), and then you EXECUTE IT RICHLY. You are a maximalist by instinct: a premium print piece is a fully designed environment — layered backgrounds, integrated graphic systems, ornament, motif, and atmosphere that fill the canvas — never a logo and a line of text floating in empty space. You make richness feel effortless and cohesive rather than cluttered, because every layer reinforces the ONE concept. Even in restrained aesthetics (Swiss, Japanese minimalism), the composition is dense with craft, tension, and intentional depth — never sparse, thin, or under-designed. Your layouts are architecturally composed (never centered-by-default), your palettes have real depth, and your typography is bold, expressive, and dramatically scaled.
+You are, simply, the best in the world at this — the senior designer whose work clients wait months for. Every piece begins with a strong, specific creative CONCEPT (one you could name in a sentence — "a business card that IS a live analytics dashboard", "an Art Deco monogram built from stepped gold rays"), and then you EXECUTE IT PRECISELY at the density that direction deserves. You have no house style and no default personality: a maximalist brief gets a fully designed environment, and a restrained brief gets three perfect elements and composed whitespace — each executed with the same conviction. You make either feel effortless, because every element reinforces the ONE concept and nothing is present to fill space. Your layouts are architecturally composed (never centered-by-default), your palettes are chosen for the brief rather than out of habit, and your typography is confident and deliberately scaled.
 
-TYPOGRAPHY DIVERSITY — CRITICAL RULE:
-Do NOT default to editorial serifs (Cormorant Garamond, Playfair Display, EB Garamond, Libre Baskerville, Didact Gothic). These are only appropriate when the style direction explicitly calls for luxury editorial, high fashion, or literary aesthetics. Every other aesthetic demands a completely different type personality:
+TYPOGRAPHY — MATCH THE DIRECTION:
+Choose type for the direction in front of you, not out of habit. A high-contrast editorial serif (Cormorant, Playfair Display, EB Garamond, Bodoni Moda, Fraunces, DM Serif Display) is exactly right for elegant serif, modern luxury, editorial minimal and soft-sophisticated work, and wrong for Swiss, brutalist or technical work — and the reverse is equally true. Never carry one favourite family across every brief. Typical pairings, as a starting point rather than a rule:
 
 - Swiss Grid / Bauhaus / Constructivist → Barlow, Space Grotesk, Work Sans, IBM Plex Sans, Outfit (tight tracking, geometric discipline)
 - Neo-Brutalism → Archivo Black, Anton, Bebas Neue, Black Han Sans (ultra-heavy, oversized, confrontational)
@@ -135,16 +135,17 @@ Do NOT default to editorial serifs (Cormorant Garamond, Playfair Display, EB Gar
 - Luxury Maximalism → Fraunces, Abril Fatface, Rozha One, Bodoni Moda (decorative but intentional)
 - Coastal Minimalism → DM Sans, Karla, Raleway, Nunito (airy, clean, light-handed)
 
-RICHNESS BAR — every design must be a fully designed environment, matching the density and confidence of award-winning print work:
-- A layered background — at least two color fields, a gradient, a pattern, or texture. NEVER one flat fill with type dropped on top.
-- A dominant HERO MOMENT (oversized type, a large monogram/emblem, a bold color field or diagonal split) owning 30%+ of the canvas.
-- Multiple integrated graphic elements that all serve the concept — geometric systems, ornament, iconography, rules, framing, motifs, patterns. Aim for 4–6 on cards and posters; more is welcome when it stays cohesive.
-- Dramatic scale contrast (hero ≥2.5× body) and confident, expressive typography.
-Sparse, thin, or "one logo + one line in a sea of empty space" output is a FAIL — unless the aesthetic is genuinely minimalist AND the empty space is actively composed with real tension.
+CRAFT BAR — every design, at every density, must show award-winning print craft:
+- A clear HERO MOMENT the viewer remembers — oversized type, a commanding wordmark, a monogram, a bold field, or a decisive split. What it is depends on the direction; that there is one does not.
+- Real hierarchy and confident scale contrast, so the eye is led rather than left to hunt.
+- Deliberate composition — asymmetry, a strict grid, a diagonal, architectural framing; never centered-by-default.
+- Every element present on purpose. Nothing added to fill space, and nothing omitted that the concept needs.
+HOW MUCH material a piece carries is set by the DESIGN DENSITY contract in the Style Direction — follow it. A restrained direction executed with three elements, a flat ground and composed whitespace is FINISHED WORK, not an under-designed one; padding it with gradients, patterns and ornament to look busier is a FAIL. A rich direction executed thinly is equally a FAIL. Match the contract you are given.
+The one thing that is never acceptable at any density is carelessness: a template-grade centered stack, arbitrary spacing, or an unconsidered palette.
 
 CRAFT PRINCIPLES:
 - Intentional composition — real layout decisions (asymmetry, grid, diagonal, architectural framing); never centered-by-default.
-- Color creates atmosphere — distinctive, industry-appropriate palettes; avoid navy/corporate blue unless the brief asks for it (legal → charcoal+gold or burgundy+parchment; healthcare → sage+coral).
+- Color creates atmosphere — choose a palette that genuinely suits this business and this direction. Light, warm, soft, saturated, deep and metallic palettes are all legitimate; so is a professional blue when it is the right answer rather than a reflex. What is not acceptable is an unconsidered palette: the same default reached for regardless of brief.
 - Integrate any user photo with intent (crop, frame, overlay); never a raw rectangle.
 - "Corporate" or "professional" still means top-agency craft — rich, bold, structured — never document-like.
 
@@ -154,10 +155,10 @@ EVERYTHING MUST FIT — non-negotiable, and it never conflicts with richness (ri
 - Reserve vertical room for every text line so nothing is cut off at the bottom.
 
 HARD FAILS (never ship these):
-- PowerPoint / Word / Canva-grade layouts, or a flat single-color background with a centered text stack.
+- PowerPoint / Word / Canva-grade layouts — a centered text stack with arbitrary spacing and no compositional thinking.
 - Any text clipped, cut off, hidden, or overlapping other text.
-- Sparse, under-designed compositions that read as a template with lots of blank space.
-- Defaulting to Cormorant/Playfair or corporate blue as a reflex.`;
+- Ignoring the density contract in either direction — padding a restrained brief, or thinning a rich one.
+- Reaching for the same typeface or the same palette regardless of the brief.`;
 
 // ── Portfolio design archetypes — used when style is generic or empty ────────
 const GENERIC_STYLE = /^(corporate|professional|business|clean|simple|modern|legal|law|minimal|minimalist|elegant|classic)?$/i;
@@ -171,6 +172,9 @@ const LEGAL_ARCHETYPES = [
   'Editorial Legal Serif — oversized cropped serif firm name bleeding off canvas edge, charcoal + terracotta accent blob behind type, thin grid lines, refined contact block',
 ];
 
+/* NOT WIRED IN since the balanced direction pool below replaced the old
+   two-random-picks default. Kept for reference while the direction set
+   settles; nothing reads them. */
 const DESIGN_ARCHETYPES = [
   ...LEGAL_ARCHETYPES,
   'Diagonal Geometric Split — two contrasting palette panels divided by clip-path diagonal, accent stripe at split, bold caps hierarchy, chevron or arrow SVG cluster on light panel',
@@ -198,6 +202,10 @@ const BOLD_ARCHETYPES = [
 ];
 
 // ── Poster / Sign archetypes — large-format design language ──────────────────
+/* Also NOT WIRED IN any more: a poster with no style direction now takes a
+   single direction from the balanced pool plus the large-format note, rather
+   than a direction PLUS a second unrelated random archetype. Kept for the
+   keyword routes' reference and for a later large-format pass. */
 const POSTER_ARCHETYPES = [
   'Swiss Modernist Grid — 2–3 words of oversized display type filling 55–65% of canvas height, strict geometric shapes (filled circles, rectangles, quarter-arcs) as the compositional graphic system in exactly 3 colors, off-white or warm cream background, Swiss grid spatial discipline (Müller-Brockmann energy)',
   'Dark Cinematic Event — deep saturated background (near-black, oxblood, or midnight navy) with large atmospheric photography blended via gradient overlay or color-burn mask, bold reversed headline at 160–220px+, gold or electric accent geometry (diagonal band, arc, corner bracket), dramatic film-poster hierarchy with strong bottom information block',
@@ -386,7 +394,7 @@ const STYLE_CHIP_MAP = {
   'Deckle Press': 'Torn-Paper Editorial — a refined display serif (Fraunces, Cormorant, or DM Serif Display) as an oversized vertical or cropped wordmark; a soft tactile palette of dusty rose #d9a7a0 + mauve/plum #6b3f52 + warm cream #f3ece4; the hero is a torn/deckle paper edge (irregular clip-path or rough SVG path) dividing two paper textures, with a subtle fibre-grain overlay; elegant editorial composition, generous margins, a small serif monogram and thin rules; boutique letterpress-studio feel — soft, premium, hand-crafted, never digital',
   'Primary Pop': 'Playful Primary Color-Block — a bold rounded geometric sans (Poppins, Nunito Black, Fredoka, or Outfit) in heavy weight; a bright saturated palette of cobalt #2f4fe0 + hot pink #ff5ea8 + tangerine #ff5a1f + teal #16c2c2 + sunshine yellow #ffd21f on off-white; the canvas is divided into bold geometric color fields (triangles, a rising-sun semicircle, quarter-arcs) meeting at clean diagonals, with simple circular icons and a friendly ampersand accent; energetic, spunky, optimistic Bauhaus-pop — fun but disciplined',
   'Gilded Emerald': 'Emerald & Gold Foil — a high-contrast serif (Cormorant, Playfair Display, or Bodoni Moda); a deep emerald #0f3d2e background with metallic gold #c8a44d foil accents (gold gradient text-fill + subtle emboss via text-shadow); a large tone-on-tone embossed monogram watermark behind a centered gold wordmark, thin gold rules and a refined stacked serif monogram; restrained, symmetrical, opulent quiet-luxury — the feel of foil-stamped heavyweight stock, jeweler / private-client premium',
-  'Corporate Professional': 'Executive Corporate — a confident modern grotesque (Barlow, Space Grotesk, Archivo, or IBM Plex Sans) with tracked-caps labels; a refined businesslike palette of deep charcoal #23272e + warm white + ONE considered accent (steel teal #2a7f8f, oxford burgundy #701f28, or brass #c9a84c) — premium and boardroom-credible without defaulting to corporate blue; a disciplined grid with one architectural gesture (a vertical accent band, a sharp diagonal seam, or a precise corner-bracket frame), thin hairline rules, a compact monogram lockup, and generous structured whitespace; polished, authoritative, Fortune-500 annual-report craft',
+  'Corporate Professional': 'Executive Corporate — a confident modern grotesque (Barlow, Space Grotesk, Archivo, or IBM Plex Sans) with tracked-caps labels; a refined businesslike palette of deep charcoal #23272e + warm white + ONE considered accent (a deep professional blue #1f4e79, steel teal #2a7f8f, oxford burgundy #701f28, or brass #c9a84c) — premium and boardroom-credible, the accent chosen for this business rather than by reflex; a disciplined grid with one architectural gesture (a vertical accent band, a sharp diagonal seam, or a precise corner-bracket frame), thin hairline rules, a compact monogram lockup, and generous structured whitespace; polished, authoritative, Fortune-500 annual-report craft',
   'Playful': 'Playful & Fun — a chunky rounded sans (Fredoka, Baloo 2, Nunito Black, or Poppins) with a bouncy friendly personality; a bright happy palette (sunshine yellow #ffd21f, bubblegum pink #ff5ea8, sky blue #3aa0ff, tangerine #ff5a1f, mint #4cd6b0) on warm off-white; sticker-style graphics with bold outlines and soft shadows, confetti dots, squiggles, zigzags, stars, and blob shapes placed with intent; gently tilted headline energy and an oversized friendly ampersand or badge motif; joyful, energetic, kid-at-heart charm — fun but composed, never chaotic',
   'Sage Standard': 'Clean Sage Minimal — a precise modern sans (Inter, Manrope, Work Sans, or Jost) with wide-tracked labels; a calm muted palette of soft sage #a9b39a + warm cream #f4f1e8 + ink charcoal #23241f; a clean color-block split (a solid sage panel meeting cream) with a stacked N&Co. monogram, thin divider rules and small tracked-caps labels; abundant white space, immaculate alignment, one restrained accent — contemporary, confident, corporate-modern calm',
 };
@@ -397,9 +405,161 @@ function expandStyleDirection(styleDirection) {
   return STYLE_CHIP_MAP[trimmed] || trimmed;
 }
 
+/* ── DESIGN DENSITY ────────────────────────────────────────────────────────
+ *
+ * How much graphic material a piece carries is a property of the DIRECTION,
+ * not a house rule. An editorial-minimal card with three elements and real
+ * whitespace is finished work; the same card judged against a "4–6 elements"
+ * floor would be marked a failure and padded until it stopped being editorial
+ * minimal. That floor is why every direction used to arrive looking layered
+ * and loud. Each direction now names its own contract and the prompts follow
+ * it — print fit, hierarchy, bleed and legibility rules are untouched and
+ * apply identically at every density. */
+const DENSITY_CONTRACTS = {
+  restrained: `DESIGN DENSITY — RESTRAINED (this direction's contract):
+- Few elements, chosen precisely. Typically 1–3 graphic elements beyond the type. More would weaken it.
+- Whitespace is the material, not leftover space — compose it deliberately: asymmetric margins, a considered optical centre, real tension between the mark and the field.
+- The typography IS the design. Scale, weight and tracking carry the piece; a single hairline rule, one small mark, or one quiet field is enough support.
+- A flat or near-flat ground is CORRECT here. Do not add gradients, patterns or layered fields to reach a quota.
+- Judge it by craft and confidence, not by how much is on the card.`,
+
+  balanced: `DESIGN DENSITY — BALANCED (this direction's contract):
+- A composed environment without crowding. Typically 2–4 graphic elements beyond the type, each earning its place.
+- The ground may be a single considered colour, a soft two-field split, or one restrained texture — whichever the direction calls for.
+- One clear hero moment, a real hierarchy, and enough breathing room that every element reads.`,
+
+  rich: `DESIGN DENSITY — RICH (this direction's contract):
+- A fully designed environment: a layered ground (2+ fields, gradient, pattern, or texture) and 4–6 integrated graphic elements.
+- Every layer serves the ONE concept — cohesive richness, never decoration for its own sake.
+- Dramatic scale contrast and confident, expressive typography.`,
+};
+
+/* ── The default direction pool ────────────────────────────────────────────
+ *
+ * ONE seed per generation, drawn from a deliberately broad set. The previous
+ * default drew TWO independent random picks — a style and an unrelated bold
+ * archetype — and concatenated them, so a calm style arrived with a loud
+ * archetype stapled on and the model resolved the conflict toward whichever
+ * half was more concrete. That is gone: a direction is a single, coherent
+ * brief.
+ *
+ * The set spans light and dark, restrained and maximal, serif and sans, warm
+ * and cool. Retro-futurist/technical and dark luxe are each ONE legitimate
+ * option among twelve — reachable when drawn or asked for, never the house
+ * personality. */
+const DESIGN_DIRECTIONS = [
+  {
+    key: 'editorial-minimal', density: 'restrained',
+    brief: 'Editorial Minimal — the discipline of a well-set magazine page: a warm off-white or soft paper ground, one restrained accent, and a precise modern sans or a quiet text serif (Inter, Jost, Karla, Söhne-like grotesques, or a calm serif) used at two or three sizes only; wide-tracked small caps for labels, one hairline rule as the entire ornament, generous asymmetric margins, immaculate alignment; the composition is carried by typographic scale and confident empty space rather than by graphics',
+  },
+  {
+    key: 'modern-luxury', density: 'restrained',
+    brief: 'Modern Luxury — quiet expensive restraint: a refined high-contrast serif or an elegant light grotesque wordmark set with generous tracking, a small precise monogram or mark, and one considered accent treatment (a tonal deboss, a soft metallic, or a single deep hue) on ivory, bone, warm stone, or a deep tonal ground; thin rules, symmetrical or gently offset balance, abundant margin; the luxury reads as material and spacing, not as ornament',
+  },
+  {
+    key: 'bold-modernist', density: 'rich',
+    brief: 'Bold Modernist / Geometric — Swiss and Bauhaus lineage brought forward: a strict modular grid, a heavy modern grotesque (Space Grotesk, Archivo, Barlow, Work Sans) at decisive scale, and a compositional system of pure geometry — a filled circle, a hard rectangle, a quarter-arc, a bold bar — in a tightly limited palette of two or three colours on white, off-white, or one saturated field; mathematical spacing, deliberate asymmetry, zero decorative fluff',
+  },
+  {
+    key: 'playful-contemporary', density: 'rich',
+    brief: 'Playful Contemporary — bright and friendly with real craft: a chunky rounded sans (Fredoka, Poppins, Nunito Black, Baloo 2), a happy saturated palette (sunshine yellow, bubblegum pink, sky blue, tangerine, mint) on warm off-white, sticker-style shapes with soft shadows, confetti dots, squiggles and stars placed with intent, a gently tilted headline and one oversized friendly mark; joyful and energetic, composed rather than chaotic',
+  },
+  {
+    key: 'organic-botanical', density: 'balanced',
+    brief: 'Organic / Botanical — a natural, hand-touched calm: sage, terracotta, clay, oat, and warm cream; delicate botanical line art (a leaf, a stem, a seed head) or a soft biomorphic shape as the motif; a humanist sans or a gentle rounded serif (Nunito, Quicksand, Lato, or a soft old-style serif), fluid asymmetric placement, and a paper-warm ground; wellness, artisan, and studio-florist warmth without kitsch',
+  },
+  {
+    key: 'elegant-serif', density: 'restrained',
+    brief: 'Elegant Serif — classical typographic poise: a beautiful high-contrast serif (Cormorant, Playfair Display, EB Garamond, Bodoni Moda, Fraunces, or DM Serif Display) as an unhurried wordmark, small-caps or italic supporting lines, hairline rules above and below the name, and a cream, ivory, or soft ink ground; symmetrical or classically balanced, generous leading, nothing hurried and nothing extra — the letterforms are the design',
+  },
+  {
+    key: 'clean-corporate', density: 'restrained',
+    brief: 'Clean Corporate — credible, structured, and genuinely modern: a confident grotesque (Inter, Manrope, IBM Plex Sans, Barlow, Archivo) with tracked-caps labels, a disciplined grid, hairline dividers, and ONE considered accent — a professional blue is entirely welcome here, as are steel teal, deep green, burgundy, or warm graphite; one architectural gesture only (a vertical accent band, a crisp seam, or a corner-bracket frame), aligned contact detail, and generous structured whitespace; boardroom-credible without being cold or template-like',
+  },
+  {
+    key: 'colourful-expressive', density: 'rich',
+    brief: 'Colourful Expressive — confident colour as the whole idea: three to five saturated hues meeting in bold fields, arcs, or diagonal bands, a heavy contemporary sans or a characterful display face, knocked-out type on colour, and one unexpected chromatic pairing that makes the card memorable; energetic and modern, held together by strict alignment so the colour reads as intentional rather than noisy',
+  },
+  {
+    key: 'collage-editorial', density: 'rich',
+    brief: 'Collage / Editorial — a cut-and-pasted print sensibility: overlapping paper and photographic fragments with rough torn or cut edges, a mixture of two or three type personalities at contrasting sizes, tape, stamp, or margin-note accents, and a muted printed palette (newsprint grey, ink black, faded red, oat) with one bright interruption; layered and tactile, arranged with an editor\'s eye rather than scattered',
+  },
+  {
+    key: 'soft-sophisticated', density: 'restrained',
+    brief: 'Soft Sophisticated — low-contrast and quietly premium: a muted palette of blush, greige, sand, oat, dusty clay, or pale sage with tone-on-tone layering; a light modern sans or a delicate serif at modest scale, wide tracking, and very little else — one soft shape, one hairline, or one gentle field edge; the ground and the type sit close in value so the piece feels calm, tactile, and expensive; nothing shouts',
+  },
+  {
+    key: 'dark-luxe', density: 'balanced',
+    brief: 'Dark Luxe — depth and restraint on a dark ground: near-black, deep ink, forest, aubergine, or oxblood, with ONE refined accent (a soft metallic, bone, or a single jewel hue) used sparingly; an elegant serif or a precise light grotesque reversed out, generous margin, a small monogram or a single tonal motif; the darkness is the luxury — resist filling it, and never let the accent become the whole card',
+  },
+  {
+    key: 'retro-futurist', density: 'rich',
+    brief: 'Retro-Futurist / Technical — deliberate 70s–80s forward-look: geometric technical type (Orbitron, Oxanium, Exo 2, Space Mono), concentric arcs, ring motifs, or a perspective grid, a chrome or gradient treatment on the wordmark, and a palette built from a deep ground with one electric or warm-metal accent; confident retro-space engineering — used when the business genuinely calls for it',
+  },
+];
+
+const DIRECTION_BY_KEY = DESIGN_DIRECTIONS.reduce((m, d) => { m[d.key] = d; return m; }, {});
+
+function pickDirection(keys) {
+  const pool = (keys && keys.length)
+    ? keys.map((k) => DIRECTION_BY_KEY[k]).filter(Boolean)
+    : DESIGN_DIRECTIONS;
+  const from = pool.length ? pool : DESIGN_DIRECTIONS;
+  return from[Math.floor(Math.random() * from.length)];
+}
+
+/* ── Generic words carry intent ────────────────────────────────────────────
+ *
+ * "professional", "clean", "modern", "minimal", "elegant", "classic",
+ * "corporate" used to be matched by GENERIC_STYLE and DISCARDED — the request
+ * was replaced by a random draw from the full pool, so "elegant" could return
+ * a primary-colour block party. These words are not empty: each names a real
+ * region of the design space. They now narrow the draw to directions that
+ * actually mean what was asked, and the draw stays random WITHIN that region
+ * so two runs of the same word still differ. */
+const GENERIC_INTENT = [
+  { test: /\b(minimal|minimalist|simple|clean)\b/i,
+    keys: ['editorial-minimal', 'clean-corporate', 'soft-sophisticated', 'modern-luxury'] },
+  { test: /\b(elegant|classic|classical|timeless|refined|sophisticated)\b/i,
+    keys: ['elegant-serif', 'modern-luxury', 'soft-sophisticated', 'editorial-minimal'] },
+  { test: /\b(legal|law|attorney|counsel|litigation|barrister|solicitor)\b/i,
+    keys: ['elegant-serif', 'clean-corporate', 'modern-luxury', 'dark-luxe'] },
+  { test: /\b(corporate|professional|business|executive)\b/i,
+    keys: ['clean-corporate', 'modern-luxury', 'editorial-minimal', 'bold-modernist'] },
+  { test: /\b(modern|contemporary)\b/i,
+    keys: ['bold-modernist', 'clean-corporate', 'editorial-minimal', 'colourful-expressive'] },
+];
+
+function intentKeysFor(text) {
+  const t = (text || '').trim();
+  if (!t) return null;
+  for (const rule of GENERIC_INTENT) {
+    if (rule.test.test(t)) return rule.keys;
+  }
+  return null;
+}
+
+/* Density for an EXPLICITLY chosen style. Unlisted styles get 'balanced' —
+ * a middle that suits most, rather than the old universal maximalist floor. */
+const CHIP_DENSITY = {
+  'Japanese Minimalism': 'restrained', 'Coastal Minimalism': 'restrained',
+  'Sage Standard': 'restrained', 'Corporate Professional': 'restrained',
+  'Fashion Editorial': 'restrained', 'Deckle Press': 'restrained',
+  'Gilded Emerald': 'restrained', 'Swiss Grid': 'balanced',
+  'Organic Modernism': 'balanced', 'Bauhaus Constructivism': 'balanced',
+  'Bold Geometric': 'balanced', 'Dark Glamour': 'balanced',
+  'Art Deco': 'rich', 'Memphis Bold': 'rich', 'Neo-Brutalism': 'rich',
+  'Luxury Maximalism': 'rich', 'Synthwave Neon': 'rich', 'Vaporwave': 'rich',
+  'Y2K Chrome': 'rich', 'Pop Art Comic': 'rich', 'Psychedelic Modernism': 'rich',
+  'Cosmic Celestial': 'rich', 'Street Graffiti': 'rich', 'Urban Industrial': 'rich',
+  'Dark Tech': 'rich', 'Retro-Futurism': 'rich', 'Data Studio': 'rich',
+  'Primary Pop': 'rich', 'Playful': 'rich', 'Creative Studio': 'balanced',
+  'WPA Travel': 'rich', 'Swiss Exhibition': 'balanced', 'Event Summit': 'balanced',
+};
+
 function resolveCreativeDirection(styleDirection, industry, templateType, creativityLevel) {
   const raw = (styleDirection || '').trim();
-  const creativityDirective = getCreativityDirective(creativityLevel || 'standard');
+  const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
   // ── Stamps: monochromatic only — special archetype pool ─────────────────
   const isStamp = /stamp/i.test(templateType || '');
@@ -410,64 +570,35 @@ function resolveCreativeDirection(styleDirection, industry, templateType, creati
   }
 
   const isLargeFormat = /poster|sign/i.test(templateType || '');
-  const archetypePool = isLargeFormat ? POSTER_ARCHETYPES : BOLD_ARCHETYPES;
-
-  // Style-specific reference archetypes take priority when keywords match
-  const styleArchetype = pickFromStyleRoute(raw, templateType)
-    || pickFromStyleRoute(expandStyleDirection(raw), templateType);
-  const archetype = styleArchetype
-    || archetypePool[Math.floor(Math.random() * archetypePool.length)];
-
   const formatNote = isLargeFormat
     ? 'Design at true poster scale — monumental display type (120px+), one dominant visual covering ≥40% of the canvas, edge-to-edge composition. A poster, not a scaled-up business card.'
-    : 'Design at portfolio quality — one clear hero moment and real graphic craft with a print-shop finish. Not a plain background with text.';
+    : 'Design at portfolio quality — one clear idea, real craft, and a print-shop finish appropriate to this direction.';
 
-  // The archetype is INSPIRATION, not a checklist — the concept step decides how to use it.
-  const inspiration = (label) =>
-    `${label}\n\nINSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${archetype}\n\n${formatNote} ${creativityDirective}`;
+  const compose = (brief, density, reference) => [
+    brief,
+    reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
+    DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
+    `${formatNote} ${creativityDirective}`,
+  ].filter(Boolean).join('\n\n');
 
+  // ── An explicit, non-generic style direction: the user's words lead ──────
   if (raw && !GENERIC_STYLE.test(raw)) {
-    return inspiration(expandStyleDirection(raw));
+    const expanded = expandStyleDirection(raw);
+    /* A reference archetype is added ONLY when the style actually routes to a
+     * matching pool. Previously an unrouted style still received a RANDOM pick
+     * from the bold archetype pool, which is how "Japanese Minimalism" arrived
+     * carrying a dominant monogram or a neon field. */
+    const reference = pickFromStyleRoute(raw, templateType)
+      || pickFromStyleRoute(expanded, templateType);
+    return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference);
   }
 
-  const key = (industry || '').toLowerCase();
-  if (!isLargeFormat && /legal|law|attorney|counsel|litigation|barrister|solicitor/.test(key)) {
-    const pick  = LEGAL_ARCHETYPES[Math.floor(Math.random() * LEGAL_ARCHETYPES.length)];
-    const style = DIVERSE_STYLES[Math.floor(Math.random() * DIVERSE_STYLES.length)];
-    return `${style}\n\nINSPIRATION DIRECTION (riff, don't copy): ${pick}\n\n${formatNote} ${creativityDirective}`;
-  }
-
-  const style = DIVERSE_STYLES[Math.floor(Math.random() * DIVERSE_STYLES.length)];
-  return inspiration(style);
+  // ── Generic or empty: intent first, then a balanced draw ─────────────────
+  const keys = intentKeysFor(raw) || intentKeysFor(industry);
+  const direction = pickDirection(keys);
+  return compose(direction.brief, direction.density, null);
 }
 
-// ── Diverse style pool — used when user provides no direction ────────────────
-const DIVERSE_STYLES = [
-  'Swiss International Style — disciplined modular grid, Space Grotesk or Barlow bold sans-serif, primary color accent on stark white or black, geometric dividing lines, precise alignment',
-  'Neo-Brutalism — ultra-heavy Archivo Black or Anton type at dramatic scale, asymmetric raw layout, diagonal or offset text blocks, extreme value contrast, bold background color blocks',
-  'Art Deco Revival — Cinzel or Josefin Sans type, geometric ornamental border framing, symmetrical composition, rich gold (#c9a84c) and black or deep jewel tones, architectural detail flourishes',
-  'Memphis Design — Unbounded or Righteous type, bold triangles/circles/zigzag shapes in contrasting saturated colors (coral, cobalt, yellow, mint), energetic asymmetric composition',
-  'Japanese Minimalism — DM Sans or Noto Sans JP, extreme negative space, one restrained accent color on near-white or deep charcoal, ultra-light type weights, immaculate spacing',
-  'Dark Tech / Cinematic — Rajdhani or Exo 2 type, deep black background, electric cyan or vivid accent color, geometric circuit-line details, bold spaced-caps hierarchy',
-  'Organic Modernism — Nunito or Quicksand rounded type, large biomorphic blob shapes in terracotta/sage/warm cream, fluid asymmetric layering, nature-inspired warmth',
-  'Retro-Futurism — Orbitron or Oxanium type, warm amber and deep navy gradient, concentric arc or ring motifs, bold condensed retro-space aesthetic, chrome-gradient accents',
-  'Psychedelic Modernism — Raleway Black or Righteous type, deeply saturated vibrant palette (electric violet, hot coral, acid yellow), fluid organic forms, bold chromatic collisions',
-  'Urban Industrial — Bebas Neue or Barlow Condensed type, dark grey and concrete palette, offset asymmetric grid, bold stencil-style headline, sharp geometric cut shapes',
-  'Luxury Maximalism — Abril Fatface or Fraunces display type, opulent jewel tones (deep emerald, burgundy, sapphire), heavy decorative geometric shapes, layered theatricality',
-  'Coastal Minimalism — Karla or Raleway Light type, deep ocean blue and warm sand, airy negative space, clean organic shapes, light atmospheric freshness',
-  'Bauhaus Constructivism — IBM Plex Sans or Work Sans, primary color geometry (red, blue, yellow, black), strict orthogonal grid, architectural precision, functional modernism',
-  'Dark Glamour — Oswald or Montserrat Bold type, deep oxblood or midnight navy background, metallic gold accent, high-contrast bold typographic hierarchy',
-  'Bold Geometric Corporate — Barlow or Space Grotesk, diagonal color-block composition splitting the canvas, bold primary colors, white type reversed out on saturated fields',
-  'Synthwave / Retrowave — layered neon atmosphere, chrome type, perspective grid, mixed font personalities, sunset horizon gradients',
-  'High-Fashion Editorial — cream canvas, extreme whitespace, serif/sans tension, architectural photo crop, thin rule separators',
-  'WPA Vintage Travel — flat illustrated depth layers, double border frame, embossed serif titles, compass emblem, earthy limited palette',
-  'Premium Leadership Summit — navy + gold luxury, curved photo portal, nested triangle depth, icon+rule information hierarchy',
-  'Data-Driven Creative Studio — dashboard UI as brand identity, metric blocks, sparkline SVG, lime accent on navy',
-  'Torn-Paper Editorial — refined serif wordmark, dusty rose + plum + cream, a torn deckle paper edge dividing two textures, fibre grain, boutique letterpress warmth',
-  'Playful Primary Color-Block — heavy rounded sans, bright cobalt/pink/tangerine/teal/yellow geometric fields and a rising-sun semicircle, circular icons, spunky Bauhaus-pop',
-  'Emerald & Gold Foil — high-contrast serif, deep emerald with gold-foil accents, an embossed monogram watermark, thin gold rules, quiet-luxury foil-stamped premium',
-  'Clean Sage Minimal — precise modern sans, sage + cream color-block split, stacked monogram, tracked-caps labels, generous white space, corporate-modern calm',
-];
 
 // ── Industry palette hints when user leaves colors empty ─────────────────────
 const INDUSTRY_COLOR_POOLS = {
@@ -509,7 +640,10 @@ function getColorGuidance(industry) {
   else if (/health|medical|clinic|hospital|pharma/.test(key)) pool = INDUSTRY_COLOR_POOLS.healthcare;
   else if (/tech|software|saas|digital|startup/.test(key)) pool = INDUSTRY_COLOR_POOLS.tech;
   const pick = pool[Math.floor(Math.random() * pool.length)];
-  return `No colors specified — invent a distinctive, premium palette. Direction: ${pick}. STRICTLY FORBIDDEN as background or primary unless user explicitly chose blue: navy #1e3a5f, royal #2563eb, corporate #1e40af, midnight #172554. Legal industry ≠ blue. Prefer charcoal+gold, burgundy+cream, slate+copper, forest+brass, black+gold, cream+charcoal.`;
+  /* A starting point, not a funnel. The previous version forbade blue outright
+     and then named a replacement list that was mostly dark + metallic, which is
+     how nearly every unprompted design arrived dark with a gold accent. */
+  return `No colors specified — invent a distinctive, premium palette that suits this business and the chosen direction. One idea to start from: ${pick}. Light, warm, soft, saturated, deep and metallic palettes are all legitimate, and a considered professional blue is welcome where it genuinely fits (it is a reflex to avoid, not a colour to ban). Whatever you choose, make it a decision — not the same default applied to every brief.`;
 }
 
 function toPx(value, unit) {
@@ -648,10 +782,10 @@ User SVG: {{SVG_CONTENT}}
 
 HOW TO APPROACH THIS:
 1. Start with ONE idea. Before anything else, decide the single memorable concept that drives this piece — something you could say in one sentence, specific to THIS business, not a generic template. Every field below serves it. This is the most important decision.
-2. Honor the Style Direction — it is the primary creative driver. Choose typography that matches the aesthetic; never default to Cormorant/Playfair/EB Garamond unless the direction is genuinely luxury-editorial or Art Deco. (Swiss/Bauhaus → Space Grotesk, Barlow, Archivo Black; organic/craft → Nunito, DM Sans; dark/tech → Oswald, Rajdhani, Exo 2; retro-future → Orbitron, Space Mono; luxury → Fraunces, Abril Fatface.) Size display type large and dramatic, but within the safe width given in the layout budget — specify sizes that fit, reducing size or breaking to two lines rather than clipping.
-3. Pick a distinctive palette. If Colors is empty, invent one that fits the industry and concept; avoid navy/royal/corporate blue unless the brief explicitly chose blue. The background must suit the aesthetic (dark styles → dark background; bold styles → saturated).
+2. Honor the Style Direction — it is the primary creative driver, and it includes a DESIGN DENSITY contract you must follow. Choose typography that belongs to that direction rather than a habitual favourite. (Editorial/luxury/elegant → Cormorant, Playfair Display, EB Garamond, Bodoni Moda, Fraunces, DM Serif Display; Swiss/Bauhaus/modernist → Space Grotesk, Barlow, Archivo, Work Sans; clean corporate → Inter, Manrope, IBM Plex Sans; organic/craft → Nunito, Quicksand, Lato; playful → Fredoka, Poppins, Baloo 2; retro-future/technical → Orbitron, Exo 2, Space Mono.) Size display type for the direction — dramatic where that is the point, restrained where it is not — and always within the safe width given in the layout budget, reducing size or breaking to two lines rather than clipping.
+3. Pick a distinctive palette that genuinely fits this business, this industry and this direction. If Colors is empty, invent one — light, warm, soft, saturated, deep or metallic, whichever the direction calls for, and a considered professional blue when that is the right answer. What to avoid is the unconsidered default: the same palette reached for regardless of brief. The background must suit the direction (dark directions → dark ground; restrained directions → a calm or paper ground; bold directions → saturated).
 4. Compose with intent — asymmetry, strict grid, or diagonal as the concept demands; never a centered stack on a flat fill. Keep decorative shapes out of the text-safe zone.
-5. Build a RICH, layered design that serves the concept. Specify a layered background (2+ color fields / gradient / pattern / texture), a dominant hero, and 4–6 integrated graphic elements that reinforce the idea — the density and craft of award-winning print, never a sparse template. Even minimal aesthetics must be rich in composition and tension, not empty.
+5. Build the design at the DENSITY the Style Direction's contract specifies. A rich contract wants a layered background and 4–6 integrated graphic elements; a restrained contract wants a calm ground, 1–3 precise elements, and whitespace composed with real tension. Either way the craft is the same: a dominant hero, a real hierarchy, and nothing present merely to fill space.
 6. If an Image URL is provided, describe its crop/frame/overlay and how it connects to type (IMAGE INTEGRATION). If a User SVG is provided, describe its exact placement, size, and relationship to the composition (SVG INTEGRATION).
 
 Return ONLY the spec in this exact format — no explanation, no code, no preamble:
@@ -676,7 +810,7 @@ LAYOUT
 [2–3 sentences: exact compositional strategy — how the canvas is divided, where key elements are anchored, how visual weight and hierarchy flow. Describe any asymmetric, diagonal, offset, or architectural layout decisions. Be specific about which quadrants are occupied by what elements.]
 
 BACKGROUND
-[The layered background environment — the 2+ color fields / gradient / pattern / texture and exactly how they are arranged across the canvas. Never a single flat fill.]
+[The ground and how it is arranged across the canvas. At a rich density: the layered environment — 2+ color fields / gradient / pattern / texture. At a restrained density: a calm or single considered ground is correct — say so plainly and do not invent layers to fill the field.]
 
 TEXT ZONES
 [Two zones only, flowed by a flex container — NO per-line pixel positions. State which text sits in .zone-copy (top: business name + tagline) vs .zone-contact (bottom: person name, title, contact lines), and whether the copy block is top-anchored or vertically centered. The build flexes these so lines can never overlap or clip.]
@@ -688,10 +822,10 @@ MOTIF
 [1–2 sentences: the specific visual element(s) — shape type (diagonal band, blob, arc, polygon, circuit line, dot grid, wave), scale relative to the canvas (e.g. "covers 60% of background"), fill treatment (solid, gradient, transparent), and exact position on the canvas]
 
 HERO MOMENT
-[The one unforgettable element that embodies the CONCEPT — its shape/type, exact size (≥30% of canvas on cards, ≥40% on posters), fill treatment, and position. This is what a viewer remembers, not merely something that looks professional.]
+[The one unforgettable element that embodies the CONCEPT — its shape/type, exact size, fill treatment, and position. On posters it should command ≥40% of the canvas; on cards it is typically ≥30%, though a restrained direction may instead make a perfectly set wordmark the hero at a smaller footprint. This is what a viewer remembers.]
 
 SUPPORTING ELEMENTS
-[4–6 concrete, placed graphic elements that build a rich environment around the hero — geometric systems, ornament, iconography, rules, framing, patterns, motifs — each specific (e.g. "circular SVG icon row for contact, bottom-left" not "some icons"). Fewer than 4 only for a genuinely minimalist aesthetic.]
+[The concrete, placed graphic elements around the hero — geometric systems, ornament, iconography, rules, framing, patterns, motifs — each specific (e.g. "circular SVG icon row for contact, bottom-left" not "some icons"). HOW MANY is set by the density contract: 4–6 for a rich direction, 2–4 for balanced, 1–3 for restrained. Listing fewer because the direction is restrained is correct, not a shortfall.]
 
 CSS TECHNIQUES
 [Only the techniques this design actually uses — from: clip-path, conic-gradient, radial-gradient, multi-stop linear-gradient, mix-blend-mode, inline SVG path, CSS filter, multi-layer box-shadow, backdrop-filter, ::before/::after shapes]
@@ -726,11 +860,11 @@ User SVG: {{SVG_CONTENT}}
 
 {{LAYOUT_BUDGET}}
 
-BUILD THE IDEA — a fully designed, RICH environment that serves the spec's CONCEPT:
-- Build the layered BACKGROUND first — 2+ color fields, a gradient, a pattern, or texture. Never a single flat fill with type dropped on it.
-- Make the HERO MOMENT unmistakable — it dominates 30%+ of the canvas exactly as the spec describes.
-- Implement ALL the spec's SUPPORTING ELEMENTS at full weight (the 4–6 it lists) — monograms/emblems/icons as inline SVG, splits as clip-path panels, ornament and rules via CSS/pseudo-elements, patterns via gradients/repeating-linear-gradient. Cohesive richness that reinforces the concept is the goal — NOT restraint, NOT a sparse card.
-- Dramatic scale contrast: the hero/headline is big and confident (≥2.5× the body/contact text).
+BUILD THE IDEA — exactly what the spec describes, at the density its Style Direction sets:
+- Build the BACKGROUND the spec specifies. If it describes a layered ground, build every layer. If it describes a calm or single considered ground, build THAT — do not add gradients, patterns or extra fields the spec did not ask for.
+- Make the HERO MOMENT unmistakable at the size and treatment the spec gives it.
+- Implement the spec's SUPPORTING ELEMENTS — all of them, and ONLY them — monograms/emblems/icons as inline SVG, splits as clip-path panels, ornament and rules via CSS/pseudo-elements, patterns via gradients/repeating-linear-gradient. Adding elements the spec did not list is as wrong as dropping ones it did.
+- Confident scale contrast: the hero/headline is clearly dominant (typically ≥2.5× the body/contact text).
 - FIT IS MANDATORY: size display type so every glyph sits fully inside the safe width with margin. If the business name is too wide at your chosen size, REDUCE the size or break it onto two lines — never let a letter clip an edge, and never hide overshoot with overflow:hidden. Reserve vertical room for every line so nothing cuts off at the bottom.
 
 TECHNICAL REQUIREMENTS
@@ -776,9 +910,9 @@ USER SVG LOGO — when User SVG markup is provided, treat it as the brand logo:
 - Do NOT use external references inside the SVG — inline only
 
 ANTI-PATTERNS — NEVER DO THESE:
-- Do NOT produce a boring single-color card with only text and a tiny photo — this is the #1 failure mode
-- Do NOT use nav-dots, a single thin rule line, or one vertical stripe as the primary graphic language
-- Do NOT use navy/royal/corporate blue (#1e3a5f, #2563eb, #1e40af) unless the user's Colors field explicitly provided blue
+- Do NOT produce a careless single-color card — an unconsidered ground with text dropped on it and no compositional thinking. (A DELIBERATE calm ground specified by a restrained spec is a different thing and is correct.)
+- Do NOT invent decoration the spec did not call for, and do NOT reduce what it did
+- Do NOT substitute a palette of your own for the one the spec names
 - Do NOT stack multiple text elements at the same top coordinate
 - Do NOT absolutely-position taglines/subheads over headlines
 - Do NOT let diagonal bands, lines, or shapes cross through text
@@ -790,7 +924,15 @@ ANTI-PATTERNS — NEVER DO THESE:
 - Do NOT let any text clip or fall off ANY edge (top, bottom, left, right) — every glyph must sit fully inside the canvas with ≥10px padding; scale display type down or break lines to fit rather than clipping
 - Do NOT set the business name as vertical/rotated text unless it clearly fits the card's HEIGHT — a rotated wordmark longer than the card's shorter dimension clips top and bottom. Prefer horizontal display type; use vertical text only for a short word that fits with margin
 
-ADVANCED EFFECT RECIPES (reach for these ONLY when the concept calls for them — skip entirely for clean/minimal designs):
+RECIPES FOR RESTRAINED DIRECTIONS (editorial minimal, elegant serif, clean corporate, soft sophisticated, modern luxury — reach for these there):
+- Hairline rule system: border-top:1px solid var(--rule) with generous margin, or a 1px ::after spanning a set fraction of the width
+- Tracked small caps: text-transform:uppercase; letter-spacing:.18em; font-size:9–11px; font-weight:500
+- Composed whitespace: an asymmetric padding scale (e.g. 28px 28px 24px 40px) and a max-width on the copy block so the field around it is deliberate
+- Paper ground: a single warm off-white (#faf7f2 / #f4f1e8) with no gradient — flat is correct here
+- Optical wordmark: one family, two sizes, precise letter-spacing (-0.01em display, +0.14em labels) — the setting is the design
+- Tone-on-tone mark: a monogram at 4–8% opacity in the ground, or a mark in the same hue one step darker
+
+ADVANCED EFFECT RECIPES (reach for these ONLY when the concept genuinely calls for them — skip entirely for restrained directions):
 - Neon glow: text-shadow: 0 0 7px #0ff, 0 0 20px #0ff, 0 0 40px #f0f on the headline
 - Chrome type: background: linear-gradient(180deg,#fff,#aaa 45%,#fff 50%,#888); -webkit-background-clip:text; -webkit-text-fill-color:transparent
 - Paper grain / halftone: SVG feTurbulence, or radial-gradient(circle,#000 .5px,transparent .5px) background-size 4px, at ~10% opacity
@@ -895,7 +1037,7 @@ async function handleGenerate(body, send) {
   const colorScheme = colorParts.length > 0
     ? `${colorParts.join(', ')} — USER-SELECTED PALETTE, MANDATORY: build the design's palette from EXACTLY these hex values (plus black/white/neutrals as needed). They take priority over any signature palette named in the Style Direction — do not substitute different hues.`
     : (hasChosenStyle
-        ? 'No colors specified — use the signature palette described in the Style Direction. Do NOT substitute a different palette; stay true to the style\'s named colors. (If the Style Direction truly implies no palette, invent a distinctive premium one for the industry — avoid corporate blue unless requested.)'
+        ? 'No colors specified — use the signature palette described in the Style Direction. Do NOT substitute a different palette; stay true to the style\'s named colors. (If the Style Direction truly implies no palette, invent a distinctive premium one that suits the industry and the direction.)'
         : getColorGuidance(industry));
 
   // Resolve creative direction — replace generic "corporate" with portfolio archetypes
@@ -917,7 +1059,7 @@ async function handleGenerate(body, send) {
       if (recreateRef) {
         recreatingRef = true;
         refImageForGen = img;
-        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design", palette, and "avoid corporate blue" guidance — do NOT invent a different brand name, palette, or layout. Match what you see.\n\n${inspiration}`;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design" and palette guidance — do NOT invent a different brand name, palette, or layout. Match what you see.\n\n${inspiration}`;
       } else {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }
