@@ -24,4 +24,4 @@
    being served from the /generator-web03-dev-e2e/ clone folder. No other
    deployment downloads it.                                                    */
 
-window.SMPWeb03DevApiKey = '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';   /* ← paste the key between the quotes, e.g. 'sk-ant-api03-…' */
+window.SMPWeb03DevApiKey = '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';   /* ← paste the key between the quotes, e.g. 'sk-ant-api03-…' */
