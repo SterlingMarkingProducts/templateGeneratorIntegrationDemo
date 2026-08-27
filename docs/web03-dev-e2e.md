@@ -67,29 +67,50 @@ outcome — for example `Push to Designer failed (HTTP 403): missing or invalid
 CSRF token`. It never falls back to the localStorage hand-off: a failed import
 has to read as a failure.
 
-## If web03 will not serve `../data/*.json`
+## The demo guard, and the one exception
 
-`product-select.js` and `demo-samples.js` each fetch a file from the clone's
-`data/` folder. On web03 those requests fail, and both features fail quietly as
-a result: the picker falls into its own catch and reads "Product catalogue
-unavailable", and the demo shortcuts — Axiom included — are never built at all,
-because `demo-samples.js` builds them inside the fetch's `.then`.
+`demo-guard.js` blocks every network request whose host matches
+`*.sterling.ca`. That is what keeps this demonstration from touching anything
+of Sterling's, and it stays exactly as it was everywhere else.
 
-The files are committed, plain and present in the clone, so this is the server
-declining to serve them rather than a build problem. Instead of guessing at
-web03's static-file configuration, the dev clone stops depending on it: the real
-fetch is still tried first and still wins whenever it works, and only a failed
-or non-JSON response falls back to `generator/web03-dev-data.js`, generated from
-those same committed files by `scripts/build-web03-dev-data.mjs`.
+web03 serves this clone from `web03.sterling.ca`, so *same-origin* requests
+match that rule too. Two things were caught by it:
 
-When that happens the picker's own status line says so, and it will hold the one
-CMS-verified record — BCDP-CM / 6505 — rather than the full list. The 800 KB
-spreadsheet-inferred TEST inventory is deliberately not embedded; it is not
-needed to select BCDP-CM. `window.SMPWeb03Dev.dataFallback` names each file that
-fell back and the real reason.
+* the same-origin POST to the verified dev import endpoint — the whole point of
+  this clone; and
+* the page's own `../data/*.json` files, which is what emptied the product
+  picker and removed the demo shortcuts entirely (`demo-samples.js` builds its
+  buttons inside that fetch's `.then`, so a blocked fetch produces no section
+  at all rather than a broken one).
 
-Off the dev clone folder none of this runs and the fallback file is never even
-downloaded.
+The guard now makes one narrow exception, and only when every part holds,
+re-checked per request:
+
+* the page is itself served from `/generator-web03-dev-e2e/` — read from the
+  page's own path;
+* the request is same-origin; and
+* the path is either **exactly**
+  `/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm` — with
+  `web03-dev-bootstrap.js` active and configured with that same endpoint, two
+  independent constants that must agree — or a plain `.json` file in this
+  clone's own `data/` folder, composed from the page's own directory so it
+  cannot climb out of it.
+
+Nothing is read from the query string, a form field or a header. Every other
+`sterling.ca` request stays blocked, from this clone included, and the import
+exception is fetch-only: XHR and `sendBeacon` keep the unconditional guard.
+
+## The embedded data fallback
+
+`web03-dev-bootstrap.js` also carries a last-resort copy of the catalogue and
+demo files, in `generator/web03-dev-data.js`, generated from the committed
+data by `scripts/build-web03-dev-data.mjs` (its `--check` mode fails the build
+if the two drift). The real fetch is tried first and wins whenever it works —
+with the guard exception in place, it does — so the fallback only covers a
+server that genuinely will not serve those files. When it engages, the picker's
+own status line says which file and why, and
+`window.SMPWeb03Dev.dataFallback` records it. Off the dev clone folder the file
+is never even downloaded.
 
 ## No API key
 
