@@ -222,7 +222,10 @@
     resultsEl.querySelectorAll('.sp-result').forEach(function (b) {
       b.addEventListener('click', function () { choose(b.dataset.id); });
     });
-    if (lastTotal > list.length) {
+    /* Only when the operator has actually typed something. On an empty box the
+     * list is a browse, not a narrowed search, so a "keep typing to narrow"
+     * count is noise rather than help. */
+    if (lastQuery && lastTotal > list.length) {
       var more = document.createElement('div');
       more.className = 'sp-empty';
       more.textContent = 'Showing ' + list.length + ' of ' + lastTotal
@@ -240,7 +243,44 @@
     });
   }
 
+  /* ── the empty-box order, web03 DEV only ─────────────────────────────────
+   *
+   * With nothing typed the picker used to show whatever the provider returned
+   * first. These are the parts Sterling wants to reach without searching, in
+   * this order. It is a DISPLAY ORDER and nothing more: a part that the live
+   * verified catalogue does not contain is simply not there, nothing is
+   * invented, and the moment anything is typed the provider's own ranking takes
+   * over untouched. */
+  var EMPTY_SEARCH_PRIORITY = [
+    'BCDP-CG', 'BCDP-CM', 'BCFCR-CG', 'BCFCR-EG', 'BCSGR-CG', 'BCSGR-EG',
+    'BCFCUV-CG', 'BCFCUV-EG', 'DS21824', 'DS21218', '57PCDP-CG', '57PCDP-CM',
+    '57PCSGR-CG', '57PCSGR-EG', 'TBDP-CG', 'S203PB', 'S203B', 'DS22436',
+    '212B26', 'HB2436DS', 'DE33', 'RE33', 'B1438', '214-13',
+  ];
+  var PRIORITY_RANK = (function () {
+    var rank = {};
+    /* DS21824 is listed twice; the first position wins. */
+    EMPTY_SEARCH_PRIORITY.forEach(function (part, i) {
+      var k = String(part).toUpperCase();
+      if (!Object.prototype.hasOwnProperty.call(rank, k)) { rank[k] = i; }
+    });
+    return rank;
+  }());
+
+  function prioritise(list) {
+    var at = function (r) {
+      var k = String(r.partNumber || '').toUpperCase();
+      return Object.prototype.hasOwnProperty.call(PRIORITY_RANK, k)
+        ? PRIORITY_RANK[k] : Number.MAX_SAFE_INTEGER;
+    };
+    /* Stable: everything not on the list keeps the provider's own order. */
+    return list.map(function (r, i) { return { r: r, i: i, p: at(r) }; })
+      .sort(function (a, b) { return (a.p - b.p) || (a.i - b.i); })
+      .map(function (x) { return x.r; });
+  }
+
   var lastTotal = 0;
+  var lastQuery = '';
   var searchTimer = null;
   function onSearchInput() {
     clearTimeout(searchTimer);
@@ -250,8 +290,18 @@
   function runSearch() {
     if (!provider) return;
     setStatus('');
-    provider.search(input.value, { limit: 25 })
-      .then(function (r) { lastTotal = r.total; renderResults(r.results); })
+    var q = (input.value || '').trim();
+    var browsing = !q && IMPORTABLE_ONLY;
+    /* Browsing asks for more than it shows: the priority parts have to be
+     * reachable before the list is cut to 25, or ordering the first 25 the
+     * provider happened to return would order the wrong 25. */
+    provider.search(input.value, { limit: browsing ? 500 : 25 })
+      .then(function (r) {
+        lastTotal = r.total;
+        lastQuery = q;
+        /* Typed: the provider's ranking, untouched. Empty: the browse order. */
+        renderResults(browsing ? prioritise(r.results).slice(0, 25) : r.results);
+      })
       .catch(function (e) { setStatus(e.message || 'Product search failed.', true); });
   }
 
