@@ -24,6 +24,27 @@ const WEB03_PROXY_ENDPOINT = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm
 /* The dev endpoints' published test token — the same one the import transport
    sends. Not a secret; it exists so the proxy's own check is exercised. */
 const WEB03_DEV_TOKEN = 'web03-dev-e2e-token';
+
+/* ── the DEV key, kept OUT of git ──────────────────────────────────────────
+   A key committed to a file was the wrong answer: GitHub's secret scanning
+   reports it to Anthropic, which revokes it automatically. Two keys died that
+   way. The key now lives in this browser's localStorage and is never written to
+   a file, so nothing to commit and nothing to scan.
+
+   Set it once, in the browser console on the dev Generator page:
+
+     localStorage.setItem('SMP_WEB03_DEV_ANTHROPIC_API_KEY', 'sk-ant-…')
+
+   A server-side ANTHROPIC_API_KEY on web03 still wins over this — aiProxy.cfm
+   only falls back to what the browser sends when it has none of its own. */
+const WEB03_DEV_KEY_STORAGE = 'SMP_WEB03_DEV_ANTHROPIC_API_KEY';
+
+function getWeb03DevKey() {
+  if (!WEB03_PROXY_MODE) return '';
+  try {
+    return (localStorage.getItem(WEB03_DEV_KEY_STORAGE) || '').trim();
+  } catch { return ''; }   /* storage disabled — behave as if unset */
+}
 const WEB03_PROXY_MODE = location.protocol !== 'file:'
   && location.pathname.indexOf(WEB03_DEV_CLONE) !== -1;
 
@@ -96,13 +117,12 @@ function anthropicHeaders() {
   if (WEB03_PROXY_MODE) {
     const headers = { 'content-type': 'application/json', 'X-CSRF-Token': WEB03_DEV_TOKEN };
     /* DEV ONLY, and only on this clone. When web03 has no server-side
-       ANTHROPIC_API_KEY configured, the dev clone may supply one so live
+       ANTHROPIC_API_KEY configured, this browser supplies one so live
        generation works without touching the Lucee service. The proxy PREFERS
        its own server-side key and falls back to this only when it has none.
-       See generator/web03-dev-api-key.js for what that trade means — that file
-       is fetched on this clone alone, and is empty unless someone pasted a key. */
-    const devKey = typeof window.SMPWeb03DevApiKey === 'string'
-      ? window.SMPWeb03DevApiKey.trim() : '';
+       Read from localStorage, never from a committed file — see
+       WEB03_DEV_KEY_STORAGE above. */
+    const devKey = getWeb03DevKey();
     if (devKey) { headers['X-Dev-Anthropic-Key'] = devKey; }
     return headers;
   }
@@ -121,8 +141,7 @@ function anthropicHeaders() {
    a 401 is the credential itself and not the transport. */
 async function logDevKeyHash(diagnostic) {
   if (!WEB03_PROXY_MODE || !window.crypto || !crypto.subtle) return;
-  const key = typeof window.SMPWeb03DevApiKey === 'string'
-    ? window.SMPWeb03DevApiKey.trim() : '';
+  const key = getWeb03DevKey();
   if (!key) return;
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key));
   const hash = Array.from(new Uint8Array(digest))
@@ -147,8 +166,16 @@ async function readAnthropicError(res) {
   } catch { /* non-JSON body */ }
   if (res.status === 401) { logDevKeyHash(diagnostic); }
   if (SERVER_PROXY_MODE) {
-    /* No key is involved on this side, so never send the operator to the key
-       button. The proxy's own message already says what is wrong. */
+    /* No key button is involved on this side, so never send the operator to
+       one. On the dev clone, a "no key" refusal has one specific remedy — say
+       exactly what to run rather than leaving the proxy's generic wording. */
+    if (WEB03_PROXY_MODE && res.status === 503 && !getWeb03DevKey()) {
+      return new Error(
+        'No Anthropic key is available. Set one for this browser only — open the '
+        + 'console and run:  localStorage.setItem(\'' + WEB03_DEV_KEY_STORAGE
+        + '\', \'sk-ant-…\')  then reload. It is never written to a file, so it '
+        + 'cannot be committed or picked up by secret scanning.');
+    }
     return new Error(message);
   }
   if (res.status === 401 || res.status === 403) {
