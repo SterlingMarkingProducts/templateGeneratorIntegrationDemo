@@ -696,8 +696,14 @@ function imageObjectRespectingFit(el, left, top, width, height, angle, style) {
     const sy = Math.round((nh - sh) * pos.y);
     try {
       const cv = document.createElement('canvas');
-      /* Cap the derivative so a cropped 4K photo cannot balloon the payload. */
-      const scale = Math.min(1, 2200 / Math.max(sw, sh));
+      /* Cap the derivative by the DISPLAYED box, not a blanket constant: the
+       * panel only ever prints at its own size, so ~300 dpi of that box
+       * (3.25 × its css px at 96 dpi) is every pixel that can matter. Under
+       * the old flat 2200px cap, a 2000px kraft-texture strip cropped for a
+       * 215px slot shipped as a 2.1MB alpha PNG — four of them on a two-sided
+       * card made an 11.6MB payload, the class the web03 gateway 502s. */
+      const need = Math.max(480, Math.min(2200, Math.ceil(Math.max(width, height) * 3.25)));
+      const scale = Math.min(1, need / Math.max(sw, sh));
       cv.width = Math.max(1, Math.round(sw * scale));
       cv.height = Math.max(1, Math.round(sh * scale));
       cv.getContext('2d').drawImage(el, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
@@ -1303,7 +1309,7 @@ async function extractMaskMarks(doc, rootEl, factor) {
  * server's hash dedup keeps matching across pushes. */
 const INLINE_BYTE_CAP = 600 * 1024;
 
-async function shrinkImageBlob(blob) {
+async function shrinkImageBlob(blob, targetSide) {
   const url = URL.createObjectURL(blob);
   try {
     const img = new Image();
@@ -1320,22 +1326,36 @@ async function shrinkImageBlob(blob) {
     let hasAlpha = false;
     for (let i = 3; i < px.length; i += 4) { if (px[i] < 250) { hasAlpha = true; break; } }
 
-    /* Step down until the result is genuinely small; 900px still prints a
-     * 3-inch decorative element at 300 dpi. */
-    for (const maxSide of [1600, 1200, 900]) {
+    /* The element's DISPLAYED size decides how many pixels can matter: a
+     * texture strip shown 215px wide needs ~700px for 300 dpi print, not its
+     * 2000px source. Step down from there, and KEEP THE SMALLEST successful
+     * re-encode even when no rung gets under the cap — the old behaviour
+     * (fall back to the ORIGINAL bytes when every canvas PNG re-encode of a
+     * noisy alpha texture came out larger than a rung's threshold) is how one
+     * kraft-paper strip shipped at 2.1MB four times and a two-sided card
+     * reached an 11.6MB payload: the exact class the web03 gateway 502s. */
+    const want = Math.max(320, Math.min(1600, Math.round(targetSide || 1600)));
+    const rungs = [want, 900, 700, 500].filter((s, i, a) => s <= want && a.indexOf(s) === i)
+      .sort((a, b) => b - a);
+    let best = null;
+    for (const maxSide of rungs) {
       const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
       const cv = document.createElement('canvas');
       cv.width = Math.max(1, Math.round(img.naturalWidth * scale));
       cv.height = Math.max(1, Math.round(img.naturalHeight * scale));
       cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
       const out = hasAlpha ? cv.toDataURL('image/png') : cv.toDataURL('image/jpeg', 0.9);
-      if (out.length * 0.75 <= Math.max(INLINE_BYTE_CAP, 900 * 1024) || maxSide === 900) {
-        return out.length * 0.75 < blob.size ? out : null;
-      }
+      const bytes = out.length * 0.75;
+      if (!best || bytes < best.bytes) best = { out, bytes };
+      if (bytes <= INLINE_BYTE_CAP) break;
     }
-    return null;
+    return best && best.bytes < blob.size ? best.out : null;
   } finally { URL.revokeObjectURL(url); }
 }
+
+/* One decode+re-encode per (file, size class) even when the same library
+ * asset appears several times across both sides of a design. */
+const inlineSrcCache = new Map();
 
 async function inlineLibraryImages(objects) {
   for (const o of objects) {
@@ -1344,24 +1364,36 @@ async function inlineLibraryImages(objects) {
     let u;
     try { u = new URL(o.src, window.location.href); } catch (e) { continue; }
     if (u.origin !== window.location.origin) continue;
+    /* ~300 dpi for the element's on-canvas size (96 css px per inch). */
+    const displaySide = Math.max(Number(o.width) || 0, Number(o.height) || 0);
+    const targetSide = displaySide > 0
+      ? Math.max(480, Math.min(1600, Math.ceil(displaySide * 3.25)))
+      : 1600;
+    const cacheKey = u.href + '|' + Math.ceil(targetSide / 100);
+    if (!inlineSrcCache.has(cacheKey)) {
+      inlineSrcCache.set(cacheKey, (async () => {
+        const r = await fetch(u.href, { credentials: 'same-origin' });
+        if (!r.ok) return null;
+        const blob = await r.blob();
+        if (!/^image\/(png|jpe?g)$/i.test(blob.type || '')) return null;
+        let src = null;
+        if (blob.size > INLINE_BYTE_CAP) {
+          try { src = await shrinkImageBlob(blob, targetSide); } catch (e) { src = null; }
+        }
+        if (!src) {
+          src = await new Promise((resolve, reject) => {
+            const fr = new FileReader();
+            fr.onload = () => resolve(fr.result);
+            fr.onerror = () => reject(fr.error);
+            fr.readAsDataURL(blob);
+          });
+        }
+        return src;
+      })().catch(() => null));
+    }
     try {
-      const r = await fetch(u.href, { credentials: 'same-origin' });
-      if (!r.ok) continue;
-      const blob = await r.blob();
-      if (!/^image\/(png|jpe?g)$/i.test(blob.type || '')) continue;
-      let src = null;
-      if (blob.size > INLINE_BYTE_CAP) {
-        try { src = await shrinkImageBlob(blob); } catch (e) { src = null; }
-      }
-      if (!src) {
-        src = await new Promise((resolve, reject) => {
-          const fr = new FileReader();
-          fr.onload = () => resolve(fr.result);
-          fr.onerror = () => reject(fr.error);
-          fr.readAsDataURL(blob);
-        });
-      }
-      o.src = src;
+      const src = await inlineSrcCache.get(cacheKey);
+      if (src) o.src = src;
     } catch (e) { /* keep the URL src */ }
   }
 }
@@ -1417,6 +1449,22 @@ async function convertCurrentDesign() {
   }
   if (!pages.length || !pages[0].objects || !pages[0].objects.length) {
     throw new Error('Could not read any design elements from the preview. Try regenerating the design.');
+  }
+  /* PAGE-COUNT CONTRACT. The import endpoint refuses a template whose page
+   * count disagrees with the product (HTTP 409 "product expects 2-2 page(s),
+   * got 1"). The normal way there: a recreated single-sided reference on a
+   * two-page product — the reference had one face, the product prints two.
+   * Synthesize each missing page as the front's background artwork alone: a
+   * clean matching back with no duplicated text, never a refused push. */
+  const productForPages = (window.SMPProductSelection && window.SMPProductSelection.get
+    && window.SMPProductSelection.get()) || null;
+  const minPages = Math.max(0,
+    Number(productForPages && productForPages.pages && productForPages.pages.min) || 0);
+  while (pages.length && pages.length < minPages) {
+    const front = pages[0];
+    const bg = (front.objects || []).find((o) => o && o.kind === 'image' && o.role === 'background');
+    pages.push({ bleedAuthored: front.bleedAuthored,
+      objects: bg ? [JSON.parse(JSON.stringify(bg))] : [] });
   }
   return { template: buildSterlingTemplate(pages, lastPayload), substitutions };
 }
