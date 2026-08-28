@@ -1367,6 +1367,24 @@ function pickStockPhoto(opts) {
   };
 }
 
+/* The customer's own uploaded/linked photograph. The stock library gets an
+ * authority block that demonstrably places photos in designs; the CUSTOMER'S
+ * photo — which outranks every library — was left with only the generic
+ * Image URL rules, and the Phase 1 direction briefs and density contracts
+ * crowded it out of the layout entirely. Same proven treatment, stronger
+ * standing: using it is NOT optional. */
+function renderCustomerPhotoBlock(recreating) {
+  const placement = recreating
+    ? '- A REFERENCE DESIGN is being recreated at the same time: the reference still controls the composition and design language. Insert this photograph INTO that recreated layout — in the exact place the reference uses photography if it does, otherwise adapt one sensible photo area (a panel, an inset, a framed block) that the reference composition can absorb without breaking.'
+    : '- Give it a deliberate layout role: a side panel, a tall or wide inset, the hero image, a framed photo block, a cropped photo region, or a background area under a scrim. Build the photo area to suit the image and compose the rest of the design around it.';
+  return 'CUSTOMER PHOTOGRAPH — the user uploaded this image to appear IN the design (it is the Image URL below):\n'
+    + '- USING IT IS MANDATORY, not decorative: it must be RECOGNIZABLY VISIBLE in the finished design. A design that omits or hides it is WRONG.\n'
+    + placement + '\n'
+    + '- Crop with intent (object-fit: cover inside its area, clip-path, a mask) — never stretch, squash or distort it.\n'
+    + '- It is the design\'s PRIMARY visual input: it counts as the hero graphic element in the density contract, and decoration steps back to make room for it.\n'
+    + '- Keep it inside the print-safe composition: respect bleed and safety margins, and never run text over it without the legibility treatments the rules below require.';
+}
+
 /* Only the chosen photograph reaches the model — a URL and a few measured
  * numbers. Never the library, never a listing, never base64. */
 function renderStockPhotoBlock(sel) {
@@ -1580,7 +1598,8 @@ function rotateDirection(candidates, memoryKey) {
 }
 
 function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided, widthIn, heightIn, stockSelection, logoSelection) {
+    variationKey, doubleSided, widthIn, heightIn, stockSelection, logoSelection,
+    customerPhoto) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -1620,7 +1639,8 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   const compose = (brief, density, reference, directionKey) => {
     const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
-      templateType, widthIn, heightIn, !!(stockSelection && stockSelection.photo),
+      templateType, widthIn, heightIn,
+      !!(stockSelection && stockSelection.photo) || !!customerPhoto,
       !!(logoSelection && logoSelection.logo));
     const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     return { text: [
@@ -2045,6 +2065,7 @@ SUPPLIED DESIGN ASSETS — when the Style Direction lists one:
 - Leaving it out is a legitimate choice if the composition is genuinely better without it
 
 EXTERNAL IMAGES — when an Image URL is provided:
+- The provided image MUST appear, recognizably, in the design — on every product type, not only cards. Omitting it is WRONG
 - Use <img src="URL"> for that user-provided image (this overrides the default no-external-images rule)
 - NEVER place a raw unstyled rectangle. Integrate the photo using at least TWO of: clip-path crop, border-radius, gradient/color overlay on a wrapper ::after, mix-blend-mode tint matching the palette, decorative SVG frame, offset box-shadow panel, overlap with an adjacent color field, or masked bleed into a shape
 - The image must feel designed-in — cropped with intent, aligned to the grid, and visually connected to surrounding typography and color blocks
@@ -2307,7 +2328,8 @@ async function handleGenerate(body, send) {
         };
       }())
     : chooseCreativeDirection(styleDirection, industry, templateType,
-        creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection);
+        creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection,
+        hasCustomerPhoto);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
@@ -2409,6 +2431,12 @@ async function handleGenerate(body, send) {
     } catch (err) {
       console.warn('Reference image analysis skipped:', err.message);
     }
+  }
+
+  /* AFTER the reference handling, so a recreation's photo instruction carries
+     the insert-into-the-recreated-layout wording rather than fighting it. */
+  if (hasCustomerPhoto) {
+    styleDirFinal += '\n\n' + renderCustomerPhotoBlock(recreatingRef);
   }
 
   const layoutBudget = getLayoutBudget(width, height, unit, templateType, bleedPx, businessName)
