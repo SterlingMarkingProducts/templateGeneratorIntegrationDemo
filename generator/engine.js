@@ -363,7 +363,29 @@ function validateDesignSpec(spec) {
   return { ok: issues.length === 0, issues };
 }
 
+/* Visible chips that ARE Phase 1 directions route straight to them — same
+ * brief, same density, same asset families, no duplicate style text. Resolved
+ * lazily in chooseCreativeDirection because DIRECTION_BY_KEY is defined below. */
+const DIRECTION_STYLE_CHIPS = {
+  'Editorial Minimal':    'editorial-minimal',
+  'Modern Luxury':        'modern-luxury',
+  'Bold Modernist':       'bold-modernist',
+  'Clean Corporate':      'clean-corporate',
+  'Elegant Serif':        'elegant-serif',
+  'Organic Botanical':    'organic-botanical',
+  'Soft Sophisticated':   'soft-sophisticated',
+  'Colourful Expressive': 'colourful-expressive',
+  'Collage Editorial':    'collage-editorial',
+  'Dark Luxe':            'dark-luxe',
+};
+
 const STYLE_CHIP_MAP = {
+  /* ── the visible chip set (non-direction chips) ── */
+  /* aliases: the visible chip label resolves to the existing internal brief */
+  'Japanese Minimal': null,   // filled below from 'Japanese Minimalism'
+  'Heritage Press':   null,   // filled below from 'Deckle Press'
+  'Geometric Professional': 'Geometric Professional — structure as the aesthetic: a disciplined modular grid carrying a composed system of precise geometry (a filled circle, a fine ring, a bisecting rule, a quarter-arc, a solid corner block) in two or three controlled colours — deep navy, slate, graphite, or forest with one confident accent — on white or a pale architectural grey; a modern grotesque (Inter Tight, Space Grotesk, Archivo, Manrope) with tracked-caps labels, mathematically consistent spacing, and zero ornament; engineered, credible, quietly bold',
+  'Playful Contemporary': 'Playful Contemporary — colour-forward and friendly, executed like a modern brand studio: a rounded-but-adult geometric sans (Outfit, Sora, Plus Jakarta Sans, DM Sans) in confident weights; a vivid contemporary palette (coral, teal, marigold, cobalt on warm off-white) used in clean fields, arcs and soft-cornered geometric shapes; ONE warm human gesture — a smile-curve arc, an oversized ampersand, or a circular badge; polished, optimistic and completely professional: NO confetti, NO squiggles, stars or sparkles, NO sticker outlines, NO blob compositions, NO cartoon or bubble typography — nothing that reads as a kids brand',
   'Swiss Grid': 'Swiss International Style — disciplined modular grid, Space Grotesk or Barlow bold sans-serif, primary color accent on stark white or black, geometric dividing lines, precise alignment',
   'Neo-Brutalism': 'Neo-Brutalism — ultra-heavy Archivo Black or Anton type at dramatic scale, asymmetric raw layout, diagonal or offset text blocks, extreme value contrast, bold background color blocks',
   'Art Deco': 'Art Deco Revival — Cinzel or Josefin Sans type; a RICH, layered Deco environment: radiating sunburst/fan rays, stepped ziggurat and chevron forms, a repeating geometric pattern field, metallic gold (#c9a84c) gradients on black or deep jewel tones, ornate corner fans and framing — opulent and detailed, NEVER just a thin border on empty black',
@@ -397,7 +419,9 @@ const STYLE_CHIP_MAP = {
   'Corporate Professional': 'Executive Corporate — a confident modern grotesque (Barlow, Space Grotesk, Archivo, or IBM Plex Sans) with tracked-caps labels; a refined businesslike palette of deep charcoal #23272e + warm white + ONE considered accent (a deep professional blue #1f4e79, steel teal #2a7f8f, oxford burgundy #701f28, or brass #c9a84c) — premium and boardroom-credible, the accent chosen for this business rather than by reflex; a disciplined grid with one architectural gesture (a vertical accent band, a sharp diagonal seam, or a precise corner-bracket frame), thin hairline rules, a compact monogram lockup, and generous structured whitespace; polished, authoritative, Fortune-500 annual-report craft',
   'Playful': 'Playful & Fun — a chunky rounded sans (Fredoka, Baloo 2, Nunito Black, or Poppins) with a bouncy friendly personality; a bright happy palette (sunshine yellow #ffd21f, bubblegum pink #ff5ea8, sky blue #3aa0ff, tangerine #ff5a1f, mint #4cd6b0) on warm off-white; sticker-style graphics with bold outlines and soft shadows, confetti dots, squiggles, zigzags, stars, and blob shapes placed with intent; gently tilted headline energy and an oversized friendly ampersand or badge motif; joyful, energetic, kid-at-heart charm — fun but composed, never chaotic',
   'Sage Standard': 'Clean Sage Minimal — a precise modern sans (Inter, Manrope, Work Sans, or Jost) with wide-tracked labels; a calm muted palette of soft sage #a9b39a + warm cream #f4f1e8 + ink charcoal #23241f; a clean color-block split (a solid sage panel meeting cream) with a stacked N&Co. monogram, thin divider rules and small tracked-caps labels; abundant white space, immaculate alignment, one restrained accent — contemporary, confident, corporate-modern calm',
-};
+};STYLE_CHIP_MAP['Japanese Minimal'] = STYLE_CHIP_MAP['Japanese Minimalism'];
+STYLE_CHIP_MAP['Heritage Press'] = STYLE_CHIP_MAP['Deckle Press'];
+
 
 function expandStyleDirection(styleDirection) {
   const trimmed = (styleDirection || '').trim();
@@ -573,6 +597,8 @@ function intentKeysFor(text) {
 /* Density for an EXPLICITLY chosen style. Unlisted styles get 'balanced' —
  * a middle that suits most, rather than the old universal maximalist floor. */
 const CHIP_DENSITY = {
+  'Japanese Minimal': 'restrained', 'Heritage Press': 'restrained',
+  'Geometric Professional': 'balanced', 'Playful Contemporary': 'balanced',
   'Japanese Minimalism': 'restrained', 'Coastal Minimalism': 'restrained',
   'Sage Standard': 'restrained', 'Corporate Professional': 'restrained',
   'Fashion Editorial': 'restrained', 'Deckle Press': 'restrained',
@@ -1619,15 +1645,21 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
 
   // ── An explicit, non-generic style direction: the user's words lead ──────
   if (raw && !GENERIC_STYLE.test(raw)) {
+    /* A visible chip that IS a Phase 1 direction resolves straight to it —
+       deterministically: same brief, same density, same asset families. */
+    if (DIRECTION_STYLE_CHIPS[raw]) {
+      const d = DIRECTION_BY_KEY[DIRECTION_STYLE_CHIPS[raw]];
+      return compose(d.brief, d.density, null, d.key);
+    }
     const expanded = expandStyleDirection(raw);
-    /* A reference archetype is added ONLY when the style actually routes to a
-     * matching pool. Previously an unrouted style still received a RANDOM pick
-     * from the bold archetype pool, which is how "Japanese Minimalism" arrived
-     * carrying a dominant monogram or a neon field. */
-    const reference = pickFromStyleRoute(raw, templateType)
-      || pickFromStyleRoute(expanded, templateType);
-    /* An explicitly chosen style keeps its own density; it draws assets only
-       through the gated triggers, since it has no direction key of its own. */
+    /* Chips resolve DETERMINISTICALLY: an exact chip name gets its brief and
+       nothing else. A typed free-text style keeps the route behaviour — a
+       reference archetype is added only when the words actually route to a
+       matching pool (an unrouted style used to receive a RANDOM bold pick,
+       which is how "Japanese Minimalism" once arrived carrying a neon field). */
+    const isChip = Object.prototype.hasOwnProperty.call(STYLE_CHIP_MAP, raw);
+    const reference = isChip ? null
+      : (pickFromStyleRoute(raw, templateType) || pickFromStyleRoute(expanded, templateType));
     return compose(expanded, CHIP_DENSITY[raw] || 'balanced', reference, null);
   }
 
