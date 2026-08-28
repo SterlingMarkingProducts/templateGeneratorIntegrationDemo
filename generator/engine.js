@@ -2591,6 +2591,7 @@ async function handleGenerate(body, send) {
   const isLargeFormat = /poster|sign/i.test(templateType || '');
   const isStamp       = /stamp/i.test(templateType || '');
   const isNameplate   = /nameplate|name badge|name tag/i.test(templateType || '');
+  const isPostcard    = /postcard/i.test(templateType || '');
   const pxW = canvasWpx;
   const pxH = canvasHpx;
 
@@ -2620,6 +2621,20 @@ LARGE FORMAT POSTER/SIGN IMPLEMENTATION (${pxW}×${pxH}px) — MANDATORY OVERRID
 - BACKGROUND: Use at least 2 color zones — top and bottom bands, diagonal split, or layered gradients — never a single flat fill with text dropped on it
 - .zone-copy four-item limit and .zone-contact separation rules DO NOT APPLY to large format posters — use whatever HTML structure best serves the design
 - FORBIDDEN on this canvas: typography below 120px for any headline element, business-card-style layout at any scale, centered text stack on plain background`;
+  }
+
+  // ── Postcard: a mailed MARKETING piece, never a scaled-up business card ──
+  if (isPostcard) {
+    posterSpecNote += `
+FORMAT — POSTCARD (${pxW}×${pxH}px): this is a MAILED PROMOTIONAL piece, NOT a business card.
+- The FRONT is a bold promotional statement: ONE hero message (an offer, an announcement, a brand moment) in commanding display type with a dominant visual — a photo zone, a colour field, an oversized graphic form. Contact details do not belong on the front beyond at most a URL or phone in small type.
+- Reference quality: direct-mail campaign work that earns a second look from arm's length in a stack of mail.
+- A contact-card layout (person's name + title + phone/email stack as the composition) is WRONG for this format on either side.`;
+    posterHtmlNote += `
+POSTCARD IMPLEMENTATION (${pxW}×${pxH}px) — MANDATORY:
+- FRONT (.card--front): promotional hero layout — display headline sized for the canvas (roughly 48–110px), a supporting line, one dominant visual treatment; at most a URL/phone as small-type contact.
+- BACK (.card--back when double-sided): the message side — brand mark, a short message block, and the contact/address details laid out cleanly. Details live HERE, not on the front.
+- FORBIDDEN: rendering either side as a business card (name + title + contact stack as the main composition), or shrinking the front's message to make room for contact lines.`;
   }
 
   // ── Stamp: override color scheme to monochromatic ───────────────────────
@@ -2725,6 +2740,21 @@ Hide the brand side ONLY via the inline attribute style="display:none" on the .c
 Do NOT add any JavaScript toggle — the app handles front/back switching externally.
 If an Image URL is provided, embed it with <img> on at least one of the two cards (typically the back's hero graphic or the front's secondary graphic), integrated per the EXTERNAL IMAGES rules — omitting the provided photo is WRONG.
 If the Colors input lists user-selected hex values, both cards' CSS custom properties MUST be built from exactly those values.`;
+    } else if (isPostcard) {
+      dsSpecNote += `
+DOUBLE-SIDED POSTCARD — SPLIT THE CONTENT like a real mail piece:
+  FRONT: the promotional statement ONLY — hero message/offer, dominant visual, brand mark. No contact block.
+  BACK: the message side — brand mark small, a short message/body block, and the full contact/address details, cleanly laid out with generous whitespace.
+Both sides share the same palette and typography but differ in job: the front sells, the back informs.`;
+      dsHtmlNote += `
+DOUBLE-SIDED POSTCARD HTML STRUCTURE:
+Output EXACTLY TWO .card containers in one HTML file:
+1. <div class="card card--front"> — the promotional side: hero message, dominant visual, brand mark. At most a URL/phone in small type.
+2. <div class="card card--back" style="display:none"> — the message side: short message block + full contact/address details + small brand mark.
+Both .card elements must be fixed to the exact same pixel dimensions.
+Hide the back ONLY via the inline attribute style="display:none" on the .card--back div — do NOT put display:none in a <style> stylesheet rule.
+@media print: show BOTH cards; add page-break-after:always on .card--front.
+Do NOT add any JavaScript toggle — the app handles front/back switching externally.`;
     } else {
       dsSpecNote += `
 DOUBLE-SIDED ${templateType.toUpperCase()} — SPLIT THE CONTENT so neither side is crowded (like premium cards: brand on the front, person + details on the back):

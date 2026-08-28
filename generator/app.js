@@ -116,7 +116,7 @@ unitToggle.addEventListener('click', (e) => {
 });
 
 /* ── Product presets ───────────────────────────────── */
-const DOUBLE_SIDED_PRODUCTS = ['Business Card', 'Brochure'];
+const DOUBLE_SIDED_PRODUCTS = ['Business Card', 'Postcard', 'Brochure'];
 
 /* ── Print bleed (0.125" on every edge → 12px @ 96dpi) ── */
 const BLEED_IN = 0.125;
@@ -140,6 +140,7 @@ function bleedPxFor(type) {
 const PRODUCT_PRESETS = {
   'Sign':          { w: 18,     h: 24,      unit: 'in', note: '' },
   'Business Card': { w: 3.5,    h: 2,       unit: 'in', note: 'Double-sided: Front = contact details, Back = branding.' },
+  'Postcard':      { w: 6,      h: 4,       unit: 'in', note: 'Double-sided marketing piece: Front = bold promotional message, Back = message & contact details.' },
   'Brochure':      { w: 11,     h: 8.5,     unit: 'in', note: 'Tri-fold, letter size. Generates outside and inside spreads (double-sided). Flat/open: 11"×8.5". Each panel: ~3.67"×8.5".' },
   'Poster':        { w: 18,     h: 24,      unit: 'in', note: '' },
   'Banner':        { w: 72,     h: 24,      unit: 'in', note: '' },
@@ -1166,7 +1167,10 @@ function injectLayoutSafety(html, widthPx, heightPx, options = {}) {
       ? html.replace('</head>', DESIGNER_FONTS_LINK + '</head>')
       : DESIGNER_FONTS_LINK + html;
   }
-  const isLargeFormat = /poster|sign/i.test(templateType || '') || heightPx > 600;
+  /* Postcards take the minimal (large-format) safety rules: they are
+   * promotional pieces with display type, not contact cards — the
+   * business-card zone caps would shrink their hero message. */
+  const isLargeFormat = /poster|sign|postcard/i.test(templateType || '') || heightPx > 600;
   const isBold = PREVIEW_GENEROUS_CAPS;   // see PREVIEW_GENEROUS_CAPS above
 
   /* The preview iframe is sized to the full bleed canvas (trim + bleed), but

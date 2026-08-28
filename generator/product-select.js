@@ -71,7 +71,7 @@
     ['sign',          'Sign'],
     ['decal',         'Sign'],
     ['magnet',        'Sign'],
-    ['postcard',      'Business Card'],
+    ['postcard',      'Postcard'],
     ['label',         'Name Badge'],
   ];
 

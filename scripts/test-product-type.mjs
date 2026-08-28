@@ -511,6 +511,70 @@ const CATALOGUE = {
     "portraitAvailable": true,
     "landscapeAvailable": true
    }
+  },
+  {
+   "maxLines": 0,
+   "bleed": {
+    "left": 12,
+    "bottom": 12,
+    "right": 12,
+    "top": 12
+   },
+   "partNumber": "57PCSGR-CG",
+   "status": {
+    "retired": false,
+    "active": true
+   },
+   "pages": {
+    "min": 2,
+    "max": 2
+   },
+   "classification": {
+    "productInformation": [
+     {
+      "id": 911,
+      "productTable": "postcards",
+      "title": "Postcards"
+     }
+    ]
+   },
+   "dimensions": {
+    "heightDisplay": "5",
+    "displayUnit": "in",
+    "heightIn": 5,
+    "widthDisplay": "7",
+    "widthIn": 7
+   },
+   "name": "Raised Gloss Postcard - Classic Gloss",
+   "id": 7205,
+   "shape": "rect",
+   "legacy": {
+    "designerVariationCode": 3,
+    "isProStamp": true,
+    "bandString": "",
+    "greenInkAvailable": false,
+    "borders": {
+     "left": 0,
+     "bottom": 0,
+     "width": 0,
+     "right": 0,
+     "top": 0
+    },
+    "daterBox": {
+     "height": 0,
+     "width": 0
+    },
+    "margins": {
+     "left": 6,
+     "bottom": 6,
+     "right": 6,
+     "top": 6
+    }
+   },
+   "orientation": {
+    "portraitAvailable": true,
+    "landscapeAvailable": true
+   }
   }
  ],
  "truncated": false,
@@ -608,6 +672,7 @@ const CASES = [
   ['TBDP-CG',  'Brochure'],
   ['HB2436DS', 'Banner'],
   ['NB13',     'Name Badge'],
+  ['57PCSGR-CG', 'Postcard'],    // a postcard is a POSTCARD — never a business card
 ];
 for (const [part, want] of CASES) {
   const r = await pickType(part);
@@ -633,6 +698,9 @@ console.log('\n4  the Banner option is a real choice');
 is(await page.evaluate(() =>
      [...document.getElementById('templateType').options].some((o) => o.value === 'Banner')),
    'the Template Type select now offers Banner');
+is(await page.evaluate(() =>
+     [...document.getElementById('templateType').options].some((o) => o.value === 'Postcard')),
+   'the Template Type select now offers Postcard');
 
 console.log('\n5  clearing restores the manual form');
 const cleared = await page.evaluate(async () => {
