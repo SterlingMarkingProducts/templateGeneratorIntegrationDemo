@@ -591,12 +591,34 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
    * text purely by array order (first element = bottom of the stack). The
    * 'background' role records its provenance without locking it, and tells the
    * adapter this is the artwork that must bleed off every edge. */
+  /* PNG is the wrong container for a BUSY large-format background: a rich
+   * textured 2600px sign raster measured 11 MB as PNG — a payload class the
+   * web03 gateway kills with a bare 502 long before templateImport.cfm sees
+   * it, where a business card's raster is a few hundred KB. Photographic and
+   * heavily textured rasters go out as JPEG (quality .92, visually lossless
+   * for background art) once PNG exceeds the cap; flat/graphic rasters stay
+   * PNG, which is both smaller and crisper for them. The background is drawn
+   * over white first because JPEG has no alpha and this layer is the bottom
+   * of the stack — white is the paper it sits on. */
+  const RASTER_PNG_BYTE_CAP = 2.5 * 1024 * 1024;
+  const rasterSrc = () => {
+    const png = cv.toDataURL('image/png');
+    if (png.length * 0.75 <= RASTER_PNG_BYTE_CAP) return png;
+    const flat = document.createElement('canvas');
+    flat.width = cw; flat.height = ch;
+    const fctx = flat.getContext('2d');
+    fctx.fillStyle = '#ffffff';
+    fctx.fillRect(0, 0, cw, ch);
+    fctx.drawImage(cv, 0, 0);
+    const jpeg = flat.toDataURL('image/jpeg', 0.92);
+    return jpeg.length < png.length ? jpeg : png;
+  };
   const toObj = () => window.SMPNormalized.image({
     role: 'background',
     x: 0, y: 0,
     width: targetWidthPx, height: targetHeightPx,
     naturalWidth: cw, naturalHeight: ch,
-    rotation: 0, src: cv.toDataURL('image/png'), opacity: 1,
+    rotation: 0, src: rasterSrc(), opacity: 1,
   });
 
   // --- Primary: whole-card foreignObject snapshot ---
@@ -960,7 +982,42 @@ async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
   const objects = extractObjectsFromDoc(doc, rootEl, factor, substitutions);
   const bg = await rasterizeBackground(doc, rootEl, targetW, targetH);
   rootEl.querySelectorAll('[data-tg-extract]').forEach(el => el.removeAttribute('data-tg-extract'));
-  return { objects: bg ? [bg, ...objects] : objects, bleedAuthored };
+  const all = bg ? [bg, ...objects] : objects;
+  /* IMPORT MODE ONLY: a library image (a stock photograph, a design asset)
+   * leaves extraction with its clone URL as src — and imported as-is, the
+   * stored draft would point at this dev folder's path forever, from a page
+   * on a different origin. Fetch the exact original bytes (same-origin only,
+   * no recompression) so the file travels as a normal asset part: the server
+   * stores it in templateassets, dedupes it by hash across imports, and
+   * rewrites the src to its own durable getImage.cfm URL — the identical
+   * treatment every other raster in the design already gets. The local
+   * transport keeps URL srcs untouched: same origin, and localStorage has no
+   * room for photo bytes. A fetch failure leaves the URL in place — the
+   * import accepts it, as before. */
+  if (transportMode === 'import') await inlineLibraryImages(all);
+  return { objects: all, bleedAuthored };
+}
+
+async function inlineLibraryImages(objects) {
+  for (const o of objects) {
+    if (!o || o.kind !== 'image' || typeof o.src !== 'string') continue;
+    if (o.src.startsWith('data:')) continue;
+    let u;
+    try { u = new URL(o.src, window.location.href); } catch (e) { continue; }
+    if (u.origin !== window.location.origin) continue;
+    try {
+      const r = await fetch(u.href, { credentials: 'same-origin' });
+      if (!r.ok) continue;
+      const blob = await r.blob();
+      if (!/^image\/(png|jpe?g)$/i.test(blob.type || '')) continue;
+      o.src = await new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result);
+        fr.onerror = () => reject(fr.error);
+        fr.readAsDataURL(blob);
+      });
+    } catch (e) { /* keep the URL src */ }
+  }
 }
 
 /* Public: convert the current generated design. Returns {template, substitutions}. */

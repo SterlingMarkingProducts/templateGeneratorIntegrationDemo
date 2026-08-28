@@ -500,6 +500,10 @@ const DESIGN_DIRECTIONS = [
 
 const DIRECTION_BY_KEY = DESIGN_DIRECTIONS.reduce((m, d) => { m[d.key] = d; return m; }, {});
 
+/* Added to an intent-narrowed pool on large format only: bold but professional
+ * concepts with visibly different layout languages. */
+const LARGE_FORMAT_EXTRA_DIRECTIONS = ['bold-modernist', 'colourful-expressive', 'collage-editorial'];
+
 function pickDirection(keys) {
   const pool = (keys && keys.length)
     ? keys.map((k) => DIRECTION_BY_KEY[k]).filter(Boolean)
@@ -1451,7 +1455,20 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
 
   // ── Generic or empty: intent first, then a rotated draw ──────────────────
   const keys = intentKeysFor(raw) || intentKeysFor(industry);
-  const candidates = (keys && keys.length) ? keys : DESIGN_DIRECTIONS.map((d) => d.key);
+  let candidates = (keys && keys.length) ? keys : DESIGN_DIRECTIONS.map((d) => d.key);
+  /* On LARGE FORMAT, an industry-narrowed pool is the repetition the user
+     sees: "legal" or "professional" collapses to four quiet, near-identical
+     directions, and rotation inside that set just shuffles the same look. A
+     sign has the distance and the canvas to carry a stronger concept, so the
+     intent pool is widened — never replaced — with the assertive directions
+     that still read as professional. The quiet directions stay in the pool,
+     so nothing is forced loud; consecutive generations simply have somewhere
+     genuinely different to go. Small formats are untouched. */
+  if (keys && keys.length && isLargeFormatForAssets(templateType, widthIn, heightIn)) {
+    LARGE_FORMAT_EXTRA_DIRECTIONS.forEach((k) => {
+      if (candidates.indexOf(k) === -1) candidates = candidates.concat(k);
+    });
+  }
   const direction = rotateDirection(candidates, memoryKey);
   return compose(direction.brief, direction.density, null, direction.key);
 }
@@ -1495,6 +1512,38 @@ const INDUSTRY_COLOR_POOLS = {
     'Charcoal #2d2d2d + saffron #f4c430 + warm white + emerald accent',
   ],
 };
+
+/* ── Large-format colour stances ──────────────────────────────────────────
+ *
+ * With no user colours and no chosen style, large format kept arriving in the
+ * same tasteful mid-register: the industry pools are deliberately refined and
+ * the model settles into them. A sign is read at ten feet — the palette is a
+ * decision made once, loudly. One stance is drawn per generation and ROTATED
+ * per brief, so consecutive defaults commit to visibly different colour moves.
+ * Each stance stays professional; none of them is neon, and none is a rainbow.
+ * User colours and explicitly chosen styles never reach this code. */
+const LARGE_FORMAT_COLOR_STANCES = [
+  'COLOUR STANCE — SATURATED FIELD: one fully saturated brand colour owns 60%+ of the canvas as a solid field; type reverses out of it in white or near-black. No pastel version of it — the colour at full strength.',
+  'COLOUR STANCE — DEEP GROUND, HOT ACCENT: a deep, dark ground (ink navy, forest, aubergine, charcoal) across the whole canvas with ONE hot accent (coral, amber, chartreuse, cyan) doing every highlight. Two colours, total commitment.',
+  'COLOUR STANCE — HIGH-KEY WARMTH: a bright warm ground (sun yellow, warm cream pushed to saturation, orange-leaning) with dense near-black type at maximum contrast. Cheerful, confident, unmissable.',
+  'COLOUR STANCE — DUOTONE CLASH: two saturated colours of similar weight split the canvas in large geometric zones (60/40 or bolder). The pair should be unexpected but harmonious — teal/tangerine, cobalt/lime, plum/gold.',
+  'COLOUR STANCE — REFINED CONTRAST: a luxury register at display scale — deep ink or espresso ground, generous light field, and one metallic or jewel accent — but with the value contrast pushed HARD so it carries across a room. Refined never means faint.',
+  'COLOUR STANCE — COLOUR-BLOCK GRID: three or four flat saturated blocks organise the whole layout into zones, one block per message. Think transit poster: each zone a different colour, type sized to the block.',
+];
+const recentColorStances = new Map();
+const COLOR_STANCE_MEMORY = 3;
+
+function rotateColorStance(memoryKey) {
+  const recent = recentColorStances.get(memoryKey) || [];
+  const pool = LARGE_FORMAT_COLOR_STANCES
+    .map((t, i) => i)
+    .filter((i) => recent.indexOf(i) === -1);
+  const idx = (pool.length ? pool : LARGE_FORMAT_COLOR_STANCES.map((t, i) => i))[
+    Math.floor(Math.random() * (pool.length || LARGE_FORMAT_COLOR_STANCES.length))];
+  recentColorStances.set(memoryKey,
+    [idx].concat(recent.filter((i) => i !== idx)).slice(0, COLOR_STANCE_MEMORY));
+  return LARGE_FORMAT_COLOR_STANCES[idx];
+}
 
 function getColorGuidance(industry) {
   const key = (industry || '').toLowerCase();
@@ -1919,6 +1968,21 @@ async function handleGenerate(body, send) {
     : (hasChosenStyle
         ? 'No colors specified — use the signature palette described in the Style Direction. Do NOT substitute a different palette; stay true to the style\'s named colors. (If the Style Direction truly implies no palette, invent a distinctive premium one that suits the industry and the direction.)'
         : getColorGuidance(industry));
+  /* Large-format DEFAULTS commit to a colour move. Only when the user set no
+     colours AND chose no style: their choices always win untouched. The stance
+     rotates per brief, so repeated generations land on visibly different
+     palettes instead of six variations of the same tasteful mid-register. */
+  let colorSchemeFinal = colorScheme;
+  {
+    const lfTrimWin = toPx(width, unit) / 96;
+    const lfTrimHin = toPx(height, unit) / 96;
+    if (!userSetColors && !hasChosenStyle
+        && isLargeFormatForAssets(templateType, lfTrimWin, lfTrimHin)
+        && !/stamp/i.test(templateType || '')) {
+      const stanceKey = JSON.stringify([templateType, industry || '', businessName || '']);
+      colorSchemeFinal = colorScheme + '\n\n' + rotateColorStance(stanceKey);
+    }
+  }
 
   // Resolve creative direction — replace generic "corporate" with portfolio archetypes
   /* Identifies THIS brief. Regenerate resends the identical payload, so this is
@@ -2097,7 +2161,7 @@ LARGE FORMAT POSTER/SIGN IMPLEMENTATION (${pxW}×${pxH}px) — MANDATORY OVERRID
   }
 
   // ── Stamp: override color scheme to monochromatic ───────────────────────
-  let effectiveColorScheme = colorScheme;
+  let effectiveColorScheme = colorSchemeFinal;
   if (isStamp) {
     effectiveColorScheme = 'STAMP MONOCHROMATIC MANDATORY: Background #ffffff (white paper), all ink #000000 (pure black). NO other colors, NO grey tones, NO rgba opacity tricks. Self-inking stamps print black ink only.';
   }
