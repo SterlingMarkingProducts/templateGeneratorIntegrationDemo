@@ -57,7 +57,7 @@ const m = await page.evaluate(async () => {
     return { ok: r.ok, count: d.file_count, first: (d.photos[0] || {}).url };
   } catch (e) { return { ok: false, error: String(e.message) }; }
 });
-is(m.ok && m.count === 35, 'the stock manifest loads through the demo guard', JSON.stringify(m));
+is(m.ok && m.count === 45, 'the stock manifest loads through the demo guard', JSON.stringify(m));
 const img = await page.evaluate((u) => new Promise((res) => {
   const i = new Image();
   i.onload = () => res({ ok: true, w: i.naturalWidth });
@@ -70,7 +70,7 @@ const both = await page.evaluate(async () => {
   const s = await fetch('assets/stock-photo-manifest.json').then((r) => r.json()).catch(() => null);
   return { assets: a && a.file_count, stock: s && s.file_count };
 });
-is(both.assets === 80 && both.stock === 35, 'both libraries load, independently',
+is(both.assets === 80 && both.stock === 45, 'both libraries load, independently',
    JSON.stringify(both));
 const off = await page.evaluate(async () => {
   try { const r = await fetch('https://designcentral.sterling.ca/anything.json'); return r.status; }
@@ -129,16 +129,16 @@ const live = await page.evaluate(async () => {
   const seen = [];
   window.addEventListener('smp:stock-photo-selected', (e) => seen.push(e.detail));
   window.dispatchEvent(new CustomEvent('smp:stock-photo-selected', { detail: {
-    file: '04-dentist-with-patient.png', id: '04-dentist-with-patient',
-    url: 'assets/stock-photo-library/04-dentist-with-patient.png',
-    subject: 'Dentist and assistant treating a seated patient',
-    industry: 'dental', matchedIndustries: ['dental'], orientation: 'landscape',
+    file: '04-vertical-dentist-with-patient.png', id: '04-vertical-dentist-with-patient',
+    url: 'assets/stock-photo-library/04-vertical-dentist-with-patient.png',
+    subject: 'Dental professional chatting with a reclined patient',
+    industry: 'dental', matchedIndustries: ['dental'], orientation: 'portrait',
     requiresScrim: true, selectMs: 0.04, format: 'large-format', mode: 'auto' } }));
   await new Promise((r) => setTimeout(r, 50));
   const box = document.getElementById('devAssetIndicator');
   return { text: box ? box.textContent : null, seen: seen.length };
 });
-is(/Photo: 04-dentist-with-patient\.png · Industry: dental/.test(live.text || ''),
+is(/Photo: 04-vertical-dentist-with-patient\.png · Industry: dental/.test(live.text || ''),
    'the indicator names the file and the matched industry', live.text);
 is(/scrim required/.test(live.text || ''), 'and flags the scrim requirement');
 

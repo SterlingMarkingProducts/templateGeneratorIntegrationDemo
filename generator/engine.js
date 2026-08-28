@@ -1079,20 +1079,19 @@ function matchStockIndustries(text, lib) {
   return hit;
 }
 
-/* A portrait product may use only portrait photos and a landscape product only
- * landscape ones — a portrait photo dropped into a wide banner is a crop, not a
- * composition. Near-square products may use either. */
-function stockOrientationFor(widthIn, heightIn) {
-  const w = Number(widthIn) || 0, h = Number(heightIn) || 0;
-  if (!w || !h) return 'any';
-  const a = w / h;
-  if (a < 0.9) return 'portrait';
-  if (a > 1.1) return 'landscape';
-  return 'any';
-}
-
-function stockOrientationOk(photo, want) {
-  return want === 'any' || photo.orientation === want;
+/* The photograph's orientation does NOT have to match the product's. A photo
+ * is composed INTO the design — a portrait file is a vertical side panel, a
+ * tall inset or a vertical hero on a landscape business card or sign, and a
+ * landscape file is a horizontal band across a portrait piece. What the
+ * orientation DOES decide is how the prompt tells the model to build the
+ * photo area, via the manifest's suitable_roles. */
+function stockRolesFor(photo) {
+  const declared = Array.isArray(photo && photo.suitable_roles)
+    ? photo.suitable_roles : [];
+  if (declared.length) return declared;
+  return (photo && photo.orientation) === 'landscape'
+    ? ['horizontal-band', 'wide-hero', 'full-width-background']
+    : ['vertical-side-panel', 'tall-inset', 'vertical-hero'];
 }
 
 /* 30 of the 35 photographs have no clean horizontal band, so "has a quiet band"
@@ -1224,15 +1223,11 @@ function pickStockPhoto(opts) {
     return null;
   }
 
-  /* ── Format gates. ── */
+  /* ── Format gate. Orientation is deliberately NOT one: the layout builds a
+        photo area to suit the file, so only measured visual chaos disqualifies
+        a photo from a small piece. ── */
   const largeFormat = isLargeFormatForAssets(templateType, opts.widthIn, opts.heightIn);
-  const wantOrientation = stockOrientationFor(opts.widthIn, opts.heightIn);
-  const oriented = pool.filter((p) => stockOrientationOk(p, wantOrientation));
-  if (!oriented.length) {
-    lastStockReason = 'no ' + wantOrientation + ' photo depicts this industry';
-    return null;
-  }
-  const safe = oriented.filter((p) => stockCompositionOk(p, largeFormat));
+  const safe = pool.filter((p) => stockCompositionOk(p, largeFormat));
   if (!safe.length) {
     lastStockReason = 'no matching photo composes safely at this size';
     return null;
@@ -1267,7 +1262,7 @@ function pickStockPhoto(opts) {
     briefIndustries: tierSlugs,
     productClass: productClass,
     largeFormat: largeFormat,
-    orientation: wantOrientation,
+    roles: stockRolesFor(photo),
     mode: mode,
   };
 }
@@ -1288,18 +1283,30 @@ function renderStockPhotoBlock(sel) {
       + `gradient overlay in a palette colour at about ${Math.round((g.scrim_opacity_if_used || 0.45) * 100)}% `
       + `over the area the text occupies. Text straight onto this photograph is not legible enough to print.`
     : 'not required — this photograph has a band quiet enough to carry type directly.';
+  const roles = (sel.roles && sel.roles.length ? sel.roles : stockRolesFor(p)).join(', ');
+  const areaRule = p.orientation === 'portrait'
+    ? `This file is PORTRAIT (${p.width}×${p.height}). Build a VERTICAL photo area for it — a left or `
+      + `right side panel, a tall inset, or a vertical hero column — whatever suits the composition. `
+      + `Do NOT stretch, squash or letterbox it to the canvas orientation: the photo area matches the `
+      + `FILE, and the rest of the layout is built around that area.`
+    : `This file is LANDSCAPE (${p.width}×${p.height}). Build a HORIZONTAL photo area for it — a `
+      + `full-width band, a wide hero, or a broad background zone — and build the rest of the layout `
+      + `around that area. Do NOT stretch or squash it to the canvas orientation.`;
   return `SUPPLIED PHOTOGRAPH — one real image file chosen for this brief:\n`
     + `- ${p.file}\n`
     + `    src: ${p.url}  (a real file — reference it with <img src="${p.url}"> exactly as written)\n`
     + `    shows: ${p.subject}\n`
     + `    ${p.orientation} ${p.width}×${p.height}, reads as ${p.mood}, ${p.brightness} overall\n`
+    + `    works as: ${roles}\n`
     + `    band grades — top: ${grade('top')}, middle: ${grade('middle')}, bottom: ${grade('bottom')}\n`
     + `    quietest band: ${best} (set type there in ${bestColour} type where the layout allows)\n\n`
     + `HOW TO USE IT:\n`
     + `- It is this design's hero image, and it is the ONLY photograph in the design. `
     + `Do not add, invent, reference or link any other image file.\n`
-    + `- Place it with intent: crop with clip-path, mask it into a shape, duotone or tint it into the `
-    + `palette, bleed it off an edge, or give it its own full panel. A plain unstyled rectangle is a failure.\n`
+    + `- PHOTO AREA: ${areaRule}\n`
+    + `- Place it with intent: crop with clip-path or object-fit cover inside its area, mask it into a shape, `
+    + `duotone or tint it into the palette, bleed it off an edge, or give it its own full panel. `
+    + `A plain unstyled rectangle is a failure — and so is distorting the image's aspect ratio.\n`
     + `- SCRIM: ${scrim}\n`
     + (poor.length
         ? `- Regions graded poor (${poor.join(', ')}) must not carry important text unless the scrim above covers them.\n`
@@ -1730,6 +1737,7 @@ TECHNICAL REQUIREMENTS
 SUPPLIED PHOTOGRAPH — when the Style Direction supplies one:
 - Reference it with <img src="[the exact src given]"> — the path is relative to this page and resolves as written. Do not rename it, do not inline it, do not invent a different file
 - It is the hero image and the ONLY photograph in the design — never add, invent or link a second image
+- Build the photo AREA to suit the FILE, not the canvas: a portrait file gets a vertical side panel, tall inset or vertical hero even on a landscape product; a landscape file gets a horizontal band or wide hero even on a portrait product. Size the area to the file's aspect and use object-fit: cover (or an equivalent clip) inside it — never stretch or squash the image
 - Integrate it: crop with clip-path, mask into a shape, duotone/tint into the palette, bleed it off an edge, or give it a full panel. Never a plain unstyled rectangle
 - Obey the band grades it carries. Important text must NOT sit on a band graded poor unless you first lay the scrim the Style Direction specifies over that area
 - Where a scrim is marked REQUIRED, no headline, sub-head or contact line may touch the photograph without one
@@ -1971,6 +1979,7 @@ async function handleGenerate(body, send) {
         industry: stockSelection.industry,
         matchedIndustries: stockSelection.matchedIndustries,
         orientation: stockSelection.photo.orientation,
+        roles: stockSelection.roles,
         requiresScrim: !!(stockSelection.photo.overlay_guidance || {}).requires_scrim_for_text,
         reason: '',
         selectMs: stockSelectMs,

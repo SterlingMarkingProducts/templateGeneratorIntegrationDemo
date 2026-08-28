@@ -20,8 +20,8 @@ globalThis.fetch = async (u) => {
 const ENGINE_SRC = readFileSync(REPO + '/generator/engine.js', 'utf8');
 let src = ENGINE_SRC.replace('window.handleGenerate = handleGenerate;',
   'globalThis.__p = { chooseCreativeDirection, loadAssetLibrary, loadStockPhotoLibrary,'
-  + ' pickStockPhoto, pickAssets, matchStockIndustries, stockOrientationFor,'
-  + ' stockCompositionOk, renderStockPhotoBlock, recentStockPhotos,'
+  + ' pickStockPhoto, pickAssets, matchStockIndustries,'
+  + ' stockCompositionOk, renderStockPhotoBlock, recentStockPhotos, stockRolesFor,'
   + ' stockProductClass, STOCK_PRODUCT_POLICY, BROAD_STOCK_SLUGS, stockSlugTier,'
   + ' PHOTO_SAFE_ASSET_FAMILIES,'
   + ' STOCK_INDUSTRY_SYNONYMS, HTML_PROMPT, get lastStockReason() { return lastStockReason; } };');
@@ -52,7 +52,13 @@ const pick = (industryText, geom = SIGN, extra = {}) => P.pickStockPhoto(Object.
 }, geom, extra));
 
 console.log('\n1  the library is present, complete and served from this clone');
-is(STOCK.file_count === 35 && STOCK.photos.length === 35, 'the manifest describes 35 photographs');
+is(STOCK.file_count === 45 && STOCK.photos.length === 45,
+   'the manifest describes the 45 v2 photographs');
+is(STOCK.version && STOCK.version.indexOf('v2') !== -1, 'and is the v2 library', STOCK.version);
+is(!STOCK.photos.some((p) => /^(01-florist-bouquet|35-peaceful-coastal-landscape|04-dentist-with-patient)\.png$/.test(p.file)),
+   'no v1 filename survives in the manifest');
+is(STOCK.photos.every((p) => Array.isArray(p.suitable_roles) && p.suitable_roles.length),
+   'every photo declares its suitable composition roles');
 is(STOCK.photos.every((p) => p.url.startsWith('assets/stock-photo-library/')),
    'every photo has a served URL under the clone');
 is(STOCK.photos.every((p) => existsSync(REPO + '/generator/' + p.url)),
@@ -174,10 +180,10 @@ console.log('\n4b  a specific trade never gets a broad or lifestyle photo');
 /* The live failure this fixes: "Dentist" returned a photo of two people
    walking in a park, because the audit had tagged that photo "dental". */
 const DENTAL_FILES = STOCK.photos.filter((p) => p.depicts.includes('dental')).map((p) => p.file);
-is(DENTAL_FILES.length === 1 && DENTAL_FILES[0] === '04-dentist-with-patient.png',
+is(DENTAL_FILES.length === 1 && DENTAL_FILES[0] === '04-vertical-dentist-with-patient.png',
    'exactly one photograph depicts dentistry', DENTAL_FILES.join(', '));
 is(!STOCK.photos.some((p) => /family-outdoors|senior-couple/.test(p.id) && p.depicts.includes('dental')),
-   'the family-in-a-park and senior-couple photos no longer claim dentistry');
+   'the family-in-a-park and senior-couple photos still do not claim dentistry');
 globalThis.window.SMPStockPhotoMode = 'force';
 const DENTAL_BRIEFS = ['Dentist', 'dental clinic', 'dental office', 'family dentistry',
   'orthodontist', 'Dr Chen Dental Care', 'dental hygiene clinic'];
@@ -187,7 +193,7 @@ DENTAL_BRIEFS.forEach((b) => {
     const r = pick(b, SIGN);
     if (!r) continue;
     dentalRuns++;
-    if (r.photo.file !== '04-dentist-with-patient.png') {
+    if (r.photo.file !== '04-vertical-dentist-with-patient.png') {
       dentalWrong++;
       if (dentalWrong < 3) console.log(`     BAD   "${b}" -> ${r.photo.file}`);
     }
@@ -198,10 +204,10 @@ is(dentalRuns > 0 && dentalWrong === 0,
    dentalRuns + ' selections across ' + DENTAL_BRIEFS.length + ' briefs');
 /* Specific beats broad in general, not just for dentistry. */
 const TIERED = [
-  ['dental clinic',     ['04-dentist-with-patient.png']],
-  ['veterinary clinic', ['23-veterinarian-with-dog.png']],
-  ['physiotherapy clinic', ['15-physiotherapy-session.png']],
-  ['yoga wellness studio', ['21-yoga-wellness-studio.png']],
+  ['dental clinic',     ['04-vertical-dentist-with-patient.png']],
+  ['veterinary clinic', ['23-vertical-veterinarian-with-dog.png']],
+  ['yoga wellness studio', ['21-vertical-yoga-wellness.png']],
+  ['chiropractor', STOCK.photos.filter((p) => p.depicts.includes('chiropractic')).map((p) => p.file)],
 ];
 let tieredOk = true;
 TIERED.forEach(([brief, allowed]) => {
@@ -216,11 +222,13 @@ is(tieredOk, 'a specific trade is never widened to its broad parent category');
 /* And the broad category still works when the brief is genuinely broad. */
 const broadHits = new Set();
 for (let i = 0; i < 200; i++) { const r = pick('medical clinic', SIGN); if (r) broadHits.add(r.photo.file); }
-is(broadHits.size > 0 && !broadHits.has('04-dentist-with-patient.png'),
+is(broadHits.size > 0 && !broadHits.has('04-vertical-dentist-with-patient.png'),
    'a genuinely broad brief still reaches its own photos', [...broadHits].join(', '));
 /* Trades with no depicting photograph get nothing at all. */
 const ORPHANS = ['roofing', 'pharmacy', 'massage therapy', 'pet grooming', 'funeral home',
   'hearing clinic', 'mortgage broker', 'HVAC'];
+is(STOCK.photos.filter((p) => p.depicts.includes('chiropractic')).length === 10,
+   'the new chiropractic series is depicted, ten photographs strong');
 let orphanHits = 0;
 ORPHANS.forEach((o) => { for (let i = 0; i < 40; i++) if (pick(o, SIGN)) orphanHits++; });
 is(orphanHits === 0, 'a trade with no depicting photograph gets none',
@@ -241,20 +249,28 @@ for (let i = 0; i < 100; i++) if (pick('dentist')) offHits++;
 is(offHits === 0, 'No Photo selects nothing');
 globalThis.window.SMPStockPhotoMode = 'auto';
 
-console.log('\n6  orientation and text safety');
+console.log('\n6  orientation is a composition instruction, not a gate');
 globalThis.window.SMPStockPhotoMode = 'force';
-let landscapeOk = true, portraitOk = true;
-for (let i = 0; i < 200; i++) {
-  const l = pick('real estate', SIGN);
-  if (l && l.photo.orientation !== 'landscape') landscapeOk = false;
-  const p = pick('hair salon', BANNER_TALL);
-  if (p && p.photo.orientation !== 'portrait') portraitOk = false;
-}
-is(landscapeOk, 'a landscape product only ever receives landscape photos');
-is(portraitOk, 'a portrait product only ever receives portrait photos');
-const noPortrait = pick('plumbing', BANNER_TALL);
-is(noPortrait === null && /portrait/.test(P.lastStockReason),
-   'an industry with no portrait photo is skipped, not substituted', P.lastStockReason);
+const onLandscape = pick('real estate', SIGN);
+is(onLandscape && onLandscape.photo.orientation === 'portrait',
+   'a HORIZONTAL sign happily receives a portrait photograph',
+   onLandscape && onLandscape.photo.file);
+is(onLandscape && onLandscape.roles.indexOf('vertical-side-panel') !== -1,
+   'carrying its vertical-panel roles', onLandscape && onLandscape.roles.join(', '));
+const onTall = pick('hair salon', BANNER_TALL);
+is(onTall && onTall.photo.orientation === 'portrait',
+   'a vertical banner receives one too — the file decides the photo area either way');
+const blk = P.renderStockPhotoBlock(onLandscape);
+is(/PHOTO AREA:/.test(blk) && /VERTICAL photo area/.test(blk),
+   'the prompt orders a VERTICAL photo area built for the portrait file');
+is(/side panel|tall inset|vertical hero/.test(blk),
+   'naming side panel, tall inset and vertical hero');
+is(/Do NOT stretch/.test(blk), 'and forbids stretching it to the canvas');
+is(/works as: /.test(blk), 'the manifest roles travel into the prompt');
+is(P.stockRolesFor({ orientation: 'landscape' }).indexOf('horizontal-band') !== -1,
+   'a landscape file would get horizontal-band roles the same way');
+is(/a portrait file gets a vertical side panel[\s\S]{0,200}landscape file gets a horizontal band/.test(P.HTML_PROMPT),
+   'and the HTML prompt states the build-the-area-around-the-file rule');
 const quietest = (p) => Math.min(...['top', 'middle', 'bottom'].map((b) => p.regions[b].busyness));
 const CHAOTIC = STOCK.photos.filter((p) => quietest(p) > 0.25);
 let cardSafe = true, cardSeen = 0;
@@ -274,9 +290,13 @@ is(CHAOTIC.length > 0, 'and such photos do exist in the library, so the gate is 
 let chaoticOnCard = 0;
 CHAOTIC.forEach((p) => {
   const slug = p.depicts[0];
-  for (let i = 0; i < 100; i++) if (pick(slug.replace(/-/g, ' '), CARD)) chaoticOnCard++;
+  for (let i = 0; i < 100; i++) {
+    const r = pick(slug.replace(/-/g, ' '), CARD);
+    if (r && r.photo.file === p.file) chaoticOnCard++;
+  }
 });
-is(chaoticOnCard === 0, 'their own trades get no card photo rather than an unreadable one');
+is(chaoticOnCard === 0,
+   'a chaotic file is never the one placed on a card — a quieter photo of the same trade is');
 let chaoticOnSign = 0;
 CHAOTIC.forEach((p) => {
   const slug = p.depicts[0];
