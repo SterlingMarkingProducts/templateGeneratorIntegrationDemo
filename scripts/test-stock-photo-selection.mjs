@@ -338,11 +338,15 @@ is(P.stockProductClass('Business Card', 3.5, 2) === 'card', 'a business card is 
 is(P.stockProductClass('Business Card', 18, 12) === 'general',
    'but an 18x12 piece still typed "Business Card" is general printed material '
    + '(web03 supplies no productFamily)');
-['Sign', 'Poster', 'Banner', 'Flyer', 'Brochure', 'Rack Card'].forEach((t) => {
+['Sign', 'Poster', 'Banner', 'Flyer', 'Rack Card'].forEach((t) => {
   is(P.stockProductClass(t, 11, 8.5) === 'general', `${t} is general printed material`);
 });
-is(P.STOCK_PRODUCT_POLICY.stamp.none === 1 && P.STOCK_PRODUCT_POLICY.nameplate.none === 1,
-   'stamps and nameplates are policy zero, not a low probability');
+is(P.stockProductClass('Brochure', 11, 8.5) === 'brochure',
+   'a brochure is its own class (photography is a major ingredient: 100%)');
+is(P.STOCK_PRODUCT_POLICY.stamp.none === 1,
+   'stamps are policy zero, not a low probability');
+is(Math.abs(P.STOCK_PRODUCT_POLICY.nameplate.none - 0.8) < 1e-9,
+   'badges and nameplates run a deliberate ~20% photo policy');
 
 const RATE_RUNS = RUNS * 4;
 /* Repeated generations of the SAME brief — the sequence a person actually
@@ -358,26 +362,34 @@ const rate = (text, geom) => {
 const cardRate = rate('dentist', CARD);
 const generalRates = {
   Sign: rate('dentist', SIGN), Poster: rate('dentist', POSTER),
-  Flyer: rate('dentist', FLYER), Brochure: rate('dentist', BROCHURE),
+  Flyer: rate('dentist', FLYER),
 };
+const brochureRate = rate('dentist', BROCHURE);
+console.log(`     Brochure      ${(brochureRate * 100).toFixed(1)}%`);
 console.log(`     business card ${(cardRate * 100).toFixed(1)}%`);
 Object.entries(generalRates).forEach(([k, v]) =>
   console.log(`     ${k.padEnd(14)}${(v * 100).toFixed(1)}%`));
 is(cardRate > 0.115 && cardRate < 0.165, 'business cards stay at approximately 14%',
    (cardRate * 100).toFixed(1) + '%');
 Object.entries(generalRates).forEach(([k, v]) =>
-  is(v > 0.76 && v < 0.85, `${k} runs at approximately 80–81%`, (v * 100).toFixed(1) + '%'));
-let zeroHits = 0;
-for (let i = 0; i < RUNS; i++) {
-  if (pick('dentist', NAMEPLATE)) zeroHits++;
-  if (pick('dentist', BADGE)) zeroHits++;
-  if (pick('dentist', STAMP)) zeroHits++;
+  is(v > 0.76 && v < 0.87, `${k} runs at approximately 80%`, (v * 100).toFixed(1) + '%'));
+is(brochureRate === 1, 'brochures use photography 100% of the time when a pool exists',
+   (brochureRate * 100).toFixed(1) + '%');
+let stampZero = 0, plateHits = 0, badgeHits = 0;
+for (let i = 0; i < RATE_RUNS; i++) {
+  if (pick('dentist', NAMEPLATE)) plateHits++;
+  if (pick('dentist', BADGE)) badgeHits++;
+  if (i < RUNS && pick('dentist', STAMP)) stampZero++;
 }
-is(zeroHits === 0, 'stamps, name badges and nameplates take none, ever',
-   RUNS * 3 + ' attempts');
-pick('dentist', NAMEPLATE);
-is(P.lastStockReason === 'name badges and nameplates never use photography',
-   'and say so', P.lastStockReason);
+is(stampZero === 0, 'stamps take none, ever', RUNS + ' attempts');
+const plateRate = plateHits / RATE_RUNS, badgeRate = badgeHits / RATE_RUNS;
+console.log(`     nameplate ${(plateRate * 100).toFixed(1)}%   name badge ${(badgeRate * 100).toFixed(1)}%`);
+is(plateRate > 0.15 && plateRate < 0.25, 'nameplates run at approximately 20%',
+   (plateRate * 100).toFixed(1) + '%');
+is(badgeRate > 0.15 && badgeRate < 0.25, 'name badges run at approximately 20%',
+   (badgeRate * 100).toFixed(1) + '%');
+pick('dentist', STAMP);
+is(P.lastStockReason === 'stamps never use photography', 'and say so', P.lastStockReason);
 
 console.log('\n8b  design assets under the same policy');
 globalThis.window.SMPAssetMode = 'force';
@@ -558,9 +570,8 @@ is(bc > 0.115 && bc < 0.165, 'blank-industry business cards still at approximate
 let blankZero = 0;
 for (let i = 0; i < RUNS; i++) {
   if (pickBlank('', STAMP)) blankZero++;
-  if (pickBlank('', NAMEPLATE)) blankZero++;
 }
-is(blankZero === 0, 'stamps and nameplates stay at zero with a blank industry too');
+is(blankZero === 0, 'stamps stay at zero with a blank industry too');
 globalThis.window.SMPStockPhotoMode = 'force';
 let blankCustomer = 0;
 for (let i = 0; i < 100; i++) if (pickBlank('', SIGN, { hasCustomerPhoto: true })) blankCustomer++;

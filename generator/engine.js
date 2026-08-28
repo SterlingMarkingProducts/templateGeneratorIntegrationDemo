@@ -800,11 +800,16 @@ if (typeof window !== 'undefined') {
 const recentAssetFamilies = new Map();
 const ASSET_FAMILY_MEMORY = 3;
 
-function assetCountFor(density, directionKey, largeFormat) {
+function assetCountFor(density, directionKey, largeFormat, noneCeiling) {
   const b = ASSET_BUDGET[density] || ASSET_BUDGET.balanced;
   let none = ASSET_NONE_OVERRIDE[directionKey] !== undefined
     ? ASSET_NONE_OVERRIDE[directionKey] : b.none;
-  if (largeFormat) { none = Math.min(none, LARGE_FORMAT_NONE_CEILING); }
+  /* Product-family policy (PRODUCT_VISUAL_POLICY.assetCap) REPLACES the
+     large-format geometry ceiling for its family: badges and nameplates draw
+     at least one asset ~85% of the time (target 80–90%) whatever the density
+     contract, direction override, or their physical length would have said. */
+  if (noneCeiling != null) { none = Math.min(none, noneCeiling); }
+  else if (largeFormat) { none = Math.min(none, LARGE_FORMAT_NONE_CEILING); }
 
   const r = Math.random();
   if (r < none) return 0;
@@ -877,9 +882,14 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
     return [];
   }
   const large = isLargeFormatForAssets(templateType, widthIn, heightIn);
+  /* The product family's own asset policy (PRODUCT_VISUAL_POLICY). */
+  const assetClass = stockProductClass(templateType, widthIn, heightIn);
+  const classPolicy = assetClass === 'nameplate' ? PRODUCT_VISUAL_POLICY.nameplate : null;
+  const noneCeiling = classPolicy && classPolicy.assetCap != null
+    ? 1 - classPolicy.assetCap : null;
   let want = mode === 'force'
-    ? Math.max(1, assetCountFor(density, directionKey, large))
-    : assetCountFor(density, directionKey, large);
+    ? Math.max(1, assetCountFor(density, directionKey, large, noneCeiling))
+    : assetCountFor(density, directionKey, large, noneCeiling);
   /* A stock photograph is a major visual element. It never stacks with loud
      decoration: at most ONE quiet texture or frame may join it. */
   if (photoSelected) want = Math.min(want, 1);
@@ -1217,28 +1227,59 @@ function stockCompositionOk(photo, largeFormat) {
   return Math.min.apply(null, bands) <= SMALL_FORMAT_MAX_BUSYNESS;
 }
 
-/* ── Product policy ───────────────────────────────────────────────────────
+/* ═══ PRODUCT-FAMILY VISUAL POLICY — the ONE source of truth ═════════════
  *
- * Photography is decided per product class, not per pixel count:
+ * Effective per-generation probabilities for each visual library, by product
+ * family, applied ONLY when a compatible pool exists (the industry hard gate
+ * and every customer-input override run first and are absolute). The values
+ * here feed the stock, logo and asset code below — change a family's numbers
+ * HERE, nowhere else, so no second rule can cancel these.
+ *
+ *   stock     chance a compatible stock photo is used
+ *   logo      chance a library mark is drawn (customer logo always wins)
+ *   assetCap  minimum chance the asset budget draws at least one asset
+ *             (the density contract still decides HOW MANY; null = contract
+ *             alone decides). Photo/logo/asset are INDEPENDENT draws —
+ *             composition restraint (a photo keeps decoration quiet) is
+ *             handled downstream, never by cancelling another draw. */
+const PRODUCT_VISUAL_POLICY = {
+  stamp:     { stock: 0,    logo: 0.50, assetsForbidden: true },
+  nameplate: { stock: 0.20, logo: 0.60, assetCap: 0.85 },   // badges + nameplates
+  card:      { stock: 0.14, logo: 0.50 },                   // unchanged: photography is the exception
+  brochure:  { stock: 1.0,  logo: 0.50 },
+  promo:     { stock: 0.80, logo: 0.50 },                   // postcard / sign / poster / banner / flyer …
+};
+
+/* ── Product policy (stock photography), derived from the table above ─────
  *
  *   stamp      no photography at all, and no design assets either — the stamp
  *              rules forbid colour, imagery and overlapping shapes outright.
- *              (Logo assets will be allowed here when that library lands.)
- *   nameplate  no photography. A name badge or nameplate is a name, read at
- *              arm's length. Design assets stay allowed.
+ *   nameplate  ~20%: a small, controlled photo element is an occasional
+ *              ingredient on a badge or nameplate, never the default.
  *   card       ~14%. Photography on a business card is the exception; most
  *              cards are better with type and space.
- *   general    ~80%. Signs, posters, banners, flyers, brochures and the rest
- *              of normal printed material — where a real photograph earns its
+ *   brochure   100% when a genuinely matched photo exists.
+ *   general    ~80%. Postcards, signs, posters, banners, flyers and the rest
+ *              of normal promotional print — where a real photograph earns its
  *              place, WHENEVER a genuinely matched one exists. When none does,
  *              the answer is no photo, never a loosely related one. */
 const STOCK_PRODUCT_POLICY = {
   stamp:     { none: 1, reason: 'stamps never use photography' },
-  nameplate: { none: 1, reason: 'name badges and nameplates never use photography' },
-  card:      { none: 0.86 },
-  /* With the never-two-consecutive-misses guard below, the long-run photo rate
-     on general printed material is 1/(1+none): 0.24 -> 80.6%. */
-  general:   { none: 0.24 },
+  /* Photo, logo and asset are INDEPENDENT opportunities on a badge or
+     nameplate — a 20% photo is a small, controlled element, never the hero. */
+  nameplate: { none: 1 - PRODUCT_VISUAL_POLICY.nameplate.stock },
+  card:      { none: 1 - PRODUCT_VISUAL_POLICY.card.stock },
+  /* Every normal Auto brochure generation uses photography when a compatible
+     photo exists — photography is a major ingredient of a brochure. */
+  brochure:  { none: 1 - PRODUCT_VISUAL_POLICY.brochure.stock },
+  /* Postcards, signs, posters, banners and similar promotional print. The
+     0.20 miss is per independent generation, so a mixed product run shows
+     ~4 in 5 with photography by itself; the never-two-consecutive-misses
+     guard below only nudges same-brief regenerate runs slightly higher.
+     (The old 0.24 was tuned expecting the guard to lift the long-run rate to
+     80.6%, but the guard is keyed per brief — every NEW brief rolled an
+     independent 24% miss and real mixed runs sat at ~76%.) */
+  general:   { none: 1 - PRODUCT_VISUAL_POLICY.promo.stock },
 };
 
 /* Whether the LAST generation of each brief drew no photo despite a valid
@@ -1248,6 +1289,7 @@ const lastStockDrawMissed = new Map();
 const STOCK_STAMP_RE     = /stamp/i;
 const STOCK_NAMEPLATE_RE = /nameplate|name\s*badge|name\s*tag|badge/i;
 const STOCK_CARD_RE      = /business\s*card|calling\s*card/i;
+const STOCK_BROCHURE_RE  = /brochure|pamphlet|leaflet|tri-?fold|booklet/i;
 
 /* The product class this brief is being designed for. The Template Type is now
  * fed from the product's own database classification, so the NAME is the
@@ -1259,6 +1301,7 @@ function stockProductClass(templateType, widthIn, heightIn) {
   const t = (templateType || '').trim();
   if (STOCK_STAMP_RE.test(t)) return 'stamp';
   if (STOCK_NAMEPLATE_RE.test(t)) return 'nameplate';
+  if (STOCK_BROCHURE_RE.test(t)) return 'brochure';
   if (STOCK_CARD_RE.test(t)) {
     return isLargeFormatForAssets(t, widthIn, heightIn) ? 'general' : 'card';
   }
@@ -1465,8 +1508,13 @@ function renderStockPhotoBlock(sel) {
     + `    band grades — top: ${grade('top')}, middle: ${grade('middle')}, bottom: ${grade('bottom')}\n`
     + `    quietest band: ${best} (set type there in ${bestColour} type where the layout allows)\n\n`
     + `HOW TO USE IT:\n`
-    + `- It is this design's hero image, and it is the ONLY photograph in the design. `
-    + `Do not add, invent, reference or link any other image file.\n`
+    + (sel.productClass === 'nameplate'
+        ? `- On this name badge / nameplate the photograph is a SMALL, CONTROLLED element — a compact `
+          + `side panel, corner chip or masked accent occupying roughly a quarter of the piece or less — `
+          + `NEVER a full-bleed hero. The NAME stays the hero. It is still the ONLY photograph in the `
+          + `design: do not add, invent, reference or link any other image file.\n`
+        : `- It is this design's hero image, and it is the ONLY photograph in the design. `
+          + `Do not add, invent, reference or link any other image file.\n`)
     + `- PHOTO AREA: ${areaRule}\n`
     + `- Place it with intent: crop with clip-path or object-fit cover inside its area, mask it into a shape, `
     + `duotone or tint it into the palette, bleed it off an edge, or give it its own full panel. `
@@ -1528,7 +1576,14 @@ if (typeof window !== 'undefined') {
 
 /* A mark should appear when the composition benefits from one — roughly half
  * the time — never in every design. Force skips only this draw. */
-const LOGO_NONE = { stamp: 0.50, nameplate: 0.45, card: 0.50, general: 0.50 };
+/* Derived from PRODUCT_VISUAL_POLICY — change probabilities THERE. */
+const LOGO_NONE = {
+  stamp:     1 - PRODUCT_VISUAL_POLICY.stamp.logo,
+  nameplate: 1 - PRODUCT_VISUAL_POLICY.nameplate.logo,
+  card:      1 - PRODUCT_VISUAL_POLICY.card.logo,
+  brochure:  1 - PRODUCT_VISUAL_POLICY.brochure.logo,
+  general:   1 - PRODUCT_VISUAL_POLICY.promo.logo,
+};
 
 const recentLogos = new Map();
 const LOGO_MEMORY = 2;
