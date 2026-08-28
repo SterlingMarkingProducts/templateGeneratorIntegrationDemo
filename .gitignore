@@ -11,3 +11,4 @@ scripts/__reports__/generator-artifact.html
 # local-only secrets — never commit
 .env
 .env.local
+node_modules
