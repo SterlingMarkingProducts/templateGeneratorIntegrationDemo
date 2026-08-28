@@ -2183,6 +2183,19 @@ async function handleGenerate(body, send) {
   // When the user gives no colors: if they chose a real style, that style's signature palette
   // must win (never override it with a random industry palette). Only fall back to industry
   // guidance when there is no style direction at all.
+  /* A REFERENCE BEING RECREATED IS THE VISUAL AUTHORITY. Known before any
+     selector runs, because every automatic choice below must stand down for
+     it: a rotated direction, a hero stock photo, a library mark or a
+     decorative asset each carries its own strong prompt language, and letting
+     them compose ahead of the recreate note is exactly how an uploaded retro
+     arc card came back as a teal corporate layout with a stock photograph.
+     The customer's own supplied photo (imageUrl) still flows through the
+     normal EXTERNAL IMAGES path — that is the "user explicitly supplied
+     photography" case and it is welcome in a recreation. */
+  const willRecreate = referenceMode === 'recreate'
+    && !!((referenceImage && referenceImage.data && referenceImage.mediaType)
+          || (referenceImageUrl || '').trim());
+
   const hasChosenStyle = (styleDirection || '').trim() && !GENERIC_STYLE.test((styleDirection || '').trim());
   const userSetColors = colorParts.length > 0;
   const colorScheme = colorParts.length > 0
@@ -2198,7 +2211,7 @@ async function handleGenerate(body, send) {
   {
     const lfTrimWin = toPx(width, unit) / 96;
     const lfTrimHin = toPx(height, unit) / 96;
-    if (!userSetColors && !hasChosenStyle
+    if (!userSetColors && !hasChosenStyle && !willRecreate
         && isLargeFormatForAssets(templateType, lfTrimWin, lfTrimHin)
         && !/stamp/i.test(templateType || '')) {
       const stanceKey = JSON.stringify([templateType, industry || '', businessName || '']);
@@ -2237,7 +2250,9 @@ async function handleGenerate(body, send) {
      the stock library must stay out of it entirely. */
   const hasCustomerPhoto = !!((imageUrl || '').trim());
   const tStock0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-  const stockSelection = pickStockPhoto({
+  const stockSelection = willRecreate
+    ? (lastStockReason = 'a reference design is being recreated', null)
+    : pickStockPhoto({
     /* Inference material, in one string through one matcher: the Industry
        field leads, and the business name and special instructions let a blank
        field still resolve "Chen Family Dental" to dentistry. Template Type is
@@ -2257,7 +2272,9 @@ async function handleGenerate(body, send) {
      the library stays out of it entirely, in every mode. */
   const hasCustomerLogo = !!((svgContent || '').trim());
   const tLogo0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-  const logoSelection = pickLogo({
+  const logoSelection = willRecreate
+    ? (lastLogoReason = 'a reference design is being recreated — its own mark leads', null)
+    : pickLogo({
     industryText: [industry, businessName, specialInstructions].filter(Boolean).join(' '),
     templateType: templateType,
     widthIn: trimWin,
@@ -2268,8 +2285,29 @@ async function handleGenerate(body, send) {
   const tLogo1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
   const logoSelectMs = Math.round((tLogo1 - tLogo0) * 1000) / 1000;
 
-  const creative = chooseCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection);
+  /* RECREATION REPLACES the creative direction outright — this is the proven
+     pre-Phase-1 shape of the prompt, where the recreate note WAS the style
+     direction instead of trailing a full competing brief (rotated direction,
+     density contract, photo/mark/asset blocks, colour stance). An explicitly
+     typed Style Direction survives as a modifier, since the user asked for it. */
+  const creative = willRecreate
+    ? (function () {
+        const rawStyle = (styleDirection || '').trim();
+        const explicitStyle = rawStyle && !GENERIC_STYLE.test(rawStyle)
+          ? expandStyleDirection(rawStyle) : '';
+        return {
+          text: explicitStyle
+            ? 'USER STYLE MODIFIER — applies ON TOP of the reference recreation below, without replacing its composition: ' + explicitStyle
+            : '',
+          direction: null, assets: [],
+          assetReason: 'a reference design is being recreated',
+          assetSelectMs: 0,
+          largeFormat: isLargeFormatForAssets(templateType, trimWin, trimHin),
+          assetMode: assetMode(),
+        };
+      }())
+    : chooseCreativeDirection(styleDirection, industry, templateType,
+        creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
@@ -2364,7 +2402,7 @@ async function handleGenerate(body, send) {
       if (recreateRef) {
         recreatingRef = true;
         refImageForGen = img;
-        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. Reproduce it FAITHFULLY: the SAME company/brand name, the SAME colours (use the exact hex values below), the SAME logo concept, the SAME text content, and the SAME overall layout. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt ONLY to fit this product's dimensions and print-safe margins. This OVERRIDES the default "invent an original design" and palette guidance — do NOT invent a different brand name, palette, or layout. Match what you see.\n\n${inspiration}`;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. The reference is the PRIMARY VISUAL AUTHORITY for this generation: reproduce its overall composition, its major shapes at their approximate proportions, its visual hierarchy and alignment, its typography personality, its colour relationships, its spacing, its borders and frames, its texture treatment, any image placement, and its distinctive effects — curved or arc-following text, oversized concentric arcs, grain, and the like — using editable HTML/CSS/inline-SVG. CONTENT: where the user supplied their own business name or details, place THEIR content in the SAME typographic role the reference gives its own; where they supplied none, keep the reference's. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt intelligently to this product's real dimensions, bleed and safety margins if the aspect ratio differs — preserve the composition, never letterbox or distort it. This note OVERRIDES every generic instruction elsewhere in this prompt where they conflict: ignore any default direction, density, palette-stance, format-style or "invent an original design" guidance. Match what you see.\n\n${inspiration}`;
       } else {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }

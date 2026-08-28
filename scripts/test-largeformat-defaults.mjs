@@ -49,8 +49,8 @@ is(seen.size === P.LARGE_FORMAT_COLOR_STANCES.length, 'every stance is reachable
 is(backToBack === 0, 'the same stance never lands twice in a row for one brief');
 
 console.log('\n3  the stance is wired into the DEFAULT large-format path only');
-is(/if \(!userSetColors && !hasChosenStyle\s*&& isLargeFormatForAssets\(templateType, lfTrimWin, lfTrimHin\)\s*&& !\/stamp\/i\.test\(templateType \|\| ''\)\) \{/.test(ENGINE_SRC),
-   'guarded on: no user colours, no chosen style, large format, not a stamp');
+is(/if \(!userSetColors && !hasChosenStyle && !willRecreate\s*&& isLargeFormatForAssets\(templateType, lfTrimWin, lfTrimHin\)\s*&& !\/stamp\/i\.test\(templateType \|\| ''\)\) \{/.test(ENGINE_SRC),
+   'guarded on: no user colours, no chosen style, no reference recreation, large format, not a stamp');
 is(/let effectiveColorScheme = colorSchemeFinal;/.test(ENGINE_SRC),
    'and the guarded value is what the prompts consume');
 is(/effectiveColorScheme = 'STAMP MONOCHROMATIC/.test(ENGINE_SRC),
