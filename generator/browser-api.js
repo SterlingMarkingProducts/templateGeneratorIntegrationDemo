@@ -192,14 +192,47 @@ async function readAnthropicError(res) {
   return new Error(message);
 }
 
+/* FAIL LOUD, NEVER SPIN FOREVER. Nothing here had a timeout, and the web03
+ * proxy (aiProxy.cfm) BUFFERS the whole upstream response — the browser sees
+ * nothing until the entire generation finishes. If that buffered response is
+ * dropped, stalled or never sent, every await above this layer waited forever
+ * and the Generator sat on its spinner with no way out. Every AI call now runs
+ * under a deadline and aborts into a visible error instead.
+ * The proxy self-caps at ~330s, so the stream budget sits just above it.
+ * Tests may shorten these via window.SMP_AI_TIMEOUTS = {create, stream} (ms). */
+function aiTimeouts() {
+  const o = window.SMP_AI_TIMEOUTS || {};
+  return {
+    create: (o.create > 0) ? o.create : 180000,
+    stream: (o.stream > 0) ? o.stream : 360000,
+  };
+}
+
+async function fetchAiWithDeadline(params, ms, what) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    return await fetch(ANTHROPIC_ENDPOINT, {
+      method: 'POST',
+      headers: anthropicHeaders(),
+      body: JSON.stringify(params),
+      signal: ctl.signal,
+    });
+  } catch (err) {
+    if (ctl.signal.aborted) {
+      throw new Error(what + ' did not respond within ' + Math.round(ms / 1000)
+        + 's. The server may be overloaded or the AI proxy stalled — please try again.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const anthropic = {
   messages: {
     async create(params) {
-      const res = await fetch(ANTHROPIC_ENDPOINT, {
-        method: 'POST',
-        headers: anthropicHeaders(),
-        body: JSON.stringify(params),
-      });
+      const res = await fetchAiWithDeadline(params, aiTimeouts().create, 'The AI service');
       if (!res.ok) throw await readAnthropicError(res);
       return res.json();
     },
@@ -208,10 +241,19 @@ const anthropic = {
     // (engine.js only consumes content_block_delta / text_delta events).
     stream(params) {
       return (async function* () {
+        /* One deadline covers the whole exchange: on the buffered web03 proxy
+         * the entire response arrives in one burst near the end, so a
+         * per-chunk watchdog would be meaningless — either the burst arrives
+         * inside the budget or the request is dead. */
+        const budget = aiTimeouts().stream;
+        const ctl = new AbortController();
+        const timer = setTimeout(() => ctl.abort(), budget);
+        try {
         const res = await fetch(ANTHROPIC_ENDPOINT, {
           method: 'POST',
           headers: anthropicHeaders(),
           body: JSON.stringify({ ...params, stream: true }),
+          signal: ctl.signal,
         });
         if (!res.ok) throw await readAnthropicError(res);
 
@@ -237,6 +279,16 @@ const anthropic = {
               yield event;
             }
           }
+        }
+        } catch (err) {
+          if (ctl.signal.aborted) {
+            throw new Error('The AI design service did not respond within '
+              + Math.round(budget / 1000) + 's. The server may be overloaded or the '
+              + 'AI proxy stalled — please try again.');
+          }
+          throw err;
+        } finally {
+          clearTimeout(timer);
         }
       })();
     },

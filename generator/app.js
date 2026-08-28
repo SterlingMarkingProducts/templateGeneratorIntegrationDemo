@@ -853,12 +853,60 @@ function validate(payload) {
     imageUrl.focus();
     return false;
   }
-  if (payload.svgContent && !/<svg[\s>]/i.test(payload.svgContent)) {
-    showError('SVG content must include valid <svg> markup.');
-    svgPaste.focus();
-    return false;
+  if (payload.svgContent) {
+    const cleaned = sanitizeSvgInput(payload.svgContent);
+    if (cleaned.error) {
+      showError('Could not import this SVG: ' + cleaned.error);
+      svgPaste.focus();
+      return false;
+    }
+    payload.svgContent = cleaned.svg;
   }
   return true;
+}
+
+/* Pasted/uploaded SVG: parse it for real (never regex-guess), fail with a
+ * useful message instead of letting bad markup ride into the pipeline, and
+ * strip only what must never execute — scripts, event handlers, javascript:
+ * and external-resource references. Geometry (paths, shapes, text, groups,
+ * transforms, gradients, masks, clipPaths, internal #refs) passes untouched.
+ * viewBox and width/height are each sufficient alone: a width/height-only SVG
+ * gets an equivalent viewBox so it scales uniformly wherever the design puts
+ * it; an SVG with neither is refused with a plain reason. */
+function sanitizeSvgInput(src) {
+  let doc;
+  try { doc = new DOMParser().parseFromString(src, 'image/svg+xml'); }
+  catch (e) { return { error: 'the markup could not be parsed (' + e.message + ').' }; }
+  const parseErr = doc.querySelector('parsererror');
+  if (parseErr) {
+    const firstLine = (parseErr.textContent || '').split('\n').find(l => l.trim()) || 'invalid XML';
+    return { error: 'the markup is not valid SVG/XML (' + firstLine.trim().slice(0, 160) + ').' };
+  }
+  const root = doc.documentElement;
+  if (!root || root.nodeName.toLowerCase() !== 'svg') {
+    return { error: 'the root element is not <svg>.' };
+  }
+  if (!root.getAttribute('xmlns')) root.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  root.querySelectorAll('script, foreignObject').forEach(n => n.remove());
+  [root, ...root.querySelectorAll('*')].forEach(el => {
+    for (const attr of [...el.attributes]) {
+      const n = attr.name.toLowerCase();
+      if (n.startsWith('on')) { el.removeAttribute(attr.name); continue; }
+      if ((n === 'href' || n === 'xlink:href')
+          && /^\s*(javascript:|https?:|\/\/)/i.test(attr.value)) {
+        el.removeAttribute(attr.name);   // no scripts, no external fetches
+      }
+    }
+  });
+  const vb = (root.getAttribute('viewBox') || '').trim();
+  const w = parseFloat(root.getAttribute('width'));
+  const h = parseFloat(root.getAttribute('height'));
+  if (!vb && !(w > 0 && h > 0)) {
+    return { error: 'it declares no viewBox and no usable width/height, so its size cannot be determined.' };
+  }
+  if (!vb && w > 0 && h > 0) root.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+  try { return { svg: new XMLSerializer().serializeToString(root) }; }
+  catch (e) { return { error: 'the cleaned markup could not be re-serialized (' + e.message + ').' }; }
 }
 
 /* ── Show / hide panels ────────────────────────────── */
@@ -1481,6 +1529,7 @@ async function generate(payload) {
     const widthPx  = toPx(payload.width,  payload.unit);
     const heightPx = toPx(payload.height, payload.unit);
 
+    let sawDone = false;
     outer: while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -1555,6 +1604,7 @@ async function generate(payload) {
         }
 
         if (msg.done) {
+          sawDone = true;
           // If HTML wasn't detected mid-stream (edge case), try final buffer
           if (!htmlRendered) {
             const htmlMatch = accum.match(/```html\s*([\s\S]*?)```/);
@@ -1587,6 +1637,14 @@ async function generate(payload) {
           break outer;
         }
       }
+    }
+
+    /* The stream ended without a done (and without an error event): the proxy
+     * dropped or truncated the buffered response. Falling through silently
+     * left the loading panel up FOREVER — the "spins forever" state. */
+    if (!sawDone) {
+      throw new Error('The design service stopped responding before the design '
+        + 'finished. Please try again.');
     }
 
   } catch (err) {
