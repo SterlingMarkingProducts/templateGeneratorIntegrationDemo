@@ -293,22 +293,14 @@ rpage.on('pageerror', (e) => rErrors.push(e.message));
 const regression = [];
 await generateAndConvert(rpage, 'Axiom (Neo-Brutalism)');
 
-/* Click the REAL Generate JSON button and wait for it to flip to its
- * download state — that proves the whole app.js path still works, not just
- * the converter underneath it. */
-await rpage.click('#jsonBtn');
-const jsonLabel = await rpage
-  .waitForFunction(() => {
-    const l = document.getElementById('jsonBtnLabel');
-    return l && /download/i.test(l.textContent) ? l.textContent : null;
-  }, { timeout: 30000 })
-  .then((h) => h.jsonValue())
-  .catch(() => null);
-ok(regression, 'Generate JSON button reaches download state', !!jsonLabel, String(jsonLabel));
+/* The Generate JSON toolbar button was retired; the converter it fronted is
+ * still exercised through convertCurrentDesign below and by Push to Designer. */
+const jsonGone = await rpage.evaluate(() => !document.getElementById('jsonBtn'));
+ok(regression, 'the retired Generate JSON button is gone from the toolbar', jsonGone);
 
 const uiOk = await rpage.evaluate(() => {
   const ids = ['templateType', 'dimWidth', 'dimHeight', 'unitToggle', 'industry', 'businessName',
-    'styleDirection', 'referenceFile', 'generateBtn', 'regenBtn', 'downloadHtmlBtn', 'jsonBtn',
+    'styleDirection', 'referenceFile', 'generateBtn', 'regenBtn', 'downloadHtmlBtn',
     'pushToDesignerBtn', 'previewFrame', 'thumbFront', 'thumbBack'];
   const missing = ids.filter((i) => !document.getElementById(i));
   return { missing, htmlBtnEnabled: !document.getElementById('downloadHtmlBtn')?.disabled };

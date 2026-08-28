@@ -1147,6 +1147,47 @@ async function extractMaskMarks(doc, rootEl, factor) {
   return out;
 }
 
+/* A library file over this size is re-encoded before it travels: the stock
+ * photographs run 2-3 MB and the collage/texture design assets past that, and
+ * two of them plus the raster is exactly the payload class the web03 gateway
+ * kills with a bare 502. Under it, bytes ship exactly as stored so the
+ * server's hash dedup keeps matching across pushes. */
+const INLINE_BYTE_CAP = 600 * 1024;
+
+async function shrinkImageBlob(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    /* Alpha check on a small sample: JPEG is only legal for opaque images. */
+    const probe = document.createElement('canvas');
+    const ps = Math.max(1, Math.floor(Math.max(img.naturalWidth, img.naturalHeight) / 64));
+    probe.width = Math.max(1, Math.floor(img.naturalWidth / ps));
+    probe.height = Math.max(1, Math.floor(img.naturalHeight / ps));
+    const pctx = probe.getContext('2d');
+    pctx.drawImage(img, 0, 0, probe.width, probe.height);
+    const px = pctx.getImageData(0, 0, probe.width, probe.height).data;
+    let hasAlpha = false;
+    for (let i = 3; i < px.length; i += 4) { if (px[i] < 250) { hasAlpha = true; break; } }
+
+    /* Step down until the result is genuinely small; 900px still prints a
+     * 3-inch decorative element at 300 dpi. */
+    for (const maxSide of [1600, 1200, 900]) {
+      const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement('canvas');
+      cv.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      cv.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      const out = hasAlpha ? cv.toDataURL('image/png') : cv.toDataURL('image/jpeg', 0.9);
+      if (out.length * 0.75 <= Math.max(INLINE_BYTE_CAP, 900 * 1024) || maxSide === 900) {
+        return out.length * 0.75 < blob.size ? out : null;
+      }
+    }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+
 async function inlineLibraryImages(objects) {
   for (const o of objects) {
     if (!o || o.kind !== 'image' || typeof o.src !== 'string') continue;
@@ -1159,12 +1200,19 @@ async function inlineLibraryImages(objects) {
       if (!r.ok) continue;
       const blob = await r.blob();
       if (!/^image\/(png|jpe?g)$/i.test(blob.type || '')) continue;
-      o.src = await new Promise((resolve, reject) => {
-        const fr = new FileReader();
-        fr.onload = () => resolve(fr.result);
-        fr.onerror = () => reject(fr.error);
-        fr.readAsDataURL(blob);
-      });
+      let src = null;
+      if (blob.size > INLINE_BYTE_CAP) {
+        try { src = await shrinkImageBlob(blob); } catch (e) { src = null; }
+      }
+      if (!src) {
+        src = await new Promise((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(fr.result);
+          fr.onerror = () => reject(fr.error);
+          fr.readAsDataURL(blob);
+        });
+      }
+      o.src = src;
     } catch (e) { /* keep the URL src */ }
   }
 }
@@ -1357,4 +1405,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* Expose for the test harness and unit tests */
-window.SMPPush = { convertCurrentDesign, buildSterlingTemplate, extractObjectsFromDoc, mapFont, SMP_CONFIG, downloadTemplateJson, compressTemplateForDemoTransport, storeTransferLocallyWithFallback, setTransportMode, pushViaImport, transportMode: () => transportMode };
+window.SMPPush = { convertCurrentDesign, buildSterlingTemplate, extractObjectsFromDoc, mapFont, SMP_CONFIG, downloadTemplateJson, compressTemplateForDemoTransport, storeTransferLocallyWithFallback, setTransportMode, pushViaImport, stripPreviewDecorations, transportMode: () => transportMode };

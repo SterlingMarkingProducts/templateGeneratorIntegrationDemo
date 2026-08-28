@@ -127,7 +127,8 @@ const ind = await page.evaluate(() => {
   return { text: box.textContent, lines: box.children.length,
     w: Math.round(r.width), top: Math.round(r.top) };
 });
-is(ind && ind.lines === 3, 'three lines: asset, photograph, logo', JSON.stringify(ind && ind.lines));
+is(ind && ind.lines === 4, 'four line slots: asset, photograph, logo, reference (hidden until active)',
+   JSON.stringify(ind && ind.lines));
 is(ind && /Photo: None · Reason: /.test(ind.text) && /Logo: None · Reason: /.test(ind.text),
    'the photo and logo lines read "None · Reason: …" before the first generation',
    ind && ind.text);

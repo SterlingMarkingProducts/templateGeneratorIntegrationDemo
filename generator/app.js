@@ -1859,7 +1859,59 @@ function downloadFile(content, filename, mime) {
   URL.revokeObjectURL(url);
 }
 
+/* The machine-readable identity block every export carries. Values come from
+ * the REAL selected product and the live payload — nothing hardcoded. It is
+ * inert JSON: browsers ignore it, and only the Upload Design parser reads it. */
+function buildSterlingMetadata() {
+  if (!lastPayload) return null;
+  const p = window.SMPProductSelection?.get?.() || null;
+  const trimW = Math.round(toPx(lastPayload.width, lastPayload.unit));
+  const trimH = Math.round(toPx(lastPayload.height, lastPayload.unit));
+  const bleed = bleedPxFor(lastPayload.templateType);
+  return {
+    schemaVersion: 1,
+    generator: 'sterling-template-generator',
+    productId: p ? p.id : null,
+    partNumber: p ? p.partNumber : null,
+    productName: p ? p.name : null,
+    templateType: lastPayload.templateType || '',
+    width: lastPayload.width, height: lastPayload.height, unit: lastPayload.unit || 'in',
+    widthIn: +(trimW / 96).toFixed(4), heightIn: +(trimH / 96).toFixed(4),
+    trimWidthPx: trimW, trimHeightPx: trimH,
+    bleedPx: bleed,
+    canvasWidthPx: trimW + 2 * bleed, canvasHeightPx: trimH + 2 * bleed,
+    pages: lastPayload.doubleSided ? 2 : 1,
+    doubleSided: !!lastPayload.doubleSided,
+    orientation: lastPayload.orientation
+      || (trimH > trimW ? 'vertical' : 'horizontal'),
+    businessName: lastPayload.businessName || '',
+  };
+}
+
+function injectSterlingMetadata(html) {
+  const meta = buildSterlingMetadata();
+  if (!meta) return html;
+  /* one block only — replace any earlier one (re-download after edits) */
+  let out = html.replace(/<script[^>]*id="sterling-template-metadata"[^>]*>[\s\S]*?<\/script>\s*/i, '');
+  const json = JSON.stringify(meta, null, 1).replace(/<\//g, '<\\/');
+  const block = `<script type="application/json" id="sterling-template-metadata">${json}</script>`;
+  return out.includes('</head>') ? out.replace('</head>', block + '</head>') : block + out;
+}
+
 function prepareDownloadHtml(html, doubleSided, templateType) {
+  /* THE DOWNLOAD IS THE INTRINSIC DESIGN, never the preview presentation.
+   * generatedHtml carries the preview layers — the trim-sized body box, the
+   * translate+cover-scale that centres the trim art on the bleed canvas, and
+   * the text-fit scripts. Baked into an export they are exactly the
+   * "card 360×216 / body 336×192 / extra transform" conflict: the file's own
+   * coordinate system disagreeing with itself, and a re-upload compounding
+   * it. Push to Designer already strips them before extraction; the download
+   * now starts from the same clean design, and the preview re-applies its
+   * display layers fresh on upload. */
+  if (window.SMPPush?.stripPreviewDecorations) {
+    html = window.SMPPush.stripPreviewDecorations(html);
+  }
+  html = injectSterlingMetadata(html);
   if (!doubleSided) return html;
   let out = html;
   // Remove preview-only hiding so both spreads render in the saved file.
@@ -1898,8 +1950,14 @@ const JSON_LABELS = {
   download: 'Download JSON',
 };
 
+/* The Generate JSON button was retired from the toolbar (Push to Designer is
+ * the product path; the JSON download was a development aid). The state
+ * machine stays as a guarded no-op so the call sites in the generation flow
+ * need no changes, and the export logic itself lives on in Push to Designer's
+ * downloadTemplateJson. */
 function setJsonState(state) {
   jsonState = state;
+  if (!jsonBtn) return;
   jsonBtnIcon.innerHTML  = JSON_ICONS[state];
   jsonBtnLabel.textContent = JSON_LABELS[state];
   jsonBtn.disabled       = state === 'loading';
@@ -1907,7 +1965,7 @@ function setJsonState(state) {
   jsonBtn.classList.toggle('tool-btn-ready', state === 'download');
 }
 
-jsonBtn.addEventListener('click', async () => {
+if (jsonBtn) jsonBtn.addEventListener('click', async () => {
   if (jsonState === 'download') {
     const name = (lastPayload?.templateType || 'template').replace(/\s+/g, '-').toLowerCase();
     downloadFile(generatedJson, `${name}-design.json`, 'application/json');
@@ -1942,6 +2000,34 @@ jsonBtn.addEventListener('click', async () => {
 const uploadDesignBtn   = document.getElementById('uploadDesignBtn');
 const uploadDesignInput = document.getElementById('uploadDesignInput');
 
+/* Read the versioned identity block out of an exported HTML file. */
+function parseSterlingMetadata(html) {
+  const m = /<script[^>]*id="sterling-template-metadata"[^>]*>([\s\S]*?)<\/script>/i.exec(html);
+  if (!m) return null;
+  try {
+    const d = JSON.parse(m[1].replace(/<\\\//g, '<\/'));
+    return d && Number(d.schemaVersion) >= 1 && d.width > 0 && d.height > 0 ? d : null;
+  } catch (e) { return null; }
+}
+
+/* Exactly ONE verified product with these trim dimensions (either
+ * orientation) -> that product. Anything else -> null: ambiguity is reported,
+ * never guessed away. */
+async function findUniqueProductByDims(wIn, hIn) {
+  if (!window.SMPProductSelection?.search) return null;
+  try {
+    const r = await window.SMPProductSelection.search('', { limit: 2000 });
+    const fit = (a, b) => Math.abs(a - b) <= Math.max(0.06, b * 0.02);
+    const hits = (r.results || []).filter((p) =>
+      (fit(wIn, p.widthIn) && fit(hIn, p.heightIn))
+      || (fit(wIn, p.heightIn) && fit(hIn, p.widthIn)));
+    if (hits.length !== 1) return null;
+    /* Template Type resolves through applyProductToForm when the product is
+       selected; the caller only needs the part number. */
+    return { partNumber: hits[0].partNumber, templateType: '' };
+  } catch (e) { return null; }
+}
+
 /* Best-effort product match from finished dimensions (inches, either orientation). */
 function matchTemplateType(wIn, hIn) {
   const fit = (a, b) => Math.abs(a - b) <= Math.max(0.2, b * 0.06);
@@ -1953,26 +2039,37 @@ function matchTemplateType(wIn, hIn) {
 
 /* Render HTML off-screen and measure the design surface, to infer its size. */
 function measureHtmlDims(html) {
+  /* Measurement only: external stylesheets (the injected designer-fonts link,
+   * a slow CDN) delay or hang the iframe's load event without changing the
+   * card's fixed pixel geometry, so they are dropped from the measuring copy
+   * and the element is POLLED instead of waiting for a full load. */
+  const measurable = html.replace(/<link\b[^>]*rel=["']?stylesheet["']?[^>]*>/gi, '');
   return new Promise(resolve => {
     const f = document.createElement('iframe');
     f.setAttribute('sandbox', 'allow-same-origin allow-scripts');
     f.style.cssText = 'position:fixed;left:-10000px;top:0;width:1600px;height:1600px;border:0;';
     let done = false;
     const finish = (v) => { if (done) return; done = true; try { f.remove(); } catch {} resolve(v); };
-    // Append FIRST, then attach the listener, then set srcdoc — otherwise the
-    // load event fires for the initial about:blank (empty) document.
     document.body.appendChild(f);
-    f.addEventListener('load', () => {
+    const read = () => {
       try {
         const doc = f.contentDocument;
+        if (!doc || !doc.body) return false;
         const el = doc.querySelector('.card, .design, .canvas, [class*="card"], [class*="plate"], [class*="badge"]')
           || doc.body.firstElementChild;
+        if (!el) return false;
         const r = el.getBoundingClientRect();
-        finish(r.width > 2 && r.height > 2 ? { wpx: Math.round(r.width), hpx: Math.round(r.height) } : null);
-      } catch { finish(null); }
-    }, { once: true });
-    f.srcdoc = html;
-    setTimeout(() => finish(null), 2500);
+        if (r.width > 2 && r.height > 2) {
+          finish({ wpx: Math.round(r.width), hpx: Math.round(r.height) });
+          return true;
+        }
+        return false;
+      } catch (e) { return false; }
+    };
+    const poll = setInterval(() => { if (read()) clearInterval(poll); }, 100);
+    f.addEventListener('load', () => { if (read()) clearInterval(poll); }, { once: true });
+    f.srcdoc = measurable;
+    setTimeout(() => { clearInterval(poll); finish(null); }, 2500);
   });
 }
 
@@ -2033,14 +2130,53 @@ async function handleUploadedFile(file) {
       }
       throw new Error('That JSON has no embedded design HTML. Upload an HTML file, or a JSON exported by this tool with the Download JSON button.');
     }
-    // An HTML file — measure the design surface and infer the product.
-    const dims = await measureHtmlDims(text);
+    // An HTML file. Older exports carry baked preview layers (trim-sized body
+    // box + cover scale); strip them so the design is intrinsic again and can
+    // never arrive pre-squished.
+    const clean = window.SMPPush?.stripPreviewDecorations
+      ? window.SMPPush.stripPreviewDecorations(text) : text;
+    const label = file.name.replace(/\.[^.]+$/, '');
+
+    // 1) The metadata block, read BEFORE anything renders: restore the REAL
+    //    Sterling product first, through the same verified provider the picker
+    //    uses — arbitrary metadata is never trusted past that resolution.
+    const meta = parseSterlingMetadata(clean);
+    if (meta && meta.partNumber && window.SMPProductSelection) {
+      try {
+        await window.SMPProductSelection.selectByPartNumber(meta.partNumber);
+      } catch (e) {
+        showError('This design was made for ' + meta.partNumber + ', which this catalogue '
+          + 'does not carry — loading it standalone at its own size.');
+      }
+      loadDesignIntoGenerator(
+        { templateType: meta.templateType, width: meta.width, height: meta.height,
+          unit: meta.unit || 'in', doubleSided: !!meta.doubleSided,
+          businessName: meta.businessName },
+        clean, label);
+      return;
+    }
+
+    // 2) No metadata (an older file): measure its intrinsic surface, then try
+    //    a catalogue match — auto-select ONLY when exactly one verified
+    //    product has these trim dimensions. Never silently assume a product,
+    //    and never rewrite the design into the currently selected one.
+    const dims = await measureHtmlDims(clean);
     if (!dims) throw new Error('Could not find a design element (e.g. a .card) in that HTML file.');
     const wIn = +(dims.wpx / 96).toFixed(2), hIn = +(dims.hpx / 96).toFixed(2);
+    const unique = await findUniqueProductByDims(wIn, hIn);
+    if (unique) {
+      try { await window.SMPProductSelection.selectByPartNumber(unique.partNumber); }
+      catch (e) { /* keep standalone */ }
+    } else if (window.SMPProductSelection?.get?.()) {
+      showError('This HTML carries no Sterling metadata and its size matches more than one '
+        + 'product (or none) — keeping the current product; the design loads at its own '
+        + wIn + '×' + hIn + ' in size.');
+    }
     loadDesignIntoGenerator(
-      { templateType: matchTemplateType(wIn, hIn), width: wIn, height: hIn, unit: 'in',
-        doubleSided: /card--back/i.test(text) },
-      text, file.name.replace(/\.[^.]+$/, ''));
+      { templateType: (unique && unique.templateType) || matchTemplateType(wIn, hIn),
+        width: wIn, height: hIn, unit: 'in',
+        doubleSided: /card--back/i.test(clean) },
+      clean, label);
   } catch (err) {
     showError(err.message || 'Could not load that file.');
   }

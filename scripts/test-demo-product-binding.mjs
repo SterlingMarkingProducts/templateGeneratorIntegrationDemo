@@ -66,12 +66,15 @@ await page.goto(`${base}/generator/index.html`, { waitUntil: 'domcontentloaded' 
 await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0
   && window.SMPProductSelection?.catalogueSize() > 0, { timeout: 20000 });
 
-const REMOVED = ['Business card 3.5" x 2"', 'Sign 12" x 16"', 'Atelier Noir (Art Deco)'];
+const REMOVED = ['Business card 3.5" x 2"', 'Sign 12" x 16"', 'Atelier Noir (Art Deco)',
+  /* retired with the Primary Pop / Playful chips — the aesthetics left the
+     visible style set, so their sample shortcuts left with them */
+  'Studio North (Primary Pop)', 'Sol & Co. (Playful)'];
 const EXPECTED = ['Axiom (Neo-Brutalism)', 'Stand Out (Blue Wave)',
-  'Avery Willow (Concrete Gold)', 'Studio North (Primary Pop)', 'Sol & Co. (Playful)'];
+  'Avery Willow (Concrete Gold)'];
 
-/* ── 1. the three shortcuts are gone from the UI ──────────────────── */
-await check('exactly the five intended demo shortcuts are user-facing', async () => {
+/* ── 1. the retired shortcuts are gone from the UI ────────────────── */
+await check('exactly the three intended demo shortcuts are user-facing', async () => {
   const labels = await page.evaluate(() => [...document.querySelectorAll('button')]
     .filter((b) => b.textContent.trim().startsWith('Load sample: '))
     .map((b) => b.textContent.trim().replace('Load sample: ', '')));
@@ -79,7 +82,7 @@ await check('exactly the five intended demo shortcuts are user-facing', async ()
   return `${labels.length} shortcuts: ${labels.join(', ')}`;
 });
 
-await check('the three removed shortcuts are nowhere in the UI', async () => {
+await check('the removed shortcuts are nowhere in the UI', async () => {
   const body = await page.evaluate(() => document.body.innerText);
   for (const name of REMOVED) ok(!body.includes(name), `"${name}" still visible in the UI`);
   const listed = await page.evaluate(() => window.SMPDemoSamples.list().map((s) => s.name));
@@ -95,7 +98,7 @@ await check('removed designs survive as regression fixtures', async () => {
     return !document.getElementById('resultState').classList.contains('hidden');
   });
   ok(loaded, 'a non-shortcut fixture must still load through the fixture API');
-  return `${all.length} samples in the file, 3 fixture-only, all still loadable`;
+  return `${all.length} samples in the file, 5 fixture-only, all still loadable`;
 });
 
 /* ── 2. per-demo product binding ──────────────────────────────────── */
@@ -103,8 +106,6 @@ const DEMO_IDS = {
   'Axiom (Neo-Brutalism)': 'sample-axiom',
   'Stand Out (Blue Wave)': 'sample-standout',
   'Avery Willow (Concrete Gold)': 'sample-averywillow',
-  'Studio North (Primary Pop)': 'sample-studionorth',
-  'Sol & Co. (Playful)': 'sample-solco',
 };
 
 for (const [name, id] of Object.entries(DEMO_IDS)) {
@@ -149,13 +150,13 @@ await check('the binding is per-demo configuration, not a global rule', async ()
     id: s.id, shortcut: !!s.shortcut, product: s.product || null })));
   /* Every shortcut names its own product; nothing names it for them. */
   const shortcuts = cfg.filter((c) => c.shortcut);
-  eq(shortcuts.length, 5, 'shortcut count');
+  eq(shortcuts.length, 3, 'shortcut count');
   ok(shortcuts.every((c) => c.product && c.product.id === 6505 && c.product.partNumber === 'BCDP-CM'),
      'each shortcut must carry its own product block');
   /* The fixture-only samples deliberately carry NO product — proving the
    * binding comes from configuration and is not applied to every demo. */
   const fixtures = cfg.filter((c) => !c.shortcut);
-  eq(fixtures.length, 3, 'fixture count');
+  eq(fixtures.length, 5, 'fixture count');
   ok(fixtures.every((c) => c.product === null), 'fixture samples must stay standalone');
   /* And loading one of those leaves the product untouched. */
   await page.evaluate(() => window.SMPProductSelection.clear());

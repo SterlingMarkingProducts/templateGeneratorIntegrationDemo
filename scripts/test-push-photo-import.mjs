@@ -145,6 +145,52 @@ is(/png/.test(flat.assetTypes[0]),
    'while a flat/graphic raster stays PNG (asset-1 is the background raster)',
    flat.assetTypes.join(', '));
 
+console.log('\n2b  big library design assets are re-encoded, not shipped raw');
+const assetHeavy = await page.evaluate(async () => {
+  const W = 18 * 96, H = 12 * 96;
+  /* two of the largest design-library PNGs as plain <img> decoration */
+  const A = await fetch('assets/design-asset-manifest.json').then((r) => r.json());
+  /* the manifest carries no byte sizes — probe a handful and take the two fattest */
+  const probeList = A.assets.filter((x, i) => i % 8 === 0).slice(0, 10);
+  const sized = [];
+  for (const x of probeList) {
+    const b = await fetch(x.url).then((r) => r.blob()).catch(() => null);
+    if (b) sized.push({ url: x.url, bytes: b.size });
+  }
+  sized.sort((x, y) => y.bytes - x.bytes);
+  const biggest = sized.slice(0, 2);
+  const html = `<!DOCTYPE html><html><head><style>body{margin:0}
+    .card{position:relative;width:${W}px;height:${H}px;background:#f5f1e8;overflow:hidden}
+    .a1{position:absolute;left:40px;top:40px;width:500px;height:400px}
+    .a2{position:absolute;right:40px;bottom:40px;width:500px;height:400px}
+    img{width:100%;height:100%;object-fit:contain}
+    .head{position:absolute;left:600px;top:200px;font:800 100px Arial;color:#123}
+  </style></head><body><div class="card">
+    <div class="a1"><img src="${biggest[0].url}"></div>
+    <div class="a2"><img src="${biggest[1].url}"></div>
+    <div class="head">Lakeside</div>
+  </div></body></html>`;
+  generatedHtml = html;
+  lastPayload = { templateType: 'Sign', width: 18, height: 12, unit: 'in', doubleSided: false };
+  const mock = window.SMPMockTemplateImport.createMockImportEndpoint({});
+  const transport = new window.SMPTransportImport.TemplateImportTransport({ baseUrl: '/mock', fetchImpl: mock });
+  window.SMPPush.setTransportMode('import', transport);
+  try {
+    const out = await window.SMPPush.pushViaImport();
+    return { ok: true, bytes: out.stats.assetBytes, assets: out.stats.uniqueAssets,
+      originals: biggest.reduce((n, b) => n + b.bytes, 0) };
+  } catch (e) { return { ok: false, error: e.message }; }
+  finally { window.SMPPush.setTransportMode('local'); }
+});
+is(assetHeavy.ok === true, 'a two-big-asset design pushes', assetHeavy.error || (assetHeavy.assets + ' assets'));
+console.log('     originals ' + (assetHeavy.originals / 1048576).toFixed(2) + ' MB -> payload '
+  + (assetHeavy.bytes / 1048576).toFixed(2) + ' MB');
+is(assetHeavy.bytes < 3.5 * 1024 * 1024,
+   'the whole payload stays under the gateway-killing class',
+   (assetHeavy.bytes / 1048576).toFixed(2) + ' MB');
+is(assetHeavy.bytes < assetHeavy.originals,
+   'meaningfully smaller than the raw library files');
+
 console.log('\n3  local transport is untouched');
 const localSrc = await page.evaluate(async () => {
   const { template } = await window.SMPPush.convertCurrentDesign();

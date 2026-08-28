@@ -27,13 +27,9 @@ await page.waitForFunction(() => window.SMPDemoSamples?.all?.().length > 0, { ti
 await page.evaluate(() => window.SMPDemoSamples.loadDesignOnly('sample-business-card'));
 await page.waitForTimeout(2500);
 
-// 1) Download JSON: click builds the template (loading→download), then inspect generatedJson
-await page.getByRole('button', { name:/Generate JSON/i }).click();
-await page.waitForFunction(() => document.getElementById('jsonBtnLabel')?.textContent === 'Download JSON', null, { timeout: 15000 });
-const jsonState = await page.evaluate(() => {
-  const t = JSON.parse(window.__lastJson || 'null');
-  return null;
-});
+// 1) Build the template JSON via the converter API (the toolbar button was
+//    retired; the Upload Design round-trip is what this suite protects).
+
 // capture generatedJson via the module scope by reading the download blob indirectly:
 const meta = await page.evaluate(() => {
   // re-derive the same way the button does, to inspect structure
