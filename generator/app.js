@@ -1537,6 +1537,7 @@ generateBtn.addEventListener('click', () => {
     el = document.createElement('div');
     el.id = 'devAssetIndicator';
     el.style.cssText = 'flex:0 0 auto;order:-1;padding:5px 12px;text-align:center;'
+      + 'display:flex;align-items:center;justify-content:center;gap:0;'
       + 'background:#f4f4f6;border-bottom:1px solid #e4e4e8;color:#5b5b66;'
       + 'font:500 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;'
       + 'letter-spacing:.02em;white-space:nowrap;overflow:hidden;'
@@ -1554,19 +1555,47 @@ generateBtn.addEventListener('click', () => {
       .trim();
   }
 
+  var line = null, modeSel = null;
+
+  function controls(box) {
+    if (line) return;
+    line = document.createElement('span');
+    modeSel = document.createElement('select');
+    modeSel.id = 'devAssetMode';
+    modeSel.style.cssText = 'margin-left:10px;font:inherit;padding:0 4px;'
+      + 'border:1px solid #d4d4d8;border-radius:3px;background:#fff;color:#3f3f46;';
+    [['auto', 'Auto'], ['force', 'Force Asset'], ['off', 'No Asset']].forEach(function (o) {
+      var opt = document.createElement('option');
+      opt.value = o[0]; opt.textContent = 'Asset Mode: ' + o[1];
+      modeSel.appendChild(opt);
+    });
+    /* Read at selection time by the engine — it changes which asset is chosen,
+     * never HOW it is chosen, so Force uses the identical local code path. */
+    modeSel.value = window.SMPAssetMode || 'auto';
+    window.SMPAssetMode = modeSel.value;
+    modeSel.addEventListener('change', function () { window.SMPAssetMode = modeSel.value; });
+    box.appendChild(line);
+    box.appendChild(modeSel);
+  }
+
   function render(sel) {
     var box = host();
     if (!box) return;
+    controls(box);
     var assets = (sel && sel.assets) || [];
+    var timing = (sel && typeof sel.selectMs === 'number') ? '  (' + sel.selectMs + 'ms)' : '';
+    var fmt = (sel && sel.format) ? '  \u00b7 ' + sel.format : '';
     if (!assets.length) {
-      box.textContent = 'Asset: None';
-      box.title = 'The engine chose no library asset for this generation.';
+      /* A blocked or missing manifest must never look like a design decision. */
+      var why = (sel && sel.reason) || 'not generated yet';
+      line.textContent = 'Asset: None \u00b7 Reason: ' + why + fmt + timing;
+      line.title = 'No library asset was used. Reason: ' + why;
       return;
     }
-    box.textContent = assets.map(function (a) {
+    line.textContent = assets.map(function (a) {
       return 'Asset: ' + pretty(a.filename) + ' \u00b7 Family: ' + a.family;
-    }).join('   |   ');
-    box.title = assets.map(function (a) { return a.url; }).join('\n');
+    }).join('   |   ') + fmt + timing;
+    line.title = assets.map(function (a) { return a.url; }).join('\n');
   }
 
   function start() {

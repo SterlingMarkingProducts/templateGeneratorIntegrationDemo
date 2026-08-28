@@ -114,10 +114,24 @@
     return DEV_DATA_FILE.test(rest.slice('data/'.length));
   }
 
+  /* The clone's OWN design asset library — the manifest and the PNGs beside it.
+   * Same reasoning as the data files above: served from this page's own
+   * directory, and blocking them means the Generator silently loses the whole
+   * asset library on any sterling.ca host. The path is composed from this
+   * page's own root plus a fixed sub-path, so it can only ever reach files
+   * shipped with this clone. */
+  function isDevCloneAsset(u, root) {
+    var rest = u.pathname.indexOf(root) === 0 ? u.pathname.slice(root.length) : null;
+    if (rest === null) return false;
+    return rest === 'generator/assets/design-asset-manifest.json'
+      || /^generator\/assets\/design-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
+  }
+
   function isDevAllowed(u, allowDevImport) {
     var root = devCloneRoot();
     if (!root || u.origin !== window.location.origin) return false;
     return isDevCloneData(u, root)
+      || isDevCloneAsset(u, root)
       || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)
                              || isDevAiKeyStatus(u) || isDevCatalogue(u)));
   }

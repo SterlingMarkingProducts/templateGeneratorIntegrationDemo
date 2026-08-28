@@ -618,8 +618,21 @@ const ASSET_NONE_OVERRIDE = { 'clean-corporate': 0.60, 'editorial-minimal': 0.50
  * almost always the right answer there — where a business card is often better
  * with nothing but type. The counts and the compatibility rules are identical;
  * only the chance of drawing nothing changes. */
-const LARGE_FORMAT_FOR_ASSETS = /poster|sign|banner/i;
+const LARGE_FORMAT_FOR_ASSETS = /poster|sign|banner|decal|magnet/i;
 const LARGE_FORMAT_NONE_CEILING = 0.08;
+/* Long edge, in inches, at or above which a piece is treated as large format
+ * whatever the Template Type says. This matters on web03: the live
+ * designCentral-dev catalogue deliberately carries no productFamily, so
+ * selecting a real sign never changes the Template Type away from Business
+ * Card — the geometry is the only honest signal that it is a sign. A business
+ * card is 3.5in; the smallest thing anyone would call a sign is far above 8. */
+const LARGE_FORMAT_MIN_INCHES = 8;
+
+function isLargeFormatForAssets(templateType, widthIn, heightIn) {
+  if (LARGE_FORMAT_FOR_ASSETS.test(templateType || '')) return true;
+  const longest = Math.max(Number(widthIn) || 0, Number(heightIn) || 0);
+  return longest >= LARGE_FORMAT_MIN_INCHES;
+}
 
 /* A gated family is only reachable when the brief actually asks for it. */
 const GATED_FAMILY_TRIGGERS = {
@@ -630,9 +643,18 @@ const GATED_FAMILY_TRIGGERS = {
   'newsprint':      /newsprint|newspaper|collage|zine|cut.?up|editorial/i,
 };
 
-let assetLibrary = null;          // { assets, families } once loaded
+let assetLibrary = null;          // { assets, byFamily } once loaded
 let assetLibraryLoading = null;   // in-flight promise, so it loads once
+let assetLibraryError = null;     // why it is not loaded, for the DEV indicator
 
+/* ONE small JSON, ONCE. ~70 KB of metadata, parsed a single time and held for
+ * the life of the page; selection then reads that object and nothing else. No
+ * PNG is opened, listed, hashed or downloaded to choose one — the image itself
+ * loads only when the generated preview renders it, like any other <img>.
+ *
+ * A FAILURE IS NOT CACHED. The first version stored an empty library on any
+ * error, so one blocked request disabled the library for the rest of the
+ * session and every generation afterwards silently said "no asset". */
 function loadAssetLibrary() {
   if (assetLibrary) return Promise.resolve(assetLibrary);
   if (assetLibraryLoading) return assetLibraryLoading;
@@ -642,16 +664,24 @@ function loadAssetLibrary() {
       const byFamily = {};
       (doc.assets || []).forEach((a) => { (byFamily[a.family] = byFamily[a.family] || []).push(a); });
       assetLibrary = { assets: doc.assets || [], byFamily: byFamily };
+      assetLibraryError = null;
+      assetLibraryLoading = null;
       return assetLibrary;
     })
     .catch((e) => {
-      /* No library is a perfectly good outcome — the Generator worked without
-         one for its whole life. Never fail a generation over decoration. */
-      console.info('[generator] design asset library unavailable; generating without it', e && e.message);
-      assetLibrary = { assets: [], byFamily: {} };
-      return assetLibrary;
+      /* Never fail a generation over decoration — but say why, and allow the
+         next generation to try again. */
+      assetLibraryError = (e && e.message) || 'manifest unavailable';
+      assetLibraryLoading = null;
+      console.warn('[generator] design asset library unavailable: ' + assetLibraryError);
+      return { assets: [], byFamily: {} };
     });
   return assetLibraryLoading;
+}
+
+/* Warm it at page load so Generate never waits on the network for it. */
+if (typeof window !== 'undefined') {
+  try { loadAssetLibrary(); } catch (e) { /* ignore */ }
 }
 
 /* Families used by the last generations of THIS brief, so a Regenerate does not
@@ -702,17 +732,46 @@ function candidateFamilies(directionKey, brief, memoryKey) {
   return fresh.length ? fresh : usable;
 }
 
-function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType) {
+/* DEV override, read at selection time. 'auto' is the shipped behaviour;
+   'force' takes a compatible asset whenever one exists; 'off' takes none. */
+function assetMode() {
+  const m = (typeof window !== 'undefined' && window.SMPAssetMode) || 'auto';
+  return (m === 'force' || m === 'off') ? m : 'auto';
+}
+
+/* Why the last selection came back empty. Reported in the DEV indicator so a
+   blocked manifest is never mistaken for "the engine chose nothing". */
+let lastAssetReason = '';
+
+function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType,
+    widthIn, heightIn) {
+  lastAssetReason = '';
+  const mode = assetMode();
+  if (mode === 'off') { lastAssetReason = 'asset mode is No Asset'; return []; }
+
   const lib = assetLibrary;
-  if (!lib || !lib.assets.length) return [];
-  if (!DIRECTION_ASSET_FAMILIES[directionKey]
-      && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))) {
+  /* The failure reason comes first: after a failed load there is no library
+     object at all, and reporting "still loading" would hide a blocked manifest
+     behind something that sounds temporary. */
+  if (assetLibraryError && (!lib || !lib.assets.length)) {
+    lastAssetReason = 'library did not load (' + assetLibraryError + ')';
     return [];
   }
-  let want = assetCountFor(density, directionKey, LARGE_FORMAT_FOR_ASSETS.test(templateType || ''));
+  if (!lib) { lastAssetReason = 'library still loading'; return []; }
+  if (!lib.assets.length) { lastAssetReason = 'library is empty'; return []; }
+  if (/stamp/i.test(templateType || '')) { lastAssetReason = 'stamps use no assets'; return []; }
+  if (!DIRECTION_ASSET_FAMILIES[directionKey]
+      && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))) {
+    lastAssetReason = 'no families are compatible with this direction';
+    return [];
+  }
+  const large = isLargeFormatForAssets(templateType, widthIn, heightIn);
+  let want = mode === 'force'
+    ? Math.max(1, assetCountFor(density, directionKey, large))
+    : assetCountFor(density, directionKey, large);
   /* A generation that uses nothing must NOT wipe the memory — otherwise the run
      after it is free to repeat the family used two runs ago. */
-  if (!want) return [];
+  if (!want) { lastAssetReason = 'the density contract drew none this time'; return []; }
 
   const families = candidateFamilies(directionKey, brief, memoryKey);
   const chosen = [];
@@ -728,6 +787,9 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
        place by being a different kind of thing. */
     chosen.push(pool[Math.floor(Math.random() * pool.length)]);
     usedFamilies.push(family);
+  }
+  if (!chosen.length) {
+    lastAssetReason = 'no asset in the compatible families fitted this product';
   }
   if (chosen.length) {
     const recent = recentAssetFamilies.get(memoryKey) || [];
@@ -798,7 +860,7 @@ function rotateDirection(candidates, memoryKey) {
 }
 
 function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided) {
+    variationKey, doubleSided, widthIn, heightIn) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -809,7 +871,9 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
     const moment    = STAMP_CREATIVE_MOMENTS[Math.floor(Math.random() * STAMP_CREATIVE_MOMENTS.length)];
     /* No library asset on a stamp: the stamp rules below forbid colour,
        imagery and overlapping shapes outright. */
-    return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [] };
+    lastAssetReason = 'stamps use no assets';
+    return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [], assetReason: lastAssetReason,
+      assetSelectMs: 0, largeFormat: false, assetMode: assetMode() };
   }
 
   const isLargeFormat = /poster|sign/i.test(templateType || '');
@@ -821,15 +885,24 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   const briefText = [raw, industry, templateType].filter(Boolean).join(' ');
 
   const compose = (brief, density, reference, directionKey) => {
+    const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
-      templateType);
+      templateType, widthIn, heightIn);
+    const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     return { text: [
       brief,
       reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
       DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
       renderAssetBlock(assets, density),
       `${formatNote} ${creativityDirective}`,
-    ].filter(Boolean).join('\n\n'), direction: directionKey, assets: assets };
+    ].filter(Boolean).join('\n\n'),
+      direction: directionKey,
+      assets: assets,
+      assetReason: assets.length ? '' : lastAssetReason,
+      assetSelectMs: Math.round((t1 - t0) * 1000) / 1000,
+      largeFormat: isLargeFormatForAssets(templateType, widthIn, heightIn),
+      assetMode: assetMode(),
+    };
   };
 
 
@@ -1322,12 +1395,20 @@ async function handleGenerate(body, send) {
   /* The library loads once and never blocks a generation: if the manifest
      cannot be fetched, pickAssets() simply returns nothing. */
   await loadAssetLibrary();
+  /* Trim size in inches, so a real sign is recognised as large format even when
+     the Template Type still says Business Card — which is exactly what happens
+     on web03, where the live catalogue supplies no productFamily. */
+  const trimWin = trimWpx / 96;
+  const trimHin = trimHpx / 96;
   const creative = chooseCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey, doubleSided);
+    creativityLevel, variationKey, doubleSided, trimWin, trimHin);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
-    + ' | assets: ' + (chosenAssets.map((a) => a.family + '/' + a.filename).join(', ') || 'none'));
+    + ' | ' + (creative.largeFormat ? 'large-format' : 'small-format')
+    + ' | assets: ' + (chosenAssets.map((a) => a.family + '/' + a.filename).join(', ')
+        || 'none (' + (creative.assetReason || 'unknown') + ')')
+    + ' | selection took ' + creative.assetSelectMs + 'ms');
 
   /* Published for the DEV asset indicator in app.js. Read-only reporting of a
      decision already made — nothing here influences selection, the prompts, or
@@ -1338,6 +1419,11 @@ async function handleGenerate(body, send) {
       filename: a.filename, family: a.family, family_role: a.family_role, url: a.url,
       card_background_safe: a.card_background_safe,
     })),
+    reason: creative.assetReason || '',
+    selectMs: creative.assetSelectMs,
+    largeFormat: creative.largeFormat,
+    mode: creative.assetMode,
+    format: creative.largeFormat ? 'large-format' : 'small-format',
   };
   try {
     window.dispatchEvent(new CustomEvent('smp:assets-selected',
