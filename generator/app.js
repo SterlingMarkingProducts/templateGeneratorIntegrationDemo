@@ -1527,13 +1527,21 @@ generateBtn.addEventListener('click', () => {
   var el = null;
   function host() {
     if (el) return el;
-    var left = document.querySelector('.result-toolbar .toolbar-left');
-    if (!left) return null;
-    el = document.createElement('span');
+    /* Directly above the design. .preview-main is the column that holds the
+     * canvas, so its first child is a full-width row sitting immediately over
+     * the preview — visible without opening anything. The toolbar was the wrong
+     * home: .toolbar-left is a flex row and the line was squashed out of sight. */
+    var main = document.querySelector('.preview-main')
+      || document.querySelector('.preview-workspace');
+    if (!main) return null;
+    el = document.createElement('div');
     el.id = 'devAssetIndicator';
-    el.style.cssText = 'display:block;margin-top:2px;font:500 10px/1.45 ui-monospace,'
-      + 'SFMono-Regular,Menlo,monospace;color:#71717a;letter-spacing:.02em;';
-    left.appendChild(el);
+    el.style.cssText = 'flex:0 0 auto;order:-1;padding:5px 12px;text-align:center;'
+      + 'background:#f4f4f6;border-bottom:1px solid #e4e4e8;color:#5b5b66;'
+      + 'font:500 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;'
+      + 'letter-spacing:.02em;white-space:nowrap;overflow:hidden;'
+      + 'text-overflow:ellipsis;';
+    main.insertBefore(el, main.firstChild);
     return el;
   }
 
@@ -1556,7 +1564,7 @@ generateBtn.addEventListener('click', () => {
       return;
     }
     box.textContent = assets.map(function (a) {
-      return 'Asset: ' + pretty(a.filename) + '  ·  Family: ' + a.family;
+      return 'Asset: ' + pretty(a.filename) + ' \u00b7 Family: ' + a.family;
     }).join('   |   ');
     box.title = assets.map(function (a) { return a.url; }).join('\n');
   }
