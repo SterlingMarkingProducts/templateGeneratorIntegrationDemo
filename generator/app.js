@@ -1997,6 +1997,17 @@ uploadDesignInput?.addEventListener('change', (e) => {
 function showError(msg) {
   clearTimeout(toastTimeout);
   errorMessage.textContent = msg;
+  errorToast.classList.remove('is-success');
+  errorToast.classList.remove('hidden');
+  toastTimeout = setTimeout(hideError, 8000);
+}
+
+/* Same toast, success dress — "Draft created, opening the designer" is good
+ * news and was being announced in the red error style. */
+function showSuccess(msg) {
+  clearTimeout(toastTimeout);
+  errorMessage.textContent = msg;
+  errorToast.classList.add('is-success');
   errorToast.classList.remove('hidden');
   toastTimeout = setTimeout(hideError, 8000);
 }

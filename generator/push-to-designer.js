@@ -1223,8 +1223,8 @@ async function pushToDesigner() {
       const url = dev.designerPage
         + '?template=' + encodeURIComponent(templateId)
         + '&product=' + encodeURIComponent(productId);
-      showError('Draft ' + templateId + ' created (not live, no mappings). '
-        + 'Opening the Template Designer…');
+      (window.showSuccess || showError)('Draft ' + templateId
+        + ' created (not live, no mappings). Opening the Template Designer…');
       const opened = window.open(url, 'sterlingTemplateDesigner');
       if (!opened) { window.location.assign(url); }   // popup blocked
       return;
@@ -1240,7 +1240,7 @@ async function pushToDesigner() {
     }
     if (substitutions.length) {
       const list = [...new Set(substitutions.map(s => `${s.requested} → ${s.used}`))].join(', ');
-      showError(`Note: some fonts were substituted with Sterling designer fonts: ${list}`);
+      (window.showSuccess || showError)(`Note: some fonts were substituted with Sterling designer fonts: ${list}`);
     }
     window.open(url, 'sterlingDesignerTest');
   } catch (err) {

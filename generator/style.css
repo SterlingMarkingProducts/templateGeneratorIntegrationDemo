@@ -1380,6 +1380,12 @@ html, body {
 }
 
 /* ── Error toast ───────────────────────────────────── */
+.error-toast.is-success {
+  background: #f0faf2;
+  border-color: rgba(22, 130, 60, 0.35);
+  color: #16823c;
+}
+
 .error-toast {
   position: fixed;
   bottom: 24px;
