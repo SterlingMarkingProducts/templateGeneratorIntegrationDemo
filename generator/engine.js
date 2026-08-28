@@ -604,14 +604,22 @@ const DIRECTION_ASSET_FAMILIES = {
  * usually none and never more than one; balanced none or one, occasionally two;
  * rich one or two, three only rarely. */
 const ASSET_BUDGET = {
-  restrained: { none: 0.75, one: 1.00, two: 1.00, max: 1 },
-  balanced:   { none: 0.45, one: 0.90, two: 1.00, max: 2 },
-  rich:       { none: 0.15, one: 0.65, two: 0.95, max: 3 },
+  restrained: { none: 0.45, split: [1.00, 0, 0],       max: 1 },
+  balanced:   { none: 0.20, split: [0.80, 0.20, 0],    max: 2 },
+  rich:       { none: 0.10, split: [0.45, 0.40, 0.15], max: 3 },
 };
-/* Clean Corporate and Editorial Minimal are quieter still, whatever their
- * contract says — these are the two directions where decoration is most likely
- * to cheapen the result. */
-const ASSET_NONE_OVERRIDE = { 'clean-corporate': 0.90, 'editorial-minimal': 0.80 };
+/* Clean Corporate and Editorial Minimal stay the quietest two, because they are
+ * where decoration most easily cheapens the result — but "quietest" now means
+ * roughly half the time, not almost never. */
+const ASSET_NONE_OVERRIDE = { 'clean-corporate': 0.60, 'editorial-minimal': 0.50 };
+
+/* Large format is a different problem. A poster, sign or banner is read from
+ * across a room and has canvas to spare, so a real piece of visual material is
+ * almost always the right answer there — where a business card is often better
+ * with nothing but type. The counts and the compatibility rules are identical;
+ * only the chance of drawing nothing changes. */
+const LARGE_FORMAT_FOR_ASSETS = /poster|sign|banner/i;
+const LARGE_FORMAT_NONE_CEILING = 0.08;
 
 /* A gated family is only reachable when the brief actually asks for it. */
 const GATED_FAMILY_TRIGGERS = {
@@ -651,15 +659,23 @@ function loadAssetLibrary() {
 const recentAssetFamilies = new Map();
 const ASSET_FAMILY_MEMORY = 3;
 
-function assetCountFor(density, directionKey) {
+function assetCountFor(density, directionKey, largeFormat) {
   const b = ASSET_BUDGET[density] || ASSET_BUDGET.balanced;
-  const none = ASSET_NONE_OVERRIDE[directionKey] !== undefined
+  let none = ASSET_NONE_OVERRIDE[directionKey] !== undefined
     ? ASSET_NONE_OVERRIDE[directionKey] : b.none;
+  if (largeFormat) { none = Math.min(none, LARGE_FORMAT_NONE_CEILING); }
+
   const r = Math.random();
   if (r < none) return 0;
-  if (r < none + (b.one - b.none)) return 1;
-  if (r < none + (b.two - b.none)) return 2;
-  return Math.min(3, b.max);
+  /* The remaining probability is shared between one, two and three assets by
+     the density's own split, so changing how often nothing is drawn never
+     changes the RATIO of one to two to three — and never the maximum. */
+  let acc = none;
+  for (let i = 0; i < b.split.length; i++) {
+    acc += (1 - none) * b.split[i];
+    if (r < acc || i === b.split.length - 1) return Math.min(i + 1, b.max);
+  }
+  return Math.min(1, b.max);
 }
 
 function gatedFamilyAllowed(family, brief) {
@@ -686,14 +702,14 @@ function candidateFamilies(directionKey, brief, memoryKey) {
   return fresh.length ? fresh : usable;
 }
 
-function pickAssets(directionKey, density, brief, memoryKey, doubleSided) {
+function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType) {
   const lib = assetLibrary;
   if (!lib || !lib.assets.length) return [];
   if (!DIRECTION_ASSET_FAMILIES[directionKey]
       && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))) {
     return [];
   }
-  let want = assetCountFor(density, directionKey);
+  let want = assetCountFor(density, directionKey, LARGE_FORMAT_FOR_ASSETS.test(templateType || ''));
   /* A generation that uses nothing must NOT wipe the memory — otherwise the run
      after it is free to repeat the family used two runs ago. */
   if (!want) return [];
@@ -805,7 +821,8 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   const briefText = [raw, industry, templateType].filter(Boolean).join(' ');
 
   const compose = (brief, density, reference, directionKey) => {
-    const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided);
+    const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
+      templateType);
     return { text: [
       brief,
       reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',

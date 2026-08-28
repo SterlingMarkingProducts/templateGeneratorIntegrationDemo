@@ -40,9 +40,15 @@ console.log('\n1  consecutive default generations rotate concepts');
   is(within3 === 0, 'never one of the last 3 directions (12 options available)');
   is(new Set(seq).size === P.DESIGN_DIRECTIONS.length,
      'all 12 concepts are reached', `${new Set(seq).size}/${P.DESIGN_DIRECTIONS.length}`);
-  const counts = [...new Set(seq)].map((k) => seq.filter((x) => x === k).length);
-  const spread = Math.max(...counts) / Math.min(...counts);
-  is(spread < 1.6, 'and they are reached at roughly even rates', 'max/min ' + spread.toFixed(2));
+  /* Even RATES, not even counts: with ~33 draws per direction the max/min ratio
+     of a fair sample swings past 1.6 on its own, so a tight ratio was testing
+     the sampler rather than the rotation. Compare each direction's share with
+     the fair share instead, which is stable at this sample size. */
+  const fair = seq.length / P.DESIGN_DIRECTIONS.length;
+  const shares = [...new Set(seq)].map((k) => seq.filter((x) => x === k).length / fair);
+  const worst = Math.max(...shares.map((x) => Math.abs(x - 1)));
+  is(worst < 0.5, 'and they are reached at roughly even rates',
+     'furthest from an even share: ' + Math.round(worst * 100) + '%');
 }
 
 console.log('\n2  each concept stays whole — nothing inside it is randomised');

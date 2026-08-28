@@ -15,6 +15,7 @@ let src = readFileSync(REPO + '/generator/engine.js', 'utf8');
 src = src.replace('window.handleGenerate = handleGenerate;',
   'globalThis.__p = { chooseCreativeDirection, loadAssetLibrary, pickAssets,'
   + ' DIRECTION_ASSET_FAMILIES, ASSET_BUDGET, GATED_FAMILY_TRIGGERS, DESIGN_DIRECTIONS,'
+  + ' LARGE_FORMAT_FOR_ASSETS, LARGE_FORMAT_NONE_CEILING,'
   + ' recentAssetFamilies, HTML_PROMPT, SPEC_PROMPT };');
 src = src.replace('window.handleGenerateJson = handleGenerateJson;', '');
 // eslint-disable-next-line no-eval
@@ -25,8 +26,8 @@ await P.loadAssetLibrary();
 let pass = 0, fail = 0;
 const is = (c, n, d = '') => { c ? pass++ : fail++; console.log(`  ${c ? 'PASS' : 'FAIL'}  ${n}${d ? ' — ' + d : ''}`); };
 const byName = Object.fromEntries(MANIFEST.assets.map((a) => [a.filename, a]));
-const gen = (style, key, industry = '', dbl = true) =>
-  P.chooseCreativeDirection(style, industry, 'Business Card', 'balanced', key, dbl);
+const gen = (style, key, industry = '', dbl = true, product = 'Business Card') =>
+  P.chooseCreativeDirection(style, industry, product, 'balanced', key, dbl);
 
 console.log('\n1  the library is present and described');
 is(MANIFEST.file_count === 80 && MANIFEST.assets.length === 80, 'the manifest describes 80 assets');
@@ -57,8 +58,36 @@ rows.forEach(([k, s]) => console.log(
   + `   families: ${[...s.fams].join(',') || '—'}`));
 const total = rows.reduce((a, [, s]) => a + s.runs, 0);
 const noneAll = rows.reduce((a, [, s]) => a + s.none, 0);
-is(noneAll / total > 0.3, 'a large share of all generations use NO asset',
-   Math.round(noneAll / total * 100) + '% asset-free overall');
+const cardUse = 1 - noneAll / total;
+console.log(`     business cards overall: ${Math.round(cardUse * 100)}% use an asset,`
+  + ` ${Math.round((1 - cardUse) * 100)}% asset-free`);
+is(cardUse >= 0.62 && cardUse <= 0.78, 'business cards land near the 70% target',
+   Math.round(cardUse * 100) + '%');
+is(noneAll > 0, 'asset-free business cards still happen',
+   Math.round((1 - cardUse) * 100) + '% of them');
+
+console.log('\n2b  large format prefers a visual asset');
+{
+  for (const product of ['Poster', 'Sign', 'Banner']) {
+    let used = 0, runs = RUNS * 2;
+    for (let i = 0; i < runs; i++) {
+      if (gen('', 'lf-' + product + '-' + (i % 40), '', false, product).assets.length) used++;
+    }
+    const rate = used / runs;
+    is(rate >= 0.88, `${product}: ${Math.round(rate * 100)}% use an asset (target 90-100%)`,
+       Math.round(rate * 100) + '%');
+  }
+  let cardRuns = 0, cardUsed = 0;
+  for (let i = 0; i < RUNS * 2; i++) {
+    if (gen('', 'cmp-' + (i % 40)).assets.length) cardUsed++;
+    cardRuns++;
+  }
+  is(cardUsed / cardRuns < 0.85, 'and a business card stays clearly below that',
+     Math.round(cardUsed / cardRuns * 100) + '%');
+  is(P.LARGE_FORMAT_FOR_ASSETS.test('Poster') && P.LARGE_FORMAT_FOR_ASSETS.test('Sign')
+     && P.LARGE_FORMAT_FOR_ASSETS.test('Banner') && !P.LARGE_FORMAT_FOR_ASSETS.test('Business Card'),
+     'the large-format rule covers posters, signs and banners only');
+}
 
 console.log('\n3  restrained directions can be completely asset-free');
 for (const key of ['clean-corporate', 'editorial-minimal', 'elegant-serif', 'modern-luxury', 'soft-sophisticated']) {
@@ -69,9 +98,18 @@ for (const key of ['clean-corporate', 'editorial-minimal', 'elegant-serif', 'mod
     is(s.two === 0 && s.three === 0, `${key} (restrained): never more than one asset`);
   }
 }
-is(stats.get('clean-corporate').none / stats.get('clean-corporate').runs > 0.8,
-   'clean corporate is asset-free the large majority of the time',
-   Math.round(stats.get('clean-corporate').none / stats.get('clean-corporate').runs * 100) + '%');
+{
+  /* Frequency was raised deliberately, so this is no longer "almost never" —
+     what must still hold is that Clean Corporate is the QUIETEST direction of
+     the twelve, and is asset-free more often than not. */
+  const rate = (k) => stats.get(k).none / stats.get(k).runs;
+  const cc = rate('clean-corporate');
+  const quietest = [...stats.keys()].filter((k) => k !== 'user-chosen')
+    .sort((a, b) => rate(b) - rate(a))[0];
+  is(cc >= 0.5, 'clean corporate is asset-free more often than not', Math.round(cc * 100) + '%');
+  is(quietest === 'clean-corporate', 'and is the quietest of the twelve directions',
+     quietest + ' at ' + Math.round(rate(quietest) * 100) + '%');
+}
 
 console.log('\n4  counts never exceed the density contract');
 {
@@ -82,6 +120,11 @@ console.log('\n4  counts never exceed the density contract');
     if (!d) continue;
     const max = P.ASSET_BUDGET[d.density].max;
     if (r.assets.length > max) bad.push(`${d.key}/${d.density}:${r.assets.length}>${max}`);
+    const lf = gen('', 'cap-lf-' + (i % 30), '', false, 'Poster');
+    const dlf = P.DESIGN_DIRECTIONS.find((x) => x.key === lf.direction);
+    if (dlf && lf.assets.length > P.ASSET_BUDGET[dlf.density].max) {
+      bad.push(`poster ${dlf.key}:${lf.assets.length}`);
+    }
   }
   is(bad.length === 0, 'restrained ≤1, balanced ≤2, rich ≤3', bad.slice(0, 3).join(' ') || 'clean');
 }
@@ -190,8 +233,14 @@ console.log('\n10  family repetition is avoided on repeat generations');
 
 console.log('\n11  stamps and missing libraries');
 {
+  let stampAssets = 0;
+  for (let i = 0; i < RUNS; i++) {
+    if (P.chooseCreativeDirection('', '', 'Self-Inking Stamp', 'balanced', 'st-' + i, false)
+        .assets.length) stampAssets++;
+  }
+  is(stampAssets === 0, 'stamps never receive an asset, over ' + RUNS + ' runs');
   const st = P.chooseCreativeDirection('', '', 'Self-Inking Stamp', 'balanced', 'stamp', false);
-  is(st.assets.length === 0 && !/SUPPLIED DESIGN ASSET/.test(st.text), 'stamps never receive an asset');
+  is(!/SUPPLIED DESIGN ASSET/.test(st.text), 'and no asset block reaches a stamp prompt');
   is(/monochromatic black ink on white ONLY/.test(st.text), 'stamp rules intact');
   is(/SUPPLIED DESIGN ASSETS — when the Style Direction lists one/.test(P.HTML_PROMPT),
      'the HTML prompt explains how to use a supplied asset');
