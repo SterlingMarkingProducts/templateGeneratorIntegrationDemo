@@ -47,8 +47,14 @@ const BADGE = { templateType: 'Name Badge', widthIn: 3, heightIn: 1.5 };
 const STAMP = { templateType: 'Stamp', widthIn: 2, heightIn: 1 };
 
 let seq = 0;
+/* pick() types the text into the Industry FIELD (explicit). pickBlank() leaves
+   the field blank and supplies the text as the rest of the brief — business
+   name and special instructions — which is the inference path. */
 const pick = (industryText, geom = SIGN, extra = {}) => P.pickStockPhoto(Object.assign({
-  industryText, memoryKey: 'k' + (seq++), hasCustomerPhoto: false,
+  industryText, explicitIndustry: industryText, memoryKey: 'k' + (seq++), hasCustomerPhoto: false,
+}, geom, extra));
+const pickBlank = (briefText, geom = SIGN, extra = {}) => P.pickStockPhoto(Object.assign({
+  industryText: briefText, explicitIndustry: '', memoryKey: 'b' + (seq++), hasCustomerPhoto: false,
 }, geom, extra));
 
 console.log('\n1  the library is present, complete and served from this clone');
@@ -116,8 +122,11 @@ is(nonsenseHits === 0, 'no photo is ever returned for an unmatched industry',
 pick('Quantum Widget Foundry');
 is(P.lastStockReason === 'no industry match in the stock library', 'and it says why',
    P.lastStockReason);
-pick('');
-is(P.lastStockReason === 'no industry given', 'an empty industry is reported as such',
+/* A blank Industry FIELD no longer refuses outright — that is section 13.
+   An explicitly TYPED industry that matches nothing still refuses. */
+pick('Quantum Widget Foundry');
+is(P.lastStockReason === 'no industry match in the stock library',
+   'a typed industry that matches nothing still refuses — the user said what the business is',
    P.lastStockReason);
 
 const CASES = [
@@ -403,8 +412,8 @@ for (let brief = 0; brief < 40; brief++) {
       hasCustomerPhoto: false, ...SIGN });
     if (!r) continue;
     /* how many valid alternatives existed at all */
-    const alts = STOCK.photos.filter((p) => p.orientation === 'landscape'
-      && p.depicts.some((s) => r.briefIndustries.indexOf(s) !== -1)).length;
+    const alts = STOCK.photos.filter((p) =>
+      p.depicts.some((s) => r.briefIndustries.indexOf(s) !== -1)).length;
     if (alts > 1) { runsWithChoice++; if (prev && prev === r.photo.id) repeats++; }
     prev = r.photo.id;
   }
@@ -469,6 +478,85 @@ is(/SUPPLIED PHOTOGRAPH — when the Style Direction supplies one/.test(P.HTML_P
    'the HTML prompt states the photograph rules');
 is(/<img> is allowed for a user-provided Image URL, for a supplied photograph/.test(P.HTML_PROMPT),
    'and permits the <img> that renders it');
+globalThis.window.SMPStockPhotoMode = 'auto';
+
+console.log('\n13  blank industry: inference first, then the general-purpose pool');
+const GENERAL_IDS = STOCK.photos.filter((p) => p.general_purpose === true).map((p) => p.id);
+is(GENERAL_IDS.length >= 8 && GENERAL_IDS.length <= 15,
+   'the manifest flags a real general-purpose pool', GENERAL_IDS.length + ' photos');
+is(STOCK.photos.filter((p) => p.general_purpose).every((p) =>
+     /headshot|business-professionals|technology-team|city-buildings|living-room|mountain|coastal|cafe|family-outdoors|senior-couple/.test(p.id)),
+   'and only genuinely neutral files carry the flag', GENERAL_IDS.join(', '));
+
+globalThis.window.SMPStockPhotoMode = 'force';
+/* 1. Inference: the field is blank, the business name says the trade. */
+const INFER = [
+  ['Chen Family Dental', 'dental', '04-vertical-dentist-with-patient.png'],
+  ['Riverside Chiropractor', 'chiropractic', null],
+  ['Bloom Florist Studio', 'florist', '01-vertical-florist-bouquet.png'],
+  ['Apex Plumbing Ltd', 'plumbing', '17-vertical-plumber-kitchen-repair.png'],
+];
+INFER.forEach(([name, slug, file]) => {
+  const r = pickBlank(name);
+  is(!!r && r.industry === slug && (!file || r.photo.file === file) && !r.generalPurpose,
+     `blank field + business name "${name}" -> the ${slug} pool`,
+     r ? r.photo.file + ' (' + r.industry + ')' : P.lastStockReason);
+});
+const viaInstructions = pickBlank('modern look please, we are a veterinary clinic');
+is(!!viaInstructions && viaInstructions.industry === 'veterinary',
+   'special instructions infer the trade the same way',
+   viaInstructions ? viaInstructions.photo.file : P.lastStockReason);
+
+/* 2. A determined trade the library cannot serve gets NOTHING — not general. */
+let inferredOrphan = 0;
+for (let i = 0; i < 120; i++) if (pickBlank('Lakeside Roofing Ltd')) inferredOrphan++;
+is(inferredOrphan === 0,
+   'an inferred trade with no depicting photo gets none — the general pool is NOT a fallback for it',
+   P.lastStockReason);
+
+/* 3. Nothing determinable: only the general-purpose pool, in Force and Auto. */
+let generalOnly = true, generalHits = 0;
+for (let i = 0; i < 300; i++) {
+  const r = pickBlank('Quantum Widget Foundry');
+  if (!r) { generalOnly = false; break; }
+  generalHits++;
+  if (!r.generalPurpose || GENERAL_IDS.indexOf(r.photo.id) === -1) generalOnly = false;
+  if (r.industry !== 'general-purpose') generalOnly = false;
+}
+is(generalOnly && generalHits === 300,
+   'Force with nothing determinable always finds a general-purpose photo, labelled as such');
+const genVariety = new Set();
+for (let i = 0; i < 200; i++) {
+  const r = pickBlank('');
+  if (r) genVariety.add(r.photo.id);
+}
+is(genVariety.size >= 5, 'and the pool actually rotates', genVariety.size + ' distinct files');
+is([...genVariety].every((id) => GENERAL_IDS.indexOf(id) !== -1),
+   'never reaching outside the flagged general set');
+
+globalThis.window.SMPStockPhotoMode = 'auto';
+/* 4. Auto uses the same hierarchy at the same product rates. */
+let blankSign = 0, blankCard = 0;
+for (let i = 0; i < RATE_RUNS; i++) {
+  if (pickBlank('', SIGN)) blankSign++;
+  if (pickBlank('', CARD)) blankCard++;
+}
+const bs = blankSign / RATE_RUNS, bc = blankCard / RATE_RUNS;
+console.log(`     blank industry: sign ${(bs * 100).toFixed(1)}%   business card ${(bc * 100).toFixed(1)}%`);
+is(bs > 0.76 && bs < 0.85, 'blank-industry large format still runs at approximately 80–81%',
+   (bs * 100).toFixed(1) + '%');
+is(bc > 0.115 && bc < 0.165, 'blank-industry business cards still at approximately 14%',
+   (bc * 100).toFixed(1) + '%');
+let blankZero = 0;
+for (let i = 0; i < RUNS; i++) {
+  if (pickBlank('', STAMP)) blankZero++;
+  if (pickBlank('', NAMEPLATE)) blankZero++;
+}
+is(blankZero === 0, 'stamps and nameplates stay at zero with a blank industry too');
+globalThis.window.SMPStockPhotoMode = 'force';
+let blankCustomer = 0;
+for (let i = 0; i < 100; i++) if (pickBlank('', SIGN, { hasCustomerPhoto: true })) blankCustomer++;
+is(blankCustomer === 0, 'and the customer\'s own photograph still wins over the general pool');
 globalThis.window.SMPStockPhotoMode = 'auto';
 
 console.log('\n12  performance');

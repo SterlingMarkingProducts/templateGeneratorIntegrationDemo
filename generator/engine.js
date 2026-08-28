@@ -1197,30 +1197,52 @@ function pickStockPhoto(opts) {
   if (!lib) { lastStockReason = 'library still loading'; return null; }
   if (!lib.photos.length) { lastStockReason = 'library is empty'; return null; }
 
-  /* ── The hard industry gate. ──
+  /* ── The industry gate, in three strictly ordered stages. ──
      Matching reads depicts[] — what the photograph actually SHOWS — and never
-     the audit's looser associations. Specific beats broad: the pool is built
-     from the most specific tier that has a depicting photograph, and it is
-     never widened past that tier. A dentist therefore reaches dental imagery
-     or nothing; a general medical or lifestyle shot is not a fallback. */
+     the audit's looser associations.
+
+       1. The whole brief text (the Industry field, plus the business name and
+          special instructions) is put through the SAME strict whole-word
+          matcher. A hit — typed or confidently inferred from "Chen Family
+          Dental" in the business name — selects from that trade's own pool,
+          with specific-beats-broad tiers exactly as before.
+       2. A recognised trade with no depicting photograph gets NOTHING. An
+          unrelated trade photo is never a fallback, and neither is the
+          general pool: the trade was determined, the library cannot serve it.
+       3. Only when NO industry can be determined at all — and only when the
+          Industry field itself is blank — the pool becomes the photos the
+          manifest explicitly flags general_purpose: neutral professional
+          people, generic workspace, neutral architecture and interiors,
+          broad lifestyle, nature. An explicitly typed industry that matches
+          nothing still gets no photo: the user said what the business is,
+          and a generic photo would be wrong on purpose. */
+  const explicitIndustry = String(opts.explicitIndustry || '').trim() !== '';
   const slugs = matchStockIndustries(opts.industryText, lib);
-  if (!slugs.length) {
-    lastStockReason = String(opts.industryText || '').trim()
-      ? 'no industry match in the stock library'
-      : 'no industry given';
+  let pool, tierSlugs, generalPool = false;
+  if (slugs.length) {
+    /* SPECIFIC WINS OUTRIGHT. If the brief names a specific trade at all, that
+       tier is the only tier considered — and if nothing depicts it, the answer
+       is no photo. The broad tier is reachable only by a brief that names
+       nothing more specific than a broad category. */
+    tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 1);
+    if (!tierSlugs.length) tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 2);
+    pool = lib.photos.filter((p) =>
+      (p.depicts || []).some((sl) => tierSlugs.indexOf(sl) !== -1));
+    if (!pool.length) {
+      lastStockReason = 'no photograph in the library depicts this industry';
+      return null;
+    }
+  } else if (explicitIndustry) {
+    lastStockReason = 'no industry match in the stock library';
     return null;
-  }
-  /* SPECIFIC WINS OUTRIGHT. If the brief names a specific trade at all, that
-     tier is the only tier considered — and if nothing depicts it, the answer is
-     no photo. The broad tier is reachable only by a brief that names nothing
-     more specific than a broad category. */
-  let tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 1);
-  if (!tierSlugs.length) tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 2);
-  const pool = lib.photos.filter((p) =>
-    (p.depicts || []).some((sl) => tierSlugs.indexOf(sl) !== -1));
-  if (!pool.length) {
-    lastStockReason = 'no photograph in the library depicts this industry';
-    return null;
+  } else {
+    tierSlugs = [];
+    generalPool = true;
+    pool = lib.photos.filter((p) => p.general_purpose === true);
+    if (!pool.length) {
+      lastStockReason = 'no industry given and the library has no general-purpose photos';
+      return null;
+    }
   }
 
   /* ── Format gate. Orientation is deliberately NOT one: the layout builds a
@@ -1257,7 +1279,8 @@ function pickStockPhoto(opts) {
   const matched = (photo.depicts || []).filter((sl) => tierSlugs.indexOf(sl) !== -1);
   return {
     photo: photo,
-    industry: matched[0] || tierSlugs[0],
+    industry: generalPool ? 'general-purpose' : (matched[0] || tierSlugs[0]),
+    generalPurpose: generalPool,
     matchedIndustries: matched,
     briefIndustries: tierSlugs,
     productClass: productClass,
@@ -1923,7 +1946,12 @@ async function handleGenerate(body, send) {
   const hasCustomerPhoto = !!((imageUrl || '').trim());
   const tStock0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
   const stockSelection = pickStockPhoto({
-    industryText: [industry, businessName].filter(Boolean).join(' '),
+    /* Inference material, in one string through one matcher: the Industry
+       field leads, and the business name and special instructions let a blank
+       field still resolve "Chen Family Dental" to dentistry. Template Type is
+       already a separate input to the product policy. */
+    industryText: [industry, businessName, specialInstructions].filter(Boolean).join(' '),
+    explicitIndustry: industry,
     templateType: templateType,
     widthIn: trimWin,
     heightIn: trimHin,

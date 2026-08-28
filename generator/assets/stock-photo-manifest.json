@@ -19,7 +19,8 @@
     "text_safety": "Important text must not sit on a region graded poor unless overlay_guidance.scrim_opacity_if_used is applied.",
     "suppresses": "When a photo is placed, design-asset usage drops to at most one quiet texture or frame.",
     "audit_associations": "Provenance from the Phase 2C audit. NEVER used to select \u2014 it is what allowed a family-in-a-park photo to answer \"dentist\".",
-    "known_industries": "The full trade vocabulary the matcher understands. A slug here with no depicting photograph is a recognised SPECIFIC trade that the library cannot serve \u2014 naming it yields no photo, and never a broad-category substitute."
+    "known_industries": "The full trade vocabulary the matcher understands. A slug here with no depicting photograph is a recognised SPECIFIC trade that the library cannot serve \u2014 naming it yields no photo, and never a broad-category substitute.",
+    "general_purpose": "Photos flagged general_purpose are industry-neutral \u2014 neutral professional people, generic workspace, neutral architecture/interiors, broad lifestyle, nature. They are the ONLY photos reachable when no industry can be determined from the brief; a specific trade photo is never a fallback."
   },
   "known_industries": [
     "accounting",
@@ -500,7 +501,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "01-vertical-florist-bouquet",
@@ -593,7 +595,8 @@
         "cover-crop",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "02-chiropractor-lower-back-mobility-assessment",
@@ -683,7 +686,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "02-vertical-hair-salon-portrait",
@@ -774,7 +778,8 @@
         "vertical-hero",
         "inset-portrait"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "03-chiropractor-side-lying-lumbar-adjustment",
@@ -863,7 +868,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "03-vertical-healthcare-professional-scrubs",
@@ -953,7 +959,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "04-chiropractor-neck-range-of-motion-assessment",
@@ -1042,7 +1049,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "04-vertical-dentist-with-patient",
@@ -1131,7 +1139,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "05-chiropractor-posture-assessment-tablet",
@@ -1220,7 +1229,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "05-vertical-doctor-patient-consultation",
@@ -1310,7 +1320,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "06-sports-chiropractor-shoulder-mobility",
@@ -1401,7 +1412,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "06-vertical-business-professionals",
@@ -1494,7 +1506,8 @@
         "vertical-hero",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "07-chiropractor-senior-mobility-care",
@@ -1584,7 +1597,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "07-vertical-person-at-cafe",
@@ -1674,7 +1688,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "08-chiropractor-resistance-band-rehabilitation",
@@ -1765,7 +1780,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "08-vertical-professional-male-headshot",
@@ -1857,7 +1873,8 @@
         "vertical-hero",
         "inset-portrait"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "09-professional-chiropractor-clinic-portrait",
@@ -1948,7 +1965,8 @@
         "inset-portrait",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "09-vertical-happy-family-outdoors",
@@ -2038,7 +2056,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "10-modern-chiropractic-treatment-room",
@@ -2130,7 +2149,8 @@
         "full-bleed-background",
         "cover-crop"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "10-vertical-modern-city-buildings",
@@ -2223,7 +2243,8 @@
         "cover-crop",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "11-vertical-mountain-lake-landscape",
@@ -2317,7 +2338,8 @@
         "cover-crop",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "12-vertical-modern-suburban-house",
@@ -2411,7 +2433,8 @@
         "cover-crop",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "13-vertical-real-estate-home-viewing",
@@ -2501,7 +2524,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "14-vertical-lawyer-office",
@@ -2593,7 +2617,8 @@
         "inset-portrait",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "15-vertical-physiotherapy-session",
@@ -2684,7 +2709,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "16-vertical-construction-professional",
@@ -2776,7 +2802,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "17-vertical-plumber-kitchen-repair",
@@ -2866,7 +2893,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "18-vertical-chef-restaurant-kitchen",
@@ -2956,7 +2984,8 @@
         "vertical-hero",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "19-vertical-artisan-baker",
@@ -3046,7 +3075,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "20-vertical-personal-trainer",
@@ -3136,7 +3166,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "21-vertical-yoga-wellness",
@@ -3227,7 +3258,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "22-vertical-spa-skincare-treatment",
@@ -3318,7 +3350,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "23-vertical-veterinarian-with-dog",
@@ -3408,7 +3441,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "24-vertical-teacher-classroom",
@@ -3498,7 +3532,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "25-vertical-daycare-educator-reading",
@@ -3589,7 +3624,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "26-vertical-happy-senior-couple",
@@ -3679,7 +3715,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "27-vertical-technology-team",
@@ -3769,7 +3806,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "28-vertical-accountant-bookkeeper",
@@ -3860,7 +3898,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "29-vertical-boutique-shop-owner",
@@ -3950,7 +3989,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "30-vertical-auto-mechanic",
@@ -4041,7 +4081,8 @@
         "vertical-hero",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "31-vertical-landscaper-gardener",
@@ -4130,7 +4171,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "32-vertical-interior-designer-consultation",
@@ -4221,7 +4263,8 @@
         "tall-inset",
         "vertical-hero"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": false
     },
     {
       "id": "33-vertical-professional-female-headshot",
@@ -4314,7 +4357,8 @@
         "inset-portrait",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "34-vertical-modern-living-room-interior",
@@ -4407,7 +4451,8 @@
         "full-bleed-background",
         "cover-crop"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     },
     {
       "id": "35-vertical-peaceful-coastal-landscape",
@@ -4502,7 +4547,8 @@
         "cover-crop",
         "background-behind-scrim"
       ],
-      "professional_suitability": "high"
+      "professional_suitability": "high",
+      "general_purpose": true
     }
   ]
 }
