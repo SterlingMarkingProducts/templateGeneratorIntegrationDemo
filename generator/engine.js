@@ -613,6 +613,12 @@ const ASSET_BUDGET = {
  * roughly half the time, not almost never. */
 const ASSET_NONE_OVERRIDE = { 'clean-corporate': 0.60, 'editorial-minimal': 0.50 };
 
+/* When a stock photograph is the hero, decoration steps back. Only these three
+ * families may still appear, and only one of them: a quiet ground or an edge
+ * treatment that a photograph can live inside. Everything loud — blobs,
+ * brushstrokes, tape, doodles, florals, glossy 3D — is suppressed outright. */
+const PHOTO_SAFE_ASSET_FAMILIES = ['texture-neutral', 'gold-frame', 'ring-frame'];
+
 /* Large format is a different problem. A poster, sign or banner is read from
  * across a room and has canvas to spare, so a real piece of visual material is
  * almost always the right answer there — where a business card is often better
@@ -744,7 +750,7 @@ function assetMode() {
 let lastAssetReason = '';
 
 function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType,
-    widthIn, heightIn) {
+    widthIn, heightIn, photoSelected) {
   lastAssetReason = '';
   const mode = assetMode();
   if (mode === 'off') { lastAssetReason = 'asset mode is No Asset'; return []; }
@@ -769,11 +775,22 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
   let want = mode === 'force'
     ? Math.max(1, assetCountFor(density, directionKey, large))
     : assetCountFor(density, directionKey, large);
+  /* A stock photograph is a major visual element. It never stacks with loud
+     decoration: at most ONE quiet texture or frame may join it. This is the
+     ONLY change Phase 2C makes to design-asset selection. */
+  if (photoSelected) want = Math.min(want, 1);
   /* A generation that uses nothing must NOT wipe the memory — otherwise the run
      after it is free to repeat the family used two runs ago. */
   if (!want) { lastAssetReason = 'the density contract drew none this time'; return []; }
 
-  const families = candidateFamilies(directionKey, brief, memoryKey);
+  let families = candidateFamilies(directionKey, brief, memoryKey);
+  if (photoSelected) {
+    families = families.filter((f) => PHOTO_SAFE_ASSET_FAMILIES.indexOf(f) !== -1);
+    if (!families.length) {
+      lastAssetReason = 'a stock photo is the hero and no quiet family suits this direction';
+      return [];
+    }
+  }
   const chosen = [];
   const usedFamilies = [];
   for (const family of families) {
@@ -825,6 +842,399 @@ function renderAssetBlock(assets, density) {
     + `- USING ${assets.length > 1 ? 'THEM IS' : 'IT IS'} OPTIONAL. If the design is genuinely better without, leave ${assets.length > 1 ? 'them' : 'it'} out and build the element${assets.length > 1 ? 's' : ''} yourself. Do not force ${assets.length > 1 ? 'them' : 'it'} in.`;
 }
 
+/* ── STOCK PHOTO LIBRARY (Phase 2C) ────────────────────────────────────────
+ *
+ * A THIRD, independent visual source. 35 audited photographs live in
+ * generator/assets/stock-photo-library/ and are described by
+ * generator/assets/stock-photo-manifest.json.
+ *
+ * It shares no pool, no budget and no selector with the design asset library
+ * above, and nothing here touches the logo library. A photograph is content;
+ * a design asset is decoration. Letting one selector reach both is how a
+ * veterinarian ends up on a stamp.
+ *
+ * Five rules shape everything below:
+ *
+ *   1. THE CUSTOMER'S OWN PHOTOGRAPH ALWAYS WINS. If the brief carries an
+ *      Image URL or an upload, stock selection does not run at all — no
+ *      blending, no "supporting" stock beside it.
+ *   2. INDUSTRY MATCH IS A HARD GATE, not a score. The brief must resolve to
+ *      a slug that the photo itself claims. There is no nearest-neighbour
+ *      fallback: an unmatched industry means NO photo, and the design falls
+ *      back to the approved design-asset path.
+ *   3. ONE photograph per design. Ever.
+ *   4. The photo's measured composition decides the layout. 30 of the 35 have
+ *      no clean horizontal band, so the prompt carries the band grades, the
+ *      scrim requirement and the recommended text colour, and a photo that
+ *      cannot be placed safely on THIS product is skipped instead.
+ *   5. A photo is the hero. When one is placed, decorative design-asset usage
+ *      drops to at most one quiet texture or frame.
+ */
+
+/* Terms that resolve free-typed industry wording onto the manifest's slugs.
+ * The slug's own words are always a term ("real-estate" matches "real estate"),
+ * so this table only carries what the slug does not say for itself. */
+const STOCK_INDUSTRY_SYNONYMS = {
+  'real-estate':        'realtor|realty|estate agent|listing agent|broker',
+  'commercial-property':'commercial real estate|commercial property|leasing|landlord',
+  'mortgage':           'mortgage broker|lending|lender|loan',
+  'home-staging':       'staging|stager',
+  'legal':              'law|law firm|lawyer|attorney|solicitor|litigation|paralegal|barrister',
+  'notary':             'notary public|commissioner of oaths',
+  'accounting':         'accountant|cpa|chartered accountant',
+  'bookkeeping':        'bookkeeper|books',
+  'tax':                'taxation|tax prep|tax preparation',
+  'finance':            'financial|wealth|investment|investing',
+  'financial-planning': 'financial planner|financial advisor|financial adviser|wealth management',
+  'insurance':          'insurance broker|insurer|underwriter',
+  'insurance-health':   'health insurance|group benefits|employee benefits',
+  'consulting':         'consultant|advisory|advisor',
+  'corporate':          'enterprise|head office',
+  'technology':         'tech',
+  'software':           'saas|app development|developer|web development',
+  'it-services':        'it support|managed services|msp|computer repair|network support',
+  'startup':            'start up',
+  'co-working':         'coworking|shared office|office space',
+  'medical-clinic':     'clinic|medical|doctor|physician|walk in|walk in clinic|healthcare|health care',
+  'family-practice':    'family doctor|family physician|general practice',
+  'specialist':         'specialist clinic|referral clinic',
+  'nursing':            'nurse|registered nurse|rn',
+  'pharmacy':           'pharmacist|drugstore|drug store|apothecary',
+  'dental':             'dentist|dentistry|dental office',
+  'orthodontics':       'orthodontist|braces|invisalign',
+  'physiotherapy':      'physio|physiotherapist|physical therapy|physical therapist',
+  'chiropractic':       'chiropractor',
+  'massage':            'massage therapy|massage therapist|rmt',
+  'rehab':              'rehabilitation|recovery clinic',
+  'sports-medicine':    'sports med|athletic therapy',
+  'mental-health':      'counselling|counseling|counsellor|counselor|therapist|psychotherapy|psychology|psychologist',
+  'hearing':            'hearing aid|hearing aids|audiology|audiologist',
+  'home-care':          'homecare|caregiver|personal support|in home care',
+  'retirement-living':  'retirement|senior living|seniors|assisted living|long term care|retirement home',
+  'veterinary':         'vet|veterinarian|animal hospital|animal clinic',
+  'pet-grooming':       'pet groomer|dog grooming|dog groomer',
+  'pet-retail':         'pet store|pet shop|pet supply|pet supplies',
+  'hair-salon':         'hair|hairdresser|hairstylist|hair stylist|salon',
+  'barber':             'barbershop|barber shop',
+  'beauty':             'beautician|nail|nails|makeup|lash|lashes|brow|brows|cosmetology',
+  'spa':                'day spa',
+  'medspa':             'med spa|medical spa',
+  'skincare':           'skin care|esthetics|esthetician|aesthetician|facial|facials',
+  'gym':                'fitness|fitness centre|fitness center|crossfit|weights|health club',
+  'personal-training':  'personal trainer|pt studio|strength coach',
+  'studio-fitness':     'fitness studio|barre|spin studio|bootcamp',
+  'yoga':               'yoga studio',
+  'wellness':           'wellbeing|well being|holistic',
+  'construction':       'builder|building|framing|concrete|excavation|site work',
+  'general-contractor': 'contractor|contracting',
+  'engineering':        'engineer|engineers',
+  'industrial':         'industry|plant|works',
+  'safety':             'workplace safety|occupational|ppe|site safety',
+  'plumbing':           'plumber|drain|drains|pipefitting',
+  'hvac':               'heating|cooling|furnace|air conditioning|ac repair|ductwork',
+  'home-repair':        'handyman|repairs|fix it',
+  'appliance-service':  'appliance repair|appliance service',
+  'roofing':            'roofer|roof|roofs|shingle|shingles|eavestrough',
+  'home-builder':       'custom home|custom homes|homebuilder|new build',
+  'home-renovation':    'renovation|renovations|reno|renos|remodel|remodelling|remodeling',
+  'landscaping':        'landscaper|landscape|hardscape',
+  'lawn-care':          'lawn|lawncare|mowing|turf',
+  'garden-centre':      'garden center|gardening|greenhouse',
+  'property-maintenance':'groundskeeping|snow removal|grounds care',
+  'cleaning':           'cleaner|cleaners|janitorial|maid|housekeeping',
+  'interior-design':    'interior designer|interiors|decorator|decorating|home decor',
+  'architecture':       'architect|architects|architectural',
+  'furniture-retail':   'furniture|furnishings',
+  'auto-repair':        'mechanic|auto shop|automotive|car repair|auto service|garage',
+  'tire-service':       'tire|tires|tyre|tyres|wheel alignment',
+  'auto-detailing':     'detailing|car wash|auto detail',
+  'fleet-service':      'fleet|fleet maintenance',
+  'restaurant':         'bistro|eatery|diner|grill|dining|gastropub',
+  'catering':           'caterer|catered',
+  'food-service':       'food services',
+  'culinary-school':    'culinary',
+  'cafe':               'coffee|coffee shop|espresso|coffeehouse|coffee house',
+  'coffee-roaster':     'roaster|roastery|coffee roasting',
+  'bakery':             'baker|bakeshop|bake shop|patisserie|pastry|bread',
+  'artisan-food':       'artisanal|small batch',
+  'farmers-market':     'farmers market|farmer s market',
+  'florist':            'flower|flowers|floral|bouquet|flower shop',
+  'events-weddings':    'wedding|weddings|bridal|event planning|event planner',
+  'gift-retail':        'gift|gifts',
+  'gift-shop':          'gift store',
+  'boutique-retail':    'boutique',
+  'fashion':            'apparel|clothing|clothier|menswear|womenswear',
+  'small-business':     'shop local|independent shop',
+  'school':             'elementary school|high school|academy|schools',
+  'tutoring':           'tutor|tutors|test prep|test preparation',
+  'education-non-profit':'education charity|literacy program',
+  'daycare':            'day care|childcare centre|childcare center',
+  'preschool':          'pre school|montessori|kindergarten|early learning',
+  'childcare':          'child care|nanny|babysitting',
+  'library':            'libraries',
+  'family-services':    'family support|family centre|family center',
+  'funeral-memorial':   'funeral|funeral home|memorial|cremation|cemetery',
+  'non-profit':         'nonprofit|charity|charitable|foundation|volunteer',
+  'environment':        'environmental|conservation|sustainability',
+  'tourism':            'tourist|visitor centre|visitor center',
+  'travel':             'travel agency|tour|tours|trip planning',
+  'outdoor-recreation': 'outdoors|hiking|camping|adventure|paddling',
+  'sports':             'athletics|sports club|sports team',
+  'photography':        'photographer|photo studio',
+  'urban-services':     'city services|municipal services',
+  'payroll':            'payroll services',
+  'pilates':            'reformer pilates',
+};
+
+let stockLibrary = null;        // { photos, byId, terms } once loaded
+let stockLibraryLoading = null; // in-flight promise, so it loads once
+let stockLibraryError = null;   // why it is not loaded, for the DEV indicator
+
+/* Words a slug is matched on: its own words, plus the synonyms above. Both are
+ * normalised the same way the brief is, so "co-working" and "co working" and
+ * "Co-Working" are one term. */
+function stockTermsFor(slug) {
+  const norm = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const out = [norm(slug)];
+  const extra = STOCK_INDUSTRY_SYNONYMS[slug];
+  if (extra) extra.split('|').forEach((t) => { const n = norm(t); if (n) out.push(n); });
+  return out.filter((t, i, a) => t && a.indexOf(t) === i);
+}
+
+/* ONE small JSON, ONCE — the same contract as the design asset library. No PNG
+ * is opened, listed, hashed, downloaded or base64'd to make a choice; the file
+ * loads only when the generated preview renders it, like any other <img>.
+ * A FAILURE IS NOT CACHED, so one blocked request does not disable the library
+ * for the rest of the session. */
+function loadStockPhotoLibrary() {
+  if (stockLibrary) return Promise.resolve(stockLibrary);
+  if (stockLibraryLoading) return stockLibraryLoading;
+  stockLibraryLoading = fetch('assets/stock-photo-manifest.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+    .then((doc) => {
+      const photos = doc.photos || [];
+      const byId = {};
+      const slugs = Object.keys(doc.industry_index || {});
+      const terms = [];
+      photos.forEach((p) => { byId[p.id] = p; });
+      slugs.forEach((slug) => stockTermsFor(slug).forEach((t) => terms.push([t, slug])));
+      /* Longest term first, so "real estate" is tested before "estate" would be
+         and a two-word trade never loses to a one-word substring of it. */
+      terms.sort((a, b) => b[0].length - a[0].length);
+      stockLibrary = { photos: photos, byId: byId, slugs: slugs, terms: terms };
+      stockLibraryError = null;
+      stockLibraryLoading = null;
+      return stockLibrary;
+    })
+    .catch((e) => {
+      stockLibraryError = (e && e.message) || 'manifest unavailable';
+      stockLibraryLoading = null;
+      console.warn('[generator] stock photo library unavailable: ' + stockLibraryError);
+      return { photos: [], byId: {}, slugs: [], terms: [] };
+    });
+  return stockLibraryLoading;
+}
+
+/* Warm it at page load so Generate never waits on the network for it. */
+if (typeof window !== 'undefined') {
+  try { loadStockPhotoLibrary(); } catch (e) { /* ignore */ }
+}
+
+/* Which library slugs this brief actually names. Whole-word matching on a
+ * normalised string — a slug is either named or it is not, and nothing here
+ * scores, ranks or approximates. */
+function matchStockIndustries(text, lib) {
+  const t = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+  if (t.trim() === '') return [];
+  const hit = [];
+  (lib.terms || []).forEach(function (pair) {
+    if (hit.indexOf(pair[1]) !== -1) return;
+    const term = pair[0];
+    /* Plain plurals and -y/-ies, so "florists" and "bakeries" match too. */
+    const forms = [term, term + 's', term + 'es'];
+    if (/y$/.test(term)) forms.push(term.slice(0, -1) + 'ies');
+    for (let i = 0; i < forms.length; i++) {
+      if (t.indexOf(' ' + forms[i] + ' ') !== -1) { hit.push(pair[1]); return; }
+    }
+  });
+  return hit;
+}
+
+/* A portrait product may use only portrait photos and a landscape product only
+ * landscape ones — a portrait photo dropped into a wide banner is a crop, not a
+ * composition. Near-square products may use either. */
+function stockOrientationFor(widthIn, heightIn) {
+  const w = Number(widthIn) || 0, h = Number(heightIn) || 0;
+  if (!w || !h) return 'any';
+  const a = w / h;
+  if (a < 0.9) return 'portrait';
+  if (a > 1.1) return 'landscape';
+  return 'any';
+}
+
+function stockOrientationOk(photo, want) {
+  return want === 'any' || photo.orientation === want;
+}
+
+/* 30 of the 35 photographs have no clean horizontal band. On a poster or a sign
+ * that is fine: there is room to give the type its own zone, or to lay the
+ * scrim the manifest specifies. On a business card there is no such room, so a
+ * photo whose every band is graded poor is skipped rather than squeezed. */
+function stockCompositionOk(photo, largeFormat) {
+  if (largeFormat) return true;
+  const r = (photo && photo.regions) || {};
+  return ['top', 'middle', 'bottom'].some((b) => r[b] && r[b].text_safety !== 'poor');
+}
+
+/* How often a matched photo is actually taken. Large format — signs, banners,
+ * posters — is where a real photograph earns its place, so a genuine industry
+ * match is usually used. A business card is the opposite case: photography
+ * there is the exception, and most cards are better with type and space. */
+const STOCK_NONE_LARGE_FORMAT = 0.20;
+const STOCK_NONE_SMALL_FORMAT = 0.85;
+
+/* Photos used by the last generations of THIS brief, so a Regenerate does not
+ * come back with the same photograph. An unrelated photo is NEVER substituted
+ * to create variety — if the only valid match is the one just used, it is used
+ * again. */
+const recentStockPhotos = new Map();
+const STOCK_PHOTO_MEMORY = 3;
+
+/* DEV override, read at selection time. 'auto' is the shipped behaviour;
+   'force' skips only the frequency draw — every hard gate still applies, so it
+   can never reach an unrelated photo; 'off' takes none. */
+function stockPhotoMode() {
+  const m = (typeof window !== 'undefined' && window.SMPStockPhotoMode) || 'auto';
+  return (m === 'force' || m === 'off') ? m : 'auto';
+}
+
+/* Why the last selection came back empty, reported in the DEV indicator. */
+let lastStockReason = '';
+
+function pickStockPhoto(opts) {
+  lastStockReason = '';
+  const mode = stockPhotoMode();
+  const templateType = opts.templateType || '';
+
+  /* ── Absolute gates. Force does not lift any of these. ── */
+  if (opts.hasCustomerPhoto) {
+    lastStockReason = 'the customer supplied their own photograph';
+    return null;
+  }
+  if (/stamp/i.test(templateType)) {
+    lastStockReason = 'stamps never use photography';
+    return null;
+  }
+  if (mode === 'off') { lastStockReason = 'stock photo mode is No Photo'; return null; }
+
+  const lib = stockLibrary;
+  if (stockLibraryError && (!lib || !lib.photos.length)) {
+    lastStockReason = 'library did not load (' + stockLibraryError + ')';
+    return null;
+  }
+  if (!lib) { lastStockReason = 'library still loading'; return null; }
+  if (!lib.photos.length) { lastStockReason = 'library is empty'; return null; }
+
+  /* ── The hard industry gate. ── */
+  const slugs = matchStockIndustries(opts.industryText, lib);
+  if (!slugs.length) {
+    lastStockReason = String(opts.industryText || '').trim()
+      ? 'no industry match in the stock library'
+      : 'no industry given';
+    return null;
+  }
+  let pool = lib.photos.filter((p) =>
+    (p.industries || []).some((s) => slugs.indexOf(s) !== -1));
+  if (!pool.length) { lastStockReason = 'no industry match in the stock library'; return null; }
+
+  /* ── Format gates. ── */
+  const largeFormat = isLargeFormatForAssets(templateType, opts.widthIn, opts.heightIn);
+  const wantOrientation = stockOrientationFor(opts.widthIn, opts.heightIn);
+  const oriented = pool.filter((p) => stockOrientationOk(p, wantOrientation));
+  if (!oriented.length) {
+    lastStockReason = 'no ' + wantOrientation + ' photo matches this industry';
+    return null;
+  }
+  const safe = oriented.filter((p) => stockCompositionOk(p, largeFormat));
+  if (!safe.length) {
+    lastStockReason = 'no matching photo composes safely at this size';
+    return null;
+  }
+
+  /* ── Frequency. The only thing Force skips. ── */
+  if (mode !== 'force') {
+    const none = largeFormat ? STOCK_NONE_LARGE_FORMAT : STOCK_NONE_SMALL_FORMAT;
+    if (Math.random() < none) {
+      lastStockReason = largeFormat
+        ? 'a match existed; this generation drew none'
+        : 'small format uses photography sparingly; this generation drew none';
+      return null;
+    }
+  }
+
+  /* ── Variety, never at the cost of relevance. ── */
+  const recent = recentStockPhotos.get(opts.memoryKey) || [];
+  const fresh = safe.filter((p) => recent.indexOf(p.id) === -1);
+  /* Once every valid match has been used, the memory has to relax — but never
+     so far that the immediately previous photo comes back twice in a row while
+     a different valid match exists. An unrelated photo is still never
+     substituted: a one-photo industry legitimately repeats. */
+  const notLast = safe.filter((p) => p.id !== recent[0]);
+  const finalPool = fresh.length ? fresh : (notLast.length ? notLast : safe);
+  const photo = finalPool[Math.floor(Math.random() * finalPool.length)];
+  recentStockPhotos.set(opts.memoryKey,
+    [photo.id].concat(recent.filter((id) => id !== photo.id)).slice(0, STOCK_PHOTO_MEMORY));
+
+  const matched = (photo.industries || []).filter((s) => slugs.indexOf(s) !== -1);
+  return {
+    photo: photo,
+    industry: matched[0] || slugs[0],
+    matchedIndustries: matched,
+    briefIndustries: slugs,
+    largeFormat: largeFormat,
+    orientation: wantOrientation,
+    mode: mode,
+  };
+}
+
+/* Only the chosen photograph reaches the model — a URL and a few measured
+ * numbers. Never the library, never a listing, never base64. */
+function renderStockPhotoBlock(sel) {
+  if (!sel || !sel.photo) return '';
+  const p = sel.photo;
+  const g = p.overlay_guidance || {};
+  const r = p.regions || {};
+  const grade = (b) => (r[b] && r[b].text_safety) || 'unknown';
+  const poor = ['top', 'middle', 'bottom'].filter((b) => grade(b) === 'poor');
+  const best = g.best_horizontal_band || 'bottom';
+  const bestColour = (r[best] && r[best].recommended_text_colour) || 'light';
+  const scrim = g.requires_scrim_for_text
+    ? `REQUIRED. Before any headline, sub-head or contact line crosses the photograph, lay a solid or `
+      + `gradient overlay in a palette colour at about ${Math.round((g.scrim_opacity_if_used || 0.45) * 100)}% `
+      + `over the area the text occupies. Text straight onto this photograph is not legible enough to print.`
+    : 'not required — this photograph has a band quiet enough to carry type directly.';
+  return `SUPPLIED PHOTOGRAPH — one real image file chosen for this brief:\n`
+    + `- ${p.file}\n`
+    + `    src: ${p.url}  (a real file — reference it with <img src="${p.url}"> exactly as written)\n`
+    + `    shows: ${p.subject}\n`
+    + `    ${p.orientation} ${p.width}×${p.height}, reads as ${p.mood}, ${p.brightness} overall\n`
+    + `    band grades — top: ${grade('top')}, middle: ${grade('middle')}, bottom: ${grade('bottom')}\n`
+    + `    quietest band: ${best} (set type there in ${bestColour} type where the layout allows)\n\n`
+    + `HOW TO USE IT:\n`
+    + `- It is this design's hero image, and it is the ONLY photograph in the design. `
+    + `Do not add, invent, reference or link any other image file.\n`
+    + `- Place it with intent: crop with clip-path, mask it into a shape, duotone or tint it into the `
+    + `palette, bleed it off an edge, or give it its own full panel. A plain unstyled rectangle is a failure.\n`
+    + `- SCRIM: ${scrim}\n`
+    + (poor.length
+        ? `- Regions graded poor (${poor.join(', ')}) must not carry important text unless the scrim above covers them.\n`
+        : '')
+    + `- Keep headlines over the image ${g.max_headline_over_image || 'short'} — this photograph is busy enough `
+    + `that a long line breaks up against it.\n`
+    + `- Readability wins over coverage. If the only way to fit the photo is to crush the type, use less of the `
+    + `photo — a band, a panel, a corner crop — not less of the type.`;
+}
+
 /* ── Direction rotation for the DEFAULT path ───────────────────────────────
  *
  * A direction is a complete, internally coherent concept — its typography,
@@ -860,7 +1270,7 @@ function rotateDirection(candidates, memoryKey) {
 }
 
 function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided, widthIn, heightIn) {
+    variationKey, doubleSided, widthIn, heightIn, stockSelection) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -872,6 +1282,7 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
     /* No library asset on a stamp: the stamp rules below forbid colour,
        imagery and overlapping shapes outright. */
     lastAssetReason = 'stamps use no assets';
+    lastStockReason = lastStockReason || 'stamps never use photography';
     return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [], assetReason: lastAssetReason,
       assetSelectMs: 0, largeFormat: false, assetMode: assetMode() };
   }
@@ -887,12 +1298,13 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   const compose = (brief, density, reference, directionKey) => {
     const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
-      templateType, widthIn, heightIn);
+      templateType, widthIn, heightIn, !!(stockSelection && stockSelection.photo));
     const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     return { text: [
       brief,
       reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
       DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
+      renderStockPhotoBlock(stockSelection),
       renderAssetBlock(assets, density),
       `${formatNote} ${creativityDirective}`,
     ].filter(Boolean).join('\n\n'),
@@ -1223,11 +1635,18 @@ TECHNICAL REQUIREMENTS
 - CSS custom properties (--var) for every color, font stack, and key measurement from the spec
 - Google Fonts @import in <head> for all fonts named in TYPOGRAPHY
 - @media print: margin:0; and @page { size: [W]px [H]px; margin: 0; }
-- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL and for any supplied design asset, and for nothing else.
+- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL, for a supplied photograph, and for any supplied design asset, and for nothing else.
 - Implement the techniques listed under CSS TECHNIQUES in the spec
 - Large-scale shapes MUST be built with CSS clip-path, SVG path elements, or pure CSS geometry
 - Typography MUST match the spec font exactly — do not substitute a different font family
 - The layout MUST honor the LAYOUT direction from the spec — do not default to centered-text stacks
+
+SUPPLIED PHOTOGRAPH — when the Style Direction supplies one:
+- Reference it with <img src="[the exact src given]"> — the path is relative to this page and resolves as written. Do not rename it, do not inline it, do not invent a different file
+- It is the hero image and the ONLY photograph in the design — never add, invent or link a second image
+- Integrate it: crop with clip-path, mask into a shape, duotone/tint into the palette, bleed it off an edge, or give it a full panel. Never a plain unstyled rectangle
+- Obey the band grades it carries. Important text must NOT sit on a band graded poor unless you first lay the scrim the Style Direction specifies over that area
+- Where a scrim is marked REQUIRED, no headline, sub-head or contact line may touch the photograph without one
 
 SUPPLIED DESIGN ASSETS — when the Style Direction lists one:
 - Reference it with <img src="[the exact src given]"> — the path is relative to this page and resolves as written. Do not rename it, do not inline it, do not invent a different file
@@ -1392,16 +1811,36 @@ async function handleGenerate(body, send) {
     templateType, industry || '', businessName || '', styleDirection || '',
     specialInstructions || '', colors || null, !!doubleSided, orientation || '',
   ]);
-  /* The library loads once and never blocks a generation: if the manifest
-     cannot be fetched, pickAssets() simply returns nothing. */
-  await loadAssetLibrary();
+  /* Both libraries load once and never block a generation: if a manifest cannot
+     be fetched, the selector simply returns nothing and says why. They are
+     separate files, separate caches and separate selectors — a stock photo is
+     content, a design asset is decoration, and neither can reach the other's
+     pool. The logo library is not touched by any of this. */
+  await Promise.all([loadAssetLibrary(), loadStockPhotoLibrary()]);
   /* Trim size in inches, so a real sign is recognised as large format even when
      the Template Type still says Business Card — which is exactly what happens
      on web03, where the live catalogue supplies no productFamily. */
   const trimWin = trimWpx / 96;
   const trimHin = trimHpx / 96;
+  /* THE CUSTOMER'S OWN PHOTOGRAPH ALWAYS WINS. imageUrl carries both a typed
+     URL and an upload (app.js substitutes a placeholder URL for the uploaded
+     file), so one truthy value means the brief already has its photography and
+     the stock library must stay out of it entirely. */
+  const hasCustomerPhoto = !!((imageUrl || '').trim());
+  const tStock0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+  const stockSelection = pickStockPhoto({
+    industryText: [industry, businessName].filter(Boolean).join(' '),
+    templateType: templateType,
+    widthIn: trimWin,
+    heightIn: trimHin,
+    hasCustomerPhoto: hasCustomerPhoto,
+    memoryKey: variationKey,
+  });
+  const tStock1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+  const stockSelectMs = Math.round((tStock1 - tStock0) * 1000) / 1000;
+
   const creative = chooseCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey, doubleSided, trimWin, trimHin);
+    creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
@@ -1409,6 +1848,10 @@ async function handleGenerate(body, send) {
     + ' | assets: ' + (chosenAssets.map((a) => a.family + '/' + a.filename).join(', ')
         || 'none (' + (creative.assetReason || 'unknown') + ')')
     + ' | selection took ' + creative.assetSelectMs + 'ms');
+  console.info('[generator] stock photo: '
+    + (stockSelection ? stockSelection.photo.file + ' (industry: ' + stockSelection.industry + ')'
+        : 'none (' + (lastStockReason || 'unknown') + ')')
+    + ' | selection took ' + stockSelectMs + 'ms');
 
   /* Published for the DEV asset indicator in app.js. Read-only reporting of a
      decision already made — nothing here influences selection, the prompts, or
@@ -1428,6 +1871,36 @@ async function handleGenerate(body, send) {
   try {
     window.dispatchEvent(new CustomEvent('smp:assets-selected',
       { detail: window.SMPLastAssetSelection }));
+  } catch (e) { /* older browsers — the global is still there */ }
+
+  /* Published for the DEV stock-photo indicator in app.js. Read-only reporting
+     of a decision already made — a separate global and a separate event from
+     the design assets, because they are separate libraries. */
+  window.SMPLastStockPhoto = stockSelection
+    ? {
+        file: stockSelection.photo.file,
+        id: stockSelection.photo.id,
+        url: stockSelection.photo.url,
+        subject: stockSelection.photo.subject,
+        industry: stockSelection.industry,
+        matchedIndustries: stockSelection.matchedIndustries,
+        orientation: stockSelection.photo.orientation,
+        requiresScrim: !!(stockSelection.photo.overlay_guidance || {}).requires_scrim_for_text,
+        reason: '',
+        selectMs: stockSelectMs,
+        format: stockSelection.largeFormat ? 'large-format' : 'small-format',
+        mode: stockSelection.mode,
+      }
+    : {
+        file: null,
+        reason: lastStockReason || 'unknown',
+        selectMs: stockSelectMs,
+        format: isLargeFormatForAssets(templateType, trimWin, trimHin) ? 'large-format' : 'small-format',
+        mode: stockPhotoMode(),
+      };
+  try {
+    window.dispatchEvent(new CustomEvent('smp:stock-photo-selected',
+      { detail: window.SMPLastStockPhoto }));
   } catch (e) { /* older browsers — the global is still there */ }
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;

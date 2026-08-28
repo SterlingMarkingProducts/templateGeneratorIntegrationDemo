@@ -22,7 +22,8 @@ const IS_LOCALHOST = /^(localhost|127\.|\[::1\])/.test(location.hostname);
 /* Both dev clone folders: the approved integration clone and the experimental
    design-quality clone beside it. Longest first, and each carries its trailing
    slash, so the plain folder cannot match the '-phase1' one by accident. */
-const WEB03_DEV_CLONES = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+const WEB03_DEV_CLONES = ['/generator-web03-dev-e2e-phase2c/', '/generator-web03-dev-e2e-phase1/',
+    '/generator-web03-dev-e2e/'];
 const WEB03_PROXY_ENDPOINT = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
 /* The dev endpoints' published test token — the same one the import transport
    sends. Not a secret; it exists so the proxy's own check is exercised. */

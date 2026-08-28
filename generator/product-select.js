@@ -91,7 +91,8 @@
    * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
    * These are CONSTANTS: nothing is read from the URL or the query string, so
    * no crafted link can turn dev behaviour on anywhere else. */
-  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase2c/', '/generator-web03-dev-e2e-phase1/',
+    '/generator-web03-dev-e2e/'];
   var IMPORTABLE_ONLY = (function () {
     var here = (window.location && window.location.pathname) || '';
     return DEV_CLONE_FOLDERS.some(function (f) { return here.indexOf(f) !== -1; });

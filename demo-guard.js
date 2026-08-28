@@ -41,7 +41,8 @@
    * '/generator-web03-dev-e2e/' cannot match the '-phase1' folder by accident.
    * These are CONSTANTS: nothing is read from the URL or the query string, so
    * no crafted link can turn dev behaviour on anywhere else. */
-  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase1/', '/generator-web03-dev-e2e/'];
+  var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase2c/', '/generator-web03-dev-e2e-phase1/',
+    '/generator-web03-dev-e2e/'];
   var DEV_IMPORT_PATH  = '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm';
   /* The same-origin AI proxy. It adds the Anthropic key server-side, so the
    * request that reaches it carries no credentials — exactly like the import. */
@@ -124,7 +125,12 @@
     var rest = u.pathname.indexOf(root) === 0 ? u.pathname.slice(root.length) : null;
     if (rest === null) return false;
     return rest === 'generator/assets/design-asset-manifest.json'
-      || /^generator\/assets\/design-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
+      || /^generator\/assets\/design-library\/[A-Za-z0-9._-]+\.png$/.test(rest)
+      /* The stock photo library, shipped in this same clone. Separate manifest,
+         separate directory — but the same reasoning: blocking it would silently
+         turn every generation into "Photo: None". */
+      || rest === 'generator/assets/stock-photo-manifest.json'
+      || /^generator\/assets\/stock-photo-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
   }
 
   function isDevAllowed(u, allowDevImport) {

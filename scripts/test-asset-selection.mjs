@@ -244,7 +244,7 @@ console.log('\n11  stamps and missing libraries');
   is(/monochromatic black ink on white ONLY/.test(st.text), 'stamp rules intact');
   is(/SUPPLIED DESIGN ASSETS — when the Style Direction lists one/.test(P.HTML_PROMPT),
      'the HTML prompt explains how to use a supplied asset');
-  is(/<img> is allowed for a user-provided Image URL and for any supplied design asset/.test(P.HTML_PROMPT),
+  is(/<img> is allowed for a user-provided Image URL, for a supplied photograph, and for any supplied design asset, and for nothing else\./.test(P.HTML_PROMPT),
      'and permits <img> for it without opening up external images generally');
 }
 

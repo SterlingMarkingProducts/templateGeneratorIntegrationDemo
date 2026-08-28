@@ -1,0 +1,3645 @@
+{
+  "library": "stock-photo-library",
+  "version": "2026-08-28",
+  "file_count": 35,
+  "base_path": "assets/stock-photo-library/",
+  "source_audit": "35 photographs, visually inspected and measured; see the Phase 2C audit.",
+  "selection_contract": {
+    "independent_of": [
+      "design-asset-library",
+      "logo-library"
+    ],
+    "customer_photo_wins": "A customer-supplied Image URL or upload disables stock selection entirely.",
+    "industry_match": "HARD GATE. A photo is eligible only when the brief resolves to one of the slugs in its industries[]. No nearest-neighbour fallback.",
+    "never_on": [
+      "stamps"
+    ],
+    "max_per_design": 1,
+    "orientation_rule": "A portrait product may use only portrait photos; a landscape product only landscape photos; a near-square product may use either.",
+    "text_safety": "Important text must not sit on a region graded poor unless overlay_guidance.scrim_opacity_if_used is applied.",
+    "suppresses": "When a photo is placed, design-asset usage drops to at most one quiet texture or frame."
+  },
+  "industry_index": {
+    "accounting": [
+      "14-lawyer-professional-office",
+      "28-accountant-bookkeeper-office"
+    ],
+    "animal-services": [
+      "23-veterinarian-with-dog"
+    ],
+    "appliance-service": [
+      "17-plumber-kitchen-sink-repair"
+    ],
+    "architecture": [
+      "32-interior-designer-consultation"
+    ],
+    "artisan-food": [
+      "19-artisan-baker-making-bread"
+    ],
+    "auto-detailing": [
+      "30-auto-mechanic"
+    ],
+    "auto-repair": [
+      "30-auto-mechanic"
+    ],
+    "bakery": [
+      "07-person-enjoying-coffee-at-cafe",
+      "19-artisan-baker-making-bread"
+    ],
+    "barber": [
+      "02-hair-salon-portrait"
+    ],
+    "beauty": [
+      "02-hair-salon-portrait",
+      "22-spa-skincare-facial-treatment"
+    ],
+    "bookkeeping": [
+      "28-accountant-bookkeeper-office"
+    ],
+    "boutique-retail": [
+      "29-boutique-shop-owner"
+    ],
+    "cafe": [
+      "07-person-enjoying-coffee-at-cafe",
+      "19-artisan-baker-making-bread"
+    ],
+    "catering": [
+      "18-chef-restaurant-kitchen"
+    ],
+    "childcare": [
+      "24-teacher-with-students-classroom",
+      "25-daycare-educator-reading"
+    ],
+    "chiropractic": [
+      "15-physiotherapy-session"
+    ],
+    "cleaning": [
+      "34-modern-living-room-interior"
+    ],
+    "co-working": [
+      "27-technology-team-collaboration"
+    ],
+    "coffee-roaster": [
+      "07-person-enjoying-coffee-at-cafe"
+    ],
+    "commercial-property": [
+      "10-modern-cityscape"
+    ],
+    "construction": [
+      "10-modern-cityscape",
+      "16-construction-professional"
+    ],
+    "consulting": [
+      "06-business-team-in-suits",
+      "08-professional-male-headshot",
+      "33-professional-female-headshot"
+    ],
+    "corporate": [
+      "06-business-team-in-suits"
+    ],
+    "culinary-school": [
+      "18-chef-restaurant-kitchen"
+    ],
+    "daycare": [
+      "25-daycare-educator-reading"
+    ],
+    "dental": [
+      "04-dentist-with-patient",
+      "09-happy-family-outdoors",
+      "26-happy-senior-couple"
+    ],
+    "education-non-profit": [
+      "24-teacher-with-students-classroom"
+    ],
+    "engineering": [
+      "16-construction-professional"
+    ],
+    "environment": [
+      "11-mountain-lake-landscape"
+    ],
+    "events-weddings": [
+      "01-florist-bouquet"
+    ],
+    "family-practice": [
+      "05-doctor-patient-consultation"
+    ],
+    "family-services": [
+      "09-happy-family-outdoors",
+      "25-daycare-educator-reading"
+    ],
+    "farmers-market": [
+      "19-artisan-baker-making-bread"
+    ],
+    "fashion": [
+      "29-boutique-shop-owner"
+    ],
+    "finance": [
+      "06-business-team-in-suits",
+      "08-professional-male-headshot",
+      "10-modern-cityscape",
+      "14-lawyer-professional-office",
+      "28-accountant-bookkeeper-office",
+      "33-professional-female-headshot"
+    ],
+    "financial-planning": [
+      "26-happy-senior-couple"
+    ],
+    "fleet-service": [
+      "30-auto-mechanic"
+    ],
+    "florist": [
+      "01-florist-bouquet"
+    ],
+    "food-service": [
+      "18-chef-restaurant-kitchen"
+    ],
+    "funeral-memorial": [
+      "35-peaceful-coastal-landscape"
+    ],
+    "furniture-retail": [
+      "32-interior-designer-consultation",
+      "34-modern-living-room-interior"
+    ],
+    "garden-centre": [
+      "01-florist-bouquet",
+      "31-landscaper-gardener"
+    ],
+    "general-contractor": [
+      "16-construction-professional"
+    ],
+    "gift-retail": [
+      "01-florist-bouquet"
+    ],
+    "gift-shop": [
+      "29-boutique-shop-owner"
+    ],
+    "gym": [
+      "20-personal-trainer-with-client"
+    ],
+    "hair-salon": [
+      "02-hair-salon-portrait"
+    ],
+    "hearing": [
+      "26-happy-senior-couple"
+    ],
+    "home-builder": [
+      "12-modern-suburban-house"
+    ],
+    "home-care": [
+      "03-healthcare-professional-scrubs",
+      "26-happy-senior-couple"
+    ],
+    "home-renovation": [
+      "32-interior-designer-consultation"
+    ],
+    "home-repair": [
+      "17-plumber-kitchen-sink-repair"
+    ],
+    "home-staging": [
+      "13-real-estate-home-viewing",
+      "34-modern-living-room-interior"
+    ],
+    "hvac": [
+      "17-plumber-kitchen-sink-repair"
+    ],
+    "industrial": [
+      "16-construction-professional"
+    ],
+    "insurance": [
+      "08-professional-male-headshot",
+      "09-happy-family-outdoors",
+      "26-happy-senior-couple",
+      "33-professional-female-headshot"
+    ],
+    "insurance-health": [
+      "05-doctor-patient-consultation"
+    ],
+    "interior-design": [
+      "13-real-estate-home-viewing",
+      "32-interior-designer-consultation",
+      "34-modern-living-room-interior"
+    ],
+    "it-services": [
+      "27-technology-team-collaboration"
+    ],
+    "landscaping": [
+      "12-modern-suburban-house",
+      "31-landscaper-gardener"
+    ],
+    "lawn-care": [
+      "31-landscaper-gardener"
+    ],
+    "legal": [
+      "06-business-team-in-suits",
+      "08-professional-male-headshot",
+      "14-lawyer-professional-office",
+      "33-professional-female-headshot"
+    ],
+    "library": [
+      "25-daycare-educator-reading"
+    ],
+    "massage": [
+      "15-physiotherapy-session",
+      "22-spa-skincare-facial-treatment"
+    ],
+    "medical-clinic": [
+      "03-healthcare-professional-scrubs",
+      "04-dentist-with-patient",
+      "05-doctor-patient-consultation"
+    ],
+    "medspa": [
+      "22-spa-skincare-facial-treatment"
+    ],
+    "mental-health": [
+      "21-yoga-wellness-studio"
+    ],
+    "mortgage": [
+      "12-modern-suburban-house",
+      "13-real-estate-home-viewing"
+    ],
+    "non-profit": [
+      "11-mountain-lake-landscape",
+      "35-peaceful-coastal-landscape"
+    ],
+    "notary": [
+      "14-lawyer-professional-office"
+    ],
+    "nursing": [
+      "03-healthcare-professional-scrubs"
+    ],
+    "orthodontics": [
+      "04-dentist-with-patient"
+    ],
+    "outdoor-recreation": [
+      "11-mountain-lake-landscape"
+    ],
+    "payroll": [
+      "28-accountant-bookkeeper-office"
+    ],
+    "personal-training": [
+      "20-personal-trainer-with-client"
+    ],
+    "pet-grooming": [
+      "23-veterinarian-with-dog"
+    ],
+    "pet-retail": [
+      "23-veterinarian-with-dog"
+    ],
+    "pharmacy": [
+      "03-healthcare-professional-scrubs"
+    ],
+    "photography": [
+      "09-happy-family-outdoors"
+    ],
+    "physiotherapy": [
+      "15-physiotherapy-session",
+      "20-personal-trainer-with-client"
+    ],
+    "pilates": [
+      "21-yoga-wellness-studio"
+    ],
+    "plumbing": [
+      "17-plumber-kitchen-sink-repair"
+    ],
+    "preschool": [
+      "25-daycare-educator-reading"
+    ],
+    "property-maintenance": [
+      "31-landscaper-gardener"
+    ],
+    "real-estate": [
+      "06-business-team-in-suits",
+      "08-professional-male-headshot",
+      "09-happy-family-outdoors",
+      "10-modern-cityscape",
+      "12-modern-suburban-house",
+      "13-real-estate-home-viewing",
+      "33-professional-female-headshot",
+      "34-modern-living-room-interior"
+    ],
+    "rehab": [
+      "15-physiotherapy-session"
+    ],
+    "restaurant": [
+      "07-person-enjoying-coffee-at-cafe",
+      "18-chef-restaurant-kitchen"
+    ],
+    "retirement-living": [
+      "26-happy-senior-couple"
+    ],
+    "roofing": [
+      "12-modern-suburban-house"
+    ],
+    "safety": [
+      "16-construction-professional"
+    ],
+    "school": [
+      "24-teacher-with-students-classroom"
+    ],
+    "skincare": [
+      "22-spa-skincare-facial-treatment"
+    ],
+    "small-business": [
+      "29-boutique-shop-owner"
+    ],
+    "software": [
+      "27-technology-team-collaboration"
+    ],
+    "spa": [
+      "02-hair-salon-portrait",
+      "22-spa-skincare-facial-treatment"
+    ],
+    "specialist": [
+      "05-doctor-patient-consultation"
+    ],
+    "sports": [
+      "20-personal-trainer-with-client"
+    ],
+    "sports-medicine": [
+      "15-physiotherapy-session"
+    ],
+    "startup": [
+      "27-technology-team-collaboration"
+    ],
+    "studio-fitness": [
+      "21-yoga-wellness-studio"
+    ],
+    "tax": [
+      "28-accountant-bookkeeper-office"
+    ],
+    "technology": [
+      "27-technology-team-collaboration"
+    ],
+    "tire-service": [
+      "30-auto-mechanic"
+    ],
+    "tourism": [
+      "11-mountain-lake-landscape",
+      "35-peaceful-coastal-landscape"
+    ],
+    "travel": [
+      "35-peaceful-coastal-landscape"
+    ],
+    "tutoring": [
+      "24-teacher-with-students-classroom"
+    ],
+    "urban-services": [
+      "10-modern-cityscape"
+    ],
+    "veterinary": [
+      "23-veterinarian-with-dog"
+    ],
+    "wellness": [
+      "11-mountain-lake-landscape",
+      "21-yoga-wellness-studio",
+      "35-peaceful-coastal-landscape"
+    ],
+    "yoga": [
+      "21-yoga-wellness-studio"
+    ]
+  },
+  "photos": [
+    {
+      "id": "01-florist-bouquet",
+      "file": "01-florist-bouquet.png",
+      "url": "assets/stock-photo-library/01-florist-bouquet.png",
+      "sha1": "47ba2260a6758e0ffb22bc6d757bd86253bb2478",
+      "bytes": 2319107,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Hands arranging a fresh mixed bouquet on a florist's worktop",
+      "category": "trade-craft",
+      "industries": [
+        "florist",
+        "gift-retail",
+        "events-weddings",
+        "garden-centre"
+      ],
+      "people": "hands-only",
+      "has_people": true,
+      "setting": "indoor-workshop",
+      "mood": "warm-artisan",
+      "seasonal": "spring-summer",
+      "brightness": "medium",
+      "mean_luminance": 0.603,
+      "contrast_sd": 0.202,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.311
+        },
+        {
+          "name": "light-grey",
+          "share": 0.149
+        },
+        {
+          "name": "green",
+          "share": 0.131
+        },
+        {
+          "name": "white",
+          "share": 0.11
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.671,
+          "busyness": 0.196,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.571,
+          "busyness": 0.213,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.566,
+          "busyness": 0.176,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.536,
+          "busyness": 0.165,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.729,
+          "busyness": 0.166,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "02-hair-salon-portrait",
+      "file": "02-hair-salon-portrait.png",
+      "url": "assets/stock-photo-library/02-hair-salon-portrait.png",
+      "sha1": "044ffbcec7a40c9243d312b75f0250db511c0797",
+      "bytes": 2168170,
+      "width": 1024,
+      "height": 1536,
+      "aspect_ratio": 0.667,
+      "orientation": "portrait",
+      "subject": "Stylist finishing a client's hair in a salon chair",
+      "category": "personal-service",
+      "industries": [
+        "hair-salon",
+        "barber",
+        "beauty",
+        "spa"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-salon",
+      "mood": "bright-friendly",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.408,
+      "contrast_sd": 0.305,
+      "dominant_hues": [
+        {
+          "name": "black",
+          "share": 0.311
+        },
+        {
+          "name": "orange",
+          "share": 0.285
+        },
+        {
+          "name": "light-grey",
+          "share": 0.127
+        },
+        {
+          "name": "red",
+          "share": 0.071
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.588,
+          "busyness": 0.272,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.472,
+          "busyness": 0.272,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.164,
+          "busyness": 0.186,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.486,
+          "busyness": 0.358,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.398,
+          "busyness": 0.282,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "door-sign",
+        "half-panel",
+        "inset-photo",
+        "poster-hero",
+        "roll-up",
+        "vertical-banner"
+      ]
+    },
+    {
+      "id": "03-healthcare-professional-scrubs",
+      "file": "03-healthcare-professional-scrubs.png",
+      "url": "assets/stock-photo-library/03-healthcare-professional-scrubs.png",
+      "sha1": "77514a097fb56f6b218f5049845748a0b15702fd",
+      "bytes": 1905128,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Smiling healthcare worker in scrubs, clinic corridor",
+      "category": "healthcare",
+      "industries": [
+        "medical-clinic",
+        "nursing",
+        "home-care",
+        "pharmacy"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-clinic",
+      "mood": "clean-reassuring",
+      "seasonal": "any",
+      "brightness": "light",
+      "mean_luminance": 0.682,
+      "contrast_sd": 0.196,
+      "dominant_hues": [
+        {
+          "name": "light-grey",
+          "share": 0.396
+        },
+        {
+          "name": "white",
+          "share": 0.231
+        },
+        {
+          "name": "teal",
+          "share": 0.153
+        },
+        {
+          "name": "orange",
+          "share": 0.142
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.761,
+          "busyness": 0.181,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.664,
+          "busyness": 0.2,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.623,
+          "busyness": 0.18,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.644,
+          "busyness": 0.191,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.734,
+          "busyness": 0.213,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "medium"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "04-dentist-with-patient",
+      "file": "04-dentist-with-patient.png",
+      "url": "assets/stock-photo-library/04-dentist-with-patient.png",
+      "sha1": "013571a32a25ce7371cb069de94b8cda43f61c21",
+      "bytes": 2043550,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Dentist and assistant treating a seated patient",
+      "category": "healthcare",
+      "industries": [
+        "dental",
+        "orthodontics",
+        "medical-clinic"
+      ],
+      "people": "three",
+      "has_people": true,
+      "setting": "indoor-clinic",
+      "mood": "clinical-bright",
+      "seasonal": "any",
+      "brightness": "light",
+      "mean_luminance": 0.671,
+      "contrast_sd": 0.244,
+      "dominant_hues": [
+        {
+          "name": "light-grey",
+          "share": 0.374
+        },
+        {
+          "name": "white",
+          "share": 0.272
+        },
+        {
+          "name": "orange",
+          "share": 0.138
+        },
+        {
+          "name": "blue",
+          "share": 0.074
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.774,
+          "busyness": 0.215,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.659,
+          "busyness": 0.261,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.581,
+          "busyness": 0.212,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.578,
+          "busyness": 0.261,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.693,
+          "busyness": 0.259,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "05-doctor-patient-consultation",
+      "file": "05-doctor-patient-consultation.png",
+      "url": "assets/stock-photo-library/05-doctor-patient-consultation.png",
+      "sha1": "f95d62e60b9dd7dc760e952091068ccced1c0c99",
+      "bytes": 2049331,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Doctor in white coat consulting with a patient across a desk",
+      "category": "healthcare",
+      "industries": [
+        "medical-clinic",
+        "family-practice",
+        "specialist",
+        "insurance-health"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-office",
+      "mood": "calm-professional",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.517,
+      "contrast_sd": 0.198,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.426
+        },
+        {
+          "name": "light-grey",
+          "share": 0.296
+        },
+        {
+          "name": "grey",
+          "share": 0.101
+        },
+        {
+          "name": "white",
+          "share": 0.064
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.56,
+          "busyness": 0.201,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.556,
+          "busyness": 0.187,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.435,
+          "busyness": 0.179,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.526,
+          "busyness": 0.23,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.549,
+          "busyness": 0.169,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "medium"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "06-business-team-in-suits",
+      "file": "06-business-team-in-suits.png",
+      "url": "assets/stock-photo-library/06-business-team-in-suits.png",
+      "sha1": "ffa18e9273e5d886add41076e4e4aed1ad59ec2a",
+      "bytes": 1805857,
+      "width": 1693,
+      "height": 929,
+      "aspect_ratio": 1.822,
+      "orientation": "landscape",
+      "subject": "Small team in business attire around a meeting table",
+      "category": "professional-services",
+      "industries": [
+        "consulting",
+        "finance",
+        "legal",
+        "corporate",
+        "real-estate"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "indoor-office",
+      "mood": "formal-corporate",
+      "seasonal": "any",
+      "brightness": "dark",
+      "mean_luminance": 0.377,
+      "contrast_sd": 0.295,
+      "dominant_hues": [
+        {
+          "name": "blue",
+          "share": 0.223
+        },
+        {
+          "name": "black",
+          "share": 0.222
+        },
+        {
+          "name": "white",
+          "share": 0.117
+        },
+        {
+          "name": "teal",
+          "share": 0.115
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.484,
+          "busyness": 0.293,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.403,
+          "busyness": 0.319,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.248,
+          "busyness": 0.214,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.385,
+          "busyness": 0.336,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.378,
+          "busyness": 0.306,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "07-person-enjoying-coffee-at-cafe",
+      "file": "07-person-enjoying-coffee-at-cafe.png",
+      "url": "assets/stock-photo-library/07-person-enjoying-coffee-at-cafe.png",
+      "sha1": "2ae1bff1c169b7f863945d7f7f2e71919f5754ef",
+      "bytes": 2040718,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Person with a coffee cup at a cafe table",
+      "category": "hospitality",
+      "industries": [
+        "cafe",
+        "coffee-roaster",
+        "bakery",
+        "restaurant"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-cafe",
+      "mood": "relaxed-lifestyle",
+      "seasonal": "autumn-winter",
+      "brightness": "medium",
+      "mean_luminance": 0.462,
+      "contrast_sd": 0.31,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.416
+        },
+        {
+          "name": "white",
+          "share": 0.206
+        },
+        {
+          "name": "black",
+          "share": 0.142
+        },
+        {
+          "name": "light-grey",
+          "share": 0.087
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.498,
+          "busyness": 0.333,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.468,
+          "busyness": 0.305,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.419,
+          "busyness": 0.284,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.229,
+          "busyness": 0.143,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.793,
+          "busyness": 0.214,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "08-professional-male-headshot",
+      "file": "08-professional-male-headshot.png",
+      "url": "assets/stock-photo-library/08-professional-male-headshot.png",
+      "sha1": "8cfc9f523dc87a2cec4f66c0f9ff0953cf0fd0a2",
+      "bytes": 2122468,
+      "width": 1024,
+      "height": 1536,
+      "aspect_ratio": 0.667,
+      "orientation": "portrait",
+      "subject": "Studio-style headshot of a man in a jacket",
+      "category": "portrait",
+      "industries": [
+        "real-estate",
+        "legal",
+        "finance",
+        "consulting",
+        "insurance"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "studio",
+      "mood": "confident-neutral",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.481,
+      "contrast_sd": 0.301,
+      "dominant_hues": [
+        {
+          "name": "light-grey",
+          "share": 0.219
+        },
+        {
+          "name": "orange",
+          "share": 0.175
+        },
+        {
+          "name": "black",
+          "share": 0.165
+        },
+        {
+          "name": "white",
+          "share": 0.147
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.53,
+          "busyness": 0.218,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.575,
+          "busyness": 0.262,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.338,
+          "busyness": 0.351,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.51,
+          "busyness": 0.322,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.302,
+          "busyness": 0.258,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "top",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "door-sign",
+        "half-panel",
+        "inset-photo",
+        "poster-hero",
+        "roll-up",
+        "vertical-banner"
+      ]
+    },
+    {
+      "id": "09-happy-family-outdoors",
+      "file": "09-happy-family-outdoors.png",
+      "url": "assets/stock-photo-library/09-happy-family-outdoors.png",
+      "sha1": "9db817b29a69cc4b6603a5642ce2ac2907fd440f",
+      "bytes": 2883170,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Family of four outdoors in open parkland",
+      "category": "lifestyle",
+      "industries": [
+        "insurance",
+        "real-estate",
+        "dental",
+        "family-services",
+        "photography"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "outdoor-park",
+      "mood": "warm-optimistic",
+      "seasonal": "summer",
+      "brightness": "medium",
+      "mean_luminance": 0.595,
+      "contrast_sd": 0.223,
+      "dominant_hues": [
+        {
+          "name": "yellow",
+          "share": 0.33
+        },
+        {
+          "name": "gold",
+          "share": 0.284
+        },
+        {
+          "name": "orange",
+          "share": 0.112
+        },
+        {
+          "name": "blue",
+          "share": 0.111
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.541,
+          "busyness": 0.258,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.629,
+          "busyness": 0.225,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.614,
+          "busyness": 0.168,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.514,
+          "busyness": 0.244,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.662,
+          "busyness": 0.208,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "10-modern-cityscape",
+      "file": "10-modern-cityscape.png",
+      "url": "assets/stock-photo-library/10-modern-cityscape.png",
+      "sha1": "727a07e4643e1b6ef31460cfe348d581d73ab4c0",
+      "bytes": 2886061,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Downtown skyline of glass towers, no people",
+      "category": "place",
+      "industries": [
+        "real-estate",
+        "commercial-property",
+        "finance",
+        "construction",
+        "urban-services"
+      ],
+      "people": "none",
+      "has_people": false,
+      "setting": "outdoor-urban",
+      "mood": "crisp-corporate",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.539,
+      "contrast_sd": 0.209,
+      "dominant_hues": [
+        {
+          "name": "blue",
+          "share": 0.297
+        },
+        {
+          "name": "green",
+          "share": 0.157
+        },
+        {
+          "name": "light-grey",
+          "share": 0.142
+        },
+        {
+          "name": "orange",
+          "share": 0.1
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.633,
+          "busyness": 0.177,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.518,
+          "busyness": 0.23,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.466,
+          "busyness": 0.179,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.386,
+          "busyness": 0.188,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.576,
+          "busyness": 0.161,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "full-bleed-background",
+        "horizontal-sign",
+        "poster-hero",
+        "sign-panel",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "11-mountain-lake-landscape",
+      "file": "11-mountain-lake-landscape.png",
+      "url": "assets/stock-photo-library/11-mountain-lake-landscape.png",
+      "sha1": "a87e56cc061533111d78cbec2e93bb8f2cc6ff3b",
+      "bytes": 2932631,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Mountain range reflected in a still alpine lake",
+      "category": "nature",
+      "industries": [
+        "tourism",
+        "outdoor-recreation",
+        "wellness",
+        "non-profit",
+        "environment"
+      ],
+      "people": "none",
+      "has_people": false,
+      "setting": "outdoor-nature",
+      "mood": "serene-expansive",
+      "seasonal": "summer",
+      "brightness": "medium",
+      "mean_luminance": 0.452,
+      "contrast_sd": 0.204,
+      "dominant_hues": [
+        {
+          "name": "blue",
+          "share": 0.303
+        },
+        {
+          "name": "teal",
+          "share": 0.249
+        },
+        {
+          "name": "green",
+          "share": 0.091
+        },
+        {
+          "name": "gold",
+          "share": 0.087
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.625,
+          "busyness": 0.164,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.39,
+          "busyness": 0.178,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.343,
+          "busyness": 0.145,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.476,
+          "busyness": 0.226,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.453,
+          "busyness": 0.207,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "full-bleed-background",
+        "horizontal-sign",
+        "poster-hero",
+        "sign-panel",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "12-modern-suburban-house",
+      "file": "12-modern-suburban-house.png",
+      "url": "assets/stock-photo-library/12-modern-suburban-house.png",
+      "sha1": "10b49d89e1555caa6a44cff8639ce907a4fe6a06",
+      "bytes": 2910702,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Contemporary two-storey house with landscaped front yard",
+      "category": "place",
+      "industries": [
+        "real-estate",
+        "home-builder",
+        "landscaping",
+        "roofing",
+        "mortgage"
+      ],
+      "people": "none",
+      "has_people": false,
+      "setting": "outdoor-residential",
+      "mood": "aspirational-clean",
+      "seasonal": "summer",
+      "brightness": "medium",
+      "mean_luminance": 0.521,
+      "contrast_sd": 0.21,
+      "dominant_hues": [
+        {
+          "name": "yellow",
+          "share": 0.334
+        },
+        {
+          "name": "orange",
+          "share": 0.271
+        },
+        {
+          "name": "blue",
+          "share": 0.129
+        },
+        {
+          "name": "white",
+          "share": 0.112
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.691,
+          "busyness": 0.194,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.409,
+          "busyness": 0.189,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.462,
+          "busyness": 0.12,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.43,
+          "busyness": 0.165,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.618,
+          "busyness": 0.232,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": false,
+        "scrim_opacity_if_used": 0.0,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "full-bleed-background",
+        "horizontal-sign",
+        "poster-hero",
+        "sign-panel",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "13-real-estate-home-viewing",
+      "file": "13-real-estate-home-viewing.png",
+      "url": "assets/stock-photo-library/13-real-estate-home-viewing.png",
+      "sha1": "ead2a42fdaf157e168290a7d07b8beaf86237f71",
+      "bytes": 2130786,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Agent showing a bright interior to a couple",
+      "category": "professional-services",
+      "industries": [
+        "real-estate",
+        "mortgage",
+        "interior-design",
+        "home-staging"
+      ],
+      "people": "three",
+      "has_people": true,
+      "setting": "indoor-home",
+      "mood": "bright-welcoming",
+      "seasonal": "any",
+      "brightness": "light",
+      "mean_luminance": 0.691,
+      "contrast_sd": 0.261,
+      "dominant_hues": [
+        {
+          "name": "white",
+          "share": 0.373
+        },
+        {
+          "name": "orange",
+          "share": 0.271
+        },
+        {
+          "name": "light-grey",
+          "share": 0.156
+        },
+        {
+          "name": "black",
+          "share": 0.059
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.78,
+          "busyness": 0.224,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.553,
+          "busyness": 0.289,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.741,
+          "busyness": 0.201,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.705,
+          "busyness": 0.313,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.71,
+          "busyness": 0.204,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "14-lawyer-professional-office",
+      "file": "14-lawyer-professional-office.png",
+      "url": "assets/stock-photo-library/14-lawyer-professional-office.png",
+      "sha1": "aa260e10efeb54fb4d1c3205dc8fb714518d911c",
+      "bytes": 2248122,
+      "width": 1024,
+      "height": 1536,
+      "aspect_ratio": 0.667,
+      "orientation": "portrait",
+      "subject": "Lawyer at a desk with law books and dark panelling",
+      "category": "professional-services",
+      "industries": [
+        "legal",
+        "notary",
+        "accounting",
+        "finance"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-office",
+      "mood": "authoritative-traditional",
+      "seasonal": "any",
+      "brightness": "dark",
+      "mean_luminance": 0.34,
+      "contrast_sd": 0.311,
+      "dominant_hues": [
+        {
+          "name": "black",
+          "share": 0.406
+        },
+        {
+          "name": "orange",
+          "share": 0.246
+        },
+        {
+          "name": "white",
+          "share": 0.123
+        },
+        {
+          "name": "light-grey",
+          "share": 0.117
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.486,
+          "busyness": 0.314,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.411,
+          "busyness": 0.312,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.124,
+          "busyness": 0.143,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.529,
+          "busyness": 0.343,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.153,
+          "busyness": 0.134,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "door-sign",
+        "half-panel",
+        "inset-photo",
+        "poster-hero",
+        "roll-up",
+        "vertical-banner"
+      ]
+    },
+    {
+      "id": "15-physiotherapy-session",
+      "file": "15-physiotherapy-session.png",
+      "url": "assets/stock-photo-library/15-physiotherapy-session.png",
+      "sha1": "55dca71e75f6fccbe98cb37369edf5abc67e048a",
+      "bytes": 2069052,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Therapist working on a client's shoulder in a treatment room",
+      "category": "healthcare",
+      "industries": [
+        "physiotherapy",
+        "chiropractic",
+        "massage",
+        "sports-medicine",
+        "rehab"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-clinic",
+      "mood": "attentive-clinical",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.585,
+      "contrast_sd": 0.289,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.3
+        },
+        {
+          "name": "white",
+          "share": 0.255
+        },
+        {
+          "name": "blue",
+          "share": 0.17
+        },
+        {
+          "name": "light-grey",
+          "share": 0.105
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.759,
+          "busyness": 0.199,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.529,
+          "busyness": 0.288,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.468,
+          "busyness": 0.284,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.559,
+          "busyness": 0.254,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.738,
+          "busyness": 0.235,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "top",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "16-construction-professional",
+      "file": "16-construction-professional.png",
+      "url": "assets/stock-photo-library/16-construction-professional.png",
+      "sha1": "708939ddfdb6713d793805133becc0861c05d8d9",
+      "bytes": 2056645,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Worker in hard hat and hi-vis on a build site",
+      "category": "trade-craft",
+      "industries": [
+        "construction",
+        "general-contractor",
+        "engineering",
+        "safety",
+        "industrial"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "outdoor-site",
+      "mood": "rugged-practical",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.409,
+      "contrast_sd": 0.207,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.682
+        },
+        {
+          "name": "blue",
+          "share": 0.119
+        },
+        {
+          "name": "grey",
+          "share": 0.069
+        },
+        {
+          "name": "black",
+          "share": 0.063
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.527,
+          "busyness": 0.21,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.386,
+          "busyness": 0.192,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.314,
+          "busyness": 0.155,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.403,
+          "busyness": 0.26,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.457,
+          "busyness": 0.155,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "17-plumber-kitchen-sink-repair",
+      "file": "17-plumber-kitchen-sink-repair.png",
+      "url": "assets/stock-photo-library/17-plumber-kitchen-sink-repair.png",
+      "sha1": "e69c0de211b6f087432c36ab0ebff2a366032961",
+      "bytes": 2020470,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Plumber working under a kitchen sink with tools",
+      "category": "trade-craft",
+      "industries": [
+        "plumbing",
+        "hvac",
+        "home-repair",
+        "appliance-service"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-home",
+      "mood": "hands-on-practical",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.435,
+      "contrast_sd": 0.287,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.381
+        },
+        {
+          "name": "blue",
+          "share": 0.139
+        },
+        {
+          "name": "black",
+          "share": 0.135
+        },
+        {
+          "name": "light-grey",
+          "share": 0.125
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.676,
+          "busyness": 0.256,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.34,
+          "busyness": 0.218,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.29,
+          "busyness": 0.215,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.359,
+          "busyness": 0.315,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.54,
+          "busyness": 0.273,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "18-chef-restaurant-kitchen",
+      "file": "18-chef-restaurant-kitchen.png",
+      "url": "assets/stock-photo-library/18-chef-restaurant-kitchen.png",
+      "sha1": "0ef62d6fb54865ae0daca935401d5c70dbae5938",
+      "bytes": 1992152,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Chef plating in a professional kitchen",
+      "category": "hospitality",
+      "industries": [
+        "restaurant",
+        "catering",
+        "culinary-school",
+        "food-service"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-kitchen",
+      "mood": "focused-craft",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.453,
+      "contrast_sd": 0.228,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.378
+        },
+        {
+          "name": "light-grey",
+          "share": 0.218
+        },
+        {
+          "name": "grey",
+          "share": 0.175
+        },
+        {
+          "name": "black",
+          "share": 0.098
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.433,
+          "busyness": 0.217,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.48,
+          "busyness": 0.242,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.446,
+          "busyness": 0.22,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.375,
+          "busyness": 0.201,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.501,
+          "busyness": 0.176,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "19-artisan-baker-making-bread",
+      "file": "19-artisan-baker-making-bread.png",
+      "url": "assets/stock-photo-library/19-artisan-baker-making-bread.png",
+      "sha1": "cd012fc10dfe4876d6fbdc5c7b316e1811dc5600",
+      "bytes": 2333597,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Baker shaping dough on a floured bench",
+      "category": "trade-craft",
+      "industries": [
+        "bakery",
+        "cafe",
+        "artisan-food",
+        "farmers-market"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-bakery",
+      "mood": "warm-artisan",
+      "seasonal": "autumn-winter",
+      "brightness": "medium",
+      "mean_luminance": 0.465,
+      "contrast_sd": 0.24,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.843
+        },
+        {
+          "name": "black",
+          "share": 0.09
+        },
+        {
+          "name": "white",
+          "share": 0.056
+        },
+        {
+          "name": "light-grey",
+          "share": 0.008
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.506,
+          "busyness": 0.233,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.381,
+          "busyness": 0.228,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.508,
+          "busyness": 0.236,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.53,
+          "busyness": 0.237,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.35,
+          "busyness": 0.201,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "middle",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "20-personal-trainer-with-client",
+      "file": "20-personal-trainer-with-client.png",
+      "url": "assets/stock-photo-library/20-personal-trainer-with-client.png",
+      "sha1": "0cf4f480fc80e8c778a9e439f3654b839bb26952",
+      "bytes": 2088233,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Trainer coaching a client through a gym exercise",
+      "category": "fitness-wellness",
+      "industries": [
+        "gym",
+        "personal-training",
+        "sports",
+        "physiotherapy"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-gym",
+      "mood": "energetic",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.544,
+      "contrast_sd": 0.306,
+      "dominant_hues": [
+        {
+          "name": "white",
+          "share": 0.186
+        },
+        {
+          "name": "light-grey",
+          "share": 0.173
+        },
+        {
+          "name": "orange",
+          "share": 0.171
+        },
+        {
+          "name": "grey",
+          "share": 0.169
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.656,
+          "busyness": 0.288,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.522,
+          "busyness": 0.3,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.454,
+          "busyness": 0.294,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.442,
+          "busyness": 0.28,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.683,
+          "busyness": 0.293,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "21-yoga-wellness-studio",
+      "file": "21-yoga-wellness-studio.png",
+      "url": "assets/stock-photo-library/21-yoga-wellness-studio.png",
+      "sha1": "ffe0c8107c5dbb5c87b1b41aa2fe99a6485cf0f7",
+      "bytes": 1850255,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Yoga class holding a pose in a light studio",
+      "category": "fitness-wellness",
+      "industries": [
+        "yoga",
+        "pilates",
+        "wellness",
+        "studio-fitness",
+        "mental-health"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "indoor-studio",
+      "mood": "calm-airy",
+      "seasonal": "any",
+      "brightness": "light",
+      "mean_luminance": 0.68,
+      "contrast_sd": 0.22,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.641
+        },
+        {
+          "name": "white",
+          "share": 0.26
+        },
+        {
+          "name": "light-grey",
+          "share": 0.065
+        },
+        {
+          "name": "black",
+          "share": 0.015
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.766,
+          "busyness": 0.182,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.679,
+          "busyness": 0.215,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.594,
+          "busyness": 0.227,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.858,
+          "busyness": 0.135,
+          "text_safety": "good",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.607,
+          "busyness": 0.169,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "22-spa-skincare-facial-treatment",
+      "file": "22-spa-skincare-facial-treatment.png",
+      "url": "assets/stock-photo-library/22-spa-skincare-facial-treatment.png",
+      "sha1": "fcdaad675d4968ea5031005779b2db5134ea19de",
+      "bytes": 1857578,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Client receiving a facial treatment on a spa bed",
+      "category": "personal-service",
+      "industries": [
+        "spa",
+        "medspa",
+        "skincare",
+        "beauty",
+        "massage"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-spa",
+      "mood": "soft-luxurious",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.505,
+      "contrast_sd": 0.17,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.938
+        },
+        {
+          "name": "black",
+          "share": 0.021
+        },
+        {
+          "name": "white",
+          "share": 0.015
+        },
+        {
+          "name": "gold",
+          "share": 0.009
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.486,
+          "busyness": 0.185,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.511,
+          "busyness": 0.132,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.52,
+          "busyness": 0.185,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.434,
+          "busyness": 0.148,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.541,
+          "busyness": 0.17,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "middle",
+        "best_horizontal_band": "middle",
+        "requires_scrim_for_text": false,
+        "scrim_opacity_if_used": 0.0,
+        "max_headline_over_image": "medium"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "23-veterinarian-with-dog",
+      "file": "23-veterinarian-with-dog.png",
+      "url": "assets/stock-photo-library/23-veterinarian-with-dog.png",
+      "sha1": "f0733c9718ea6f36c385ae5f47667d8becd9d05c",
+      "bytes": 2169077,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Vet examining a dog on a clinic table",
+      "category": "healthcare",
+      "industries": [
+        "veterinary",
+        "pet-grooming",
+        "pet-retail",
+        "animal-services"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-clinic",
+      "mood": "caring-friendly",
+      "seasonal": "any",
+      "brightness": "light",
+      "mean_luminance": 0.664,
+      "contrast_sd": 0.281,
+      "dominant_hues": [
+        {
+          "name": "white",
+          "share": 0.394
+        },
+        {
+          "name": "light-grey",
+          "share": 0.216
+        },
+        {
+          "name": "orange",
+          "share": 0.185
+        },
+        {
+          "name": "blue",
+          "share": 0.091
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.759,
+          "busyness": 0.257,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.623,
+          "busyness": 0.281,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.611,
+          "busyness": 0.279,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.64,
+          "busyness": 0.353,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.665,
+          "busyness": 0.241,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "24-teacher-with-students-classroom",
+      "file": "24-teacher-with-students-classroom.png",
+      "url": "assets/stock-photo-library/24-teacher-with-students-classroom.png",
+      "sha1": "5c473ea6843b3ed8858bd03ba68832ee4ff2e909",
+      "bytes": 2191393,
+      "width": 1683,
+      "height": 934,
+      "aspect_ratio": 1.802,
+      "orientation": "landscape",
+      "subject": "Teacher with children at classroom desks",
+      "category": "education",
+      "industries": [
+        "school",
+        "tutoring",
+        "education-non-profit",
+        "childcare"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "indoor-classroom",
+      "mood": "bright-engaged",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.597,
+      "contrast_sd": 0.276,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.35
+        },
+        {
+          "name": "white",
+          "share": 0.178
+        },
+        {
+          "name": "light-grey",
+          "share": 0.161
+        },
+        {
+          "name": "blue",
+          "share": 0.109
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.674,
+          "busyness": 0.312,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.484,
+          "busyness": 0.251,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.633,
+          "busyness": 0.221,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.634,
+          "busyness": 0.282,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.599,
+          "busyness": 0.256,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "25-daycare-educator-reading",
+      "file": "25-daycare-educator-reading.png",
+      "url": "assets/stock-photo-library/25-daycare-educator-reading.png",
+      "sha1": "379aabe99e1ae3ad9c41fa5a2ea270dfec432cbf",
+      "bytes": 2493445,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Educator reading a picture book to young children",
+      "category": "education",
+      "industries": [
+        "daycare",
+        "preschool",
+        "childcare",
+        "library",
+        "family-services"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "indoor-classroom",
+      "mood": "playful-warm",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.582,
+      "contrast_sd": 0.244,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.449
+        },
+        {
+          "name": "light-grey",
+          "share": 0.201
+        },
+        {
+          "name": "white",
+          "share": 0.118
+        },
+        {
+          "name": "gold",
+          "share": 0.109
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.679,
+          "busyness": 0.242,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.441,
+          "busyness": 0.229,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.625,
+          "busyness": 0.191,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.584,
+          "busyness": 0.269,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.62,
+          "busyness": 0.218,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "26-happy-senior-couple",
+      "file": "26-happy-senior-couple.png",
+      "url": "assets/stock-photo-library/26-happy-senior-couple.png",
+      "sha1": "4571d37531a44b8990c6357a515f9e65ce612cca",
+      "bytes": 2938427,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Older couple smiling together outdoors",
+      "category": "lifestyle",
+      "industries": [
+        "retirement-living",
+        "insurance",
+        "financial-planning",
+        "home-care",
+        "dental",
+        "hearing"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "outdoor-park",
+      "mood": "warm-trustworthy",
+      "seasonal": "autumn",
+      "brightness": "medium",
+      "mean_luminance": 0.544,
+      "contrast_sd": 0.23,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.438
+        },
+        {
+          "name": "gold",
+          "share": 0.229
+        },
+        {
+          "name": "white",
+          "share": 0.132
+        },
+        {
+          "name": "light-grey",
+          "share": 0.055
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.507,
+          "busyness": 0.274,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.604,
+          "busyness": 0.224,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.52,
+          "busyness": 0.168,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.632,
+          "busyness": 0.233,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.447,
+          "busyness": 0.236,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "27-technology-team-collaboration",
+      "file": "27-technology-team-collaboration.png",
+      "url": "assets/stock-photo-library/27-technology-team-collaboration.png",
+      "sha1": "d1551936a1e1c59b83e094740fefb8a0b0471bc5",
+      "bytes": 1766773,
+      "width": 1726,
+      "height": 911,
+      "aspect_ratio": 1.895,
+      "orientation": "landscape",
+      "subject": "Team at monitors in an open-plan tech office",
+      "category": "professional-services",
+      "industries": [
+        "technology",
+        "software",
+        "it-services",
+        "startup",
+        "co-working"
+      ],
+      "people": "group",
+      "has_people": true,
+      "setting": "indoor-office",
+      "mood": "modern-collaborative",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.587,
+      "contrast_sd": 0.309,
+      "dominant_hues": [
+        {
+          "name": "white",
+          "share": 0.323
+        },
+        {
+          "name": "light-grey",
+          "share": 0.191
+        },
+        {
+          "name": "grey",
+          "share": 0.148
+        },
+        {
+          "name": "black",
+          "share": 0.104
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.835,
+          "busyness": 0.182,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.527,
+          "busyness": 0.284,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.406,
+          "busyness": 0.272,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.55,
+          "busyness": 0.298,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.669,
+          "busyness": 0.311,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "top",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "28-accountant-bookkeeper-office",
+      "file": "28-accountant-bookkeeper-office.png",
+      "url": "assets/stock-photo-library/28-accountant-bookkeeper-office.png",
+      "sha1": "fd6e3477f5a4d7bd48f60d84b4dde841d1c60d4e",
+      "bytes": 2035704,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Accountant reviewing documents with a calculator and laptop",
+      "category": "professional-services",
+      "industries": [
+        "accounting",
+        "bookkeeping",
+        "tax",
+        "finance",
+        "payroll"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-office",
+      "mood": "orderly-precise",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.562,
+      "contrast_sd": 0.273,
+      "dominant_hues": [
+        {
+          "name": "light-grey",
+          "share": 0.289
+        },
+        {
+          "name": "orange",
+          "share": 0.254
+        },
+        {
+          "name": "white",
+          "share": 0.161
+        },
+        {
+          "name": "grey",
+          "share": 0.109
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.601,
+          "busyness": 0.282,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.493,
+          "busyness": 0.281,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.591,
+          "busyness": 0.241,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.684,
+          "busyness": 0.227,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.544,
+          "busyness": 0.24,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "29-boutique-shop-owner",
+      "file": "29-boutique-shop-owner.png",
+      "url": "assets/stock-photo-library/29-boutique-shop-owner.png",
+      "sha1": "f1c012c0c57b302621fd0820dddd74ef528da7c0",
+      "bytes": 2189455,
+      "width": 1024,
+      "height": 1536,
+      "aspect_ratio": 0.667,
+      "orientation": "portrait",
+      "subject": "Shop owner standing among racks in a small boutique",
+      "category": "retail",
+      "industries": [
+        "boutique-retail",
+        "fashion",
+        "gift-shop",
+        "small-business"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-retail",
+      "mood": "stylish-independent",
+      "seasonal": "any",
+      "brightness": "dark",
+      "mean_luminance": 0.375,
+      "contrast_sd": 0.255,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.579
+        },
+        {
+          "name": "black",
+          "share": 0.215
+        },
+        {
+          "name": "white",
+          "share": 0.068
+        },
+        {
+          "name": "light-grey",
+          "share": 0.064
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.413,
+          "busyness": 0.243,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.336,
+          "busyness": 0.255,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.376,
+          "busyness": 0.26,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.402,
+          "busyness": 0.212,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.401,
+          "busyness": 0.27,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "left",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "door-sign",
+        "half-panel",
+        "inset-photo",
+        "poster-hero",
+        "roll-up",
+        "vertical-banner"
+      ]
+    },
+    {
+      "id": "30-auto-mechanic",
+      "file": "30-auto-mechanic.png",
+      "url": "assets/stock-photo-library/30-auto-mechanic.png",
+      "sha1": "2a491662a2902d95da6a15b1b87d905260d18ab8",
+      "bytes": 2198567,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Mechanic working on a vehicle in a service bay",
+      "category": "trade-craft",
+      "industries": [
+        "auto-repair",
+        "tire-service",
+        "auto-detailing",
+        "fleet-service"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "indoor-garage",
+      "mood": "industrial-capable",
+      "seasonal": "any",
+      "brightness": "dark",
+      "mean_luminance": 0.313,
+      "contrast_sd": 0.25,
+      "dominant_hues": [
+        {
+          "name": "black",
+          "share": 0.359
+        },
+        {
+          "name": "grey",
+          "share": 0.252
+        },
+        {
+          "name": "light-grey",
+          "share": 0.165
+        },
+        {
+          "name": "orange",
+          "share": 0.138
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.445,
+          "busyness": 0.304,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.252,
+          "busyness": 0.193,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.242,
+          "busyness": 0.178,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.214,
+          "busyness": 0.182,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.399,
+          "busyness": 0.289,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "31-landscaper-gardener",
+      "file": "31-landscaper-gardener.png",
+      "url": "assets/stock-photo-library/31-landscaper-gardener.png",
+      "sha1": "eaedc1a07c049b6bef822f5379d13d2323934d5e",
+      "bytes": 2813617,
+      "width": 1727,
+      "height": 911,
+      "aspect_ratio": 1.896,
+      "orientation": "landscape",
+      "subject": "Landscaper tending planting beds with tools",
+      "category": "trade-craft",
+      "industries": [
+        "landscaping",
+        "lawn-care",
+        "garden-centre",
+        "property-maintenance"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "outdoor-garden",
+      "mood": "natural-active",
+      "seasonal": "spring-summer",
+      "brightness": "dark",
+      "mean_luminance": 0.321,
+      "contrast_sd": 0.159,
+      "dominant_hues": [
+        {
+          "name": "green",
+          "share": 0.306
+        },
+        {
+          "name": "orange",
+          "share": 0.165
+        },
+        {
+          "name": "yellow",
+          "share": 0.164
+        },
+        {
+          "name": "black",
+          "share": 0.128
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.328,
+          "busyness": 0.157,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.344,
+          "busyness": 0.175,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.293,
+          "busyness": 0.14,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.313,
+          "busyness": 0.142,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.354,
+          "busyness": 0.177,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": false,
+        "scrim_opacity_if_used": 0.0,
+        "max_headline_over_image": "medium"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "32-interior-designer-consultation",
+      "file": "32-interior-designer-consultation.png",
+      "url": "assets/stock-photo-library/32-interior-designer-consultation.png",
+      "sha1": "2d3dd21b7a0f1e47b48fabca2e4f9b5c450713cd",
+      "bytes": 2289550,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Designer reviewing material samples with a client",
+      "category": "professional-services",
+      "industries": [
+        "interior-design",
+        "home-renovation",
+        "furniture-retail",
+        "architecture"
+      ],
+      "people": "two",
+      "has_people": true,
+      "setting": "indoor-studio",
+      "mood": "refined-considered",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.502,
+      "contrast_sd": 0.269,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.342
+        },
+        {
+          "name": "light-grey",
+          "share": 0.29
+        },
+        {
+          "name": "black",
+          "share": 0.151
+        },
+        {
+          "name": "white",
+          "share": 0.095
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.598,
+          "busyness": 0.244,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.47,
+          "busyness": 0.266,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.439,
+          "busyness": 0.269,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.349,
+          "busyness": 0.271,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.64,
+          "busyness": 0.232,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "right",
+        "best_horizontal_band": "top",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "half-panel",
+        "horizontal-sign",
+        "inset-photo",
+        "poster-hero",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "33-professional-female-headshot",
+      "file": "33-professional-female-headshot.png",
+      "url": "assets/stock-photo-library/33-professional-female-headshot.png",
+      "sha1": "08164cf1c1ef8c83260706e5f5bbef7af26622ef",
+      "bytes": 2264469,
+      "width": 1024,
+      "height": 1536,
+      "aspect_ratio": 0.667,
+      "orientation": "portrait",
+      "subject": "Studio-style headshot of a woman in business attire",
+      "category": "portrait",
+      "industries": [
+        "real-estate",
+        "legal",
+        "finance",
+        "consulting",
+        "insurance"
+      ],
+      "people": "one",
+      "has_people": true,
+      "setting": "studio",
+      "mood": "confident-neutral",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.39,
+      "contrast_sd": 0.296,
+      "dominant_hues": [
+        {
+          "name": "teal",
+          "share": 0.385
+        },
+        {
+          "name": "orange",
+          "share": 0.329
+        },
+        {
+          "name": "black",
+          "share": 0.146
+        },
+        {
+          "name": "white",
+          "share": 0.122
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.554,
+          "busyness": 0.324,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.45,
+          "busyness": 0.272,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "bottom": {
+          "luminance": 0.167,
+          "busyness": 0.071,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.506,
+          "busyness": 0.341,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        },
+        "right": {
+          "luminance": 0.343,
+          "busyness": 0.293,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": false,
+        "scrim_opacity_if_used": 0.0,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "door-sign",
+        "half-panel",
+        "inset-photo",
+        "poster-hero",
+        "roll-up",
+        "vertical-banner"
+      ]
+    },
+    {
+      "id": "34-modern-living-room-interior",
+      "file": "34-modern-living-room-interior.png",
+      "url": "assets/stock-photo-library/34-modern-living-room-interior.png",
+      "sha1": "518fcb5d6e038920bbf7f89e35846000660d2a9e",
+      "bytes": 2893456,
+      "width": 1536,
+      "height": 1024,
+      "aspect_ratio": 1.5,
+      "orientation": "landscape",
+      "subject": "Styled contemporary living room, no people",
+      "category": "place",
+      "industries": [
+        "interior-design",
+        "real-estate",
+        "furniture-retail",
+        "home-staging",
+        "cleaning"
+      ],
+      "people": "none",
+      "has_people": false,
+      "setting": "indoor-home",
+      "mood": "calm-designed",
+      "seasonal": "any",
+      "brightness": "medium",
+      "mean_luminance": 0.552,
+      "contrast_sd": 0.212,
+      "dominant_hues": [
+        {
+          "name": "orange",
+          "share": 0.604
+        },
+        {
+          "name": "yellow",
+          "share": 0.112
+        },
+        {
+          "name": "light-grey",
+          "share": 0.104
+        },
+        {
+          "name": "white",
+          "share": 0.08
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.661,
+          "busyness": 0.189,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "middle": {
+          "luminance": 0.558,
+          "busyness": 0.204,
+          "text_safety": "poor",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.437,
+          "busyness": 0.182,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "left": {
+          "luminance": 0.555,
+          "busyness": 0.182,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.513,
+          "busyness": 0.245,
+          "text_safety": "poor",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": true,
+        "scrim_opacity_if_used": 0.45,
+        "max_headline_over_image": "short"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "full-bleed-background",
+        "horizontal-sign",
+        "poster-hero",
+        "sign-panel",
+        "wide-header"
+      ]
+    },
+    {
+      "id": "35-peaceful-coastal-landscape",
+      "file": "35-peaceful-coastal-landscape.png",
+      "url": "assets/stock-photo-library/35-peaceful-coastal-landscape.png",
+      "sha1": "8bec42ebc3eba882bb5c4bf227d6a05ab5245d11",
+      "bytes": 1898358,
+      "width": 1535,
+      "height": 1024,
+      "aspect_ratio": 1.499,
+      "orientation": "landscape",
+      "subject": "Quiet shoreline with open sky and water",
+      "category": "nature",
+      "industries": [
+        "tourism",
+        "wellness",
+        "funeral-memorial",
+        "non-profit",
+        "travel"
+      ],
+      "people": "none",
+      "has_people": false,
+      "setting": "outdoor-nature",
+      "mood": "serene-open",
+      "seasonal": "summer",
+      "brightness": "medium",
+      "mean_luminance": 0.57,
+      "contrast_sd": 0.171,
+      "dominant_hues": [
+        {
+          "name": "blue",
+          "share": 0.432
+        },
+        {
+          "name": "orange",
+          "share": 0.307
+        },
+        {
+          "name": "light-grey",
+          "share": 0.126
+        },
+        {
+          "name": "white",
+          "share": 0.064
+        }
+      ],
+      "regions": {
+        "top": {
+          "luminance": 0.465,
+          "busyness": 0.143,
+          "text_safety": "fair",
+          "recommended_text_colour": "light"
+        },
+        "middle": {
+          "luminance": 0.653,
+          "busyness": 0.197,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "bottom": {
+          "luminance": 0.592,
+          "busyness": 0.102,
+          "text_safety": "good",
+          "recommended_text_colour": "dark"
+        },
+        "left": {
+          "luminance": 0.667,
+          "busyness": 0.161,
+          "text_safety": "fair",
+          "recommended_text_colour": "dark"
+        },
+        "right": {
+          "luminance": 0.502,
+          "busyness": 0.139,
+          "text_safety": "good",
+          "recommended_text_colour": "light"
+        }
+      },
+      "overlay_guidance": {
+        "best_text_region": "bottom",
+        "best_horizontal_band": "bottom",
+        "requires_scrim_for_text": false,
+        "scrim_opacity_if_used": 0.0,
+        "max_headline_over_image": "medium"
+      },
+      "suggested_usage": [
+        "banner-hero",
+        "full-bleed-background",
+        "horizontal-sign",
+        "poster-hero",
+        "sign-panel",
+        "wide-header"
+      ]
+    }
+  ]
+}

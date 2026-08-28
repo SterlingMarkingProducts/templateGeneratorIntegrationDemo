@@ -1555,7 +1555,43 @@ generateBtn.addEventListener('click', () => {
       .trim();
   }
 
-  var line = null, modeSel = null;
+  var line = null, modeSel = null, photoLine = null, photoSel = null;
+
+  /* One builder for both DEV selects, so the stock-photo control is visibly and
+   * behaviourally the same kind of thing as the asset control beside it. */
+  function makeModeSelect(id, labelText, options, globalName) {
+    var wrap = document.createElement('div');
+    wrap.id = id + 'Wrap';
+    wrap.style.cssText = 'margin-bottom:10px;padding:8px 10px;border:1px solid #e4e4e8;'
+      + 'border-radius:6px;background:#f7f7f9;';
+
+    var label = document.createElement('label');
+    label.setAttribute('for', id);
+    label.textContent = labelText;
+    label.style.cssText = 'display:block;margin-bottom:4px;color:#71717a;'
+      + 'font:600 10px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;'
+      + 'letter-spacing:.08em;text-transform:uppercase;';
+
+    var sel = document.createElement('select');
+    sel.id = id;
+    sel.style.cssText = 'width:100%;box-sizing:border-box;padding:5px 7px;'
+      + 'border:1px solid #d4d4d8;border-radius:4px;background:#fff;color:#3f3f46;'
+      + 'font:500 12px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;';
+    options.forEach(function (o) {
+      var opt = document.createElement('option');
+      opt.value = o[0]; opt.textContent = o[1];
+      sel.appendChild(opt);
+    });
+    /* Read at selection time by the engine — it changes WHICH file is chosen,
+     * never HOW it is chosen, so Force uses the identical local code path. */
+    sel.value = window[globalName] || 'auto';
+    window[globalName] = sel.value;
+    sel.addEventListener('change', function () { window[globalName] = sel.value; });
+
+    wrap.appendChild(label);
+    wrap.appendChild(sel);
+    return { wrap: wrap, sel: sel };
+  }
 
   /* The REPORT lives above the preview, which only exists once something has
    * been generated. The CONTROL has to be usable before that, so it goes in the
@@ -1567,43 +1603,48 @@ generateBtn.addEventListener('click', () => {
     var generate = document.getElementById('generateBtn');
     if (!actions || !generate) return;
 
-    var wrap = document.createElement('div');
-    wrap.id = 'devAssetModeWrap';
-    wrap.style.cssText = 'margin-bottom:10px;padding:8px 10px;border:1px solid #e4e4e8;'
-      + 'border-radius:6px;background:#f7f7f9;';
+    var asset = makeModeSelect('devAssetMode', 'Asset Mode',
+      [['auto', 'Auto'], ['force', 'Force Asset'], ['off', 'No Asset']], 'SMPAssetMode');
+    modeSel = asset.sel;
+    actions.insertBefore(asset.wrap, generate);
 
-    var label = document.createElement('label');
-    label.setAttribute('for', 'devAssetMode');
-    label.textContent = 'Asset Mode';
-    label.style.cssText = 'display:block;margin-bottom:4px;color:#71717a;'
-      + 'font:600 10px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;'
-      + 'letter-spacing:.08em;text-transform:uppercase;';
-
-    modeSel = document.createElement('select');
-    modeSel.id = 'devAssetMode';
-    modeSel.style.cssText = 'width:100%;box-sizing:border-box;padding:5px 7px;'
-      + 'border:1px solid #d4d4d8;border-radius:4px;background:#fff;color:#3f3f46;'
-      + 'font:500 12px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;';
-    [['auto', 'Auto'], ['force', 'Force Asset'], ['off', 'No Asset']].forEach(function (o) {
-      var opt = document.createElement('option');
-      opt.value = o[0]; opt.textContent = o[1];
-      modeSel.appendChild(opt);
-    });
-    /* Read at selection time by the engine — it changes WHICH asset is chosen,
-     * never HOW it is chosen, so Force uses the identical local code path. */
-    modeSel.value = window.SMPAssetMode || 'auto';
-    window.SMPAssetMode = modeSel.value;
-    modeSel.addEventListener('change', function () { window.SMPAssetMode = modeSel.value; });
-
-    wrap.appendChild(label);
-    wrap.appendChild(modeSel);
-    actions.insertBefore(wrap, generate);
+    /* The stock photo library is a separate source with its own selector, so it
+     * gets its own control rather than sharing the asset one. */
+    var photo = makeModeSelect('devStockPhotoMode', 'Stock Photo Mode',
+      [['auto', 'Auto'], ['force', 'Force Photo'], ['off', 'No Photo']], 'SMPStockPhotoMode');
+    photoSel = photo.sel;
+    actions.insertBefore(photo.wrap, generate);
   }
 
   function reportLine(box) {
     if (line) return;
+    /* Two stacked lines: the design asset on top, the stock photo under it.
+     * Separate libraries, separate decisions, separate readouts. */
+    box.style.flexDirection = 'column';
     line = document.createElement('span');
+    photoLine = document.createElement('span');
+    photoLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;';
     box.appendChild(line);
+    box.appendChild(photoLine);
+  }
+
+  /* Photo: None · Reason: <reason>   or   Photo: <file> · Industry: <slug> */
+  function renderPhoto(sel) {
+    var box = host();
+    if (!box) return;
+    reportLine(box);
+    var timing = (sel && typeof sel.selectMs === 'number') ? '  (' + sel.selectMs + 'ms)' : '';
+    var fmt = (sel && sel.format) ? '  \u00b7 ' + sel.format : '';
+    if (!sel || !sel.file) {
+      var why = (sel && sel.reason) || 'not generated yet';
+      photoLine.textContent = 'Photo: None \u00b7 Reason: ' + why + fmt + timing;
+      photoLine.title = 'No stock photograph was used. Reason: ' + why;
+      return;
+    }
+    photoLine.textContent = 'Photo: ' + sel.file + ' \u00b7 Industry: ' + sel.industry
+      + (sel.requiresScrim ? ' \u00b7 scrim required' : '') + fmt + timing;
+    photoLine.title = sel.url + '\n' + (sel.subject || '')
+      + '\nmatched: ' + ((sel.matchedIndustries || []).join(', ') || sel.industry);
   }
 
   function render(sel) {
@@ -1635,8 +1676,10 @@ generateBtn.addEventListener('click', () => {
      * blank state before Generate Design has ever been clicked. */
     buildModeControl();
     window.addEventListener('smp:assets-selected', function (e) { render(e.detail); });
-    /* A generation may already have run before this listener existed. */
+    window.addEventListener('smp:stock-photo-selected', function (e) { renderPhoto(e.detail); });
+    /* A generation may already have run before these listeners existed. */
     render(window.SMPLastAssetSelection || { assets: [] });
+    renderPhoto(window.SMPLastStockPhoto || null);
   }
 
   if (document.readyState === 'loading') {
