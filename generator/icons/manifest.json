@@ -1,0 +1,9915 @@
+{
+ "generated": "extracted from vendor EPS icon sheets - see README.md",
+ "collections": {
+  "minimal": {
+   "count": 600,
+   "style": "line icons, stroke-based, currentColor; rows 1-12 of the source sheet follow Feather icon naming, rows 13-25 are a second rounded style"
+  },
+  "business-medical": {
+   "count": 225,
+   "style": "outline glyph icons (filled paths), currentColor; business, medical, finance, travel, education themes"
+  }
+ },
+ "icons": [
+  {
+   "name": "user-minus",
+   "collection": "minimal",
+   "file": "minimal/user-minus.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 1
+   }
+  },
+  {
+   "name": "user-plus",
+   "collection": "minimal",
+   "file": "minimal/user-plus.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 2
+   }
+  },
+  {
+   "name": "user-x",
+   "collection": "minimal",
+   "file": "minimal/user-x.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 3
+   }
+  },
+  {
+   "name": "users",
+   "collection": "minimal",
+   "file": "minimal/users.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 4
+   }
+  },
+  {
+   "name": "video",
+   "collection": "minimal",
+   "file": "minimal/video.svg",
+   "w": 48.5,
+   "h": 32.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 5
+   }
+  },
+  {
+   "name": "video-off",
+   "collection": "minimal",
+   "file": "minimal/video-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 6
+   }
+  },
+  {
+   "name": "voicemail",
+   "collection": "minimal",
+   "file": "minimal/voicemail.svg",
+   "w": 48.5,
+   "h": 22.4,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 7
+   }
+  },
+  {
+   "name": "volume",
+   "collection": "minimal",
+   "file": "minimal/volume.svg",
+   "w": 20.8,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 8
+   }
+  },
+  {
+   "name": "volume-1",
+   "collection": "minimal",
+   "file": "minimal/volume-1.svg",
+   "w": 33.1,
+   "h": 31.1,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 9
+   }
+  },
+  {
+   "name": "volume-2",
+   "collection": "minimal",
+   "file": "minimal/volume-2.svg",
+   "w": 44.1,
+   "h": 32.3,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 10
+   }
+  },
+  {
+   "name": "volume-x",
+   "collection": "minimal",
+   "file": "minimal/volume-x.svg",
+   "w": 46.3,
+   "h": 32.3,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 11
+   }
+  },
+  {
+   "name": "watch",
+   "collection": "minimal",
+   "file": "minimal/watch.svg",
+   "w": 32.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 12
+   }
+  },
+  {
+   "name": "wifi",
+   "collection": "minimal",
+   "file": "minimal/wifi.svg",
+   "w": 46.6,
+   "h": 34.3,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 13
+   }
+  },
+  {
+   "name": "wifi-off",
+   "collection": "minimal",
+   "file": "minimal/wifi-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 14
+   }
+  },
+  {
+   "name": "wind",
+   "collection": "minimal",
+   "file": "minimal/wind.svg",
+   "w": 44.1,
+   "h": 36.1,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 15
+   }
+  },
+  {
+   "name": "x",
+   "collection": "minimal",
+   "file": "minimal/x.svg",
+   "w": 26.4,
+   "h": 26.4,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 16
+   }
+  },
+  {
+   "name": "x-circle",
+   "collection": "minimal",
+   "file": "minimal/x-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 17
+   }
+  },
+  {
+   "name": "x-octagon",
+   "collection": "minimal",
+   "file": "minimal/x-octagon.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 18
+   }
+  },
+  {
+   "name": "x-square",
+   "collection": "minimal",
+   "file": "minimal/x-square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 19
+   }
+  },
+  {
+   "name": "youtube",
+   "collection": "minimal",
+   "file": "minimal/youtube.svg",
+   "w": 48.5,
+   "h": 35.4,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 20
+   }
+  },
+  {
+   "name": "zap",
+   "collection": "minimal",
+   "file": "minimal/zap.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 21
+   }
+  },
+  {
+   "name": "zap-off",
+   "collection": "minimal",
+   "file": "minimal/zap-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 22
+   }
+  },
+  {
+   "name": "zoom-in",
+   "collection": "minimal",
+   "file": "minimal/zoom-in.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 23
+   }
+  },
+  {
+   "name": "zoom-out",
+   "collection": "minimal",
+   "file": "minimal/zoom-out.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 1,
+    "col": 24
+   }
+  },
+  {
+   "name": "thermometer",
+   "collection": "minimal",
+   "file": "minimal/thermometer.svg",
+   "w": 22.4,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 1
+   }
+  },
+  {
+   "name": "thumbs-down",
+   "collection": "minimal",
+   "file": "minimal/thumbs-down.svg",
+   "w": 43.4,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 2
+   }
+  },
+  {
+   "name": "thumbs-up",
+   "collection": "minimal",
+   "file": "minimal/thumbs-up.svg",
+   "w": 43.4,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 3
+   }
+  },
+  {
+   "name": "toggle-left",
+   "collection": "minimal",
+   "file": "minimal/toggle-left.svg",
+   "w": 48.5,
+   "h": 32.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 4
+   }
+  },
+  {
+   "name": "toggle-right",
+   "collection": "minimal",
+   "file": "minimal/toggle-right.svg",
+   "w": 48.5,
+   "h": 32.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 5
+   }
+  },
+  {
+   "name": "tool",
+   "collection": "minimal",
+   "file": "minimal/tool.svg",
+   "w": 41.9,
+   "h": 41.9,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 6
+   }
+  },
+  {
+   "name": "trash",
+   "collection": "minimal",
+   "file": "minimal/trash.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 7
+   }
+  },
+  {
+   "name": "trash-2",
+   "collection": "minimal",
+   "file": "minimal/trash-2.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 8
+   }
+  },
+  {
+   "name": "trello",
+   "collection": "minimal",
+   "file": "minimal/trello.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 9
+   }
+  },
+  {
+   "name": "trending-down",
+   "collection": "minimal",
+   "file": "minimal/trending-down.svg",
+   "w": 48.5,
+   "h": 28.4,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 10
+   }
+  },
+  {
+   "name": "trending-up",
+   "collection": "minimal",
+   "file": "minimal/trending-up.svg",
+   "w": 48.5,
+   "h": 28.4,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 11
+   }
+  },
+  {
+   "name": "triangle",
+   "collection": "minimal",
+   "file": "minimal/triangle.svg",
+   "w": 46.0,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 12
+   }
+  },
+  {
+   "name": "truck",
+   "collection": "minimal",
+   "file": "minimal/truck.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 13
+   }
+  },
+  {
+   "name": "tv",
+   "collection": "minimal",
+   "file": "minimal/tv.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 14
+   }
+  },
+  {
+   "name": "twitch",
+   "collection": "minimal",
+   "file": "minimal/twitch.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 15
+   }
+  },
+  {
+   "name": "twitter",
+   "collection": "minimal",
+   "file": "minimal/twitter.svg",
+   "w": 48.5,
+   "h": 40.4,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 16
+   }
+  },
+  {
+   "name": "type",
+   "collection": "minimal",
+   "file": "minimal/type.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 17
+   }
+  },
+  {
+   "name": "umbrella",
+   "collection": "minimal",
+   "file": "minimal/umbrella.svg",
+   "w": 48.5,
+   "h": 44.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 18
+   }
+  },
+  {
+   "name": "underline",
+   "collection": "minimal",
+   "file": "minimal/underline.svg",
+   "w": 35.6,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 19
+   }
+  },
+  {
+   "name": "unlock",
+   "collection": "minimal",
+   "file": "minimal/unlock.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 20
+   }
+  },
+  {
+   "name": "upload",
+   "collection": "minimal",
+   "file": "minimal/upload.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 21
+   }
+  },
+  {
+   "name": "upload-cloud",
+   "collection": "minimal",
+   "file": "minimal/upload-cloud.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 22
+   }
+  },
+  {
+   "name": "user",
+   "collection": "minimal",
+   "file": "minimal/user.svg",
+   "w": 35.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 23
+   }
+  },
+  {
+   "name": "user-check",
+   "collection": "minimal",
+   "file": "minimal/user-check.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 2,
+    "col": 24
+   }
+  },
+  {
+   "name": "shield-off",
+   "collection": "minimal",
+   "file": "minimal/shield-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 1
+   }
+  },
+  {
+   "name": "shopping-bag",
+   "collection": "minimal",
+   "file": "minimal/shopping-bag.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 2
+   }
+  },
+  {
+   "name": "shopping-cart",
+   "collection": "minimal",
+   "file": "minimal/shopping-cart.svg",
+   "w": 48.5,
+   "h": 46.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 3
+   }
+  },
+  {
+   "name": "shuffle",
+   "collection": "minimal",
+   "file": "minimal/shuffle.svg",
+   "w": 37.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 4
+   }
+  },
+  {
+   "name": "sidebar",
+   "collection": "minimal",
+   "file": "minimal/sidebar.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 5
+   }
+  },
+  {
+   "name": "skip-back",
+   "collection": "minimal",
+   "file": "minimal/skip-back.svg",
+   "w": 31.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 6
+   }
+  },
+  {
+   "name": "skip-forward",
+   "collection": "minimal",
+   "file": "minimal/skip-forward.svg",
+   "w": 31.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 7
+   }
+  },
+  {
+   "name": "slack",
+   "collection": "minimal",
+   "file": "minimal/slack.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 8
+   }
+  },
+  {
+   "name": "slash",
+   "collection": "minimal",
+   "file": "minimal/slash.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 9
+   }
+  },
+  {
+   "name": "sliders",
+   "collection": "minimal",
+   "file": "minimal/sliders.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 10
+   }
+  },
+  {
+   "name": "smartphone",
+   "collection": "minimal",
+   "file": "minimal/smartphone.svg",
+   "w": 32.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 11
+   }
+  },
+  {
+   "name": "smile",
+   "collection": "minimal",
+   "file": "minimal/smile.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 12
+   }
+  },
+  {
+   "name": "speaker",
+   "collection": "minimal",
+   "file": "minimal/speaker.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 13
+   }
+  },
+  {
+   "name": "square",
+   "collection": "minimal",
+   "file": "minimal/square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 14
+   }
+  },
+  {
+   "name": "star",
+   "collection": "minimal",
+   "file": "minimal/star.svg",
+   "w": 44.1,
+   "h": 42.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 15
+   }
+  },
+  {
+   "name": "stop-circle",
+   "collection": "minimal",
+   "file": "minimal/stop-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 16
+   }
+  },
+  {
+   "name": "sun",
+   "collection": "minimal",
+   "file": "minimal/sun.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 17
+   }
+  },
+  {
+   "name": "sunrise",
+   "collection": "minimal",
+   "file": "minimal/sunrise.svg",
+   "w": 48.5,
+   "h": 44.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 18
+   }
+  },
+  {
+   "name": "sunset",
+   "collection": "minimal",
+   "file": "minimal/sunset.svg",
+   "w": 48.5,
+   "h": 44.5,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 19
+   }
+  },
+  {
+   "name": "table",
+   "collection": "minimal",
+   "file": "minimal/table.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 20
+   }
+  },
+  {
+   "name": "tablet",
+   "collection": "minimal",
+   "file": "minimal/tablet.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 21
+   }
+  },
+  {
+   "name": "tag",
+   "collection": "minimal",
+   "file": "minimal/tag.svg",
+   "w": 42.2,
+   "h": 42.2,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 22
+   }
+  },
+  {
+   "name": "target",
+   "collection": "minimal",
+   "file": "minimal/target.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 23
+   }
+  },
+  {
+   "name": "terminal",
+   "collection": "minimal",
+   "file": "minimal/terminal.svg",
+   "w": 35.3,
+   "h": 31.3,
+   "source": {
+    "sheet": "min",
+    "row": 3,
+    "col": 24
+   }
+  },
+  {
+   "name": "play-circle",
+   "collection": "minimal",
+   "file": "minimal/play-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 1
+   }
+  },
+  {
+   "name": "plus",
+   "collection": "minimal",
+   "file": "minimal/plus.svg",
+   "w": 30.9,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 2
+   }
+  },
+  {
+   "name": "plus-circle",
+   "collection": "minimal",
+   "file": "minimal/plus-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 3
+   }
+  },
+  {
+   "name": "plus-square",
+   "collection": "minimal",
+   "file": "minimal/plus-square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 4
+   }
+  },
+  {
+   "name": "pocket",
+   "collection": "minimal",
+   "file": "minimal/pocket.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 5
+   }
+  },
+  {
+   "name": "power",
+   "collection": "minimal",
+   "file": "minimal/power.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 6
+   }
+  },
+  {
+   "name": "printer",
+   "collection": "minimal",
+   "file": "minimal/printer.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 7
+   }
+  },
+  {
+   "name": "radio",
+   "collection": "minimal",
+   "file": "minimal/radio.svg",
+   "w": 44.1,
+   "h": 32.3,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 8
+   }
+  },
+  {
+   "name": "refresh-ccw",
+   "collection": "minimal",
+   "file": "minimal/refresh-ccw.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 9
+   }
+  },
+  {
+   "name": "refresh-cw",
+   "collection": "minimal",
+   "file": "minimal/refresh-cw.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 10
+   }
+  },
+  {
+   "name": "repeat",
+   "collection": "minimal",
+   "file": "minimal/repeat.svg",
+   "w": 40.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 11
+   }
+  },
+  {
+   "name": "rewind",
+   "collection": "minimal",
+   "file": "minimal/rewind.svg",
+   "w": 44.1,
+   "h": 32.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 12
+   }
+  },
+  {
+   "name": "rotate-ccw",
+   "collection": "minimal",
+   "file": "minimal/rotate-ccw.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 13
+   }
+  },
+  {
+   "name": "rotate-cw",
+   "collection": "minimal",
+   "file": "minimal/rotate-cw.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 14
+   }
+  },
+  {
+   "name": "rss",
+   "collection": "minimal",
+   "file": "minimal/rss.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 15
+   }
+  },
+  {
+   "name": "save",
+   "collection": "minimal",
+   "file": "minimal/save.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 16
+   }
+  },
+  {
+   "name": "scissors",
+   "collection": "minimal",
+   "file": "minimal/scissors.svg",
+   "w": 37.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 17
+   }
+  },
+  {
+   "name": "search",
+   "collection": "minimal",
+   "file": "minimal/search.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 18
+   }
+  },
+  {
+   "name": "send",
+   "collection": "minimal",
+   "file": "minimal/send.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 19
+   }
+  },
+  {
+   "name": "server",
+   "collection": "minimal",
+   "file": "minimal/server.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 20
+   }
+  },
+  {
+   "name": "settings",
+   "collection": "minimal",
+   "file": "minimal/settings.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 21
+   }
+  },
+  {
+   "name": "share",
+   "collection": "minimal",
+   "file": "minimal/share.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 22
+   }
+  },
+  {
+   "name": "share-2",
+   "collection": "minimal",
+   "file": "minimal/share-2.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 23
+   }
+  },
+  {
+   "name": "shield",
+   "collection": "minimal",
+   "file": "minimal/shield.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 4,
+    "col": 24
+   }
+  },
+  {
+   "name": "moon",
+   "collection": "minimal",
+   "file": "minimal/moon.svg",
+   "w": 39.6,
+   "h": 39.6,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 1
+   }
+  },
+  {
+   "name": "more-horizontal",
+   "collection": "minimal",
+   "file": "minimal/more-horizontal.svg",
+   "w": 35.3,
+   "h": 7.2,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 2
+   }
+  },
+  {
+   "name": "more-vertical",
+   "collection": "minimal",
+   "file": "minimal/more-vertical.svg",
+   "w": 7.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 3
+   }
+  },
+  {
+   "name": "mouse-pointer",
+   "collection": "minimal",
+   "file": "minimal/mouse-pointer.svg",
+   "w": 37.4,
+   "h": 37.4,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 4
+   }
+  },
+  {
+   "name": "move",
+   "collection": "minimal",
+   "file": "minimal/move.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 5
+   }
+  },
+  {
+   "name": "music",
+   "collection": "minimal",
+   "file": "minimal/music.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 6
+   }
+  },
+  {
+   "name": "navigation",
+   "collection": "minimal",
+   "file": "minimal/navigation.svg",
+   "w": 41.9,
+   "h": 41.9,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 7
+   }
+  },
+  {
+   "name": "navigation-2",
+   "collection": "minimal",
+   "file": "minimal/navigation-2.svg",
+   "w": 31.9,
+   "h": 41.9,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 8
+   }
+  },
+  {
+   "name": "octagon",
+   "collection": "minimal",
+   "file": "minimal/octagon.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 9
+   }
+  },
+  {
+   "name": "package",
+   "collection": "minimal",
+   "file": "minimal/package.svg",
+   "w": 40.1,
+   "h": 44.2,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 10
+   }
+  },
+  {
+   "name": "paperclip",
+   "collection": "minimal",
+   "file": "minimal/paperclip.svg",
+   "w": 43.1,
+   "h": 45.4,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 11
+   }
+  },
+  {
+   "name": "pause",
+   "collection": "minimal",
+   "file": "minimal/pause.svg",
+   "w": 27.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 12
+   }
+  },
+  {
+   "name": "pause-circle",
+   "collection": "minimal",
+   "file": "minimal/pause-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 13
+   }
+  },
+  {
+   "name": "pen-tool",
+   "collection": "minimal",
+   "file": "minimal/pen-tool.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 14
+   }
+  },
+  {
+   "name": "percent",
+   "collection": "minimal",
+   "file": "minimal/percent.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 15
+   }
+  },
+  {
+   "name": "phone",
+   "collection": "minimal",
+   "file": "minimal/phone.svg",
+   "w": 43.8,
+   "h": 43.9,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 16
+   }
+  },
+  {
+   "name": "phone-call",
+   "collection": "minimal",
+   "file": "minimal/phone-call.svg",
+   "w": 46.0,
+   "h": 46.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 17
+   }
+  },
+  {
+   "name": "phone-forwarded",
+   "collection": "minimal",
+   "file": "minimal/phone-forwarded.svg",
+   "w": 46.0,
+   "h": 46.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 18
+   }
+  },
+  {
+   "name": "phone-incoming",
+   "collection": "minimal",
+   "file": "minimal/phone-incoming.svg",
+   "w": 46.0,
+   "h": 46.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 19
+   }
+  },
+  {
+   "name": "phone-missed",
+   "collection": "minimal",
+   "file": "minimal/phone-missed.svg",
+   "w": 46.0,
+   "h": 46.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 20
+   }
+  },
+  {
+   "name": "phone-off",
+   "collection": "minimal",
+   "file": "minimal/phone-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 21
+   }
+  },
+  {
+   "name": "phone-outgoing",
+   "collection": "minimal",
+   "file": "minimal/phone-outgoing.svg",
+   "w": 46.0,
+   "h": 46.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 22
+   }
+  },
+  {
+   "name": "pie-chart",
+   "collection": "minimal",
+   "file": "minimal/pie-chart.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 23
+   }
+  },
+  {
+   "name": "play",
+   "collection": "minimal",
+   "file": "minimal/play.svg",
+   "w": 31.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 5,
+    "col": 24
+   }
+  },
+  {
+   "name": "link-2",
+   "collection": "minimal",
+   "file": "minimal/link-2.svg",
+   "w": 48.5,
+   "h": 24.4,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 1
+   }
+  },
+  {
+   "name": "linkedin",
+   "collection": "minimal",
+   "file": "minimal/linkedin.svg",
+   "w": 44.1,
+   "h": 42.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 2
+   }
+  },
+  {
+   "name": "list",
+   "collection": "minimal",
+   "file": "minimal/list.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 3
+   }
+  },
+  {
+   "name": "loader",
+   "collection": "minimal",
+   "file": "minimal/loader.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 4
+   }
+  },
+  {
+   "name": "lock",
+   "collection": "minimal",
+   "file": "minimal/lock.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 5
+   }
+  },
+  {
+   "name": "log-in",
+   "collection": "minimal",
+   "file": "minimal/log-in.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 6
+   }
+  },
+  {
+   "name": "log-out",
+   "collection": "minimal",
+   "file": "minimal/log-out.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 7
+   }
+  },
+  {
+   "name": "mail",
+   "collection": "minimal",
+   "file": "minimal/mail.svg",
+   "w": 44.1,
+   "h": 36.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 8
+   }
+  },
+  {
+   "name": "map",
+   "collection": "minimal",
+   "file": "minimal/map.svg",
+   "w": 48.5,
+   "h": 44.5,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 9
+   }
+  },
+  {
+   "name": "map-pin",
+   "collection": "minimal",
+   "file": "minimal/map-pin.svg",
+   "w": 40.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 10
+   }
+  },
+  {
+   "name": "maximize",
+   "collection": "minimal",
+   "file": "minimal/maximize.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 11
+   }
+  },
+  {
+   "name": "maximize-2",
+   "collection": "minimal",
+   "file": "minimal/maximize-2.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 12
+   }
+  },
+  {
+   "name": "meh",
+   "collection": "minimal",
+   "file": "minimal/meh.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 13
+   }
+  },
+  {
+   "name": "menu",
+   "collection": "minimal",
+   "file": "minimal/menu.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 14
+   }
+  },
+  {
+   "name": "message-circle",
+   "collection": "minimal",
+   "file": "minimal/message-circle.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 15
+   }
+  },
+  {
+   "name": "message-square",
+   "collection": "minimal",
+   "file": "minimal/message-square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 16
+   }
+  },
+  {
+   "name": "mic",
+   "collection": "minimal",
+   "file": "minimal/mic.svg",
+   "w": 32.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 17
+   }
+  },
+  {
+   "name": "mic-off",
+   "collection": "minimal",
+   "file": "minimal/mic-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 18
+   }
+  },
+  {
+   "name": "minimize",
+   "collection": "minimal",
+   "file": "minimal/minimize.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 19
+   }
+  },
+  {
+   "name": "minimize-2",
+   "collection": "minimal",
+   "file": "minimal/minimize-2.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 20
+   }
+  },
+  {
+   "name": "minus",
+   "collection": "minimal",
+   "file": "minimal/minus.svg",
+   "w": 30.9,
+   "h": 2.8,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 21
+   }
+  },
+  {
+   "name": "minus-circle",
+   "collection": "minimal",
+   "file": "minimal/minus-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 22
+   }
+  },
+  {
+   "name": "minus-square",
+   "collection": "minimal",
+   "file": "minimal/minus-square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 23
+   }
+  },
+  {
+   "name": "monitor",
+   "collection": "minimal",
+   "file": "minimal/monitor.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 6,
+    "col": 24
+   }
+  },
+  {
+   "name": "edit-2",
+   "collection": "minimal",
+   "file": "minimal/edit-2.svg",
+   "w": 43.7,
+   "h": 43.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 1
+   }
+  },
+  {
+   "name": "git-merge",
+   "collection": "minimal",
+   "file": "minimal/git-merge.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 2
+   }
+  },
+  {
+   "name": "git-pull-request",
+   "collection": "minimal",
+   "file": "minimal/git-pull-request.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 3
+   }
+  },
+  {
+   "name": "github",
+   "collection": "minimal",
+   "file": "minimal/github.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 4
+   }
+  },
+  {
+   "name": "gitlab",
+   "collection": "minimal",
+   "file": "minimal/gitlab.svg",
+   "w": 48.5,
+   "h": 45.0,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 5
+   }
+  },
+  {
+   "name": "globe",
+   "collection": "minimal",
+   "file": "minimal/globe.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 6
+   }
+  },
+  {
+   "name": "grid",
+   "collection": "minimal",
+   "file": "minimal/grid.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 7
+   }
+  },
+  {
+   "name": "hard-drive",
+   "collection": "minimal",
+   "file": "minimal/hard-drive.svg",
+   "w": 44.1,
+   "h": 36.0,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 8
+   }
+  },
+  {
+   "name": "hash",
+   "collection": "minimal",
+   "file": "minimal/hash.svg",
+   "w": 35.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 9
+   }
+  },
+  {
+   "name": "headphones",
+   "collection": "minimal",
+   "file": "minimal/headphones.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 10
+   }
+  },
+  {
+   "name": "heart",
+   "collection": "minimal",
+   "file": "minimal/heart.svg",
+   "w": 46.1,
+   "h": 40.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 11
+   }
+  },
+  {
+   "name": "help-circle",
+   "collection": "minimal",
+   "file": "minimal/help-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 12
+   }
+  },
+  {
+   "name": "hexagon",
+   "collection": "minimal",
+   "file": "minimal/hexagon.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 13
+   }
+  },
+  {
+   "name": "home",
+   "collection": "minimal",
+   "file": "minimal/home.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 14
+   }
+  },
+  {
+   "name": "image",
+   "collection": "minimal",
+   "file": "minimal/image.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 15
+   }
+  },
+  {
+   "name": "inbox",
+   "collection": "minimal",
+   "file": "minimal/inbox.svg",
+   "w": 44.1,
+   "h": 36.0,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 16
+   }
+  },
+  {
+   "name": "info",
+   "collection": "minimal",
+   "file": "minimal/info.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 17
+   }
+  },
+  {
+   "name": "instagram",
+   "collection": "minimal",
+   "file": "minimal/instagram.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 18
+   }
+  },
+  {
+   "name": "italic",
+   "collection": "minimal",
+   "file": "minimal/italic.svg",
+   "w": 31.3,
+   "h": 35.2,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 19
+   }
+  },
+  {
+   "name": "key",
+   "collection": "minimal",
+   "file": "minimal/key.svg",
+   "w": 43.9,
+   "h": 42.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 20
+   }
+  },
+  {
+   "name": "layers",
+   "collection": "minimal",
+   "file": "minimal/layers.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 21
+   }
+  },
+  {
+   "name": "layout",
+   "collection": "minimal",
+   "file": "minimal/layout.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 22
+   }
+  },
+  {
+   "name": "life-buoy",
+   "collection": "minimal",
+   "file": "minimal/life-buoy.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 23
+   }
+  },
+  {
+   "name": "link",
+   "collection": "minimal",
+   "file": "minimal/link.svg",
+   "w": 43.8,
+   "h": 43.8,
+   "source": {
+    "sheet": "min",
+    "row": 7,
+    "col": 24
+   }
+  },
+  {
+   "name": "chevron-left-2",
+   "collection": "minimal",
+   "file": "minimal/chevron-left-2.svg",
+   "w": 12.0,
+   "h": 22.0,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 1
+   }
+  },
+  {
+   "name": "edit-3",
+   "collection": "minimal",
+   "file": "minimal/edit-3.svg",
+   "w": 39.7,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 2
+   }
+  },
+  {
+   "name": "external-link",
+   "collection": "minimal",
+   "file": "minimal/external-link.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 3
+   }
+  },
+  {
+   "name": "eye",
+   "collection": "minimal",
+   "file": "minimal/eye.svg",
+   "w": 48.5,
+   "h": 36.5,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 4
+   }
+  },
+  {
+   "name": "eye-off",
+   "collection": "minimal",
+   "file": "minimal/eye-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 5
+   }
+  },
+  {
+   "name": "facebook",
+   "collection": "minimal",
+   "file": "minimal/facebook.svg",
+   "w": 26.0,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 6
+   }
+  },
+  {
+   "name": "fast-forward",
+   "collection": "minimal",
+   "file": "minimal/fast-forward.svg",
+   "w": 44.1,
+   "h": 32.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 7
+   }
+  },
+  {
+   "name": "feather",
+   "collection": "minimal",
+   "file": "minimal/feather.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 8
+   }
+  },
+  {
+   "name": "figma",
+   "collection": "minimal",
+   "file": "minimal/figma.svg",
+   "w": 32.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 9
+   }
+  },
+  {
+   "name": "file",
+   "collection": "minimal",
+   "file": "minimal/file.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 10
+   }
+  },
+  {
+   "name": "file-minus",
+   "collection": "minimal",
+   "file": "minimal/file-minus.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 11
+   }
+  },
+  {
+   "name": "file-plus",
+   "collection": "minimal",
+   "file": "minimal/file-plus.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 12
+   }
+  },
+  {
+   "name": "file-text",
+   "collection": "minimal",
+   "file": "minimal/file-text.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 13
+   }
+  },
+  {
+   "name": "film",
+   "collection": "minimal",
+   "file": "minimal/film.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 14
+   }
+  },
+  {
+   "name": "filter",
+   "collection": "minimal",
+   "file": "minimal/filter.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 15
+   }
+  },
+  {
+   "name": "flag",
+   "collection": "minimal",
+   "file": "minimal/flag.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 16
+   }
+  },
+  {
+   "name": "folder",
+   "collection": "minimal",
+   "file": "minimal/folder.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 17
+   }
+  },
+  {
+   "name": "folder-minus",
+   "collection": "minimal",
+   "file": "minimal/folder-minus.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 18
+   }
+  },
+  {
+   "name": "folder-plus",
+   "collection": "minimal",
+   "file": "minimal/folder-plus.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 19
+   }
+  },
+  {
+   "name": "framer",
+   "collection": "minimal",
+   "file": "minimal/framer.svg",
+   "w": 32.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 20
+   }
+  },
+  {
+   "name": "frown",
+   "collection": "minimal",
+   "file": "minimal/frown.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 21
+   }
+  },
+  {
+   "name": "gift",
+   "collection": "minimal",
+   "file": "minimal/gift.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 22
+   }
+  },
+  {
+   "name": "git-branch",
+   "collection": "minimal",
+   "file": "minimal/git-branch.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 23
+   }
+  },
+  {
+   "name": "git-commit",
+   "collection": "minimal",
+   "file": "minimal/git-commit.svg",
+   "w": 48.3,
+   "h": 20.4,
+   "source": {
+    "sheet": "min",
+    "row": 8,
+    "col": 24
+   }
+  },
+  {
+   "name": "corner-down-left",
+   "collection": "minimal",
+   "file": "minimal/corner-down-left.svg",
+   "w": 35.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 1
+   }
+  },
+  {
+   "name": "corner-down-right",
+   "collection": "minimal",
+   "file": "minimal/corner-down-right.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 2
+   }
+  },
+  {
+   "name": "corner-left-down",
+   "collection": "minimal",
+   "file": "minimal/corner-left-down.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 3
+   }
+  },
+  {
+   "name": "corner-left-up",
+   "collection": "minimal",
+   "file": "minimal/corner-left-up.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 4
+   }
+  },
+  {
+   "name": "corner-right-down",
+   "collection": "minimal",
+   "file": "minimal/corner-right-down.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 5
+   }
+  },
+  {
+   "name": "corner-right-up",
+   "collection": "minimal",
+   "file": "minimal/corner-right-up.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 6
+   }
+  },
+  {
+   "name": "corner-up-left",
+   "collection": "minimal",
+   "file": "minimal/corner-up-left.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 7
+   }
+  },
+  {
+   "name": "corner-up-right",
+   "collection": "minimal",
+   "file": "minimal/corner-up-right.svg",
+   "w": 35.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 8
+   }
+  },
+  {
+   "name": "cpu",
+   "collection": "minimal",
+   "file": "minimal/cpu.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 9
+   }
+  },
+  {
+   "name": "credit-card",
+   "collection": "minimal",
+   "file": "minimal/credit-card.svg",
+   "w": 48.5,
+   "h": 36.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 10
+   }
+  },
+  {
+   "name": "crop",
+   "collection": "minimal",
+   "file": "minimal/crop.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 11
+   }
+  },
+  {
+   "name": "crosshair",
+   "collection": "minimal",
+   "file": "minimal/crosshair.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 12
+   }
+  },
+  {
+   "name": "database",
+   "collection": "minimal",
+   "file": "minimal/database.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 13
+   }
+  },
+  {
+   "name": "delete",
+   "collection": "minimal",
+   "file": "minimal/delete.svg",
+   "w": 48.5,
+   "h": 36.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 14
+   }
+  },
+  {
+   "name": "disc",
+   "collection": "minimal",
+   "file": "minimal/disc.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 15
+   }
+  },
+  {
+   "name": "divide",
+   "collection": "minimal",
+   "file": "minimal/divide.svg",
+   "w": 31.3,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 16
+   }
+  },
+  {
+   "name": "divide-circle",
+   "collection": "minimal",
+   "file": "minimal/divide-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 17
+   }
+  },
+  {
+   "name": "divide-square",
+   "collection": "minimal",
+   "file": "minimal/divide-square.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 18
+   }
+  },
+  {
+   "name": "dollar-sign",
+   "collection": "minimal",
+   "file": "minimal/dollar-sign.svg",
+   "w": 28.4,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 19
+   }
+  },
+  {
+   "name": "download",
+   "collection": "minimal",
+   "file": "minimal/download.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 20
+   }
+  },
+  {
+   "name": "download-cloud",
+   "collection": "minimal",
+   "file": "minimal/download-cloud.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 21
+   }
+  },
+  {
+   "name": "dribbble",
+   "collection": "minimal",
+   "file": "minimal/dribbble.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 22
+   }
+  },
+  {
+   "name": "droplet",
+   "collection": "minimal",
+   "file": "minimal/droplet.svg",
+   "w": 35.9,
+   "h": 42.6,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 23
+   }
+  },
+  {
+   "name": "edit",
+   "collection": "minimal",
+   "file": "minimal/edit.svg",
+   "w": 44.3,
+   "h": 44.3,
+   "source": {
+    "sheet": "min",
+    "row": 9,
+    "col": 24
+   }
+  },
+  {
+   "name": "chevron-down",
+   "collection": "minimal",
+   "file": "minimal/chevron-down.svg",
+   "w": 26.4,
+   "h": 14.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 1
+   }
+  },
+  {
+   "name": "chevron-left",
+   "collection": "minimal",
+   "file": "minimal/chevron-left.svg",
+   "w": 14.4,
+   "h": 26.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 2
+   }
+  },
+  {
+   "name": "chevron-right",
+   "collection": "minimal",
+   "file": "minimal/chevron-right.svg",
+   "w": 14.4,
+   "h": 26.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 3
+   }
+  },
+  {
+   "name": "chevron-up",
+   "collection": "minimal",
+   "file": "minimal/chevron-up.svg",
+   "w": 26.4,
+   "h": 14.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 4
+   }
+  },
+  {
+   "name": "chevrons-down",
+   "collection": "minimal",
+   "file": "minimal/chevrons-down.svg",
+   "w": 22.4,
+   "h": 26.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 5
+   }
+  },
+  {
+   "name": "chevrons-left",
+   "collection": "minimal",
+   "file": "minimal/chevrons-left.svg",
+   "w": 26.4,
+   "h": 22.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 6
+   }
+  },
+  {
+   "name": "chevrons-right",
+   "collection": "minimal",
+   "file": "minimal/chevrons-right.svg",
+   "w": 26.4,
+   "h": 22.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 7
+   }
+  },
+  {
+   "name": "chevrons-up",
+   "collection": "minimal",
+   "file": "minimal/chevrons-up.svg",
+   "w": 22.4,
+   "h": 26.4,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 8
+   }
+  },
+  {
+   "name": "chrome",
+   "collection": "minimal",
+   "file": "minimal/chrome.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 9
+   }
+  },
+  {
+   "name": "circle",
+   "collection": "minimal",
+   "file": "minimal/circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 10
+   }
+  },
+  {
+   "name": "clipboard",
+   "collection": "minimal",
+   "file": "minimal/clipboard.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 11
+   }
+  },
+  {
+   "name": "clock",
+   "collection": "minimal",
+   "file": "minimal/clock.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 12
+   }
+  },
+  {
+   "name": "cloud",
+   "collection": "minimal",
+   "file": "minimal/cloud.svg",
+   "w": 48.5,
+   "h": 36.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 13
+   }
+  },
+  {
+   "name": "cloud-drizzle",
+   "collection": "minimal",
+   "file": "minimal/cloud-drizzle.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 14
+   }
+  },
+  {
+   "name": "cloud-lightning",
+   "collection": "minimal",
+   "file": "minimal/cloud-lightning.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 15
+   }
+  },
+  {
+   "name": "cloud-off",
+   "collection": "minimal",
+   "file": "minimal/cloud-off.svg",
+   "w": 48.8,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 16
+   }
+  },
+  {
+   "name": "cloud-rain",
+   "collection": "minimal",
+   "file": "minimal/cloud-rain.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 17
+   }
+  },
+  {
+   "name": "cloud-snow",
+   "collection": "minimal",
+   "file": "minimal/cloud-snow.svg",
+   "w": 48.5,
+   "h": 44.5,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 18
+   }
+  },
+  {
+   "name": "code",
+   "collection": "minimal",
+   "file": "minimal/code.svg",
+   "w": 44.1,
+   "h": 28.0,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 19
+   }
+  },
+  {
+   "name": "codepen",
+   "collection": "minimal",
+   "file": "minimal/codepen.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 20
+   }
+  },
+  {
+   "name": "codesandbox",
+   "collection": "minimal",
+   "file": "minimal/codesandbox.svg",
+   "w": 40.1,
+   "h": 44.2,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 21
+   }
+  },
+  {
+   "name": "coffee",
+   "collection": "minimal",
+   "file": "minimal/coffee.svg",
+   "w": 46.3,
+   "h": 44.3,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 22
+   }
+  },
+  {
+   "name": "compass",
+   "collection": "minimal",
+   "file": "minimal/compass.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 23
+   }
+  },
+  {
+   "name": "copy",
+   "collection": "minimal",
+   "file": "minimal/copy.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 10,
+    "col": 24
+   }
+  },
+  {
+   "name": "at-sign",
+   "collection": "minimal",
+   "file": "minimal/at-sign.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 1
+   }
+  },
+  {
+   "name": "award",
+   "collection": "minimal",
+   "file": "minimal/award.svg",
+   "w": 32.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 2
+   }
+  },
+  {
+   "name": "bar-chart",
+   "collection": "minimal",
+   "file": "minimal/bar-chart.svg",
+   "w": 27.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 3
+   }
+  },
+  {
+   "name": "bar-chart-2",
+   "collection": "minimal",
+   "file": "minimal/bar-chart-2.svg",
+   "w": 27.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 4
+   }
+  },
+  {
+   "name": "battery",
+   "collection": "minimal",
+   "file": "minimal/battery.svg",
+   "w": 48.5,
+   "h": 28.4,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 5
+   }
+  },
+  {
+   "name": "battery-charging",
+   "collection": "minimal",
+   "file": "minimal/battery-charging.svg",
+   "w": 48.5,
+   "h": 28.4,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 6
+   }
+  },
+  {
+   "name": "bell",
+   "collection": "minimal",
+   "file": "minimal/bell.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 7
+   }
+  },
+  {
+   "name": "bell-off",
+   "collection": "minimal",
+   "file": "minimal/bell-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 8
+   }
+  },
+  {
+   "name": "bluetooth",
+   "collection": "minimal",
+   "file": "minimal/bluetooth.svg",
+   "w": 26.4,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 9
+   }
+  },
+  {
+   "name": "bold",
+   "collection": "minimal",
+   "file": "minimal/bold.svg",
+   "w": 29.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 10
+   }
+  },
+  {
+   "name": "book",
+   "collection": "minimal",
+   "file": "minimal/book.svg",
+   "w": 36.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 11
+   }
+  },
+  {
+   "name": "book-open",
+   "collection": "minimal",
+   "file": "minimal/book-open.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 12
+   }
+  },
+  {
+   "name": "bookmark",
+   "collection": "minimal",
+   "file": "minimal/bookmark.svg",
+   "w": 31.6,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 13
+   }
+  },
+  {
+   "name": "box",
+   "collection": "minimal",
+   "file": "minimal/box.svg",
+   "w": 40.1,
+   "h": 44.2,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 14
+   }
+  },
+  {
+   "name": "briefcase",
+   "collection": "minimal",
+   "file": "minimal/briefcase.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 15
+   }
+  },
+  {
+   "name": "calendar",
+   "collection": "minimal",
+   "file": "minimal/calendar.svg",
+   "w": 40.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 16
+   }
+  },
+  {
+   "name": "camera",
+   "collection": "minimal",
+   "file": "minimal/camera.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 17
+   }
+  },
+  {
+   "name": "camera-off",
+   "collection": "minimal",
+   "file": "minimal/camera-off.svg",
+   "w": 48.5,
+   "h": 48.5,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 18
+   }
+  },
+  {
+   "name": "cast",
+   "collection": "minimal",
+   "file": "minimal/cast.svg",
+   "w": 44.1,
+   "h": 36.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 19
+   }
+  },
+  {
+   "name": "check",
+   "collection": "minimal",
+   "file": "minimal/check.svg",
+   "w": 35.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 20
+   }
+  },
+  {
+   "name": "check-circle",
+   "collection": "minimal",
+   "file": "minimal/check-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 21
+   }
+  },
+  {
+   "name": "check-square",
+   "collection": "minimal",
+   "file": "minimal/check-square.svg",
+   "w": 41.9,
+   "h": 39.9,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 22
+   }
+  },
+  {
+   "name": "columns",
+   "collection": "minimal",
+   "file": "minimal/columns.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 23
+   }
+  },
+  {
+   "name": "command",
+   "collection": "minimal",
+   "file": "minimal/command.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 11,
+    "col": 24
+   }
+  },
+  {
+   "name": "activity",
+   "collection": "minimal",
+   "file": "minimal/activity.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 1
+   }
+  },
+  {
+   "name": "airplay",
+   "collection": "minimal",
+   "file": "minimal/airplay.svg",
+   "w": 44.1,
+   "h": 40.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 2
+   }
+  },
+  {
+   "name": "alert-circle",
+   "collection": "minimal",
+   "file": "minimal/alert-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 3
+   }
+  },
+  {
+   "name": "alert-octagon",
+   "collection": "minimal",
+   "file": "minimal/alert-octagon.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 4
+   }
+  },
+  {
+   "name": "alert-triangle",
+   "collection": "minimal",
+   "file": "minimal/alert-triangle.svg",
+   "w": 46.0,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 5
+   }
+  },
+  {
+   "name": "align-center",
+   "collection": "minimal",
+   "file": "minimal/align-center.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 6
+   }
+  },
+  {
+   "name": "align-justify",
+   "collection": "minimal",
+   "file": "minimal/align-justify.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 7
+   }
+  },
+  {
+   "name": "align-left",
+   "collection": "minimal",
+   "file": "minimal/align-left.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 8
+   }
+  },
+  {
+   "name": "align-right",
+   "collection": "minimal",
+   "file": "minimal/align-right.svg",
+   "w": 39.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 9
+   }
+  },
+  {
+   "name": "anchor",
+   "collection": "minimal",
+   "file": "minimal/anchor.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 10
+   }
+  },
+  {
+   "name": "aperture",
+   "collection": "minimal",
+   "file": "minimal/aperture.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 11
+   }
+  },
+  {
+   "name": "archive",
+   "collection": "minimal",
+   "file": "minimal/archive.svg",
+   "w": 48.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 12
+   }
+  },
+  {
+   "name": "arrow-down",
+   "collection": "minimal",
+   "file": "minimal/arrow-down.svg",
+   "w": 30.9,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 13
+   }
+  },
+  {
+   "name": "arrow-down-circle",
+   "collection": "minimal",
+   "file": "minimal/arrow-down-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 14
+   }
+  },
+  {
+   "name": "arrow-down-left",
+   "collection": "minimal",
+   "file": "minimal/arrow-down-left.svg",
+   "w": 22.0,
+   "h": 22.0,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 15
+   }
+  },
+  {
+   "name": "arrow-down-right",
+   "collection": "minimal",
+   "file": "minimal/arrow-down-right.svg",
+   "w": 22.0,
+   "h": 22.0,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 16
+   }
+  },
+  {
+   "name": "arrow-left",
+   "collection": "minimal",
+   "file": "minimal/arrow-left.svg",
+   "w": 30.9,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 17
+   }
+  },
+  {
+   "name": "arrow-left-circle",
+   "collection": "minimal",
+   "file": "minimal/arrow-left-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 18
+   }
+  },
+  {
+   "name": "arrow-right",
+   "collection": "minimal",
+   "file": "minimal/arrow-right.svg",
+   "w": 30.9,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 19
+   }
+  },
+  {
+   "name": "arrow-right-circle",
+   "collection": "minimal",
+   "file": "minimal/arrow-right-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 20
+   }
+  },
+  {
+   "name": "arrow-up",
+   "collection": "minimal",
+   "file": "minimal/arrow-up.svg",
+   "w": 30.9,
+   "h": 30.9,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 21
+   }
+  },
+  {
+   "name": "arrow-up-circle",
+   "collection": "minimal",
+   "file": "minimal/arrow-up-circle.svg",
+   "w": 44.1,
+   "h": 44.1,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 22
+   }
+  },
+  {
+   "name": "arrow-up-left",
+   "collection": "minimal",
+   "file": "minimal/arrow-up-left.svg",
+   "w": 22.0,
+   "h": 22.0,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 23
+   }
+  },
+  {
+   "name": "arrow-up-right",
+   "collection": "minimal",
+   "file": "minimal/arrow-up-right.svg",
+   "w": 22.0,
+   "h": 22.0,
+   "source": {
+    "sheet": "min",
+    "row": 12,
+    "col": 24
+   }
+  },
+  {
+   "name": "inbox-full",
+   "collection": "minimal",
+   "file": "minimal/inbox-full.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 1
+   }
+  },
+  {
+   "name": "inbox-2",
+   "collection": "minimal",
+   "file": "minimal/inbox-2.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 2
+   }
+  },
+  {
+   "name": "archive-drawer",
+   "collection": "minimal",
+   "file": "minimal/archive-drawer.svg",
+   "w": 46.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 3
+   }
+  },
+  {
+   "name": "film-frames",
+   "collection": "minimal",
+   "file": "minimal/film-frames.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 4
+   }
+  },
+  {
+   "name": "filter-circle",
+   "collection": "minimal",
+   "file": "minimal/filter-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 5
+   }
+  },
+  {
+   "name": "filter-lines",
+   "collection": "minimal",
+   "file": "minimal/filter-lines.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 6
+   }
+  },
+  {
+   "name": "fingerprint",
+   "collection": "minimal",
+   "file": "minimal/fingerprint.svg",
+   "w": 43.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 7
+   }
+  },
+  {
+   "name": "credit-card-back",
+   "collection": "minimal",
+   "file": "minimal/credit-card-back.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 8
+   }
+  },
+  {
+   "name": "caret-left-circle",
+   "collection": "minimal",
+   "file": "minimal/caret-left-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 9
+   }
+  },
+  {
+   "name": "caret-left-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-left-solid.svg",
+   "w": 22.9,
+   "h": 33.8,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 10
+   }
+  },
+  {
+   "name": "caret-down-circle",
+   "collection": "minimal",
+   "file": "minimal/caret-down-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 11
+   }
+  },
+  {
+   "name": "caret-down-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-down-solid.svg",
+   "w": 33.9,
+   "h": 22.9,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 12
+   }
+  },
+  {
+   "name": "question-mark",
+   "collection": "minimal",
+   "file": "minimal/question-mark.svg",
+   "w": 25.3,
+   "h": 38.0,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 13
+   }
+  },
+  {
+   "name": "house",
+   "collection": "minimal",
+   "file": "minimal/house.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 14
+   }
+  },
+  {
+   "name": "hourglass",
+   "collection": "minimal",
+   "file": "minimal/hourglass.svg",
+   "w": 34.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 15
+   }
+  },
+  {
+   "name": "ice-cream",
+   "collection": "minimal",
+   "file": "minimal/ice-cream.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 16
+   }
+  },
+  {
+   "name": "mobile-user",
+   "collection": "minimal",
+   "file": "minimal/mobile-user.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 17
+   }
+  },
+  {
+   "name": "photo",
+   "collection": "minimal",
+   "file": "minimal/photo.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 18
+   }
+  },
+  {
+   "name": "photos",
+   "collection": "minimal",
+   "file": "minimal/photos.svg",
+   "w": 52.9,
+   "h": 46.9,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 19
+   }
+  },
+  {
+   "name": "bag-minus",
+   "collection": "minimal",
+   "file": "minimal/bag-minus.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 20
+   }
+  },
+  {
+   "name": "balloon",
+   "collection": "minimal",
+   "file": "minimal/balloon.svg",
+   "w": 37.9,
+   "h": 52.8,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 21
+   }
+  },
+  {
+   "name": "ban",
+   "collection": "minimal",
+   "file": "minimal/ban.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 22
+   }
+  },
+  {
+   "name": "dumbbell",
+   "collection": "minimal",
+   "file": "minimal/dumbbell.svg",
+   "w": 49.6,
+   "h": 31.6,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 23
+   }
+  },
+  {
+   "name": "barcode",
+   "collection": "minimal",
+   "file": "minimal/barcode.svg",
+   "w": 43.0,
+   "h": 34.0,
+   "source": {
+    "sheet": "min",
+    "row": 13,
+    "col": 24
+   }
+  },
+  {
+   "name": "cloud-round",
+   "collection": "minimal",
+   "file": "minimal/cloud-round.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 1
+   }
+  },
+  {
+   "name": "code-download",
+   "collection": "minimal",
+   "file": "minimal/code-download.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 2
+   }
+  },
+  {
+   "name": "code-brackets",
+   "collection": "minimal",
+   "file": "minimal/code-brackets.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 3
+   }
+  },
+  {
+   "name": "code-slash",
+   "collection": "minimal",
+   "file": "minimal/code-slash.svg",
+   "w": 49.6,
+   "h": 37.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 4
+   }
+  },
+  {
+   "name": "code-dots",
+   "collection": "minimal",
+   "file": "minimal/code-dots.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 5
+   }
+  },
+  {
+   "name": "gear",
+   "collection": "minimal",
+   "file": "minimal/gear.svg",
+   "w": 43.0,
+   "h": 42.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 6
+   }
+  },
+  {
+   "name": "paint-pour",
+   "collection": "minimal",
+   "file": "minimal/paint-pour.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 7
+   }
+  },
+  {
+   "name": "blend-circles",
+   "collection": "minimal",
+   "file": "minimal/blend-circles.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 8
+   }
+  },
+  {
+   "name": "palette",
+   "collection": "minimal",
+   "file": "minimal/palette.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 9
+   }
+  },
+  {
+   "name": "car",
+   "collection": "minimal",
+   "file": "minimal/car.svg",
+   "w": 39.7,
+   "h": 33.7,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 10
+   }
+  },
+  {
+   "name": "car-sport",
+   "collection": "minimal",
+   "file": "minimal/car-sport.svg",
+   "w": 49.6,
+   "h": 34.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 11
+   }
+  },
+  {
+   "name": "fast-food",
+   "collection": "minimal",
+   "file": "minimal/fast-food.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 12
+   }
+  },
+  {
+   "name": "move-arrows",
+   "collection": "minimal",
+   "file": "minimal/move-arrows.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 13
+   }
+  },
+  {
+   "name": "music-note",
+   "collection": "minimal",
+   "file": "minimal/music-note.svg",
+   "w": 28.2,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 14
+   }
+  },
+  {
+   "name": "music-notes",
+   "collection": "minimal",
+   "file": "minimal/music-notes.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 15
+   }
+  },
+  {
+   "name": "navigation-circle",
+   "collection": "minimal",
+   "file": "minimal/navigation-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 16
+   }
+  },
+  {
+   "name": "navigation-arrow",
+   "collection": "minimal",
+   "file": "minimal/navigation-arrow.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 17
+   }
+  },
+  {
+   "name": "newspaper",
+   "collection": "minimal",
+   "file": "minimal/newspaper.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 18
+   }
+  },
+  {
+   "name": "bell-circle",
+   "collection": "minimal",
+   "file": "minimal/bell-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 19
+   }
+  },
+  {
+   "name": "caret-down-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-down-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 20
+   }
+  },
+  {
+   "name": "caret-down-triangle",
+   "collection": "minimal",
+   "file": "minimal/caret-down-triangle.svg",
+   "w": 33.9,
+   "h": 22.9,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 21
+   }
+  },
+  {
+   "name": "bandage",
+   "collection": "minimal",
+   "file": "minimal/bandage.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 22
+   }
+  },
+  {
+   "name": "caret-up-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-up-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 23
+   }
+  },
+  {
+   "name": "caret-up-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-up-solid.svg",
+   "w": 33.8,
+   "h": 22.9,
+   "source": {
+    "sheet": "min",
+    "row": 14,
+    "col": 24
+   }
+  },
+  {
+   "name": "paperclip-round",
+   "collection": "minimal",
+   "file": "minimal/paperclip-round.svg",
+   "w": 24.6,
+   "h": 40.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 1
+   }
+  },
+  {
+   "name": "backspace",
+   "collection": "minimal",
+   "file": "minimal/backspace.svg",
+   "w": 43.1,
+   "h": 34.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 2
+   }
+  },
+  {
+   "name": "bag-plus",
+   "collection": "minimal",
+   "file": "minimal/bag-plus.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 3
+   }
+  },
+  {
+   "name": "bag-check",
+   "collection": "minimal",
+   "file": "minimal/bag-check.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 4
+   }
+  },
+  {
+   "name": "shopping-bag-round",
+   "collection": "minimal",
+   "file": "minimal/shopping-bag-round.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 5
+   }
+  },
+  {
+   "name": "bag",
+   "collection": "minimal",
+   "file": "minimal/bag.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 6
+   }
+  },
+  {
+   "name": "bag-minus-2",
+   "collection": "minimal",
+   "file": "minimal/bag-minus-2.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 7
+   }
+  },
+  {
+   "name": "balloon-string",
+   "collection": "minimal",
+   "file": "minimal/balloon-string.svg",
+   "w": 37.9,
+   "h": 52.8,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 8
+   }
+  },
+  {
+   "name": "ban-circle",
+   "collection": "minimal",
+   "file": "minimal/ban-circle.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 9
+   }
+  },
+  {
+   "name": "camera-rounded",
+   "collection": "minimal",
+   "file": "minimal/camera-rounded.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 10
+   }
+  },
+  {
+   "name": "camera-rotate",
+   "collection": "minimal",
+   "file": "minimal/camera-rotate.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 11
+   }
+  },
+  {
+   "name": "ship-wheel",
+   "collection": "minimal",
+   "file": "minimal/ship-wheel.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 12
+   }
+  },
+  {
+   "name": "price-tag",
+   "collection": "minimal",
+   "file": "minimal/price-tag.svg",
+   "w": 52.9,
+   "h": 49.9,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 13
+   }
+  },
+  {
+   "name": "printer-round",
+   "collection": "minimal",
+   "file": "minimal/printer-round.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 14
+   }
+  },
+  {
+   "name": "pyramid",
+   "collection": "minimal",
+   "file": "minimal/pyramid.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 15
+   }
+  },
+  {
+   "name": "pulse-dot",
+   "collection": "minimal",
+   "file": "minimal/pulse-dot.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 16
+   }
+  },
+  {
+   "name": "upload-square",
+   "collection": "minimal",
+   "file": "minimal/upload-square.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 17
+   }
+  },
+  {
+   "name": "qr-code",
+   "collection": "minimal",
+   "file": "minimal/qr-code.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 18
+   }
+  },
+  {
+   "name": "circle-outline",
+   "collection": "minimal",
+   "file": "minimal/circle-outline.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 19
+   }
+  },
+  {
+   "name": "blend-circles-2",
+   "collection": "minimal",
+   "file": "minimal/blend-circles-2.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 20
+   }
+  },
+  {
+   "name": "palette-dots",
+   "collection": "minimal",
+   "file": "minimal/palette-dots.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 21
+   }
+  },
+  {
+   "name": "play-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/play-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 22
+   }
+  },
+  {
+   "name": "flask-conical",
+   "collection": "minimal",
+   "file": "minimal/flask-conical.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 23
+   }
+  },
+  {
+   "name": "flower",
+   "collection": "minimal",
+   "file": "minimal/flower.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 15,
+    "col": 24
+   }
+  },
+  {
+   "name": "chart-dots",
+   "collection": "minimal",
+   "file": "minimal/chart-dots.svg",
+   "w": 49.6,
+   "h": 28.6,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 1
+   }
+  },
+  {
+   "name": "shutter-solid",
+   "collection": "minimal",
+   "file": "minimal/shutter-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 2
+   }
+  },
+  {
+   "name": "dots-grid",
+   "collection": "minimal",
+   "file": "minimal/dots-grid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 3
+   }
+  },
+  {
+   "name": "archive-down",
+   "collection": "minimal",
+   "file": "minimal/archive-down.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 4
+   }
+  },
+  {
+   "name": "arrow-left-circle-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-left-circle-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 5
+   }
+  },
+  {
+   "name": "arrow-left-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-left-bold.svg",
+   "w": 37.2,
+   "h": 34.9,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 6
+   }
+  },
+  {
+   "name": "arrow-down-circle-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-down-circle-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 7
+   }
+  },
+  {
+   "name": "arrow-down-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-down-bold.svg",
+   "w": 34.9,
+   "h": 37.2,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 8
+   }
+  },
+  {
+   "name": "arrow-right-circle-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-right-circle-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 9
+   }
+  },
+  {
+   "name": "arrow-undo-circle",
+   "collection": "minimal",
+   "file": "minimal/arrow-undo-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 10
+   }
+  },
+  {
+   "name": "arrow-up-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-up-bold.svg",
+   "w": 34.9,
+   "h": 37.2,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 11
+   }
+  },
+  {
+   "name": "microphone",
+   "collection": "minimal",
+   "file": "minimal/microphone.svg",
+   "w": 30.9,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 12
+   }
+  },
+  {
+   "name": "shield-check",
+   "collection": "minimal",
+   "file": "minimal/shield-check.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 13
+   }
+  },
+  {
+   "name": "shield-half",
+   "collection": "minimal",
+   "file": "minimal/shield-half.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 14
+   }
+  },
+  {
+   "name": "shield-blank",
+   "collection": "minimal",
+   "file": "minimal/shield-blank.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 15
+   }
+  },
+  {
+   "name": "tshirt",
+   "collection": "minimal",
+   "file": "minimal/tshirt.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 16
+   }
+  },
+  {
+   "name": "shuffle-bold",
+   "collection": "minimal",
+   "file": "minimal/shuffle-bold.svg",
+   "w": 43.0,
+   "h": 34.0,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 17
+   }
+  },
+  {
+   "name": "skull",
+   "collection": "minimal",
+   "file": "minimal/skull.svg",
+   "w": 43.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 18
+   }
+  },
+  {
+   "name": "snowflake-branch",
+   "collection": "minimal",
+   "file": "minimal/snowflake-branch.svg",
+   "w": 43.9,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 19
+   }
+  },
+  {
+   "name": "filter-bars",
+   "collection": "minimal",
+   "file": "minimal/filter-bars.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 20
+   }
+  },
+  {
+   "name": "fingerprint-round",
+   "collection": "minimal",
+   "file": "minimal/fingerprint-round.svg",
+   "w": 43.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 21
+   }
+  },
+  {
+   "name": "magic-wand",
+   "collection": "minimal",
+   "file": "minimal/magic-wand.svg",
+   "w": 45.3,
+   "h": 45.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 22
+   }
+  },
+  {
+   "name": "translate",
+   "collection": "minimal",
+   "file": "minimal/translate.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 23
+   }
+  },
+  {
+   "name": "laptop-flat",
+   "collection": "minimal",
+   "file": "minimal/laptop-flat.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 16,
+    "col": 24
+   }
+  },
+  {
+   "name": "book-open-round",
+   "collection": "minimal",
+   "file": "minimal/book-open-round.svg",
+   "w": 49.6,
+   "h": 43.6,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 1
+   }
+  },
+  {
+   "name": "bookmark-round",
+   "collection": "minimal",
+   "file": "minimal/bookmark-round.svg",
+   "w": 34.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 2
+   }
+  },
+  {
+   "name": "bookmarks",
+   "collection": "minimal",
+   "file": "minimal/bookmarks.svg",
+   "w": 43.9,
+   "h": 52.9,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 3
+   }
+  },
+  {
+   "name": "bowling-ball",
+   "collection": "minimal",
+   "file": "minimal/bowling-ball.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 4
+   }
+  },
+  {
+   "name": "toolbox",
+   "collection": "minimal",
+   "file": "minimal/toolbox.svg",
+   "w": 49.6,
+   "h": 43.6,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 5
+   }
+  },
+  {
+   "name": "browser-window",
+   "collection": "minimal",
+   "file": "minimal/browser-window.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 6
+   }
+  },
+  {
+   "name": "paint-brush-slim",
+   "collection": "minimal",
+   "file": "minimal/paint-brush-slim.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 7
+   }
+  },
+  {
+   "name": "bug",
+   "collection": "minimal",
+   "file": "minimal/bug.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 8
+   }
+  },
+  {
+   "name": "wrench",
+   "collection": "minimal",
+   "file": "minimal/wrench.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 9
+   }
+  },
+  {
+   "name": "tea-cup",
+   "collection": "minimal",
+   "file": "minimal/tea-cup.svg",
+   "w": 43.0,
+   "h": 38.5,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 10
+   }
+  },
+  {
+   "name": "calendar-31",
+   "collection": "minimal",
+   "file": "minimal/calendar-31.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 11
+   }
+  },
+  {
+   "name": "power-bold",
+   "collection": "minimal",
+   "file": "minimal/power-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 12
+   }
+  },
+  {
+   "name": "trophy-round",
+   "collection": "minimal",
+   "file": "minimal/trophy-round.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 13
+   }
+  },
+  {
+   "name": "monitor-flat",
+   "collection": "minimal",
+   "file": "minimal/monitor-flat.svg",
+   "w": 49.6,
+   "h": 37.6,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 14
+   }
+  },
+  {
+   "name": "umbrella-round",
+   "collection": "minimal",
+   "file": "minimal/umbrella-round.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 15
+   }
+  },
+  {
+   "name": "link-broken",
+   "collection": "minimal",
+   "file": "minimal/link-broken.svg",
+   "w": 46.7,
+   "h": 25.7,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 16
+   }
+  },
+  {
+   "name": "video-off-round",
+   "collection": "minimal",
+   "file": "minimal/video-off-round.svg",
+   "w": 49.6,
+   "h": 39.1,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 17
+   }
+  },
+  {
+   "name": "video-camera",
+   "collection": "minimal",
+   "file": "minimal/video-camera.svg",
+   "w": 49.6,
+   "h": 31.5,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 18
+   }
+  },
+  {
+   "name": "volume-loud",
+   "collection": "minimal",
+   "file": "minimal/volume-loud.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 19
+   }
+  },
+  {
+   "name": "photo-round",
+   "collection": "minimal",
+   "file": "minimal/photo-round.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 20
+   }
+  },
+  {
+   "name": "photos-round",
+   "collection": "minimal",
+   "file": "minimal/photos-round.svg",
+   "w": 52.9,
+   "h": 46.9,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 21
+   }
+  },
+  {
+   "name": "fish",
+   "collection": "minimal",
+   "file": "minimal/fish.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 22
+   }
+  },
+  {
+   "name": "paper-plane-tilt",
+   "collection": "minimal",
+   "file": "minimal/paper-plane-tilt.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 23
+   }
+  },
+  {
+   "name": "cloud-sun",
+   "collection": "minimal",
+   "file": "minimal/cloud-sun.svg",
+   "w": 52.9,
+   "h": 46.9,
+   "source": {
+    "sheet": "min",
+    "row": 17,
+    "col": 24
+   }
+  },
+  {
+   "name": "collapse-vertical",
+   "collection": "minimal",
+   "file": "minimal/collapse-vertical.svg",
+   "w": 28.7,
+   "h": 34.7,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 1
+   }
+  },
+  {
+   "name": "chevron-down-circle",
+   "collection": "minimal",
+   "file": "minimal/chevron-down-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 2
+   }
+  },
+  {
+   "name": "chevron-down-bold",
+   "collection": "minimal",
+   "file": "minimal/chevron-down-bold.svg",
+   "w": 34.7,
+   "h": 21.2,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 3
+   }
+  },
+  {
+   "name": "expand-vertical",
+   "collection": "minimal",
+   "file": "minimal/expand-vertical.svg",
+   "w": 28.7,
+   "h": 34.7,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 4
+   }
+  },
+  {
+   "name": "chevron-right-circle",
+   "collection": "minimal",
+   "file": "minimal/chevron-right-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 5
+   }
+  },
+  {
+   "name": "chevron-right-bold",
+   "collection": "minimal",
+   "file": "minimal/chevron-right-bold.svg",
+   "w": 21.2,
+   "h": 34.7,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 6
+   }
+  },
+  {
+   "name": "chevron-up-circle",
+   "collection": "minimal",
+   "file": "minimal/chevron-up-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 7
+   }
+  },
+  {
+   "name": "chevron-up-bold",
+   "collection": "minimal",
+   "file": "minimal/chevron-up-bold.svg",
+   "w": 34.7,
+   "h": 21.2,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 8
+   }
+  },
+  {
+   "name": "clipboard-round",
+   "collection": "minimal",
+   "file": "minimal/clipboard-round.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 9
+   }
+  },
+  {
+   "name": "cloud-check",
+   "collection": "minimal",
+   "file": "minimal/cloud-check.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 10
+   }
+  },
+  {
+   "name": "cloud-plain",
+   "collection": "minimal",
+   "file": "minimal/cloud-plain.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 11
+   }
+  },
+  {
+   "name": "share-box",
+   "collection": "minimal",
+   "file": "minimal/share-box.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 12
+   }
+  },
+  {
+   "name": "triangle-round",
+   "collection": "minimal",
+   "file": "minimal/triangle-round.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 13
+   }
+  },
+  {
+   "name": "paperclip-vertical",
+   "collection": "minimal",
+   "file": "minimal/paperclip-vertical.svg",
+   "w": 24.6,
+   "h": 40.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 14
+   }
+  },
+  {
+   "name": "backspace-round",
+   "collection": "minimal",
+   "file": "minimal/backspace-round.svg",
+   "w": 43.1,
+   "h": 34.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 15
+   }
+  },
+  {
+   "name": "bag-plus-round",
+   "collection": "minimal",
+   "file": "minimal/bag-plus-round.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 16
+   }
+  },
+  {
+   "name": "bag-check-round",
+   "collection": "minimal",
+   "file": "minimal/bag-check-round.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 17
+   }
+  },
+  {
+   "name": "shopping-bag-handle",
+   "collection": "minimal",
+   "file": "minimal/shopping-bag-handle.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 18
+   }
+  },
+  {
+   "name": "bag-plain",
+   "collection": "minimal",
+   "file": "minimal/bag-plain.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 19
+   }
+  },
+  {
+   "name": "newspaper-fold",
+   "collection": "minimal",
+   "file": "minimal/newspaper-fold.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 20
+   }
+  },
+  {
+   "name": "bell-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/bell-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 21
+   }
+  },
+  {
+   "name": "infinity",
+   "collection": "minimal",
+   "file": "minimal/infinity.svg",
+   "w": 49.6,
+   "h": 25.5,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 22
+   }
+  },
+  {
+   "name": "redo",
+   "collection": "minimal",
+   "file": "minimal/redo.svg",
+   "w": 37.1,
+   "h": 44.2,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 23
+   }
+  },
+  {
+   "name": "refresh-circle",
+   "collection": "minimal",
+   "file": "minimal/refresh-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 18,
+    "col": 24
+   }
+  },
+  {
+   "name": "download-tray",
+   "collection": "minimal",
+   "file": "minimal/download-tray.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 1
+   }
+  },
+  {
+   "name": "copy-plus",
+   "collection": "minimal",
+   "file": "minimal/copy-plus.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 2
+   }
+  },
+  {
+   "name": "ear",
+   "collection": "minimal",
+   "file": "minimal/ear.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 3
+   }
+  },
+  {
+   "name": "earth",
+   "collection": "minimal",
+   "file": "minimal/earth.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 4
+   }
+  },
+  {
+   "name": "easel",
+   "collection": "minimal",
+   "file": "minimal/easel.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 5
+   }
+  },
+  {
+   "name": "egg",
+   "collection": "minimal",
+   "file": "minimal/egg.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 6
+   }
+  },
+  {
+   "name": "circle-plain",
+   "collection": "minimal",
+   "file": "minimal/circle-plain.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 7
+   }
+  },
+  {
+   "name": "more-circle",
+   "collection": "minimal",
+   "file": "minimal/more-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 8
+   }
+  },
+  {
+   "name": "dots-loose",
+   "collection": "minimal",
+   "file": "minimal/dots-loose.svg",
+   "w": 43.0,
+   "h": 12.9,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 9
+   }
+  },
+  {
+   "name": "reply",
+   "collection": "minimal",
+   "file": "minimal/reply.svg",
+   "w": 43.0,
+   "h": 38.5,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 10
+   }
+  },
+  {
+   "name": "at-circle",
+   "collection": "minimal",
+   "file": "minimal/at-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 11
+   }
+  },
+  {
+   "name": "trending-arrow",
+   "collection": "minimal",
+   "file": "minimal/trending-arrow.svg",
+   "w": 46.3,
+   "h": 28.2,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 12
+   }
+  },
+  {
+   "name": "camera-classic",
+   "collection": "minimal",
+   "file": "minimal/camera-classic.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 13
+   }
+  },
+  {
+   "name": "camera-switch",
+   "collection": "minimal",
+   "file": "minimal/camera-switch.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 14
+   }
+  },
+  {
+   "name": "car-round",
+   "collection": "minimal",
+   "file": "minimal/car-round.svg",
+   "w": 39.7,
+   "h": 33.7,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 15
+   }
+  },
+  {
+   "name": "car-sport-round",
+   "collection": "minimal",
+   "file": "minimal/car-sport-round.svg",
+   "w": 49.6,
+   "h": 34.6,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 16
+   }
+  },
+  {
+   "name": "credit-card-front",
+   "collection": "minimal",
+   "file": "minimal/credit-card-front.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 17
+   }
+  },
+  {
+   "name": "caret-left-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/caret-left-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 18
+   }
+  },
+  {
+   "name": "caret-left-triangle",
+   "collection": "minimal",
+   "file": "minimal/caret-left-triangle.svg",
+   "w": 22.9,
+   "h": 33.9,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 19
+   }
+  },
+  {
+   "name": "qr-blocks",
+   "collection": "minimal",
+   "file": "minimal/qr-blocks.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 20
+   }
+  },
+  {
+   "name": "circle-thin",
+   "collection": "minimal",
+   "file": "minimal/circle-thin.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 21
+   }
+  },
+  {
+   "name": "bell-off-circle",
+   "collection": "minimal",
+   "file": "minimal/bell-off-circle.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 22
+   }
+  },
+  {
+   "name": "square-bold",
+   "collection": "minimal",
+   "file": "minimal/square-bold.svg",
+   "w": 36.4,
+   "h": 36.4,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 23
+   }
+  },
+  {
+   "name": "stopwatch",
+   "collection": "minimal",
+   "file": "minimal/stopwatch.svg",
+   "w": 40.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 19,
+    "col": 24
+   }
+  },
+  {
+   "name": "commit-branch",
+   "collection": "minimal",
+   "file": "minimal/commit-branch.svg",
+   "w": 40.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 1
+   }
+  },
+  {
+   "name": "fork-branch",
+   "collection": "minimal",
+   "file": "minimal/fork-branch.svg",
+   "w": 40.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 2
+   }
+  },
+  {
+   "name": "compare-branch",
+   "collection": "minimal",
+   "file": "minimal/compare-branch.svg",
+   "w": 40.4,
+   "h": 47.9,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 3
+   }
+  },
+  {
+   "name": "eyeglasses",
+   "collection": "minimal",
+   "file": "minimal/eyeglasses.svg",
+   "w": 46.3,
+   "h": 20.7,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 4
+   }
+  },
+  {
+   "name": "globe-wire",
+   "collection": "minimal",
+   "file": "minimal/globe-wire.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 5
+   }
+  },
+  {
+   "name": "golf-flag",
+   "collection": "minimal",
+   "file": "minimal/golf-flag.svg",
+   "w": 43.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 6
+   }
+  },
+  {
+   "name": "app-grid",
+   "collection": "minimal",
+   "file": "minimal/app-grid.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 7
+   }
+  },
+  {
+   "name": "hammer",
+   "collection": "minimal",
+   "file": "minimal/hammer.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 8
+   }
+  },
+  {
+   "name": "hand-raised",
+   "collection": "minimal",
+   "file": "minimal/hand-raised.svg",
+   "w": 40.9,
+   "h": 52.9,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 9
+   }
+  },
+  {
+   "name": "calculator",
+   "collection": "minimal",
+   "file": "minimal/calculator.svg",
+   "w": 34.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 10
+   }
+  },
+  {
+   "name": "calendar-dots",
+   "collection": "minimal",
+   "file": "minimal/calendar-dots.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 11
+   }
+  },
+  {
+   "name": "gender-female",
+   "collection": "minimal",
+   "file": "minimal/gender-female.svg",
+   "w": 36.1,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 12
+   }
+  },
+  {
+   "name": "cloud-soft",
+   "collection": "minimal",
+   "file": "minimal/cloud-soft.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 13
+   }
+  },
+  {
+   "name": "code-download-round",
+   "collection": "minimal",
+   "file": "minimal/code-download-round.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 14
+   }
+  },
+  {
+   "name": "code-brackets-round",
+   "collection": "minimal",
+   "file": "minimal/code-brackets-round.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 15
+   }
+  },
+  {
+   "name": "code-slash-round",
+   "collection": "minimal",
+   "file": "minimal/code-slash-round.svg",
+   "w": 49.6,
+   "h": 37.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 16
+   }
+  },
+  {
+   "name": "code-dots-round",
+   "collection": "minimal",
+   "file": "minimal/code-dots-round.svg",
+   "w": 49.6,
+   "h": 28.5,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 17
+   }
+  },
+  {
+   "name": "gear-round",
+   "collection": "minimal",
+   "file": "minimal/gear-round.svg",
+   "w": 43.0,
+   "h": 42.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 18
+   }
+  },
+  {
+   "name": "paint-pour-round",
+   "collection": "minimal",
+   "file": "minimal/paint-pour-round.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 19
+   }
+  },
+  {
+   "name": "skull-round",
+   "collection": "minimal",
+   "file": "minimal/skull-round.svg",
+   "w": 43.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 20
+   }
+  },
+  {
+   "name": "snowflake-bold",
+   "collection": "minimal",
+   "file": "minimal/snowflake-bold.svg",
+   "w": 43.9,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 21
+   }
+  },
+  {
+   "name": "record",
+   "collection": "minimal",
+   "file": "minimal/record.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 22
+   }
+  },
+  {
+   "name": "smartwatch",
+   "collection": "minimal",
+   "file": "minimal/smartwatch.svg",
+   "w": 34.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 23
+   }
+  },
+  {
+   "name": "water-drop",
+   "collection": "minimal",
+   "file": "minimal/water-drop.svg",
+   "w": 34.2,
+   "h": 45.5,
+   "source": {
+    "sheet": "min",
+    "row": 20,
+    "col": 24
+   }
+  },
+  {
+   "name": "login-round",
+   "collection": "minimal",
+   "file": "minimal/login-round.svg",
+   "w": 39.7,
+   "h": 36.7,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 1
+   }
+  },
+  {
+   "name": "logout-round",
+   "collection": "minimal",
+   "file": "minimal/logout-round.svg",
+   "w": 43.0,
+   "h": 37.0,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 2
+   }
+  },
+  {
+   "name": "magnet",
+   "collection": "minimal",
+   "file": "minimal/magnet.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 3
+   }
+  },
+  {
+   "name": "mail-closed",
+   "collection": "minimal",
+   "file": "minimal/mail-closed.svg",
+   "w": 46.3,
+   "h": 40.0,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 4
+   }
+  },
+  {
+   "name": "mail-plain",
+   "collection": "minimal",
+   "file": "minimal/mail-plain.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 5
+   }
+  },
+  {
+   "name": "mail-unread",
+   "collection": "minimal",
+   "file": "minimal/mail-unread.svg",
+   "w": 47.9,
+   "h": 38.9,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 6
+   }
+  },
+  {
+   "name": "gender-transgender",
+   "collection": "minimal",
+   "file": "minimal/gender-transgender.svg",
+   "w": 40.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 7
+   }
+  },
+  {
+   "name": "gender-male",
+   "collection": "minimal",
+   "file": "minimal/gender-male.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 8
+   }
+  },
+  {
+   "name": "person",
+   "collection": "minimal",
+   "file": "minimal/person.svg",
+   "w": 25.8,
+   "h": 52.9,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 9
+   }
+  },
+  {
+   "name": "cloud-download-round",
+   "collection": "minimal",
+   "file": "minimal/cloud-download-round.svg",
+   "w": 52.9,
+   "h": 46.9,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 10
+   }
+  },
+  {
+   "name": "cloud-upload-round",
+   "collection": "minimal",
+   "file": "minimal/cloud-upload-round.svg",
+   "w": 52.9,
+   "h": 43.9,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 11
+   }
+  },
+  {
+   "name": "question-circle",
+   "collection": "minimal",
+   "file": "minimal/question-circle.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 12
+   }
+  },
+  {
+   "name": "fast-food-round",
+   "collection": "minimal",
+   "file": "minimal/fast-food-round.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 13
+   }
+  },
+  {
+   "name": "gender-neuter",
+   "collection": "minimal",
+   "file": "minimal/gender-neuter.svg",
+   "w": 36.1,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 14
+   }
+  },
+  {
+   "name": "inbox-full-round",
+   "collection": "minimal",
+   "file": "minimal/inbox-full-round.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 15
+   }
+  },
+  {
+   "name": "inbox-round",
+   "collection": "minimal",
+   "file": "minimal/inbox-round.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 16
+   }
+  },
+  {
+   "name": "archive-drawer-round",
+   "collection": "minimal",
+   "file": "minimal/archive-drawer-round.svg",
+   "w": 46.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 17
+   }
+  },
+  {
+   "name": "film-frames-round",
+   "collection": "minimal",
+   "file": "minimal/film-frames-round.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 18
+   }
+  },
+  {
+   "name": "filter-circle-round",
+   "collection": "minimal",
+   "file": "minimal/filter-circle-round.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 19
+   }
+  },
+  {
+   "name": "video-camera-round",
+   "collection": "minimal",
+   "file": "minimal/video-camera-round.svg",
+   "w": 49.6,
+   "h": 31.6,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 20
+   }
+  },
+  {
+   "name": "volume-loud-round",
+   "collection": "minimal",
+   "file": "minimal/volume-loud-round.svg",
+   "w": 46.3,
+   "h": 37.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 21
+   }
+  },
+  {
+   "name": "sparkles",
+   "collection": "minimal",
+   "file": "minimal/sparkles.svg",
+   "w": 52.9,
+   "h": 52.9,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 22
+   }
+  },
+  {
+   "name": "info-circle",
+   "collection": "minimal",
+   "file": "minimal/info-circle.svg",
+   "w": 41.3,
+   "h": 41.3,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 23
+   }
+  },
+  {
+   "name": "info-solid",
+   "collection": "minimal",
+   "file": "minimal/info-solid.svg",
+   "w": 19.7,
+   "h": 33.1,
+   "source": {
+    "sheet": "min",
+    "row": 21,
+    "col": 24
+   }
+  },
+  {
+   "name": "battery-flat",
+   "collection": "minimal",
+   "file": "minimal/battery-flat.svg",
+   "w": 52.9,
+   "h": 31.9,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 1
+   }
+  },
+  {
+   "name": "phone-frame",
+   "collection": "minimal",
+   "file": "minimal/phone-frame.svg",
+   "w": 31.9,
+   "h": 52.9,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 2
+   }
+  },
+  {
+   "name": "pie-chart-solid",
+   "collection": "minimal",
+   "file": "minimal/pie-chart-solid.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 3
+   }
+  },
+  {
+   "name": "pin-ball",
+   "collection": "minimal",
+   "file": "minimal/pin-ball.svg",
+   "w": 19.5,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 4
+   }
+  },
+  {
+   "name": "pint-glass",
+   "collection": "minimal",
+   "file": "minimal/pint-glass.svg",
+   "w": 31.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 5
+   }
+  },
+  {
+   "name": "pizza",
+   "collection": "minimal",
+   "file": "minimal/pizza.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 6
+   }
+  },
+  {
+   "name": "planet",
+   "collection": "minimal",
+   "file": "minimal/planet.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 7
+   }
+  },
+  {
+   "name": "rewind-circle-solid",
+   "collection": "minimal",
+   "file": "minimal/rewind-circle-solid.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 8
+   }
+  },
+  {
+   "name": "rewind-solid",
+   "collection": "minimal",
+   "file": "minimal/rewind-solid.svg",
+   "w": 49.6,
+   "h": 31.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 9
+   }
+  },
+  {
+   "name": "arrow-up-circle-bold",
+   "collection": "minimal",
+   "file": "minimal/arrow-up-circle-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 10
+   }
+  },
+  {
+   "name": "at-sign-bold",
+   "collection": "minimal",
+   "file": "minimal/at-sign-bold.svg",
+   "w": 39.9,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 11
+   }
+  },
+  {
+   "name": "moon-crescent",
+   "collection": "minimal",
+   "file": "minimal/moon-crescent.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 12
+   }
+  },
+  {
+   "name": "ship-wheel-round",
+   "collection": "minimal",
+   "file": "minimal/ship-wheel-round.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 13
+   }
+  },
+  {
+   "name": "help-round",
+   "collection": "minimal",
+   "file": "minimal/help-round.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 14
+   }
+  },
+  {
+   "name": "question-bold",
+   "collection": "minimal",
+   "file": "minimal/question-bold.svg",
+   "w": 25.2,
+   "h": 38.0,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 15
+   }
+  },
+  {
+   "name": "house-round",
+   "collection": "minimal",
+   "file": "minimal/house-round.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 16
+   }
+  },
+  {
+   "name": "hourglass-round",
+   "collection": "minimal",
+   "file": "minimal/hourglass-round.svg",
+   "w": 34.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 17
+   }
+  },
+  {
+   "name": "ice-cream-round",
+   "collection": "minimal",
+   "file": "minimal/ice-cream-round.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 18
+   }
+  },
+  {
+   "name": "mobile-user-round",
+   "collection": "minimal",
+   "file": "minimal/mobile-user-round.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 19
+   }
+  },
+  {
+   "name": "tshirt-round",
+   "collection": "minimal",
+   "file": "minimal/tshirt-round.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 20
+   }
+  },
+  {
+   "name": "shuffle-round",
+   "collection": "minimal",
+   "file": "minimal/shuffle-round.svg",
+   "w": 43.0,
+   "h": 34.0,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 21
+   }
+  },
+  {
+   "name": "volume-mid",
+   "collection": "minimal",
+   "file": "minimal/volume-mid.svg",
+   "w": 33.1,
+   "h": 33.1,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 22
+   }
+  },
+  {
+   "name": "bell-off-round",
+   "collection": "minimal",
+   "file": "minimal/bell-off-round.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 23
+   }
+  },
+  {
+   "name": "bell-round",
+   "collection": "minimal",
+   "file": "minimal/bell-round.svg",
+   "w": 40.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 22,
+    "col": 24
+   }
+  },
+  {
+   "name": "arrow-hook-right",
+   "collection": "minimal",
+   "file": "minimal/arrow-hook-right.svg",
+   "w": 46.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 1
+   }
+  },
+  {
+   "name": "arrow-hook-left",
+   "collection": "minimal",
+   "file": "minimal/arrow-hook-left.svg",
+   "w": 46.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 2
+   }
+  },
+  {
+   "name": "arrow-curve-right",
+   "collection": "minimal",
+   "file": "minimal/arrow-curve-right.svg",
+   "w": 46.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 3
+   }
+  },
+  {
+   "name": "award-rosette",
+   "collection": "minimal",
+   "file": "minimal/award-rosette.svg",
+   "w": 46.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 4
+   }
+  },
+  {
+   "name": "rocket-round",
+   "collection": "minimal",
+   "file": "minimal/rocket-round.svg",
+   "w": 46.3,
+   "h": 46.2,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 5
+   }
+  },
+  {
+   "name": "rose",
+   "collection": "minimal",
+   "file": "minimal/rose.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 6
+   }
+  },
+  {
+   "name": "face-worried",
+   "collection": "minimal",
+   "file": "minimal/face-worried.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 7
+   }
+  },
+  {
+   "name": "floppy-disk",
+   "collection": "minimal",
+   "file": "minimal/floppy-disk.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 8
+   }
+  },
+  {
+   "name": "scale-weight",
+   "collection": "minimal",
+   "file": "minimal/scale-weight.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 9
+   }
+  },
+  {
+   "name": "calendar-blank",
+   "collection": "minimal",
+   "file": "minimal/calendar-blank.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 10
+   }
+  },
+  {
+   "name": "phone-handset",
+   "collection": "minimal",
+   "file": "minimal/phone-handset.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 11
+   }
+  },
+  {
+   "name": "tag-dot",
+   "collection": "minimal",
+   "file": "minimal/tag-dot.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 12
+   }
+  },
+  {
+   "name": "microphone-round",
+   "collection": "minimal",
+   "file": "minimal/microphone-round.svg",
+   "w": 30.9,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 13
+   }
+  },
+  {
+   "name": "moon-round",
+   "collection": "minimal",
+   "file": "minimal/moon-round.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 14
+   }
+  },
+  {
+   "name": "move-round",
+   "collection": "minimal",
+   "file": "minimal/move-round.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 15
+   }
+  },
+  {
+   "name": "music-note-round",
+   "collection": "minimal",
+   "file": "minimal/music-note-round.svg",
+   "w": 28.2,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 16
+   }
+  },
+  {
+   "name": "music-notes-round",
+   "collection": "minimal",
+   "file": "minimal/music-notes-round.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 17
+   }
+  },
+  {
+   "name": "navigation-circle-round",
+   "collection": "minimal",
+   "file": "minimal/navigation-circle-round.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 18
+   }
+  },
+  {
+   "name": "navigation-plain",
+   "collection": "minimal",
+   "file": "minimal/navigation-plain.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 19
+   }
+  },
+  {
+   "name": "link-broken-round",
+   "collection": "minimal",
+   "file": "minimal/link-broken-round.svg",
+   "w": 46.7,
+   "h": 25.7,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 20
+   }
+  },
+  {
+   "name": "video-off-plain",
+   "collection": "minimal",
+   "file": "minimal/video-off-plain.svg",
+   "w": 49.6,
+   "h": 39.1,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 21
+   }
+  },
+  {
+   "name": "chart-bars",
+   "collection": "minimal",
+   "file": "minimal/chart-bars.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 22
+   }
+  },
+  {
+   "name": "broadcast",
+   "collection": "minimal",
+   "file": "minimal/broadcast.svg",
+   "w": 52.9,
+   "h": 37.9,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 23
+   }
+  },
+  {
+   "name": "cloud-rain-round",
+   "collection": "minimal",
+   "file": "minimal/cloud-rain-round.svg",
+   "w": 48.1,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 23,
+    "col": 24
+   }
+  },
+  {
+   "name": "tennis-ball",
+   "collection": "minimal",
+   "file": "minimal/tennis-ball.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 1
+   }
+  },
+  {
+   "name": "terminal-box",
+   "collection": "minimal",
+   "file": "minimal/terminal-box.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 2
+   }
+  },
+  {
+   "name": "letters-aa",
+   "collection": "minimal",
+   "file": "minimal/letters-aa.svg",
+   "w": 49.6,
+   "h": 37.7,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 3
+   }
+  },
+  {
+   "name": "thermometer-round",
+   "collection": "minimal",
+   "file": "minimal/thermometer-round.svg",
+   "w": 25.5,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 4
+   }
+  },
+  {
+   "name": "thumbs-down-bold",
+   "collection": "minimal",
+   "file": "minimal/thumbs-down-bold.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 5
+   }
+  },
+  {
+   "name": "thumbs-up-bold",
+   "collection": "minimal",
+   "file": "minimal/thumbs-up-bold.svg",
+   "w": 49.6,
+   "h": 46.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 6
+   }
+  },
+  {
+   "name": "storm-cloud",
+   "collection": "minimal",
+   "file": "minimal/storm-cloud.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 7
+   }
+  },
+  {
+   "name": "ticket",
+   "collection": "minimal",
+   "file": "minimal/ticket.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 8
+   }
+  },
+  {
+   "name": "clock-bold",
+   "collection": "minimal",
+   "file": "minimal/clock-bold.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 9
+   }
+  },
+  {
+   "name": "cloud-off-round",
+   "collection": "minimal",
+   "file": "minimal/cloud-off-round.svg",
+   "w": 52.9,
+   "h": 43.9,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 10
+   }
+  },
+  {
+   "name": "night-cloud",
+   "collection": "minimal",
+   "file": "minimal/night-cloud.svg",
+   "w": 52.9,
+   "h": 46.9,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 11
+   }
+  },
+  {
+   "name": "share-nodes",
+   "collection": "minimal",
+   "file": "minimal/share-nodes.svg",
+   "w": 40.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 12
+   }
+  },
+  {
+   "name": "power-heavy",
+   "collection": "minimal",
+   "file": "minimal/power-heavy.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 13
+   }
+  },
+  {
+   "name": "tag-plain",
+   "collection": "minimal",
+   "file": "minimal/tag-plain.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 14
+   }
+  },
+  {
+   "name": "tags-double",
+   "collection": "minimal",
+   "file": "minimal/tags-double.svg",
+   "w": 52.9,
+   "h": 49.8,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 15
+   }
+  },
+  {
+   "name": "printer-flat",
+   "collection": "minimal",
+   "file": "minimal/printer-flat.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 16
+   }
+  },
+  {
+   "name": "pyramid-round",
+   "collection": "minimal",
+   "file": "minimal/pyramid-round.svg",
+   "w": 49.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 17
+   }
+  },
+  {
+   "name": "pulse-line",
+   "collection": "minimal",
+   "file": "minimal/pulse-line.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 18
+   }
+  },
+  {
+   "name": "upload-tray",
+   "collection": "minimal",
+   "file": "minimal/upload-tray.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 19
+   }
+  },
+  {
+   "name": "screen-flat",
+   "collection": "minimal",
+   "file": "minimal/screen-flat.svg",
+   "w": 49.6,
+   "h": 37.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 20
+   }
+  },
+  {
+   "name": "umbrella-plain",
+   "collection": "minimal",
+   "file": "minimal/umbrella-plain.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 21
+   }
+  },
+  {
+   "name": "play-solid",
+   "collection": "minimal",
+   "file": "minimal/play-solid.svg",
+   "w": 22.9,
+   "h": 33.9,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 22
+   }
+  },
+  {
+   "name": "speedometer",
+   "collection": "minimal",
+   "file": "minimal/speedometer.svg",
+   "w": 49.6,
+   "h": 43.6,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 23
+   }
+  },
+  {
+   "name": "square-rounded",
+   "collection": "minimal",
+   "file": "minimal/square-rounded.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 24,
+    "col": 24
+   }
+  },
+  {
+   "name": "share-tray",
+   "collection": "minimal",
+   "file": "minimal/share-tray.svg",
+   "w": 37.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 1
+   }
+  },
+  {
+   "name": "share-nodes-bold",
+   "collection": "minimal",
+   "file": "minimal/share-nodes-bold.svg",
+   "w": 40.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 2
+   }
+  },
+  {
+   "name": "shield-check-bold",
+   "collection": "minimal",
+   "file": "minimal/shield-check-bold.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 3
+   }
+  },
+  {
+   "name": "shield-half-bold",
+   "collection": "minimal",
+   "file": "minimal/shield-half-bold.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 4
+   }
+  },
+  {
+   "name": "shield-plain",
+   "collection": "minimal",
+   "file": "minimal/shield-plain.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 5
+   }
+  },
+  {
+   "name": "trending-bold",
+   "collection": "minimal",
+   "file": "minimal/trending-bold.svg",
+   "w": 46.3,
+   "h": 28.2,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 6
+   }
+  },
+  {
+   "name": "triangle-plain",
+   "collection": "minimal",
+   "file": "minimal/triangle-plain.svg",
+   "w": 46.3,
+   "h": 43.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 7
+   }
+  },
+  {
+   "name": "trophy-cup",
+   "collection": "minimal",
+   "file": "minimal/trophy-cup.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 8
+   }
+  },
+  {
+   "name": "compass-round",
+   "collection": "minimal",
+   "file": "minimal/compass-round.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 9
+   }
+  },
+  {
+   "name": "tools",
+   "collection": "minimal",
+   "file": "minimal/tools.svg",
+   "w": 52.9,
+   "h": 43.9,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 10
+   }
+  },
+  {
+   "name": "minimize-arrows",
+   "collection": "minimal",
+   "file": "minimal/minimize-arrows.svg",
+   "w": 39.7,
+   "h": 39.7,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 11
+   }
+  },
+  {
+   "name": "contrast",
+   "collection": "minimal",
+   "file": "minimal/contrast.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 12
+   }
+  },
+  {
+   "name": "copies",
+   "collection": "minimal",
+   "file": "minimal/copies.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 13
+   }
+  },
+  {
+   "name": "edit-box",
+   "collection": "minimal",
+   "file": "minimal/edit-box.svg",
+   "w": 43.0,
+   "h": 43.0,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 14
+   }
+  },
+  {
+   "name": "crop-bold",
+   "collection": "minimal",
+   "file": "minimal/crop-bold.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 15
+   }
+  },
+  {
+   "name": "cube",
+   "collection": "minimal",
+   "file": "minimal/cube.svg",
+   "w": 43.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 16
+   }
+  },
+  {
+   "name": "heart-pulse",
+   "collection": "minimal",
+   "file": "minimal/heart-pulse.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 17
+   }
+  },
+  {
+   "name": "flag-wave",
+   "collection": "minimal",
+   "file": "minimal/flag-wave.svg",
+   "w": 40.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 18
+   }
+  },
+  {
+   "name": "flame",
+   "collection": "minimal",
+   "file": "minimal/flame.svg",
+   "w": 34.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 19
+   }
+  },
+  {
+   "name": "zap-off-bold",
+   "collection": "minimal",
+   "file": "minimal/zap-off-bold.svg",
+   "w": 40.5,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 20
+   }
+  },
+  {
+   "name": "zap-bold",
+   "collection": "minimal",
+   "file": "minimal/zap-bold.svg",
+   "w": 37.6,
+   "h": 49.6,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 21
+   }
+  },
+  {
+   "name": "flashlight",
+   "collection": "minimal",
+   "file": "minimal/flashlight.svg",
+   "w": 46.3,
+   "h": 46.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 22
+   }
+  },
+  {
+   "name": "volume-max",
+   "collection": "minimal",
+   "file": "minimal/volume-max.svg",
+   "w": 39.7,
+   "h": 33.7,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 23
+   }
+  },
+  {
+   "name": "volume-mute",
+   "collection": "minimal",
+   "file": "minimal/volume-mute.svg",
+   "w": 46.3,
+   "h": 40.3,
+   "source": {
+    "sheet": "min",
+    "row": 25,
+    "col": 24
+   }
+  },
+  {
+   "name": "justice-scale",
+   "collection": "business-medical",
+   "file": "business-medical/justice-scale.svg",
+   "w": 44.7,
+   "h": 34.6,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 1
+   }
+  },
+  {
+   "name": "team",
+   "collection": "business-medical",
+   "file": "business-medical/team.svg",
+   "w": 33.6,
+   "h": 23.2,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 2
+   }
+  },
+  {
+   "name": "money-bag",
+   "collection": "business-medical",
+   "file": "business-medical/money-bag.svg",
+   "w": 32.3,
+   "h": 35.5,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 3
+   }
+  },
+  {
+   "name": "target",
+   "collection": "business-medical",
+   "file": "business-medical/target.svg",
+   "w": 43.5,
+   "h": 42.5,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 4
+   }
+  },
+  {
+   "name": "pie-chart",
+   "collection": "business-medical",
+   "file": "business-medical/pie-chart.svg",
+   "w": 35.3,
+   "h": 36.6,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 5
+   }
+  },
+  {
+   "name": "camera",
+   "collection": "business-medical",
+   "file": "business-medical/camera.svg",
+   "w": 31.3,
+   "h": 27.2,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 6
+   }
+  },
+  {
+   "name": "gears",
+   "collection": "business-medical",
+   "file": "business-medical/gears.svg",
+   "w": 40.3,
+   "h": 34.4,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 7
+   }
+  },
+  {
+   "name": "tablet",
+   "collection": "business-medical",
+   "file": "business-medical/tablet.svg",
+   "w": 25.3,
+   "h": 35.7,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 8
+   }
+  },
+  {
+   "name": "computer-mouse",
+   "collection": "business-medical",
+   "file": "business-medical/computer-mouse.svg",
+   "w": 21.3,
+   "h": 36.3,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 9
+   }
+  },
+  {
+   "name": "people-network",
+   "collection": "business-medical",
+   "file": "business-medical/people-network.svg",
+   "w": 38.4,
+   "h": 41.5,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 10
+   }
+  },
+  {
+   "name": "medical-cross",
+   "collection": "business-medical",
+   "file": "business-medical/medical-cross.svg",
+   "w": 29.0,
+   "h": 29.0,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 11
+   }
+  },
+  {
+   "name": "dna",
+   "collection": "business-medical",
+   "file": "business-medical/dna.svg",
+   "w": 20.5,
+   "h": 48.4,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 12
+   }
+  },
+  {
+   "name": "bandages-crossed",
+   "collection": "business-medical",
+   "file": "business-medical/bandages-crossed.svg",
+   "w": 31.3,
+   "h": 31.3,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 13
+   }
+  },
+  {
+   "name": "thermometer",
+   "collection": "business-medical",
+   "file": "business-medical/thermometer.svg",
+   "w": 34.2,
+   "h": 38.6,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 14
+   }
+  },
+  {
+   "name": "pill",
+   "collection": "business-medical",
+   "file": "business-medical/pill.svg",
+   "w": 33.4,
+   "h": 15.1,
+   "source": {
+    "sheet": "med",
+    "row": 1,
+    "col": 15
+   }
+  },
+  {
+   "name": "handshake",
+   "collection": "business-medical",
+   "file": "business-medical/handshake.svg",
+   "w": 42.0,
+   "h": 35.6,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 1
+   }
+  },
+  {
+   "name": "award-badge",
+   "collection": "business-medical",
+   "file": "business-medical/award-badge.svg",
+   "w": 42.4,
+   "h": 40.4,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 2
+   }
+  },
+  {
+   "name": "profile-network",
+   "collection": "business-medical",
+   "file": "business-medical/profile-network.svg",
+   "w": 46.1,
+   "h": 44.7,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 3
+   }
+  },
+  {
+   "name": "briefcase",
+   "collection": "business-medical",
+   "file": "business-medical/briefcase.svg",
+   "w": 30.6,
+   "h": 26.1,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 4
+   }
+  },
+  {
+   "name": "coins",
+   "collection": "business-medical",
+   "file": "business-medical/coins.svg",
+   "w": 28.4,
+   "h": 31.1,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 5
+   }
+  },
+  {
+   "name": "photo",
+   "collection": "business-medical",
+   "file": "business-medical/photo.svg",
+   "w": 31.9,
+   "h": 34.8,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 6
+   }
+  },
+  {
+   "name": "cloud-upload",
+   "collection": "business-medical",
+   "file": "business-medical/cloud-upload.svg",
+   "w": 35.7,
+   "h": 25.2,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 7
+   }
+  },
+  {
+   "name": "phone-ring",
+   "collection": "business-medical",
+   "file": "business-medical/phone-ring.svg",
+   "w": 36.2,
+   "h": 36.1,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 8
+   }
+  },
+  {
+   "name": "mail-open",
+   "collection": "business-medical",
+   "file": "business-medical/mail-open.svg",
+   "w": 35.3,
+   "h": 39.4,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 9
+   }
+  },
+  {
+   "name": "laptop",
+   "collection": "business-medical",
+   "file": "business-medical/laptop.svg",
+   "w": 53.2,
+   "h": 38.5,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 10
+   }
+  },
+  {
+   "name": "droplet",
+   "collection": "business-medical",
+   "file": "business-medical/droplet.svg",
+   "w": 20.5,
+   "h": 32.9,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 11
+   }
+  },
+  {
+   "name": "lungs",
+   "collection": "business-medical",
+   "file": "business-medical/lungs.svg",
+   "w": 43.8,
+   "h": 42.2,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 12
+   }
+  },
+  {
+   "name": "pill-blister",
+   "collection": "business-medical",
+   "file": "business-medical/pill-blister.svg",
+   "w": 32.3,
+   "h": 42.4,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 13
+   }
+  },
+  {
+   "name": "health-monitor",
+   "collection": "business-medical",
+   "file": "business-medical/health-monitor.svg",
+   "w": 36.1,
+   "h": 38.6,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 14
+   }
+  },
+  {
+   "name": "star-of-life",
+   "collection": "business-medical",
+   "file": "business-medical/star-of-life.svg",
+   "w": 40.7,
+   "h": 41.5,
+   "source": {
+    "sheet": "med",
+    "row": 2,
+    "col": 15
+   }
+  },
+  {
+   "name": "trophy",
+   "collection": "business-medical",
+   "file": "business-medical/trophy.svg",
+   "w": 34.4,
+   "h": 35.9,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 1
+   }
+  },
+  {
+   "name": "money-bill",
+   "collection": "business-medical",
+   "file": "business-medical/money-bill.svg",
+   "w": 45.3,
+   "h": 25.2,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 2
+   }
+  },
+  {
+   "name": "growth-chart",
+   "collection": "business-medical",
+   "file": "business-medical/growth-chart.svg",
+   "w": 27.3,
+   "h": 34.0,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 3
+   }
+  },
+  {
+   "name": "globe",
+   "collection": "business-medical",
+   "file": "business-medical/globe.svg",
+   "w": 35.7,
+   "h": 35.6,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 4
+   }
+  },
+  {
+   "name": "growth-curve",
+   "collection": "business-medical",
+   "file": "business-medical/growth-curve.svg",
+   "w": 33.2,
+   "h": 31.1,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 5
+   }
+  },
+  {
+   "name": "globe-sphere",
+   "collection": "business-medical",
+   "file": "business-medical/globe-sphere.svg",
+   "w": 35.7,
+   "h": 35.6,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 6
+   }
+  },
+  {
+   "name": "map-pin",
+   "collection": "business-medical",
+   "file": "business-medical/map-pin.svg",
+   "w": 24.6,
+   "h": 38.6,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 7
+   }
+  },
+  {
+   "name": "download-box",
+   "collection": "business-medical",
+   "file": "business-medical/download-box.svg",
+   "w": 32.1,
+   "h": 34.3,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 8
+   }
+  },
+  {
+   "name": "video-player",
+   "collection": "business-medical",
+   "file": "business-medical/video-player.svg",
+   "w": 35.3,
+   "h": 25.9,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 9
+   }
+  },
+  {
+   "name": "transfer-arrows",
+   "collection": "business-medical",
+   "file": "business-medical/transfer-arrows.svg",
+   "w": 23.1,
+   "h": 26.5,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 10
+   }
+  },
+  {
+   "name": "syringe",
+   "collection": "business-medical",
+   "file": "business-medical/syringe.svg",
+   "w": 37.5,
+   "h": 42.3,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 11
+   }
+  },
+  {
+   "name": "medicine-bottle",
+   "collection": "business-medical",
+   "file": "business-medical/medicine-bottle.svg",
+   "w": 20.6,
+   "h": 32.6,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 12
+   }
+  },
+  {
+   "name": "stethoscope",
+   "collection": "business-medical",
+   "file": "business-medical/stethoscope.svg",
+   "w": 33.1,
+   "h": 35.7,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 13
+   }
+  },
+  {
+   "name": "hospital-sign",
+   "collection": "business-medical",
+   "file": "business-medical/hospital-sign.svg",
+   "w": 37.2,
+   "h": 32.5,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 14
+   }
+  },
+  {
+   "name": "scalpel",
+   "collection": "business-medical",
+   "file": "business-medical/scalpel.svg",
+   "w": 32.0,
+   "h": 35.2,
+   "source": {
+    "sheet": "med",
+    "row": 3,
+    "col": 15
+   }
+  },
+  {
+   "name": "org-chart",
+   "collection": "business-medical",
+   "file": "business-medical/org-chart.svg",
+   "w": 48.5,
+   "h": 34.0,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 1
+   }
+  },
+  {
+   "name": "gavel",
+   "collection": "business-medical",
+   "file": "business-medical/gavel.svg",
+   "w": 42.2,
+   "h": 40.1,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 2
+   }
+  },
+  {
+   "name": "meeting",
+   "collection": "business-medical",
+   "file": "business-medical/meeting.svg",
+   "w": 28.3,
+   "h": 41.7,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 3
+   }
+  },
+  {
+   "name": "envelope-note",
+   "collection": "business-medical",
+   "file": "business-medical/envelope-note.svg",
+   "w": 32.7,
+   "h": 23.2,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 4
+   }
+  },
+  {
+   "name": "math-symbols",
+   "collection": "business-medical",
+   "file": "business-medical/math-symbols.svg",
+   "w": 30.1,
+   "h": 29.3,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 5
+   }
+  },
+  {
+   "name": "film-strip",
+   "collection": "business-medical",
+   "file": "business-medical/film-strip.svg",
+   "w": 32.5,
+   "h": 27.1,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 6
+   }
+  },
+  {
+   "name": "clouds",
+   "collection": "business-medical",
+   "file": "business-medical/clouds.svg",
+   "w": 38.0,
+   "h": 23.8,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 7
+   }
+  },
+  {
+   "name": "monitor",
+   "collection": "business-medical",
+   "file": "business-medical/monitor.svg",
+   "w": 39.5,
+   "h": 37.2,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 8
+   }
+  },
+  {
+   "name": "share-nodes",
+   "collection": "business-medical",
+   "file": "business-medical/share-nodes.svg",
+   "w": 27.4,
+   "h": 33.2,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 9
+   }
+  },
+  {
+   "name": "wifi",
+   "collection": "business-medical",
+   "file": "business-medical/wifi.svg",
+   "w": 37.9,
+   "h": 35.4,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 10
+   }
+  },
+  {
+   "name": "nurse-cap",
+   "collection": "business-medical",
+   "file": "business-medical/nurse-cap.svg",
+   "w": 40.7,
+   "h": 37.9,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 11
+   }
+  },
+  {
+   "name": "hospital-bed",
+   "collection": "business-medical",
+   "file": "business-medical/hospital-bed.svg",
+   "w": 41.6,
+   "h": 37.2,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 12
+   }
+  },
+  {
+   "name": "radiation",
+   "collection": "business-medical",
+   "file": "business-medical/radiation.svg",
+   "w": 35.6,
+   "h": 35.6,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 13
+   }
+  },
+  {
+   "name": "wheelchair",
+   "collection": "business-medical",
+   "file": "business-medical/wheelchair.svg",
+   "w": 33.7,
+   "h": 38.0,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 14
+   }
+  },
+  {
+   "name": "heart",
+   "collection": "business-medical",
+   "file": "business-medical/heart.svg",
+   "w": 35.2,
+   "h": 31.7,
+   "source": {
+    "sheet": "med",
+    "row": 4,
+    "col": 15
+   }
+  },
+  {
+   "name": "dollar",
+   "collection": "business-medical",
+   "file": "business-medical/dollar.svg",
+   "w": 24.1,
+   "h": 33.8,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 1
+   }
+  },
+  {
+   "name": "bar-chart",
+   "collection": "business-medical",
+   "file": "business-medical/bar-chart.svg",
+   "w": 30.7,
+   "h": 33.7,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 2
+   }
+  },
+  {
+   "name": "desk-globe",
+   "collection": "business-medical",
+   "file": "business-medical/desk-globe.svg",
+   "w": 32.3,
+   "h": 40.1,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 3
+   }
+  },
+  {
+   "name": "cart-download",
+   "collection": "business-medical",
+   "file": "business-medical/cart-download.svg",
+   "w": 31.0,
+   "h": 29.0,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 4
+   }
+  },
+  {
+   "name": "phone-ring-2",
+   "collection": "business-medical",
+   "file": "business-medical/phone-ring-2.svg",
+   "w": 33.6,
+   "h": 33.5,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 5
+   }
+  },
+  {
+   "name": "speaker",
+   "collection": "business-medical",
+   "file": "business-medical/speaker.svg",
+   "w": 39.5,
+   "h": 29.9,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 6
+   }
+  },
+  {
+   "name": "power",
+   "collection": "business-medical",
+   "file": "business-medical/power.svg",
+   "w": 28.0,
+   "h": 33.0,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 7
+   }
+  },
+  {
+   "name": "chain-link",
+   "collection": "business-medical",
+   "file": "business-medical/chain-link.svg",
+   "w": 33.2,
+   "h": 33.5,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 8
+   }
+  },
+  {
+   "name": "disc",
+   "collection": "business-medical",
+   "file": "business-medical/disc.svg",
+   "w": 35.1,
+   "h": 35.1,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 9
+   }
+  },
+  {
+   "name": "chat-bubbles",
+   "collection": "business-medical",
+   "file": "business-medical/chat-bubbles.svg",
+   "w": 32.9,
+   "h": 30.1,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 10
+   }
+  },
+  {
+   "name": "tooth",
+   "collection": "business-medical",
+   "file": "business-medical/tooth.svg",
+   "w": 33.0,
+   "h": 37.1,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 11
+   }
+  },
+  {
+   "name": "iv-bag",
+   "collection": "business-medical",
+   "file": "business-medical/iv-bag.svg",
+   "w": 30.2,
+   "h": 39.1,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 12
+   }
+  },
+  {
+   "name": "first-aid-kit",
+   "collection": "business-medical",
+   "file": "business-medical/first-aid-kit.svg",
+   "w": 36.7,
+   "h": 33.4,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 13
+   }
+  },
+  {
+   "name": "flask",
+   "collection": "business-medical",
+   "file": "business-medical/flask.svg",
+   "w": 31.5,
+   "h": 43.4,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 14
+   }
+  },
+  {
+   "name": "forbidden",
+   "collection": "business-medical",
+   "file": "business-medical/forbidden.svg",
+   "w": 32.8,
+   "h": 33.9,
+   "source": {
+    "sheet": "med",
+    "row": 5,
+    "col": 15
+   }
+  },
+  {
+   "name": "paint-palette",
+   "collection": "business-medical",
+   "file": "business-medical/paint-palette.svg",
+   "w": 33.2,
+   "h": 32.6,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 1
+   }
+  },
+  {
+   "name": "camera-2",
+   "collection": "business-medical",
+   "file": "business-medical/camera-2.svg",
+   "w": 31.3,
+   "h": 27.2,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 2
+   }
+  },
+  {
+   "name": "dropper",
+   "collection": "business-medical",
+   "file": "business-medical/dropper.svg",
+   "w": 27.7,
+   "h": 38.5,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 3
+   }
+  },
+  {
+   "name": "eraser",
+   "collection": "business-medical",
+   "file": "business-medical/eraser.svg",
+   "w": 38.1,
+   "h": 27.3,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 4
+   }
+  },
+  {
+   "name": "drafting-compass",
+   "collection": "business-medical",
+   "file": "business-medical/drafting-compass.svg",
+   "w": 25.2,
+   "h": 40.9,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 5
+   }
+  },
+  {
+   "name": "mountains",
+   "collection": "business-medical",
+   "file": "business-medical/mountains.svg",
+   "w": 53.3,
+   "h": 26.9,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 6
+   }
+  },
+  {
+   "name": "sailboat",
+   "collection": "business-medical",
+   "file": "business-medical/sailboat.svg",
+   "w": 28.4,
+   "h": 36.0,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 7
+   }
+  },
+  {
+   "name": "palm-tree",
+   "collection": "business-medical",
+   "file": "business-medical/palm-tree.svg",
+   "w": 28.9,
+   "h": 34.6,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 8
+   }
+  },
+  {
+   "name": "camera-3",
+   "collection": "business-medical",
+   "file": "business-medical/camera-3.svg",
+   "w": 28.9,
+   "h": 25.1,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 9
+   }
+  },
+  {
+   "name": "cocktail",
+   "collection": "business-medical",
+   "file": "business-medical/cocktail.svg",
+   "w": 29.8,
+   "h": 32.4,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 10
+   }
+  },
+  {
+   "name": "sliders",
+   "collection": "business-medical",
+   "file": "business-medical/sliders.svg",
+   "w": 29.6,
+   "h": 35.3,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 11
+   }
+  },
+  {
+   "name": "camera-4",
+   "collection": "business-medical",
+   "file": "business-medical/camera-4.svg",
+   "w": 34.3,
+   "h": 29.7,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 12
+   }
+  },
+  {
+   "name": "gears-2",
+   "collection": "business-medical",
+   "file": "business-medical/gears-2.svg",
+   "w": 46.5,
+   "h": 40.5,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 13
+   }
+  },
+  {
+   "name": "chat-bubble",
+   "collection": "business-medical",
+   "file": "business-medical/chat-bubble.svg",
+   "w": 32.9,
+   "h": 30.1,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 14
+   }
+  },
+  {
+   "name": "play-circle",
+   "collection": "business-medical",
+   "file": "business-medical/play-circle.svg",
+   "w": 30.5,
+   "h": 30.5,
+   "source": {
+    "sheet": "med",
+    "row": 6,
+    "col": 15
+   }
+  },
+  {
+   "name": "magnifier",
+   "collection": "business-medical",
+   "file": "business-medical/magnifier.svg",
+   "w": 32.9,
+   "h": 37.4,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 1
+   }
+  },
+  {
+   "name": "drawing-tablet",
+   "collection": "business-medical",
+   "file": "business-medical/drawing-tablet.svg",
+   "w": 43.4,
+   "h": 40.3,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 2
+   }
+  },
+  {
+   "name": "scissors",
+   "collection": "business-medical",
+   "file": "business-medical/scissors.svg",
+   "w": 34.9,
+   "h": 34.2,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 3
+   }
+  },
+  {
+   "name": "paint-brush",
+   "collection": "business-medical",
+   "file": "business-medical/paint-brush.svg",
+   "w": 32.4,
+   "h": 36.5,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 4
+   }
+  },
+  {
+   "name": "folder",
+   "collection": "business-medical",
+   "file": "business-medical/folder.svg",
+   "w": 35.0,
+   "h": 30.1,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 5
+   }
+  },
+  {
+   "name": "travel-bag",
+   "collection": "business-medical",
+   "file": "business-medical/travel-bag.svg",
+   "w": 31.3,
+   "h": 30.8,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 6
+   }
+  },
+  {
+   "name": "passport",
+   "collection": "business-medical",
+   "file": "business-medical/passport.svg",
+   "w": 26.6,
+   "h": 36.0,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 7
+   }
+  },
+  {
+   "name": "compass",
+   "collection": "business-medical",
+   "file": "business-medical/compass.svg",
+   "w": 33.9,
+   "h": 37.4,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 8
+   }
+  },
+  {
+   "name": "map-pin-2",
+   "collection": "business-medical",
+   "file": "business-medical/map-pin-2.svg",
+   "w": 24.6,
+   "h": 38.6,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 9
+   }
+  },
+  {
+   "name": "lifebuoy",
+   "collection": "business-medical",
+   "file": "business-medical/lifebuoy.svg",
+   "w": 36.7,
+   "h": 37.6,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 10
+   }
+  },
+  {
+   "name": "monitor-2",
+   "collection": "business-medical",
+   "file": "business-medical/monitor-2.svg",
+   "w": 39.5,
+   "h": 37.2,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 11
+   }
+  },
+  {
+   "name": "power-2",
+   "collection": "business-medical",
+   "file": "business-medical/power-2.svg",
+   "w": 31.0,
+   "h": 36.6,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 12
+   }
+  },
+  {
+   "name": "satellite-dish",
+   "collection": "business-medical",
+   "file": "business-medical/satellite-dish.svg",
+   "w": 28.8,
+   "h": 30.7,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 13
+   }
+  },
+  {
+   "name": "battery",
+   "collection": "business-medical",
+   "file": "business-medical/battery.svg",
+   "w": 33.6,
+   "h": 18.3,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 14
+   }
+  },
+  {
+   "name": "padlock",
+   "collection": "business-medical",
+   "file": "business-medical/padlock.svg",
+   "w": 29.6,
+   "h": 37.1,
+   "source": {
+    "sheet": "med",
+    "row": 7,
+    "col": 15
+   }
+  },
+  {
+   "name": "pencil-cup",
+   "collection": "business-medical",
+   "file": "business-medical/pencil-cup.svg",
+   "w": 26.9,
+   "h": 46.5,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 1
+   }
+  },
+  {
+   "name": "puzzle",
+   "collection": "business-medical",
+   "file": "business-medical/puzzle.svg",
+   "w": 42.3,
+   "h": 39.3,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 2
+   }
+  },
+  {
+   "name": "select-object",
+   "collection": "business-medical",
+   "file": "business-medical/select-object.svg",
+   "w": 28.4,
+   "h": 28.4,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 3
+   }
+  },
+  {
+   "name": "paint-brush-2",
+   "collection": "business-medical",
+   "file": "business-medical/paint-brush-2.svg",
+   "w": 27.3,
+   "h": 41.6,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 4
+   }
+  },
+  {
+   "name": "pencil-ruler",
+   "collection": "business-medical",
+   "file": "business-medical/pencil-ruler.svg",
+   "w": 25.8,
+   "h": 46.8,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 5
+   }
+  },
+  {
+   "name": "cloud-sun",
+   "collection": "business-medical",
+   "file": "business-medical/cloud-sun.svg",
+   "w": 41.2,
+   "h": 24.5,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 6
+   }
+  },
+  {
+   "name": "swimming-pool",
+   "collection": "business-medical",
+   "file": "business-medical/swimming-pool.svg",
+   "w": 35.6,
+   "h": 37.3,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 7
+   }
+  },
+  {
+   "name": "folded-map",
+   "collection": "business-medical",
+   "file": "business-medical/folded-map.svg",
+   "w": 37.8,
+   "h": 36.9,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 8
+   }
+  },
+  {
+   "name": "sunglasses",
+   "collection": "business-medical",
+   "file": "business-medical/sunglasses.svg",
+   "w": 46.2,
+   "h": 19.4,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 9
+   }
+  },
+  {
+   "name": "tent",
+   "collection": "business-medical",
+   "file": "business-medical/tent.svg",
+   "w": 33.4,
+   "h": 34.5,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 10
+   }
+  },
+  {
+   "name": "film-play",
+   "collection": "business-medical",
+   "file": "business-medical/film-play.svg",
+   "w": 40.4,
+   "h": 33.8,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 11
+   }
+  },
+  {
+   "name": "wifi-2",
+   "collection": "business-medical",
+   "file": "business-medical/wifi-2.svg",
+   "w": 40.9,
+   "h": 38.2,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 12
+   }
+  },
+  {
+   "name": "folder-check",
+   "collection": "business-medical",
+   "file": "business-medical/folder-check.svg",
+   "w": 35.7,
+   "h": 27.6,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 13
+   }
+  },
+  {
+   "name": "headphones",
+   "collection": "business-medical",
+   "file": "business-medical/headphones.svg",
+   "w": 32.5,
+   "h": 32.8,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 14
+   }
+  },
+  {
+   "name": "sync",
+   "collection": "business-medical",
+   "file": "business-medical/sync.svg",
+   "w": 42.4,
+   "h": 36.8,
+   "source": {
+    "sheet": "med",
+    "row": 8,
+    "col": 15
+   }
+  },
+  {
+   "name": "document-edit",
+   "collection": "business-medical",
+   "file": "business-medical/document-edit.svg",
+   "w": 44.9,
+   "h": 35.5,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 1
+   }
+  },
+  {
+   "name": "paint-bucket",
+   "collection": "business-medical",
+   "file": "business-medical/paint-bucket.svg",
+   "w": 33.3,
+   "h": 34.4,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 2
+   }
+  },
+  {
+   "name": "utility-knife",
+   "collection": "business-medical",
+   "file": "business-medical/utility-knife.svg",
+   "w": 30.8,
+   "h": 37.2,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 3
+   }
+  },
+  {
+   "name": "typography",
+   "collection": "business-medical",
+   "file": "business-medical/typography.svg",
+   "w": 37.8,
+   "h": 25.3,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 4
+   }
+  },
+  {
+   "name": "signature",
+   "collection": "business-medical",
+   "file": "business-medical/signature.svg",
+   "w": 36.9,
+   "h": 35.5,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 5
+   }
+  },
+  {
+   "name": "signpost",
+   "collection": "business-medical",
+   "file": "business-medical/signpost.svg",
+   "w": 42.2,
+   "h": 35.7,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 6
+   }
+  },
+  {
+   "name": "anchor",
+   "collection": "business-medical",
+   "file": "business-medical/anchor.svg",
+   "w": 34.1,
+   "h": 38.2,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 7
+   }
+  },
+  {
+   "name": "stars",
+   "collection": "business-medical",
+   "file": "business-medical/stars.svg",
+   "w": 45.0,
+   "h": 33.1,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 8
+   }
+  },
+  {
+   "name": "taxi",
+   "collection": "business-medical",
+   "file": "business-medical/taxi.svg",
+   "w": 41.0,
+   "h": 42.6,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 9
+   }
+  },
+  {
+   "name": "whale",
+   "collection": "business-medical",
+   "file": "business-medical/whale.svg",
+   "w": 50.8,
+   "h": 42.1,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 10
+   }
+  },
+  {
+   "name": "magnifier-2",
+   "collection": "business-medical",
+   "file": "business-medical/magnifier-2.svg",
+   "w": 32.9,
+   "h": 37.4,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 11
+   }
+  },
+  {
+   "name": "smartphone",
+   "collection": "business-medical",
+   "file": "business-medical/smartphone.svg",
+   "w": 29.4,
+   "h": 43.8,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 12
+   }
+  },
+  {
+   "name": "sim-card",
+   "collection": "business-medical",
+   "file": "business-medical/sim-card.svg",
+   "w": 39.2,
+   "h": 28.7,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 13
+   }
+  },
+  {
+   "name": "cursor-click",
+   "collection": "business-medical",
+   "file": "business-medical/cursor-click.svg",
+   "w": 39.0,
+   "h": 43.2,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 14
+   }
+  },
+  {
+   "name": "speaker-2",
+   "collection": "business-medical",
+   "file": "business-medical/speaker-2.svg",
+   "w": 44.7,
+   "h": 33.8,
+   "source": {
+    "sheet": "med",
+    "row": 9,
+    "col": 15
+   }
+  },
+  {
+   "name": "color-swatches",
+   "collection": "business-medical",
+   "file": "business-medical/color-swatches.svg",
+   "w": 33.5,
+   "h": 31.8,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 1
+   }
+  },
+  {
+   "name": "music-notes",
+   "collection": "business-medical",
+   "file": "business-medical/music-notes.svg",
+   "w": 34.2,
+   "h": 36.1,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 2
+   }
+  },
+  {
+   "name": "lightbulb",
+   "collection": "business-medical",
+   "file": "business-medical/lightbulb.svg",
+   "w": 26.3,
+   "h": 39.4,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 3
+   }
+  },
+  {
+   "name": "ruler",
+   "collection": "business-medical",
+   "file": "business-medical/ruler.svg",
+   "w": 34.5,
+   "h": 43.9,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 4
+   }
+  },
+  {
+   "name": "notepad",
+   "collection": "business-medical",
+   "file": "business-medical/notepad.svg",
+   "w": 34.7,
+   "h": 43.1,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 5
+   }
+  },
+  {
+   "name": "airplane",
+   "collection": "business-medical",
+   "file": "business-medical/airplane.svg",
+   "w": 36.5,
+   "h": 41.9,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 6
+   }
+  },
+  {
+   "name": "swimsuit",
+   "collection": "business-medical",
+   "file": "business-medical/swimsuit.svg",
+   "w": 36.7,
+   "h": 48.6,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 7
+   }
+  },
+  {
+   "name": "city-buildings",
+   "collection": "business-medical",
+   "file": "business-medical/city-buildings.svg",
+   "w": 51.7,
+   "h": 37.4,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 8
+   }
+  },
+  {
+   "name": "fedora-hat",
+   "collection": "business-medical",
+   "file": "business-medical/fedora-hat.svg",
+   "w": 44.2,
+   "h": 24.7,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 9
+   }
+  },
+  {
+   "name": "moon",
+   "collection": "business-medical",
+   "file": "business-medical/moon.svg",
+   "w": 27.8,
+   "h": 27.7,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 10
+   }
+  },
+  {
+   "name": "share-box",
+   "collection": "business-medical",
+   "file": "business-medical/share-box.svg",
+   "w": 37.2,
+   "h": 50.3,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 11
+   }
+  },
+  {
+   "name": "cloud-download",
+   "collection": "business-medical",
+   "file": "business-medical/cloud-download.svg",
+   "w": 44.8,
+   "h": 37.8,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 12
+   }
+  },
+  {
+   "name": "laptop-2",
+   "collection": "business-medical",
+   "file": "business-medical/laptop-2.svg",
+   "w": 53.2,
+   "h": 38.5,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 13
+   }
+  },
+  {
+   "name": "mail-letter",
+   "collection": "business-medical",
+   "file": "business-medical/mail-letter.svg",
+   "w": 35.3,
+   "h": 39.4,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 14
+   }
+  },
+  {
+   "name": "antenna",
+   "collection": "business-medical",
+   "file": "business-medical/antenna.svg",
+   "w": 47.2,
+   "h": 44.3,
+   "source": {
+    "sheet": "med",
+    "row": 10,
+    "col": 15
+   }
+  },
+  {
+   "name": "graduation-cap",
+   "collection": "business-medical",
+   "file": "business-medical/graduation-cap.svg",
+   "w": 48.8,
+   "h": 30.2,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 1
+   }
+  },
+  {
+   "name": "palette-brush",
+   "collection": "business-medical",
+   "file": "business-medical/palette-brush.svg",
+   "w": 40.0,
+   "h": 35.7,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 2
+   }
+  },
+  {
+   "name": "test-tubes",
+   "collection": "business-medical",
+   "file": "business-medical/test-tubes.svg",
+   "w": 29.2,
+   "h": 33.1,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 3
+   }
+  },
+  {
+   "name": "abacus",
+   "collection": "business-medical",
+   "file": "business-medical/abacus.svg",
+   "w": 36.5,
+   "h": 37.0,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 4
+   }
+  },
+  {
+   "name": "calculator",
+   "collection": "business-medical",
+   "file": "business-medical/calculator.svg",
+   "w": 31.4,
+   "h": 38.8,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 5
+   }
+  },
+  {
+   "name": "hand-coin",
+   "collection": "business-medical",
+   "file": "business-medical/hand-coin.svg",
+   "w": 41.3,
+   "h": 31.1,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 6
+   }
+  },
+  {
+   "name": "people-exchange",
+   "collection": "business-medical",
+   "file": "business-medical/people-exchange.svg",
+   "w": 44.5,
+   "h": 47.3,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 7
+   }
+  },
+  {
+   "name": "coins-2",
+   "collection": "business-medical",
+   "file": "business-medical/coins-2.svg",
+   "w": 31.9,
+   "h": 34.9,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 8
+   }
+  },
+  {
+   "name": "hands-heart",
+   "collection": "business-medical",
+   "file": "business-medical/hands-heart.svg",
+   "w": 34.2,
+   "h": 35.3,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 9
+   }
+  },
+  {
+   "name": "blood-donation",
+   "collection": "business-medical",
+   "file": "business-medical/blood-donation.svg",
+   "w": 38.5,
+   "h": 45.5,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 10
+   }
+  },
+  {
+   "name": "calendar",
+   "collection": "business-medical",
+   "file": "business-medical/calendar.svg",
+   "w": 39.6,
+   "h": 42.8,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 11
+   }
+  },
+  {
+   "name": "mobile-phone",
+   "collection": "business-medical",
+   "file": "business-medical/mobile-phone.svg",
+   "w": 20.9,
+   "h": 43.8,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 12
+   }
+  },
+  {
+   "name": "math-blocks",
+   "collection": "business-medical",
+   "file": "business-medical/math-blocks.svg",
+   "w": 29.7,
+   "h": 29.9,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 13
+   }
+  },
+  {
+   "name": "coffee-cup",
+   "collection": "business-medical",
+   "file": "business-medical/coffee-cup.svg",
+   "w": 35.3,
+   "h": 24.1,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 14
+   }
+  },
+  {
+   "name": "stationery",
+   "collection": "business-medical",
+   "file": "business-medical/stationery.svg",
+   "w": 27.2,
+   "h": 45.6,
+   "source": {
+    "sheet": "med",
+    "row": 11,
+    "col": 15
+   }
+  },
+  {
+   "name": "lightbulb-bright",
+   "collection": "business-medical",
+   "file": "business-medical/lightbulb-bright.svg",
+   "w": 23.6,
+   "h": 40.6,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 1
+   }
+  },
+  {
+   "name": "apple",
+   "collection": "business-medical",
+   "file": "business-medical/apple.svg",
+   "w": 31.7,
+   "h": 33.7,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 2
+   }
+  },
+  {
+   "name": "school-bus",
+   "collection": "business-medical",
+   "file": "business-medical/school-bus.svg",
+   "w": 36.8,
+   "h": 34.7,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 3
+   }
+  },
+  {
+   "name": "classroom",
+   "collection": "business-medical",
+   "file": "business-medical/classroom.svg",
+   "w": 28.7,
+   "h": 30.4,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 4
+   }
+  },
+  {
+   "name": "school",
+   "collection": "business-medical",
+   "file": "business-medical/school.svg",
+   "w": 46.4,
+   "h": 45.7,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 5
+   }
+  },
+  {
+   "name": "heart-signal",
+   "collection": "business-medical",
+   "file": "business-medical/heart-signal.svg",
+   "w": 39.4,
+   "h": 36.9,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 6
+   }
+  },
+  {
+   "name": "ambulance",
+   "collection": "business-medical",
+   "file": "business-medical/ambulance.svg",
+   "w": 39.5,
+   "h": 30.6,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 7
+   }
+  },
+  {
+   "name": "hand-money",
+   "collection": "business-medical",
+   "file": "business-medical/hand-money.svg",
+   "w": 30.6,
+   "h": 35.3,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 8
+   }
+  },
+  {
+   "name": "hands-care",
+   "collection": "business-medical",
+   "file": "business-medical/hands-care.svg",
+   "w": 32.3,
+   "h": 27.1,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 9
+   }
+  },
+  {
+   "name": "people-group",
+   "collection": "business-medical",
+   "file": "business-medical/people-group.svg",
+   "w": 42.3,
+   "h": 29.3,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 10
+   }
+  },
+  {
+   "name": "people-groups",
+   "collection": "business-medical",
+   "file": "business-medical/people-groups.svg",
+   "w": 41.1,
+   "h": 28.4,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 11
+   }
+  },
+  {
+   "name": "desk-phone",
+   "collection": "business-medical",
+   "file": "business-medical/desk-phone.svg",
+   "w": 34.1,
+   "h": 33.4,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 12
+   }
+  },
+  {
+   "name": "necktie",
+   "collection": "business-medical",
+   "file": "business-medical/necktie.svg",
+   "w": 21.0,
+   "h": 36.3,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 13
+   }
+  },
+  {
+   "name": "rocket",
+   "collection": "business-medical",
+   "file": "business-medical/rocket.svg",
+   "w": 36.6,
+   "h": 36.6,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 14
+   }
+  },
+  {
+   "name": "coins-3",
+   "collection": "business-medical",
+   "file": "business-medical/coins-3.svg",
+   "w": 31.9,
+   "h": 34.9,
+   "source": {
+    "sheet": "med",
+    "row": 12,
+    "col": 15
+   }
+  },
+  {
+   "name": "chemistry-flask",
+   "collection": "business-medical",
+   "file": "business-medical/chemistry-flask.svg",
+   "w": 37.7,
+   "h": 52.5,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 1
+   }
+  },
+  {
+   "name": "pen",
+   "collection": "business-medical",
+   "file": "business-medical/pen.svg",
+   "w": 25.5,
+   "h": 36.7,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 2
+   }
+  },
+  {
+   "name": "open-book",
+   "collection": "business-medical",
+   "file": "business-medical/open-book.svg",
+   "w": 38.7,
+   "h": 32.2,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 3
+   }
+  },
+  {
+   "name": "dartboard",
+   "collection": "business-medical",
+   "file": "business-medical/dartboard.svg",
+   "w": 43.5,
+   "h": 42.5,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 4
+   }
+  },
+  {
+   "name": "football",
+   "collection": "business-medical",
+   "file": "business-medical/football.svg",
+   "w": 33.9,
+   "h": 33.8,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 5
+   }
+  },
+  {
+   "name": "couple-hearts",
+   "collection": "business-medical",
+   "file": "business-medical/couple-hearts.svg",
+   "w": 34.1,
+   "h": 25.2,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 6
+   }
+  },
+  {
+   "name": "heart-plus",
+   "collection": "business-medical",
+   "file": "business-medical/heart-plus.svg",
+   "w": 38.8,
+   "h": 34.8,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 7
+   }
+  },
+  {
+   "name": "awareness-ribbon",
+   "collection": "business-medical",
+   "file": "business-medical/awareness-ribbon.svg",
+   "w": 29.6,
+   "h": 31.8,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 8
+   }
+  },
+  {
+   "name": "heart-cross",
+   "collection": "business-medical",
+   "file": "business-medical/heart-cross.svg",
+   "w": 36.7,
+   "h": 32.9,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 9
+   }
+  },
+  {
+   "name": "house-care",
+   "collection": "business-medical",
+   "file": "business-medical/house-care.svg",
+   "w": 37.9,
+   "h": 40.1,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 10
+   }
+  },
+  {
+   "name": "city-growth",
+   "collection": "business-medical",
+   "file": "business-medical/city-growth.svg",
+   "w": 42.5,
+   "h": 31.7,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 11
+   }
+  },
+  {
+   "name": "document",
+   "collection": "business-medical",
+   "file": "business-medical/document.svg",
+   "w": 29.2,
+   "h": 34.8,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 12
+   }
+  },
+  {
+   "name": "gears-3",
+   "collection": "business-medical",
+   "file": "business-medical/gears-3.svg",
+   "w": 40.3,
+   "h": 34.4,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 13
+   }
+  },
+  {
+   "name": "cash",
+   "collection": "business-medical",
+   "file": "business-medical/cash.svg",
+   "w": 44.4,
+   "h": 31.7,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 14
+   }
+  },
+  {
+   "name": "pie-chart-2",
+   "collection": "business-medical",
+   "file": "business-medical/pie-chart-2.svg",
+   "w": 31.2,
+   "h": 31.3,
+   "source": {
+    "sheet": "med",
+    "row": 13,
+    "col": 15
+   }
+  },
+  {
+   "name": "basketball",
+   "collection": "business-medical",
+   "file": "business-medical/basketball.svg",
+   "w": 32.2,
+   "h": 32.2,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 1
+   }
+  },
+  {
+   "name": "notebook-star",
+   "collection": "business-medical",
+   "file": "business-medical/notebook-star.svg",
+   "w": 29.7,
+   "h": 39.0,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 2
+   }
+  },
+  {
+   "name": "desk-globe-2",
+   "collection": "business-medical",
+   "file": "business-medical/desk-globe-2.svg",
+   "w": 32.3,
+   "h": 40.1,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 3
+   }
+  },
+  {
+   "name": "plant-growth",
+   "collection": "business-medical",
+   "file": "business-medical/plant-growth.svg",
+   "w": 40.5,
+   "h": 47.2,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 4
+   }
+  },
+  {
+   "name": "briefcase-2",
+   "collection": "business-medical",
+   "file": "business-medical/briefcase-2.svg",
+   "w": 42.3,
+   "h": 39.5,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 5
+   }
+  },
+  {
+   "name": "donation-cycle",
+   "collection": "business-medical",
+   "file": "business-medical/donation-cycle.svg",
+   "w": 60.4,
+   "h": 25.7,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 6
+   }
+  },
+  {
+   "name": "hand-heart",
+   "collection": "business-medical",
+   "file": "business-medical/hand-heart.svg",
+   "w": 37.5,
+   "h": 36.2,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 7
+   }
+  },
+  {
+   "name": "medical-cross-bold",
+   "collection": "business-medical",
+   "file": "business-medical/medical-cross-bold.svg",
+   "w": 31.3,
+   "h": 32.4,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 8
+   }
+  },
+  {
+   "name": "money-jar",
+   "collection": "business-medical",
+   "file": "business-medical/money-jar.svg",
+   "w": 25.3,
+   "h": 31.5,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 9
+   }
+  },
+  {
+   "name": "handshake-2",
+   "collection": "business-medical",
+   "file": "business-medical/handshake-2.svg",
+   "w": 35.5,
+   "h": 30.1,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 10
+   }
+  },
+  {
+   "name": "buildings",
+   "collection": "business-medical",
+   "file": "business-medical/buildings.svg",
+   "w": 55.4,
+   "h": 41.2,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 11
+   }
+  },
+  {
+   "name": "phone-call",
+   "collection": "business-medical",
+   "file": "business-medical/phone-call.svg",
+   "w": 35.3,
+   "h": 35.2,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 12
+   }
+  },
+  {
+   "name": "transfer-arrows-2",
+   "collection": "business-medical",
+   "file": "business-medical/transfer-arrows-2.svg",
+   "w": 23.1,
+   "h": 26.5,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 13
+   }
+  },
+  {
+   "name": "money-case",
+   "collection": "business-medical",
+   "file": "business-medical/money-case.svg",
+   "w": 43.8,
+   "h": 37.4,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 14
+   }
+  },
+  {
+   "name": "push-pin",
+   "collection": "business-medical",
+   "file": "business-medical/push-pin.svg",
+   "w": 21.8,
+   "h": 31.8,
+   "source": {
+    "sheet": "med",
+    "row": 14,
+    "col": 15
+   }
+  },
+  {
+   "name": "paper-plane",
+   "collection": "business-medical",
+   "file": "business-medical/paper-plane.svg",
+   "w": 41.4,
+   "h": 25.8,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 1
+   }
+  },
+  {
+   "name": "eyeglasses",
+   "collection": "business-medical",
+   "file": "business-medical/eyeglasses.svg",
+   "w": 43.0,
+   "h": 26.2,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 2
+   }
+  },
+  {
+   "name": "grade-a",
+   "collection": "business-medical",
+   "file": "business-medical/grade-a.svg",
+   "w": 39.6,
+   "h": 37.6,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 3
+   }
+  },
+  {
+   "name": "chart-rising",
+   "collection": "business-medical",
+   "file": "business-medical/chart-rising.svg",
+   "w": 33.0,
+   "h": 33.0,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 4
+   }
+  },
+  {
+   "name": "diploma-bow",
+   "collection": "business-medical",
+   "file": "business-medical/diploma-bow.svg",
+   "w": 36.8,
+   "h": 19.0,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 5
+   }
+  },
+  {
+   "name": "hand-leaf",
+   "collection": "business-medical",
+   "file": "business-medical/hand-leaf.svg",
+   "w": 40.7,
+   "h": 40.8,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 6
+   }
+  },
+  {
+   "name": "blood-drop",
+   "collection": "business-medical",
+   "file": "business-medical/blood-drop.svg",
+   "w": 27.6,
+   "h": 36.3,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 7
+   }
+  },
+  {
+   "name": "hand-donate",
+   "collection": "business-medical",
+   "file": "business-medical/hand-donate.svg",
+   "w": 37.7,
+   "h": 27.4,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 8
+   }
+  },
+  {
+   "name": "donation-box",
+   "collection": "business-medical",
+   "file": "business-medical/donation-box.svg",
+   "w": 40.9,
+   "h": 37.8,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 9
+   }
+  },
+  {
+   "name": "earth-heart",
+   "collection": "business-medical",
+   "file": "business-medical/earth-heart.svg",
+   "w": 37.5,
+   "h": 37.5,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 10
+   }
+  },
+  {
+   "name": "globe-sphere-2",
+   "collection": "business-medical",
+   "file": "business-medical/globe-sphere-2.svg",
+   "w": 35.7,
+   "h": 35.6,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 11
+   }
+  },
+  {
+   "name": "businessman",
+   "collection": "business-medical",
+   "file": "business-medical/businessman.svg",
+   "w": 34.7,
+   "h": 36.9,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 12
+   }
+  },
+  {
+   "name": "tablet-2",
+   "collection": "business-medical",
+   "file": "business-medical/tablet-2.svg",
+   "w": 28.0,
+   "h": 39.6,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 13
+   }
+  },
+  {
+   "name": "mail-doc",
+   "collection": "business-medical",
+   "file": "business-medical/mail-doc.svg",
+   "w": 38.3,
+   "h": 35.1,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 14
+   }
+  },
+  {
+   "name": "presentation-chart",
+   "collection": "business-medical",
+   "file": "business-medical/presentation-chart.svg",
+   "w": 35.8,
+   "h": 40.4,
+   "source": {
+    "sheet": "med",
+    "row": 15,
+    "col": 15
+   }
+  }
+ ]
+}

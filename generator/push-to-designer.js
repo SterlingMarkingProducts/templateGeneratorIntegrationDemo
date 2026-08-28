@@ -485,6 +485,13 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
 function svgElementToDataUri(el, doc, cssW, cssH) {
   const clone = el.cloneNode(true);
   if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  /* Icon-bank icons paint with currentColor; a detached data URI has no
+   * inherited color, so bake the computed color into the clone (harmless
+   * for SVGs that use explicit fills). */
+  try {
+    const ink = doc.defaultView.getComputedStyle(el).color;
+    if (ink && !clone.getAttribute('color')) clone.setAttribute('color', ink);
+  } catch (e) { /* keep default currentColor resolution */ }
   if (!clone.getAttribute('viewBox')) {
     const vw = parseFloat(clone.getAttribute('width')) || cssW;
     const vh = parseFloat(clone.getAttribute('height')) || cssH;
@@ -776,6 +783,10 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
         if (r.width < 1 || r.height < 1) continue;
         const clone = svgEl.cloneNode(true);
         if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        try {
+          const ink = doc.defaultView.getComputedStyle(svgEl).color;
+          if (ink && !clone.getAttribute('color')) clone.setAttribute('color', ink);
+        } catch (e) { /* keep default currentColor resolution */ }
         if (!clone.getAttribute('xmlns:xlink')) clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
         if (!clone.getAttribute('width')) clone.setAttribute('width', r.width);
         if (!clone.getAttribute('height')) clone.setAttribute('height', r.height);
