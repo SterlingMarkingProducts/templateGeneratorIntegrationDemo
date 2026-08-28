@@ -1200,6 +1200,7 @@ async function upgradePreviewIcons(htmlStr, payload) {
     if (inlined === htmlStr) return;
     generatedHtml = renderPreviewHtml(inlined, payload);
     previewFrame.srcdoc = generatedHtml;
+    armPreviewReady();
     updateSidePreviews();
   } catch (err) {
     console.warn('Icon bank inlining failed (tokens left as empty spans):', err);
@@ -1324,11 +1325,54 @@ function fitIframeToContent() {
   requestAnimationFrame(() => applyPreviewScale(widthPx, heightPx));
 }
 
-previewFrame.addEventListener('load', () => {
+/* Everything that makes a freshly set preview correct — the bleed-canvas frame
+ * size, hiding the non-front spread of a double-sided design, the text-fit
+ * passes — used to run ONLY in the iframe's 'load' event. That event waits for
+ * every external stylesheet (the injected designer-fonts link, Google Fonts),
+ * so a slow or unreachable CDN delays it indefinitely while the document is
+ * already parsed and painted. For an uploaded double-sided export (whose back
+ * spread is deliberately un-hidden in the saved file) that meant BOTH spreads
+ * visible, and the design's own flex body crushing the two cards to fit —
+ * the squished round-trip. Poll for the parsed document instead and run the
+ * same steps as soon as the design element exists; the load event stays as a
+ * backstop and re-runs the steps harmlessly. */
+function onPreviewDocReady() {
   fitIframeToContent();
   schedulePreviewTextFit();
   updateSidePreviews();
   if (lastPayload?.doubleSided) switchSide('front'); // front = contact side for business cards
+  if (htmlImportDiag) {
+    htmlImportDiag = false;
+    const doc = previewFrame.contentDocument;
+    const card = doc && doc.querySelector('.card, [class*="card"]');
+    const r = card && card.getBoundingClientRect();
+    console.log('[html-import] intrinsic design size:', r ? Math.round(r.width) + '×' + Math.round(r.height) + 'px' : 'n/a');
+    console.log('[html-import] product canvas size:', previewFrame.style.width, '×', previewFrame.style.height);
+    console.log('[html-import] preview display scale X:', lastScale.toFixed(4), 'Y:', lastScale.toFixed(4), '(uniform — one factor scales both axes)');
+  }
+}
+
+let htmlImportDiag = false;
+let previewReadyPoll = null;
+function armPreviewReady() {
+  if (previewReadyPoll) clearInterval(previewReadyPoll);
+  const oldDoc = previewFrame.contentDocument;
+  const started = Date.now();
+  previewReadyPoll = setInterval(() => {
+    const doc = previewFrame.contentDocument;
+    if (!doc || doc === oldDoc) { /* srcdoc not swapped in yet */ }
+    else if (doc.body && (doc.querySelector('.card, [class*="card"]') || doc.body.firstElementChild)) {
+      clearInterval(previewReadyPoll); previewReadyPoll = null;
+      onPreviewDocReady();
+      return;
+    }
+    if (Date.now() - started > 6000) { clearInterval(previewReadyPoll); previewReadyPoll = null; }
+  }, 100);
+}
+
+previewFrame.addEventListener('load', () => {
+  if (previewReadyPoll) { clearInterval(previewReadyPoll); previewReadyPoll = null; }
+  onPreviewDocReady();
 });
 
 /* ── PX conversion (for iframe sizing) ────────────── */
@@ -1499,7 +1543,7 @@ async function generate(payload) {
               requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                   previewFrame.srcdoc = generatedHtml;
-                  // scaling is handled by the iframe 'load' listener (fitIframeToContent)
+                  armPreviewReady(); // fit + side visibility without waiting for 'load'
                 });
               });
 
@@ -1531,7 +1575,7 @@ async function generate(payload) {
             requestAnimationFrame(() => {
               requestAnimationFrame(() => {
                 previewFrame.srcdoc = generatedHtml;
-                // scaling is handled by the iframe 'load' listener (fitIframeToContent)
+                armPreviewReady(); // fit + side visibility without waiting for 'load'
               });
             });
 
@@ -1849,6 +1893,24 @@ resetBtn.addEventListener('click', () => {
 });
 
 /* ── Download helpers ──────────────────────────────── */
+
+/* The preview decorations MUST come off a file before it is exported or
+ * measured. push-to-designer.js owns the canonical stripper; this fallback
+ * carries the same ids so a stale-cached (or not-yet-loaded) SMPPush can never
+ * silently disable stripping — an unstripped file measures at its cover-scaled,
+ * flex-crushed preview box (e.g. 4.22×0.84in for a 3.5×2 business card), and
+ * that measurement must never exist. */
+const PREVIEW_DECOR_IDS = ['layout-safety', 'layout-fix-applied', 'download-both-sides', 'layout-safety-script', 'layout-universal-fit'];
+function stripPreviewDecorationsSafe(html) {
+  if (window.SMPPush?.stripPreviewDecorations) return window.SMPPush.stripPreviewDecorations(html);
+  let out = html;
+  for (const id of PREVIEW_DECOR_IDS) {
+    out = out.replace(new RegExp('<style id="' + id + '">[\\s\\S]*?<\\/style>', 'g'), '')
+             .replace(new RegExp('<script id="' + id + '">[\\s\\S]*?<\\/script>', 'g'), '');
+  }
+  return out;
+}
+
 function downloadFile(content, filename, mime) {
   const blob = new Blob([content], { type: mime });
   const url  = URL.createObjectURL(blob);
@@ -1908,9 +1970,7 @@ function prepareDownloadHtml(html, doubleSided, templateType) {
    * it. Push to Designer already strips them before extraction; the download
    * now starts from the same clean design, and the preview re-applies its
    * display layers fresh on upload. */
-  if (window.SMPPush?.stripPreviewDecorations) {
-    html = window.SMPPush.stripPreviewDecorations(html);
-  }
+  html = stripPreviewDecorationsSafe(html);
   html = injectSterlingMetadata(html);
   if (!doubleSided) return html;
   let out = html;
@@ -2075,7 +2135,7 @@ function measureHtmlDims(html) {
 
 /* Load an arbitrary design into the generator exactly as if it had just been
  * generated — preview, Push to Designer, and Download JSON all then work. */
-function loadDesignIntoGenerator(payload, html, label) {
+function loadDesignIntoGenerator(payload, html, label, opts) {
   lastPayload = {
     templateType: payload.templateType || 'Business Card',
     width: payload.width, height: payload.height, unit: payload.unit || 'in',
@@ -2086,10 +2146,19 @@ function loadDesignIntoGenerator(payload, html, label) {
   generatedHtml = html;
   generatedJson = null;
   setJsonState('generate');
-  // keep the form controls in sync so Regenerate / Push stay consistent
-  if ([...templateType.options].some(o => o.value === lastPayload.templateType)) templateType.value = lastPayload.templateType;
-  if (dimWidth)  dimWidth.value  = lastPayload.width;
-  if (dimHeight) dimHeight.value = lastPayload.height;
+  /* Keep the form controls in sync so Regenerate / Push stay consistent —
+   * EXCEPT when a selected product's fields are authoritative and this design
+   * was NOT restored to that product (a metadata-less upload kept "at its own
+   * size"). Writing the file's measured dimensions into product-locked fields
+   * poisoned every later generation for that product (a 3.5×2 business card
+   * regenerating at 4.22×0.84 after one bad upload). The design still previews,
+   * pushes and downloads at its own lastPayload size either way. */
+  const syncForm = !(opts && opts.syncForm === false);
+  if (syncForm) {
+    if ([...templateType.options].some(o => o.value === lastPayload.templateType)) templateType.value = lastPayload.templateType;
+    if (dimWidth)  dimWidth.value  = lastPayload.width;
+    if (dimHeight) dimHeight.value = lastPayload.height;
+  }
   if (businessName && payload.businessName && payload.businessName !== 'Demo Co') businessName.value = payload.businessName;
   showPanel('result');
   const widthPx  = Math.round(toPx(lastPayload.width, lastPayload.unit));
@@ -2097,6 +2166,7 @@ function loadDesignIntoGenerator(payload, html, label) {
   previewFrame.style.width  = widthPx + 'px';
   previewFrame.style.height = heightPx + 'px';
   previewFrame.srcdoc = renderPreviewHtml(html, lastPayload);
+  armPreviewReady(); // fit + side visibility without waiting for 'load'
   applyPreviewScale(widthPx, heightPx);
   toolbarLabel.textContent = (label || 'Uploaded design') + ' — loaded';
   upgradePreviewIcons(html, lastPayload);
@@ -2133,14 +2203,15 @@ async function handleUploadedFile(file) {
     // An HTML file. Older exports carry baked preview layers (trim-sized body
     // box + cover scale); strip them so the design is intrinsic again and can
     // never arrive pre-squished.
-    const clean = window.SMPPush?.stripPreviewDecorations
-      ? window.SMPPush.stripPreviewDecorations(text) : text;
+    const clean = stripPreviewDecorationsSafe(text);
     const label = file.name.replace(/\.[^.]+$/, '');
 
     // 1) The metadata block, read BEFORE anything renders: restore the REAL
     //    Sterling product first, through the same verified provider the picker
     //    uses — arbitrary metadata is never trusted past that resolution.
     const meta = parseSterlingMetadata(clean);
+    console.log('[html-import] metadata product:', meta ? (meta.partNumber + ' · ' + meta.width + '×' + meta.height + (meta.unit || 'in')) : 'none (older file)');
+    console.log('[html-import] current product BEFORE:', window.SMPProductSelection?.get?.()?.partNumber || 'none');
     if (meta && meta.partNumber && window.SMPProductSelection) {
       try {
         await window.SMPProductSelection.selectByPartNumber(meta.partNumber);
@@ -2148,6 +2219,8 @@ async function handleUploadedFile(file) {
         showError('This design was made for ' + meta.partNumber + ', which this catalogue '
           + 'does not carry — loading it standalone at its own size.');
       }
+      console.log('[html-import] current product AFTER await:', window.SMPProductSelection?.get?.()?.partNumber || 'none');
+      htmlImportDiag = true;
       loadDesignIntoGenerator(
         { templateType: meta.templateType, width: meta.width, height: meta.height,
           unit: meta.unit || 'in', doubleSided: !!meta.doubleSided,
@@ -2163,20 +2236,28 @@ async function handleUploadedFile(file) {
     const dims = await measureHtmlDims(clean);
     if (!dims) throw new Error('Could not find a design element (e.g. a .card) in that HTML file.');
     const wIn = +(dims.wpx / 96).toFixed(2), hIn = +(dims.hpx / 96).toFixed(2);
+    console.log('[html-import] intrinsic HTML size:', dims.wpx + '×' + dims.hpx + 'px (' + wIn + '×' + hIn + 'in)');
     const unique = await findUniqueProductByDims(wIn, hIn);
+    let keptCurrent = false;
     if (unique) {
       try { await window.SMPProductSelection.selectByPartNumber(unique.partNumber); }
       catch (e) { /* keep standalone */ }
     } else if (window.SMPProductSelection?.get?.()) {
+      keptCurrent = true;
       showError('This HTML carries no Sterling metadata and its size matches more than one '
         + 'product (or none) — keeping the current product; the design loads at its own '
         + wIn + '×' + hIn + ' in size.');
     }
+    console.log('[html-import] current product AFTER await:', window.SMPProductSelection?.get?.()?.partNumber || 'none');
+    htmlImportDiag = true;
     loadDesignIntoGenerator(
       { templateType: (unique && unique.templateType) || matchTemplateType(wIn, hIn),
         width: wIn, height: hIn, unit: 'in',
         doubleSided: /card--back/i.test(clean) },
-      clean, label);
+      clean, label,
+      /* never rewrite a locked product's dimension fields with a stray file's
+       * measured size — the preview alone uses the file's own size */
+      { syncForm: !keptCurrent });
   } catch (err) {
     showError(err.message || 'Could not load that file.');
   }

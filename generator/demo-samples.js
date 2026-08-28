@@ -95,6 +95,9 @@
     if (typeof userZoomPercent !== 'undefined') userZoomPercent = 100;
     if (typeof zoomLabel !== 'undefined' && zoomLabel) zoomLabel.textContent = '100%';
     frame.srcdoc = showFront;
+    /* Fit + side visibility must not wait for the iframe 'load' event (a slow
+     * fonts CDN can hold it back long after the document has painted). */
+    if (typeof armPreviewReady === 'function') armPreviewReady();
     if (sample.doubleSided && typeof injectThumbSideCss === 'function') {
       // Populate BOTH per-side thumbnails with explicit sizes so Push to
       // Designer reliably transfers Front + Back (the converter reads these).
