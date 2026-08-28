@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Icon Bank — Template Generator</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6f8; color: #1c2430; }
+    header { position: sticky; top: 0; z-index: 5; background: #fff; border-bottom: 1px solid #e2e6ec; padding: 14px 22px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    header h1 { font-size: 17px; margin: 0 12px 0 0; }
+    header input { flex: 1 1 220px; max-width: 380px; padding: 8px 12px; border: 1px solid #cdd4de; border-radius: 8px; font-size: 14px; }
+    header select { padding: 8px 10px; border: 1px solid #cdd4de; border-radius: 8px; font-size: 14px; background: #fff; }
+    #count { font-size: 13px; color: #6b7686; }
+    main { padding: 20px 22px 60px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+    .cell { background: #fff; border: 1px solid #e2e6ec; border-radius: 10px; padding: 12px 8px 8px; text-align: center; cursor: pointer; transition: box-shadow .12s, transform .12s; }
+    .cell:hover { box-shadow: 0 3px 12px rgba(20,30,50,.12); transform: translateY(-1px); }
+    .cell img { width: 44px; height: 44px; object-fit: contain; display: block; margin: 0 auto 8px; }
+    .cell .nm { font-size: 11px; color: #39424f; word-break: break-all; line-height: 1.25; }
+    .cell .col { font-size: 9.5px; color: #98a1ae; text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
+    #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #1c2430; color: #fff; font-size: 13px; padding: 9px 16px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Icon Bank</h1>
+    <input id="q" type="search" placeholder="Search icons… (e.g. phone, heart, chart)" />
+    <select id="colFilter">
+      <option value="">All collections</option>
+      <option value="minimal">minimal</option>
+      <option value="business-medical">business-medical</option>
+    </select>
+    <span id="count"></span>
+  </header>
+  <main><div class="grid" id="grid"></div></main>
+  <div id="toast"></div>
+  <script>
+    const grid = document.getElementById('grid');
+    const q = document.getElementById('q');
+    const colFilter = document.getElementById('colFilter');
+    const count = document.getElementById('count');
+    const toast = document.getElementById('toast');
+    let all = [];
+
+    fetch('manifest.json').then(r => r.json()).then(man => { all = man.icons; render(); });
+
+    function render() {
+      const term = q.value.trim().toLowerCase();
+      const col = colFilter.value;
+      const hits = all.filter(e =>
+        (!col || e.collection === col) && (!term || e.name.includes(term)));
+      count.textContent = hits.length + ' / ' + all.length + ' icons';
+      grid.innerHTML = hits.map(e =>
+        `<div class="cell" data-token="${e.collection}/${e.name}" title="click: copy token">
+           <img loading="lazy" src="${e.file}" alt="${e.name}" />
+           <div class="nm">${e.name}</div><div class="col">${e.collection}</div>
+         </div>`).join('');
+    }
+
+    grid.addEventListener('click', (ev) => {
+      const cell = ev.target.closest('.cell');
+      if (!cell) return;
+      const token = `<i data-icon="${cell.dataset.token}"></i>`;
+      navigator.clipboard?.writeText(token);
+      toast.textContent = 'Copied ' + token;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1400);
+    });
+
+    q.addEventListener('input', render);
+    colFilter.addEventListener('change', render);
+  </script>
+</body>
+</html>

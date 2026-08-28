@@ -866,6 +866,20 @@ ${bodyFill}
   return appendUniversalFit(out);
 }
 
+/* ── Icon bank: swap <i data-icon="name"> tokens for real inline SVGs ── */
+async function upgradePreviewIcons(htmlStr, payload) {
+  if (!window.IconBank || htmlStr.indexOf('data-icon') === -1) return;
+  try {
+    const inlined = await IconBank.inline(htmlStr);
+    if (inlined === htmlStr) return;
+    generatedHtml = renderPreviewHtml(inlined, payload);
+    previewFrame.srcdoc = generatedHtml;
+    updateSidePreviews();
+  } catch (err) {
+    console.warn('Icon bank inlining failed (tokens left as empty spans):', err);
+  }
+}
+
 function renderPreviewHtml(htmlStr, payload) {
   // Swap the sentinel URL the AI was told to place for the real uploaded photo
   // data URI (the model can't emit a large base64 string itself).
@@ -1147,6 +1161,7 @@ async function generate(payload) {
             if (htmlMatch) {
               const htmlStr = htmlMatch[1].trim();
               generatedHtml = renderPreviewHtml(htmlStr, payload);
+              upgradePreviewIcons(htmlStr, payload);
 
               toolbarLabel.textContent = payload.templateType + ' — Preview';
               setJsonState('generate');
@@ -1178,6 +1193,7 @@ async function generate(payload) {
             }
             const htmlStr = htmlMatch[1].trim();
             generatedHtml = renderPreviewHtml(htmlStr, payload);
+            upgradePreviewIcons(htmlStr, payload);
 
             toolbarLabel.textContent = payload.templateType + ' — Preview';
             setJsonState('generate');
