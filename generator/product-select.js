@@ -167,6 +167,25 @@
     return !inferred && typeof raw.id === 'number' && isFinite(raw.id) && raw.id > 0;
   }
 
+  /* ── Excluded product families ───────────────────────────────────────────
+   *
+   * Seals and embossers — every kind: corporate/notary/common seals, desk and
+   * pocket embossers, embossing seals, seal presses, foil label seals — are
+   * not offered by this Generator at all. They are excluded HERE, at the one
+   * point every catalogue source passes through, so search, browse, the
+   * default selection, selectByPartNumber and the size-match on upload all
+   * agree. The record's own name, part number and authoritative
+   * classification titles are all read; "self-seal(ing)" envelopes and
+   * similar are NOT seals and stay. */
+  function isSealOrEmbosser(raw) {
+    var texts = [raw && raw.name, raw && raw.partNumber];
+    var cls = (raw && raw.classification && raw.classification.productInformation) || [];
+    for (var i = 0; i < cls.length; i++) texts.push(cls[i] && cls[i].title);
+    var hay = texts.filter(Boolean).join(' ').toLowerCase()
+      .replace(/self[- ]?seal(ing|ed)?/g, ' ');
+    return /\bseals?\b|emboss/.test(hay);
+  }
+
   var selected = null;      // normalized Product record, or null
   var catalogueSize = 0;
   var provider = null;
@@ -393,6 +412,13 @@
 
     loadRecords.then(function (loaded) {
       var records = loaded.records;
+      if (!records.length) throw new Error('no catalogue records');
+      var beforeExclusions = records.length;
+      records = records.filter(function (r) { return !isSealOrEmbosser(r); });
+      if (records.length !== beforeExclusions) {
+        console.info('[product-select] excluded ' + (beforeExclusions - records.length)
+          + ' seal/embosser products from the picker');
+      }
       if (!records.length) throw new Error('no catalogue records');
       if (IMPORTABLE_ONLY) {
         records = records.filter(hasAuthoritativeProductId);

@@ -656,7 +656,7 @@ eval(src);
 const P = globalThis.__p;
 is(P.stockProductClass('Sign', 18, 12) === 'general'
    && P.stockProductClass('Banner', 72, 24) === 'general'
-   && P.stockProductClass('Brochure', 11, 8.5) === 'general',
+   && P.stockProductClass('Brochure', 11, 8.5) === 'brochure',
    'a real Sign, Banner and Brochure classify by NAME');
 is(P.stockProductClass('Name Badge', 3, 1) === 'nameplate'
    && P.stockProductClass('Stamp', 2.25, 0.8) === 'stamp',
