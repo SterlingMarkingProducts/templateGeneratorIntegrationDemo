@@ -875,7 +875,7 @@ function renderAssetBlock(assets, density) {
  * The slug's own words are always a term ("real-estate" matches "real estate"),
  * so this table only carries what the slug does not say for itself. */
 const STOCK_INDUSTRY_SYNONYMS = {
-  'real-estate':        'realtor|realty|estate agent|listing agent|broker',
+  'real-estate':        'realtor|realty|estate agent|listing agent',
   'commercial-property':'commercial real estate|commercial property|leasing|landlord',
   'mortgage':           'mortgage broker|lending|lender|loan',
   'home-staging':       'staging|stager',
@@ -986,6 +986,20 @@ const STOCK_INDUSTRY_SYNONYMS = {
   'pilates':            'reformer pilates',
 };
 
+/* Broad parent categories. A specific trade NEVER falls back to one of these:
+ * matching takes the most specific tier that has a depicting photograph and
+ * stops there. This is what stops "dentist" — which also contains the word
+ * "clinic" in most briefs — from reaching a general medical or lifestyle shot.
+ * Everything not listed here is treated as a specific trade. */
+const BROAD_STOCK_SLUGS = ['medical-clinic', 'wellness', 'corporate', 'small-business',
+  'family-services', 'urban-services', 'environment', 'tourism', 'travel', 'safety',
+  'food-service', 'home-repair', 'animal-services', 'property-maintenance',
+  'artisan-food', 'education-non-profit', 'consulting', 'finance'];
+
+function stockSlugTier(slug) {
+  return BROAD_STOCK_SLUGS.indexOf(slug) === -1 ? 1 : 2;
+}
+
 let stockLibrary = null;        // { photos, byId, terms } once loaded
 let stockLibraryLoading = null; // in-flight promise, so it loads once
 let stockLibraryError = null;   // why it is not loaded, for the DEV indicator
@@ -1014,7 +1028,12 @@ function loadStockPhotoLibrary() {
     .then((doc) => {
       const photos = doc.photos || [];
       const byId = {};
-      const slugs = Object.keys(doc.industry_index || {});
+      /* The matcher knows the FULL trade vocabulary, not only the trades the
+         library can serve. A slug that is recognised but undepicted has to be
+         recognised anyway — that is what lets "hearing clinic" be understood as
+         a hearing clinic and refused, instead of falling through the word
+         "clinic" into a general medical photograph. */
+      const slugs = doc.known_industries || Object.keys(doc.industry_index || {});
       const terms = [];
       photos.forEach((p) => { byId[p.id] = p; });
       slugs.forEach((slug) => stockTermsFor(slug).forEach((t) => terms.push([t, slug])));
@@ -1076,22 +1095,59 @@ function stockOrientationOk(photo, want) {
   return want === 'any' || photo.orientation === want;
 }
 
-/* 30 of the 35 photographs have no clean horizontal band. On a poster or a sign
- * that is fine: there is room to give the type its own zone, or to lay the
- * scrim the manifest specifies. On a business card there is no such room, so a
- * photo whose every band is graded poor is skipped rather than squeezed. */
+/* 30 of the 35 photographs have no clean horizontal band, so "has a quiet band"
+ * is far too strict a test to put on a card — it would ban photography from
+ * business cards outright, which is not the policy. What a small format cannot
+ * survive is genuine visual chaos: a frame busy edge to edge, where even a
+ * scrim leaves the type fighting the image. That is measured, not graded — the
+ * quietest horizontal band's busyness has to be within reach. Large format has
+ * the room to give type its own zone, so nothing is excluded there. */
+const SMALL_FORMAT_MAX_BUSYNESS = 0.25;
+
 function stockCompositionOk(photo, largeFormat) {
   if (largeFormat) return true;
   const r = (photo && photo.regions) || {};
-  return ['top', 'middle', 'bottom'].some((b) => r[b] && r[b].text_safety !== 'poor');
+  const bands = ['top', 'middle', 'bottom'].map((b) => (r[b] ? r[b].busyness : 1));
+  return Math.min.apply(null, bands) <= SMALL_FORMAT_MAX_BUSYNESS;
 }
 
-/* How often a matched photo is actually taken. Large format — signs, banners,
- * posters — is where a real photograph earns its place, so a genuine industry
- * match is usually used. A business card is the opposite case: photography
- * there is the exception, and most cards are better with type and space. */
-const STOCK_NONE_LARGE_FORMAT = 0.20;
-const STOCK_NONE_SMALL_FORMAT = 0.85;
+/* ── Product policy ───────────────────────────────────────────────────────
+ *
+ * Photography is decided per product class, not per pixel count:
+ *
+ *   stamp      no photography at all, and no design assets either — the stamp
+ *              rules forbid colour, imagery and overlapping shapes outright.
+ *              (Logo assets will be allowed here when that library lands.)
+ *   nameplate  no photography. A name badge or nameplate is a name, read at
+ *              arm's length. Design assets stay allowed.
+ *   card       ~14%. Photography on a business card is the exception; most
+ *              cards are better with type and space.
+ *   general    ~80%. Signs, posters, banners, flyers, brochures and the rest
+ *              of normal printed material — where a real photograph earns its
+ *              place, WHENEVER a genuinely matched one exists. When none does,
+ *              the answer is no photo, never a loosely related one. */
+const STOCK_PRODUCT_POLICY = {
+  stamp:     { none: 1, reason: 'stamps never use photography' },
+  nameplate: { none: 1, reason: 'name badges and nameplates never use photography' },
+  card:      { none: 0.86 },
+  general:   { none: 0.195 },
+};
+const STOCK_STAMP_RE     = /stamp/i;
+const STOCK_NAMEPLATE_RE = /nameplate|name\s*badge|name\s*tag|badge/i;
+const STOCK_CARD_RE      = /business\s*card|calling\s*card/i;
+
+/* The product class this brief is being designed for. Geometry has the last
+ * word on cards: web03's live catalogue carries no productFamily, so a real
+ * 18x12 sign still arrives with Template Type "Business Card". */
+function stockProductClass(templateType, widthIn, heightIn) {
+  const t = templateType || '';
+  if (STOCK_STAMP_RE.test(t)) return 'stamp';
+  if (STOCK_NAMEPLATE_RE.test(t)) return 'nameplate';
+  if (STOCK_CARD_RE.test(t)) {
+    return isLargeFormatForAssets(t, widthIn, heightIn) ? 'general' : 'card';
+  }
+  return 'general';
+}
 
 /* Photos used by the last generations of THIS brief, so a Regenerate does not
  * come back with the same photograph. An unrelated photo is NEVER substituted
@@ -1121,10 +1177,9 @@ function pickStockPhoto(opts) {
     lastStockReason = 'the customer supplied their own photograph';
     return null;
   }
-  if (/stamp/i.test(templateType)) {
-    lastStockReason = 'stamps never use photography';
-    return null;
-  }
+  const productClass = stockProductClass(templateType, opts.widthIn, opts.heightIn);
+  const policy = STOCK_PRODUCT_POLICY[productClass] || STOCK_PRODUCT_POLICY.general;
+  if (policy.none >= 1) { lastStockReason = policy.reason; return null; }
   if (mode === 'off') { lastStockReason = 'stock photo mode is No Photo'; return null; }
 
   const lib = stockLibrary;
@@ -1135,7 +1190,12 @@ function pickStockPhoto(opts) {
   if (!lib) { lastStockReason = 'library still loading'; return null; }
   if (!lib.photos.length) { lastStockReason = 'library is empty'; return null; }
 
-  /* ── The hard industry gate. ── */
+  /* ── The hard industry gate. ──
+     Matching reads depicts[] — what the photograph actually SHOWS — and never
+     the audit's looser associations. Specific beats broad: the pool is built
+     from the most specific tier that has a depicting photograph, and it is
+     never widened past that tier. A dentist therefore reaches dental imagery
+     or nothing; a general medical or lifestyle shot is not a fallback. */
   const slugs = matchStockIndustries(opts.industryText, lib);
   if (!slugs.length) {
     lastStockReason = String(opts.industryText || '').trim()
@@ -1143,16 +1203,25 @@ function pickStockPhoto(opts) {
       : 'no industry given';
     return null;
   }
-  let pool = lib.photos.filter((p) =>
-    (p.industries || []).some((s) => slugs.indexOf(s) !== -1));
-  if (!pool.length) { lastStockReason = 'no industry match in the stock library'; return null; }
+  /* SPECIFIC WINS OUTRIGHT. If the brief names a specific trade at all, that
+     tier is the only tier considered — and if nothing depicts it, the answer is
+     no photo. The broad tier is reachable only by a brief that names nothing
+     more specific than a broad category. */
+  let tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 1);
+  if (!tierSlugs.length) tierSlugs = slugs.filter((sl) => stockSlugTier(sl) === 2);
+  const pool = lib.photos.filter((p) =>
+    (p.depicts || []).some((sl) => tierSlugs.indexOf(sl) !== -1));
+  if (!pool.length) {
+    lastStockReason = 'no photograph in the library depicts this industry';
+    return null;
+  }
 
   /* ── Format gates. ── */
   const largeFormat = isLargeFormatForAssets(templateType, opts.widthIn, opts.heightIn);
   const wantOrientation = stockOrientationFor(opts.widthIn, opts.heightIn);
   const oriented = pool.filter((p) => stockOrientationOk(p, wantOrientation));
   if (!oriented.length) {
-    lastStockReason = 'no ' + wantOrientation + ' photo matches this industry';
+    lastStockReason = 'no ' + wantOrientation + ' photo depicts this industry';
     return null;
   }
   const safe = oriented.filter((p) => stockCompositionOk(p, largeFormat));
@@ -1162,14 +1231,11 @@ function pickStockPhoto(opts) {
   }
 
   /* ── Frequency. The only thing Force skips. ── */
-  if (mode !== 'force') {
-    const none = largeFormat ? STOCK_NONE_LARGE_FORMAT : STOCK_NONE_SMALL_FORMAT;
-    if (Math.random() < none) {
-      lastStockReason = largeFormat
-        ? 'a match existed; this generation drew none'
-        : 'small format uses photography sparingly; this generation drew none';
-      return null;
-    }
+  if (mode !== 'force' && Math.random() < policy.none) {
+    lastStockReason = productClass === 'card'
+      ? 'business cards use photography sparingly; this generation drew none'
+      : 'a match existed; this generation drew none';
+    return null;
   }
 
   /* ── Variety, never at the cost of relevance. ── */
@@ -1185,12 +1251,13 @@ function pickStockPhoto(opts) {
   recentStockPhotos.set(opts.memoryKey,
     [photo.id].concat(recent.filter((id) => id !== photo.id)).slice(0, STOCK_PHOTO_MEMORY));
 
-  const matched = (photo.industries || []).filter((s) => slugs.indexOf(s) !== -1);
+  const matched = (photo.depicts || []).filter((sl) => tierSlugs.indexOf(sl) !== -1);
   return {
     photo: photo,
-    industry: matched[0] || slugs[0],
+    industry: matched[0] || tierSlugs[0],
     matchedIndustries: matched,
-    briefIndustries: slugs,
+    briefIndustries: tierSlugs,
+    productClass: productClass,
     largeFormat: largeFormat,
     orientation: wantOrientation,
     mode: mode,
@@ -1287,9 +1354,20 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
       assetSelectMs: 0, largeFormat: false, assetMode: assetMode() };
   }
 
-  const isLargeFormat = /poster|sign/i.test(templateType || '');
+  /* Large format is decided by geometry as well as by name, so a real sign or
+   * banner is treated as one even when the live catalogue leaves Template Type
+   * saying Business Card. Business cards are untouched by everything here. */
+  const isLargeFormat = isLargeFormatForAssets(templateType, widthIn, heightIn);
   const formatNote = isLargeFormat
-    ? 'Design at true poster scale — monumental display type (120px+), one dominant visual covering ≥40% of the canvas, edge-to-edge composition. A poster, not a scaled-up business card.'
+    ? 'Design at true poster scale — monumental display type (120px+), one dominant visual covering ≥40% of the canvas, edge-to-edge composition. A poster, not a scaled-up business card.\n\n'
+      + 'DISTANCE IMPACT — this piece is read from across a room, not held in the hand. Commit to it: '
+      + 'fewer and LARGER colour fields, one colour owning a decisive share of the canvas, and hard contrast '
+      + 'between that field and the type carried on it. Half-tints, thin rules and delicate spacing that read '
+      + 'beautifully at 3.5 inches simply disappear at ten feet. '
+      + 'Strength is not brightness: reach it through saturation, depth, scale and contrast — a refined, '
+      + 'luxury or editorial direction stays refined and gets there with deep ink, warm neutrals and one '
+      + 'confident accent. Do NOT default to neon, and do NOT spread the palette into a rainbow — two or '
+      + 'three colours doing decisive work beats six competing.'
     : 'Design at portfolio quality — one clear idea, real craft, and a print-shop finish appropriate to this direction.';
 
   const memoryKey = variationKey || `${templateType}|${raw}|${industry}`;
@@ -1889,6 +1967,7 @@ async function handleGenerate(body, send) {
         reason: '',
         selectMs: stockSelectMs,
         format: stockSelection.largeFormat ? 'large-format' : 'small-format',
+        productClass: stockSelection.productClass,
         mode: stockSelection.mode,
       }
     : {
@@ -1896,6 +1975,7 @@ async function handleGenerate(body, send) {
         reason: lastStockReason || 'unknown',
         selectMs: stockSelectMs,
         format: isLargeFormatForAssets(templateType, trimWin, trimHin) ? 'large-format' : 'small-format',
+        productClass: stockProductClass(templateType, trimWin, trimHin),
         mode: stockPhotoMode(),
       };
   try {

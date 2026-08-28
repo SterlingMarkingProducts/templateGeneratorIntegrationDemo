@@ -10,44 +10,32 @@
       "logo-library"
     ],
     "customer_photo_wins": "A customer-supplied Image URL or upload disables stock selection entirely.",
-    "industry_match": "HARD GATE. A photo is eligible only when the brief resolves to one of the slugs in its industries[]. No nearest-neighbour fallback.",
+    "industry_match": "HARD GATE on depicts[] only \u2014 what the photograph actually shows. A specific trade never receives a broad-category or lifestyle photo: matching resolves to the most specific tier that has a depicting photo and never widens past it. No nearest-neighbour fallback; an unmatched industry means no photo.",
     "never_on": [
       "stamps"
     ],
     "max_per_design": 1,
     "orientation_rule": "A portrait product may use only portrait photos; a landscape product only landscape photos; a near-square product may use either.",
     "text_safety": "Important text must not sit on a region graded poor unless overlay_guidance.scrim_opacity_if_used is applied.",
-    "suppresses": "When a photo is placed, design-asset usage drops to at most one quiet texture or frame."
+    "suppresses": "When a photo is placed, design-asset usage drops to at most one quiet texture or frame.",
+    "audit_associations": "Provenance from the Phase 2C audit. NEVER used to select \u2014 it is what allowed a family-in-a-park photo to answer \"dentist\".",
+    "known_industries": "The full trade vocabulary the matcher understands. A slug here with no depicting photograph is a recognised SPECIFIC trade that the library cannot serve \u2014 naming it yields no photo, and never a broad-category substitute."
   },
   "industry_index": {
     "accounting": [
-      "14-lawyer-professional-office",
       "28-accountant-bookkeeper-office"
     ],
     "animal-services": [
       "23-veterinarian-with-dog"
     ],
-    "appliance-service": [
-      "17-plumber-kitchen-sink-repair"
-    ],
-    "architecture": [
-      "32-interior-designer-consultation"
-    ],
     "artisan-food": [
       "19-artisan-baker-making-bread"
-    ],
-    "auto-detailing": [
-      "30-auto-mechanic"
     ],
     "auto-repair": [
       "30-auto-mechanic"
     ],
     "bakery": [
-      "07-person-enjoying-coffee-at-cafe",
       "19-artisan-baker-making-bread"
-    ],
-    "barber": [
-      "02-hair-salon-portrait"
     ],
     "beauty": [
       "02-hair-salon-portrait",
@@ -60,21 +48,16 @@
       "29-boutique-shop-owner"
     ],
     "cafe": [
-      "07-person-enjoying-coffee-at-cafe",
-      "19-artisan-baker-making-bread"
+      "07-person-enjoying-coffee-at-cafe"
     ],
     "catering": [
       "18-chef-restaurant-kitchen"
     ],
     "childcare": [
-      "24-teacher-with-students-classroom",
       "25-daycare-educator-reading"
     ],
     "chiropractic": [
       "15-physiotherapy-session"
-    ],
-    "cleaning": [
-      "34-modern-living-room-interior"
     ],
     "co-working": [
       "27-technology-team-collaboration"
@@ -86,7 +69,6 @@
       "10-modern-cityscape"
     ],
     "construction": [
-      "10-modern-cityscape",
       "16-construction-professional"
     ],
     "consulting": [
@@ -104,18 +86,14 @@
       "25-daycare-educator-reading"
     ],
     "dental": [
-      "04-dentist-with-patient",
-      "09-happy-family-outdoors",
-      "26-happy-senior-couple"
+      "04-dentist-with-patient"
     ],
     "education-non-profit": [
       "24-teacher-with-students-classroom"
     ],
-    "engineering": [
-      "16-construction-professional"
-    ],
     "environment": [
-      "11-mountain-lake-landscape"
+      "11-mountain-lake-landscape",
+      "35-peaceful-coastal-landscape"
     ],
     "events-weddings": [
       "01-florist-bouquet"
@@ -124,11 +102,7 @@
       "05-doctor-patient-consultation"
     ],
     "family-services": [
-      "09-happy-family-outdoors",
-      "25-daycare-educator-reading"
-    ],
-    "farmers-market": [
-      "19-artisan-baker-making-bread"
+      "09-happy-family-outdoors"
     ],
     "fashion": [
       "29-boutique-shop-owner"
@@ -136,13 +110,11 @@
     "finance": [
       "06-business-team-in-suits",
       "08-professional-male-headshot",
-      "10-modern-cityscape",
-      "14-lawyer-professional-office",
-      "28-accountant-bookkeeper-office",
       "33-professional-female-headshot"
     ],
     "financial-planning": [
-      "26-happy-senior-couple"
+      "08-professional-male-headshot",
+      "33-professional-female-headshot"
     ],
     "fleet-service": [
       "30-auto-mechanic"
@@ -153,25 +125,14 @@
     "food-service": [
       "18-chef-restaurant-kitchen"
     ],
-    "funeral-memorial": [
-      "35-peaceful-coastal-landscape"
-    ],
     "furniture-retail": [
-      "32-interior-designer-consultation",
       "34-modern-living-room-interior"
     ],
     "garden-centre": [
-      "01-florist-bouquet",
       "31-landscaper-gardener"
     ],
     "general-contractor": [
       "16-construction-professional"
-    ],
-    "gift-retail": [
-      "01-florist-bouquet"
-    ],
-    "gift-shop": [
-      "29-boutique-shop-owner"
     ],
     "gym": [
       "20-personal-trainer-with-client"
@@ -179,15 +140,8 @@
     "hair-salon": [
       "02-hair-salon-portrait"
     ],
-    "hearing": [
-      "26-happy-senior-couple"
-    ],
     "home-builder": [
       "12-modern-suburban-house"
-    ],
-    "home-care": [
-      "03-healthcare-professional-scrubs",
-      "26-happy-senior-couple"
     ],
     "home-renovation": [
       "32-interior-designer-consultation"
@@ -199,23 +153,11 @@
       "13-real-estate-home-viewing",
       "34-modern-living-room-interior"
     ],
-    "hvac": [
-      "17-plumber-kitchen-sink-repair"
-    ],
-    "industrial": [
-      "16-construction-professional"
-    ],
     "insurance": [
       "08-professional-male-headshot",
-      "09-happy-family-outdoors",
-      "26-happy-senior-couple",
       "33-professional-female-headshot"
     ],
-    "insurance-health": [
-      "05-doctor-patient-consultation"
-    ],
     "interior-design": [
-      "13-real-estate-home-viewing",
       "32-interior-designer-consultation",
       "34-modern-living-room-interior"
     ],
@@ -223,43 +165,22 @@
       "27-technology-team-collaboration"
     ],
     "landscaping": [
-      "12-modern-suburban-house",
       "31-landscaper-gardener"
     ],
     "lawn-care": [
       "31-landscaper-gardener"
     ],
     "legal": [
-      "06-business-team-in-suits",
       "08-professional-male-headshot",
       "14-lawyer-professional-office",
       "33-professional-female-headshot"
     ],
-    "library": [
-      "25-daycare-educator-reading"
-    ],
-    "massage": [
-      "15-physiotherapy-session",
-      "22-spa-skincare-facial-treatment"
-    ],
     "medical-clinic": [
       "03-healthcare-professional-scrubs",
-      "04-dentist-with-patient",
       "05-doctor-patient-consultation"
     ],
     "medspa": [
       "22-spa-skincare-facial-treatment"
-    ],
-    "mental-health": [
-      "21-yoga-wellness-studio"
-    ],
-    "mortgage": [
-      "12-modern-suburban-house",
-      "13-real-estate-home-viewing"
-    ],
-    "non-profit": [
-      "11-mountain-lake-landscape",
-      "35-peaceful-coastal-landscape"
     ],
     "notary": [
       "14-lawyer-professional-office"
@@ -279,21 +200,8 @@
     "personal-training": [
       "20-personal-trainer-with-client"
     ],
-    "pet-grooming": [
-      "23-veterinarian-with-dog"
-    ],
-    "pet-retail": [
-      "23-veterinarian-with-dog"
-    ],
-    "pharmacy": [
-      "03-healthcare-professional-scrubs"
-    ],
-    "photography": [
-      "09-happy-family-outdoors"
-    ],
     "physiotherapy": [
-      "15-physiotherapy-session",
-      "20-personal-trainer-with-client"
+      "15-physiotherapy-session"
     ],
     "pilates": [
       "21-yoga-wellness-studio"
@@ -308,27 +216,19 @@
       "31-landscaper-gardener"
     ],
     "real-estate": [
-      "06-business-team-in-suits",
       "08-professional-male-headshot",
-      "09-happy-family-outdoors",
-      "10-modern-cityscape",
       "12-modern-suburban-house",
       "13-real-estate-home-viewing",
-      "33-professional-female-headshot",
-      "34-modern-living-room-interior"
+      "33-professional-female-headshot"
     ],
     "rehab": [
       "15-physiotherapy-session"
     ],
     "restaurant": [
-      "07-person-enjoying-coffee-at-cafe",
       "18-chef-restaurant-kitchen"
     ],
     "retirement-living": [
       "26-happy-senior-couple"
-    ],
-    "roofing": [
-      "12-modern-suburban-house"
     ],
     "safety": [
       "16-construction-professional"
@@ -346,14 +246,7 @@
       "27-technology-team-collaboration"
     ],
     "spa": [
-      "02-hair-salon-portrait",
       "22-spa-skincare-facial-treatment"
-    ],
-    "specialist": [
-      "05-doctor-patient-consultation"
-    ],
-    "sports": [
-      "20-personal-trainer-with-client"
     ],
     "sports-medicine": [
       "15-physiotherapy-session"
@@ -390,14 +283,124 @@
       "23-veterinarian-with-dog"
     ],
     "wellness": [
-      "11-mountain-lake-landscape",
-      "21-yoga-wellness-studio",
-      "35-peaceful-coastal-landscape"
+      "21-yoga-wellness-studio"
     ],
     "yoga": [
       "21-yoga-wellness-studio"
     ]
   },
+  "known_industries": [
+    "accounting",
+    "animal-services",
+    "appliance-service",
+    "architecture",
+    "artisan-food",
+    "auto-detailing",
+    "auto-repair",
+    "bakery",
+    "barber",
+    "beauty",
+    "bookkeeping",
+    "boutique-retail",
+    "cafe",
+    "catering",
+    "childcare",
+    "chiropractic",
+    "cleaning",
+    "co-working",
+    "coffee-roaster",
+    "commercial-property",
+    "construction",
+    "consulting",
+    "corporate",
+    "culinary-school",
+    "daycare",
+    "dental",
+    "education-non-profit",
+    "engineering",
+    "environment",
+    "events-weddings",
+    "family-practice",
+    "family-services",
+    "farmers-market",
+    "fashion",
+    "finance",
+    "financial-planning",
+    "fleet-service",
+    "florist",
+    "food-service",
+    "funeral-memorial",
+    "furniture-retail",
+    "garden-centre",
+    "general-contractor",
+    "gift-retail",
+    "gift-shop",
+    "gym",
+    "hair-salon",
+    "hearing",
+    "home-builder",
+    "home-care",
+    "home-renovation",
+    "home-repair",
+    "home-staging",
+    "hvac",
+    "industrial",
+    "insurance",
+    "insurance-health",
+    "interior-design",
+    "it-services",
+    "landscaping",
+    "lawn-care",
+    "legal",
+    "library",
+    "massage",
+    "medical-clinic",
+    "medspa",
+    "mental-health",
+    "mortgage",
+    "non-profit",
+    "notary",
+    "nursing",
+    "orthodontics",
+    "outdoor-recreation",
+    "payroll",
+    "personal-training",
+    "pet-grooming",
+    "pet-retail",
+    "pharmacy",
+    "photography",
+    "physiotherapy",
+    "pilates",
+    "plumbing",
+    "preschool",
+    "property-maintenance",
+    "real-estate",
+    "rehab",
+    "restaurant",
+    "retirement-living",
+    "roofing",
+    "safety",
+    "school",
+    "skincare",
+    "small-business",
+    "software",
+    "spa",
+    "specialist",
+    "sports",
+    "sports-medicine",
+    "startup",
+    "studio-fitness",
+    "tax",
+    "technology",
+    "tire-service",
+    "tourism",
+    "travel",
+    "tutoring",
+    "urban-services",
+    "veterinary",
+    "wellness",
+    "yoga"
+  ],
   "photos": [
     {
       "id": "01-florist-bouquet",
@@ -411,7 +414,11 @@
       "orientation": "landscape",
       "subject": "Hands arranging a fresh mixed bouquet on a florist's worktop",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "florist",
+        "events-weddings"
+      ],
+      "audit_associations": [
         "florist",
         "gift-retail",
         "events-weddings",
@@ -503,7 +510,11 @@
       "orientation": "portrait",
       "subject": "Stylist finishing a client's hair in a salon chair",
       "category": "personal-service",
-      "industries": [
+      "depicts": [
+        "hair-salon",
+        "beauty"
+      ],
+      "audit_associations": [
         "hair-salon",
         "barber",
         "beauty",
@@ -596,7 +607,11 @@
       "orientation": "landscape",
       "subject": "Smiling healthcare worker in scrubs, clinic corridor",
       "category": "healthcare",
-      "industries": [
+      "depicts": [
+        "medical-clinic",
+        "nursing"
+      ],
+      "audit_associations": [
         "medical-clinic",
         "nursing",
         "home-care",
@@ -688,7 +703,11 @@
       "orientation": "landscape",
       "subject": "Dentist and assistant treating a seated patient",
       "category": "healthcare",
-      "industries": [
+      "depicts": [
+        "dental",
+        "orthodontics"
+      ],
+      "audit_associations": [
         "dental",
         "orthodontics",
         "medical-clinic"
@@ -779,7 +798,11 @@
       "orientation": "landscape",
       "subject": "Doctor in white coat consulting with a patient across a desk",
       "category": "healthcare",
-      "industries": [
+      "depicts": [
+        "medical-clinic",
+        "family-practice"
+      ],
+      "audit_associations": [
         "medical-clinic",
         "family-practice",
         "specialist",
@@ -871,7 +894,12 @@
       "orientation": "landscape",
       "subject": "Small team in business attire around a meeting table",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "consulting",
+        "corporate",
+        "finance"
+      ],
+      "audit_associations": [
         "consulting",
         "finance",
         "legal",
@@ -964,7 +992,11 @@
       "orientation": "landscape",
       "subject": "Person with a coffee cup at a cafe table",
       "category": "hospitality",
-      "industries": [
+      "depicts": [
+        "cafe",
+        "coffee-roaster"
+      ],
+      "audit_associations": [
         "cafe",
         "coffee-roaster",
         "bakery",
@@ -1056,7 +1088,15 @@
       "orientation": "portrait",
       "subject": "Studio-style headshot of a man in a jacket",
       "category": "portrait",
-      "industries": [
+      "depicts": [
+        "real-estate",
+        "legal",
+        "finance",
+        "consulting",
+        "insurance",
+        "financial-planning"
+      ],
+      "audit_associations": [
         "real-estate",
         "legal",
         "finance",
@@ -1150,7 +1190,10 @@
       "orientation": "landscape",
       "subject": "Family of four outdoors in open parkland",
       "category": "lifestyle",
-      "industries": [
+      "depicts": [
+        "family-services"
+      ],
+      "audit_associations": [
         "insurance",
         "real-estate",
         "dental",
@@ -1243,7 +1286,11 @@
       "orientation": "landscape",
       "subject": "Downtown skyline of glass towers, no people",
       "category": "place",
-      "industries": [
+      "depicts": [
+        "commercial-property",
+        "urban-services"
+      ],
+      "audit_associations": [
         "real-estate",
         "commercial-property",
         "finance",
@@ -1336,7 +1383,12 @@
       "orientation": "landscape",
       "subject": "Mountain range reflected in a still alpine lake",
       "category": "nature",
-      "industries": [
+      "depicts": [
+        "outdoor-recreation",
+        "tourism",
+        "environment"
+      ],
+      "audit_associations": [
         "tourism",
         "outdoor-recreation",
         "wellness",
@@ -1429,7 +1481,11 @@
       "orientation": "landscape",
       "subject": "Contemporary two-storey house with landscaped front yard",
       "category": "place",
-      "industries": [
+      "depicts": [
+        "real-estate",
+        "home-builder"
+      ],
+      "audit_associations": [
         "real-estate",
         "home-builder",
         "landscaping",
@@ -1522,7 +1578,11 @@
       "orientation": "landscape",
       "subject": "Agent showing a bright interior to a couple",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "real-estate",
+        "home-staging"
+      ],
+      "audit_associations": [
         "real-estate",
         "mortgage",
         "interior-design",
@@ -1614,7 +1674,11 @@
       "orientation": "portrait",
       "subject": "Lawyer at a desk with law books and dark panelling",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "legal",
+        "notary"
+      ],
+      "audit_associations": [
         "legal",
         "notary",
         "accounting",
@@ -1707,7 +1771,13 @@
       "orientation": "landscape",
       "subject": "Therapist working on a client's shoulder in a treatment room",
       "category": "healthcare",
-      "industries": [
+      "depicts": [
+        "physiotherapy",
+        "chiropractic",
+        "rehab",
+        "sports-medicine"
+      ],
+      "audit_associations": [
         "physiotherapy",
         "chiropractic",
         "massage",
@@ -1800,7 +1870,12 @@
       "orientation": "landscape",
       "subject": "Worker in hard hat and hi-vis on a build site",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "construction",
+        "general-contractor",
+        "safety"
+      ],
+      "audit_associations": [
         "construction",
         "general-contractor",
         "engineering",
@@ -1893,7 +1968,11 @@
       "orientation": "landscape",
       "subject": "Plumber working under a kitchen sink with tools",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "plumbing",
+        "home-repair"
+      ],
+      "audit_associations": [
         "plumbing",
         "hvac",
         "home-repair",
@@ -1985,7 +2064,13 @@
       "orientation": "landscape",
       "subject": "Chef plating in a professional kitchen",
       "category": "hospitality",
-      "industries": [
+      "depicts": [
+        "restaurant",
+        "catering",
+        "food-service",
+        "culinary-school"
+      ],
+      "audit_associations": [
         "restaurant",
         "catering",
         "culinary-school",
@@ -2077,7 +2162,11 @@
       "orientation": "landscape",
       "subject": "Baker shaping dough on a floured bench",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "bakery",
+        "artisan-food"
+      ],
+      "audit_associations": [
         "bakery",
         "cafe",
         "artisan-food",
@@ -2169,7 +2258,11 @@
       "orientation": "landscape",
       "subject": "Trainer coaching a client through a gym exercise",
       "category": "fitness-wellness",
-      "industries": [
+      "depicts": [
+        "personal-training",
+        "gym"
+      ],
+      "audit_associations": [
         "gym",
         "personal-training",
         "sports",
@@ -2261,7 +2354,13 @@
       "orientation": "landscape",
       "subject": "Yoga class holding a pose in a light studio",
       "category": "fitness-wellness",
-      "industries": [
+      "depicts": [
+        "yoga",
+        "pilates",
+        "studio-fitness",
+        "wellness"
+      ],
+      "audit_associations": [
         "yoga",
         "pilates",
         "wellness",
@@ -2354,7 +2453,13 @@
       "orientation": "landscape",
       "subject": "Client receiving a facial treatment on a spa bed",
       "category": "personal-service",
-      "industries": [
+      "depicts": [
+        "spa",
+        "medspa",
+        "skincare",
+        "beauty"
+      ],
+      "audit_associations": [
         "spa",
         "medspa",
         "skincare",
@@ -2447,7 +2552,11 @@
       "orientation": "landscape",
       "subject": "Vet examining a dog on a clinic table",
       "category": "healthcare",
-      "industries": [
+      "depicts": [
+        "veterinary",
+        "animal-services"
+      ],
+      "audit_associations": [
         "veterinary",
         "pet-grooming",
         "pet-retail",
@@ -2539,7 +2648,12 @@
       "orientation": "landscape",
       "subject": "Teacher with children at classroom desks",
       "category": "education",
-      "industries": [
+      "depicts": [
+        "school",
+        "tutoring",
+        "education-non-profit"
+      ],
+      "audit_associations": [
         "school",
         "tutoring",
         "education-non-profit",
@@ -2631,7 +2745,12 @@
       "orientation": "landscape",
       "subject": "Educator reading a picture book to young children",
       "category": "education",
-      "industries": [
+      "depicts": [
+        "daycare",
+        "preschool",
+        "childcare"
+      ],
+      "audit_associations": [
         "daycare",
         "preschool",
         "childcare",
@@ -2724,7 +2843,10 @@
       "orientation": "landscape",
       "subject": "Older couple smiling together outdoors",
       "category": "lifestyle",
-      "industries": [
+      "depicts": [
+        "retirement-living"
+      ],
+      "audit_associations": [
         "retirement-living",
         "insurance",
         "financial-planning",
@@ -2818,7 +2940,14 @@
       "orientation": "landscape",
       "subject": "Team at monitors in an open-plan tech office",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "technology",
+        "software",
+        "it-services",
+        "startup",
+        "co-working"
+      ],
+      "audit_associations": [
         "technology",
         "software",
         "it-services",
@@ -2911,7 +3040,13 @@
       "orientation": "landscape",
       "subject": "Accountant reviewing documents with a calculator and laptop",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "accounting",
+        "bookkeeping",
+        "tax",
+        "payroll"
+      ],
+      "audit_associations": [
         "accounting",
         "bookkeeping",
         "tax",
@@ -3004,7 +3139,12 @@
       "orientation": "portrait",
       "subject": "Shop owner standing among racks in a small boutique",
       "category": "retail",
-      "industries": [
+      "depicts": [
+        "boutique-retail",
+        "fashion",
+        "small-business"
+      ],
+      "audit_associations": [
         "boutique-retail",
         "fashion",
         "gift-shop",
@@ -3097,7 +3237,12 @@
       "orientation": "landscape",
       "subject": "Mechanic working on a vehicle in a service bay",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "auto-repair",
+        "tire-service",
+        "fleet-service"
+      ],
+      "audit_associations": [
         "auto-repair",
         "tire-service",
         "auto-detailing",
@@ -3189,7 +3334,13 @@
       "orientation": "landscape",
       "subject": "Landscaper tending planting beds with tools",
       "category": "trade-craft",
-      "industries": [
+      "depicts": [
+        "landscaping",
+        "lawn-care",
+        "garden-centre",
+        "property-maintenance"
+      ],
+      "audit_associations": [
         "landscaping",
         "lawn-care",
         "garden-centre",
@@ -3281,7 +3432,11 @@
       "orientation": "landscape",
       "subject": "Designer reviewing material samples with a client",
       "category": "professional-services",
-      "industries": [
+      "depicts": [
+        "interior-design",
+        "home-renovation"
+      ],
+      "audit_associations": [
         "interior-design",
         "home-renovation",
         "furniture-retail",
@@ -3373,7 +3528,15 @@
       "orientation": "portrait",
       "subject": "Studio-style headshot of a woman in business attire",
       "category": "portrait",
-      "industries": [
+      "depicts": [
+        "real-estate",
+        "legal",
+        "finance",
+        "consulting",
+        "insurance",
+        "financial-planning"
+      ],
+      "audit_associations": [
         "real-estate",
         "legal",
         "finance",
@@ -3467,7 +3630,12 @@
       "orientation": "landscape",
       "subject": "Styled contemporary living room, no people",
       "category": "place",
-      "industries": [
+      "depicts": [
+        "interior-design",
+        "home-staging",
+        "furniture-retail"
+      ],
+      "audit_associations": [
         "interior-design",
         "real-estate",
         "furniture-retail",
@@ -3560,7 +3728,12 @@
       "orientation": "landscape",
       "subject": "Quiet shoreline with open sky and water",
       "category": "nature",
-      "industries": [
+      "depicts": [
+        "tourism",
+        "travel",
+        "environment"
+      ],
+      "audit_associations": [
         "tourism",
         "wellness",
         "funeral-memorial",

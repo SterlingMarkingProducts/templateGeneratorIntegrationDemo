@@ -22,7 +22,8 @@ let src = ENGINE_SRC.replace('window.handleGenerate = handleGenerate;',
   'globalThis.__p = { chooseCreativeDirection, loadAssetLibrary, loadStockPhotoLibrary,'
   + ' pickStockPhoto, pickAssets, matchStockIndustries, stockOrientationFor,'
   + ' stockCompositionOk, renderStockPhotoBlock, recentStockPhotos,'
-  + ' STOCK_NONE_LARGE_FORMAT, STOCK_NONE_SMALL_FORMAT, PHOTO_SAFE_ASSET_FAMILIES,'
+  + ' stockProductClass, STOCK_PRODUCT_POLICY, BROAD_STOCK_SLUGS, stockSlugTier,'
+  + ' PHOTO_SAFE_ASSET_FAMILIES,'
   + ' STOCK_INDUSTRY_SYNONYMS, HTML_PROMPT, get lastStockReason() { return lastStockReason; } };');
 src = src.replace('window.handleGenerateJson = handleGenerateJson;', '');
 // eslint-disable-next-line no-eval
@@ -38,6 +39,12 @@ const is = (c, n, d = '') => { c ? pass++ : fail++; console.log(`  ${c ? 'PASS' 
 const CARD = { templateType: 'Business Card', widthIn: 3.5, heightIn: 2 };
 const SIGN = { templateType: 'Sign', widthIn: 36, heightIn: 24 };
 const BANNER_TALL = { templateType: 'Banner', widthIn: 24, heightIn: 72 };
+const POSTER = { templateType: 'Poster', widthIn: 24, heightIn: 18 };
+const FLYER  = { templateType: 'Flyer', widthIn: 11, heightIn: 8.5 };
+const BROCHURE = { templateType: 'Brochure', widthIn: 11, heightIn: 8.5 };
+const NAMEPLATE = { templateType: 'Nameplate', widthIn: 8, heightIn: 2 };
+const BADGE = { templateType: 'Name Badge', widthIn: 3, heightIn: 1.5 };
+const STAMP = { templateType: 'Stamp', widthIn: 2, heightIn: 1 };
 
 let seq = 0;
 const pick = (industryText, geom = SIGN, extra = {}) => P.pickStockPhoto(Object.assign({
@@ -51,10 +58,19 @@ is(STOCK.photos.every((p) => p.url.startsWith('assets/stock-photo-library/')),
 is(STOCK.photos.every((p) => existsSync(REPO + '/generator/' + p.url)),
    'every described file actually exists on disk');
 is(!JSON.stringify(STOCK).includes('/tmp/'), 'no /tmp path survived into the committed manifest');
-is(Object.keys(STOCK.industry_index).length >= 100, 'an industry index is present',
-   Object.keys(STOCK.industry_index).length + ' slugs');
+is(Object.keys(STOCK.industry_index).length >= 80, 'an industry index is present',
+   Object.keys(STOCK.industry_index).length + ' slugs, all built from depicts[]');
+is(Object.entries(STOCK.industry_index).every(([slug, ids]) =>
+     ids.every((id) => STOCK.photos.find((p) => p.id === id).depicts.includes(slug))),
+   'and the index agrees with depicts[] on every entry');
 is(STOCK.photos.every((p) => p.regions && p.overlay_guidance),
    'every photo carries region grades and overlay guidance');
+is(STOCK.photos.every((p) => Array.isArray(p.depicts) && p.depicts.length),
+   'every photo declares what it DEPICTS');
+is(STOCK.photos.every((p) => Array.isArray(p.audit_associations)),
+   'and keeps the audit\'s looser associations separately, for provenance');
+is(!/\bp\.industries\b|\.industries \|\| \[\]/.test(ENGINE_SRC),
+   'the engine never reads the loose associations');
 
 console.log('\n2  the three libraries stay separate');
 const stockFiles = new Set(STOCK.photos.map((p) => p.file));
@@ -100,6 +116,7 @@ is(P.lastStockReason === 'no industry given', 'an empty industry is reported as 
 
 const CASES = [
   ['Dental',                'dental'],
+  ['orthodontist',          'orthodontics'],
   ['dentist office',        'dental'],
   ['Plumbing',              'plumbing'],
   ['plumber',               'plumbing'],
@@ -131,7 +148,7 @@ CASES.forEach(([text, slug]) => {
        product's shape. That is the rule working, not a miss. */
     if (!r) { if (!/no (landscape|portrait|any) photo|composes safely/.test(P.lastStockReason)) {
         relevantAll = false; console.log(`     NONE  "${text}" -> ${P.lastStockReason}`); } break; }
-    if (!r.photo.industries.some((s) => slugs.indexOf(s) !== -1)) {
+    if (!r.photo.depicts.some((s) => slugs.indexOf(s) !== -1)) {
       relevantAll = false; console.log(`     BAD   "${text}" -> ${r.photo.file}`);
     }
   }
@@ -153,11 +170,68 @@ function STOCK_TERMS() {
 is(matchedAll, 'every real-world industry phrase resolves to its slug', CASES.length + ' phrases');
 is(relevantAll, 'and every photo returned for it claims a matched slug');
 
+console.log('\n4b  a specific trade never gets a broad or lifestyle photo');
+/* The live failure this fixes: "Dentist" returned a photo of two people
+   walking in a park, because the audit had tagged that photo "dental". */
+const DENTAL_FILES = STOCK.photos.filter((p) => p.depicts.includes('dental')).map((p) => p.file);
+is(DENTAL_FILES.length === 1 && DENTAL_FILES[0] === '04-dentist-with-patient.png',
+   'exactly one photograph depicts dentistry', DENTAL_FILES.join(', '));
+is(!STOCK.photos.some((p) => /family-outdoors|senior-couple/.test(p.id) && p.depicts.includes('dental')),
+   'the family-in-a-park and senior-couple photos no longer claim dentistry');
+globalThis.window.SMPStockPhotoMode = 'force';
+const DENTAL_BRIEFS = ['Dentist', 'dental clinic', 'dental office', 'family dentistry',
+  'orthodontist', 'Dr Chen Dental Care', 'dental hygiene clinic'];
+let dentalWrong = 0, dentalRuns = 0;
+DENTAL_BRIEFS.forEach((b) => {
+  for (let i = 0; i < 50; i++) {
+    const r = pick(b, SIGN);
+    if (!r) continue;
+    dentalRuns++;
+    if (r.photo.file !== '04-dentist-with-patient.png') {
+      dentalWrong++;
+      if (dentalWrong < 3) console.log(`     BAD   "${b}" -> ${r.photo.file}`);
+    }
+  }
+});
+is(dentalRuns > 0 && dentalWrong === 0,
+   'every dental brief receives the dental photograph and nothing else',
+   dentalRuns + ' selections across ' + DENTAL_BRIEFS.length + ' briefs');
+/* Specific beats broad in general, not just for dentistry. */
+const TIERED = [
+  ['dental clinic',     ['04-dentist-with-patient.png']],
+  ['veterinary clinic', ['23-veterinarian-with-dog.png']],
+  ['physiotherapy clinic', ['15-physiotherapy-session.png']],
+  ['yoga wellness studio', ['21-yoga-wellness-studio.png']],
+];
+let tieredOk = true;
+TIERED.forEach(([brief, allowed]) => {
+  for (let i = 0; i < 40; i++) {
+    const r = pick(brief, SIGN);
+    if (r && allowed.indexOf(r.photo.file) === -1) {
+      tieredOk = false; console.log(`     BAD   "${brief}" -> ${r.photo.file}`);
+    }
+  }
+});
+is(tieredOk, 'a specific trade is never widened to its broad parent category');
+/* And the broad category still works when the brief is genuinely broad. */
+const broadHits = new Set();
+for (let i = 0; i < 200; i++) { const r = pick('medical clinic', SIGN); if (r) broadHits.add(r.photo.file); }
+is(broadHits.size > 0 && !broadHits.has('04-dentist-with-patient.png'),
+   'a genuinely broad brief still reaches its own photos', [...broadHits].join(', '));
+/* Trades with no depicting photograph get nothing at all. */
+const ORPHANS = ['roofing', 'pharmacy', 'massage therapy', 'pet grooming', 'funeral home',
+  'hearing clinic', 'mortgage broker', 'HVAC'];
+let orphanHits = 0;
+ORPHANS.forEach((o) => { for (let i = 0; i < 40; i++) if (pick(o, SIGN)) orphanHits++; });
+is(orphanHits === 0, 'a trade with no depicting photograph gets none',
+   ORPHANS.length * 40 + ' attempts');
+globalThis.window.SMPStockPhotoMode = 'auto';
+
 console.log('\n5  stamps and mode gates');
 let stampHits = 0;
 ['auto', 'force'].forEach((m) => {
   globalThis.window.SMPStockPhotoMode = m;
-  for (let i = 0; i < 100; i++) if (pick('dentist', { templateType: 'Stamp', widthIn: 2, heightIn: 1 })) stampHits++;
+  for (let i = 0; i < 100; i++) if (pick('dentist', STAMP)) stampHits++;
 });
 globalThis.window.SMPStockPhotoMode = 'auto';
 is(stampHits === 0, 'stamps never use stock photography, in any mode');
@@ -181,19 +255,34 @@ is(portraitOk, 'a portrait product only ever receives portrait photos');
 const noPortrait = pick('plumbing', BANNER_TALL);
 is(noPortrait === null && /portrait/.test(P.lastStockReason),
    'an industry with no portrait photo is skipped, not substituted', P.lastStockReason);
-let cardSafe = true;
-for (let i = 0; i < 400; i++) {
-  const r = pick('dentist', CARD);
-  if (!r) continue;
-  const g = ['top', 'middle', 'bottom'].map((b) => r.photo.regions[b].text_safety);
-  if (g.every((x) => x === 'poor')) cardSafe = false;
-}
-is(cardSafe, 'a small format never receives a photo whose every band is poor');
-is(STOCK.photos.filter((p) => ['top', 'middle', 'bottom']
-     .every((b) => p.regions[b].text_safety === 'poor')).length > 0,
-   'and such photos do exist in the library, so the gate is doing work',
-   STOCK.photos.filter((p) => ['top', 'middle', 'bottom']
-     .every((b) => p.regions[b].text_safety === 'poor')).length + ' of 35');
+const quietest = (p) => Math.min(...['top', 'middle', 'bottom'].map((b) => p.regions[b].busyness));
+const CHAOTIC = STOCK.photos.filter((p) => quietest(p) > 0.25);
+let cardSafe = true, cardSeen = 0;
+['dentist', 'cafe', 'personal trainer', 'veterinary clinic', 'plumbing', 'bakery']
+  .forEach((t) => {
+    for (let i = 0; i < 200; i++) {
+      const r = pick(t, CARD);
+      if (!r) continue;
+      cardSeen++;
+      if (quietest(r.photo) > 0.25) cardSafe = false;
+    }
+  });
+is(cardSafe && cardSeen > 0, 'a small format never receives a visually chaotic photo',
+   cardSeen + ' card selections checked');
+is(CHAOTIC.length > 0, 'and such photos do exist in the library, so the gate is doing work',
+   CHAOTIC.map((p) => p.id).join(', '));
+let chaoticOnCard = 0;
+CHAOTIC.forEach((p) => {
+  const slug = p.depicts[0];
+  for (let i = 0; i < 100; i++) if (pick(slug.replace(/-/g, ' '), CARD)) chaoticOnCard++;
+});
+is(chaoticOnCard === 0, 'their own trades get no card photo rather than an unreadable one');
+let chaoticOnSign = 0;
+CHAOTIC.forEach((p) => {
+  const slug = p.depicts[0];
+  for (let i = 0; i < 100; i++) if (pick(slug.replace(/-/g, ' '), SIGN)) chaoticOnSign++;
+});
+is(chaoticOnSign > 0, 'while large format, which has room for them, still can');
 globalThis.window.SMPStockPhotoMode = 'auto';
 
 console.log('\n7  Force Photo');
@@ -208,20 +297,76 @@ is(forcedMiss === null && P.lastStockReason === 'no industry match in the stock 
    P.lastStockReason);
 globalThis.window.SMPStockPhotoMode = 'auto';
 
-console.log('\n8  how often Auto takes a photo');
+console.log('\n8  the product policy');
+is(P.stockProductClass('Stamp', 2, 1) === 'stamp'
+   && P.stockProductClass('Self-Inking Stamp', 2, 1) === 'stamp', 'stamps classify as stamps');
+is(P.stockProductClass('Nameplate', 8, 2) === 'nameplate'
+   && P.stockProductClass('Name Badge', 3, 1.5) === 'nameplate'
+   && P.stockProductClass('Name Tag', 3, 1.5) === 'nameplate',
+   'name badges, name tags and nameplates classify together');
+is(P.stockProductClass('Business Card', 3.5, 2) === 'card', 'a business card is its own class');
+is(P.stockProductClass('Business Card', 18, 12) === 'general',
+   'but an 18x12 piece still typed "Business Card" is general printed material '
+   + '(web03 supplies no productFamily)');
+['Sign', 'Poster', 'Banner', 'Flyer', 'Brochure', 'Rack Card'].forEach((t) => {
+  is(P.stockProductClass(t, 11, 8.5) === 'general', `${t} is general printed material`);
+});
+is(P.STOCK_PRODUCT_POLICY.stamp.none === 1 && P.STOCK_PRODUCT_POLICY.nameplate.none === 1,
+   'stamps and nameplates are policy zero, not a low probability');
+
+const RATE_RUNS = RUNS * 4;
 const rate = (text, geom) => {
   let hit = 0;
-  for (let i = 0; i < RUNS; i++) if (pick(text, geom)) hit++;
-  return hit / RUNS;
+  for (let i = 0; i < RATE_RUNS; i++) if (pick(text, geom)) hit++;
+  return hit / RATE_RUNS;
 };
-const signRate = rate('dentist', SIGN);
 const cardRate = rate('dentist', CARD);
-console.log(`     large format ${Math.round(signRate * 100)}%   business card ${Math.round(cardRate * 100)}%`);
-is(signRate > 0.70 && signRate < 0.90, 'large format strongly considers photography',
-   Math.round(signRate * 100) + '%');
-is(cardRate > 0.07 && cardRate < 0.25, 'business cards use it far more selectively',
-   Math.round(cardRate * 100) + '%');
-is(signRate > cardRate * 3, 'and the gap between them is real');
+const generalRates = {
+  Sign: rate('dentist', SIGN), Poster: rate('dentist', POSTER),
+  Flyer: rate('dentist', FLYER), Brochure: rate('dentist', BROCHURE),
+};
+console.log(`     business card ${(cardRate * 100).toFixed(1)}%`);
+Object.entries(generalRates).forEach(([k, v]) =>
+  console.log(`     ${k.padEnd(14)}${(v * 100).toFixed(1)}%`));
+is(cardRate > 0.115 && cardRate < 0.165, 'business cards stay at approximately 14%',
+   (cardRate * 100).toFixed(1) + '%');
+Object.entries(generalRates).forEach(([k, v]) =>
+  is(v > 0.76 && v < 0.85, `${k} runs at approximately 80–81%`, (v * 100).toFixed(1) + '%'));
+let zeroHits = 0;
+for (let i = 0; i < RUNS; i++) {
+  if (pick('dentist', NAMEPLATE)) zeroHits++;
+  if (pick('dentist', BADGE)) zeroHits++;
+  if (pick('dentist', STAMP)) zeroHits++;
+}
+is(zeroHits === 0, 'stamps, name badges and nameplates take none, ever',
+   RUNS * 3 + ' attempts');
+pick('dentist', NAMEPLATE);
+is(P.lastStockReason === 'name badges and nameplates never use photography',
+   'and say so', P.lastStockReason);
+
+console.log('\n8b  design assets under the same policy');
+globalThis.window.SMPAssetMode = 'force';
+let stampAssets = 0, badgeAssets = 0;
+for (let i = 0; i < RUNS; i++) {
+  stampAssets += P.chooseCreativeDirection('', 'dentist', 'Stamp', 'balanced', 'sa' + i, false, 2, 1).assets.length;
+  badgeAssets += P.chooseCreativeDirection('', 'dentist', 'Nameplate', 'balanced', 'ba' + i, false, 8, 2).assets.length;
+}
+is(stampAssets === 0, 'stamps use no design assets either', RUNS + ' runs');
+is(badgeAssets > 0, 'name badges and nameplates still may', badgeAssets + ' over ' + RUNS + ' runs');
+globalThis.window.SMPAssetMode = 'auto';
+
+console.log('\n8c  large-format visual impact');
+const bigText = P.chooseCreativeDirection('', 'dentist', 'Sign', 'balanced', 'imp1', false, 36, 24, null).text;
+const cardText = P.chooseCreativeDirection('', 'dentist', 'Business Card', 'balanced', 'imp2', false, 3.5, 2, null).text;
+is(/DISTANCE IMPACT/.test(bigText), 'signs carry a distance-impact directive');
+is(/LARGER colour fields/.test(bigText) && /contrast/.test(bigText),
+   'naming larger colour fields and harder contrast');
+is(/Do NOT default to neon/.test(bigText) && /rainbow/.test(bigText),
+   'while ruling out neon and rainbow palettes');
+is(/refined/.test(bigText), 'and leaving refined directions refined');
+is(!/DISTANCE IMPACT/.test(cardText), 'business-card styling is untouched');
+const bannerText = P.chooseCreativeDirection('', 'dentist', 'Banner', 'balanced', 'imp3', false, 24, 72, null).text;
+is(/DISTANCE IMPACT/.test(bannerText), 'banners get it too');
 
 console.log('\n9  one photo per design, and variety without drift');
 const one = pick('healthcare', SIGN);
@@ -239,18 +384,18 @@ for (let brief = 0; brief < 40; brief++) {
     if (!r) continue;
     /* how many valid alternatives existed at all */
     const alts = STOCK.photos.filter((p) => p.orientation === 'landscape'
-      && p.industries.some((s) => r.briefIndustries.indexOf(s) !== -1)).length;
+      && p.depicts.some((s) => r.briefIndustries.indexOf(s) !== -1)).length;
     if (alts > 1) { runsWithChoice++; if (prev && prev === r.photo.id) repeats++; }
     prev = r.photo.id;
   }
 }
 is(repeats === 0, 'a photo is never repeated back-to-back while another valid match exists',
    runsWithChoice + ' consecutive pairs checked');
-const solo = STOCK.photos.filter((p) => p.industries.includes('funeral-memorial'));
-is(solo.length === 1, 'an industry with exactly one match exists in the library');
+const solo = STOCK.photos.filter((p) => p.depicts.includes('dental'));
+is(solo.length === 1, 'an industry with exactly one depicting photo exists in the library');
 P.recentStockPhotos.clear();
-const a1 = P.pickStockPhoto({ industryText: 'funeral home', memoryKey: 'solo', hasCustomerPhoto: false, ...SIGN });
-const a2 = P.pickStockPhoto({ industryText: 'funeral home', memoryKey: 'solo', hasCustomerPhoto: false, ...SIGN });
+const a1 = P.pickStockPhoto({ industryText: 'dentist', memoryKey: 'solo', hasCustomerPhoto: false, ...SIGN });
+const a2 = P.pickStockPhoto({ industryText: 'dentist', memoryKey: 'solo', hasCustomerPhoto: false, ...SIGN });
 is(a1 && a2 && a1.photo.id === a2.photo.id,
    'and it is reused rather than swapped for something unrelated');
 globalThis.window.SMPStockPhotoMode = 'auto';
