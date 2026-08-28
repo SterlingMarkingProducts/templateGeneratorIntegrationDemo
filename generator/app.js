@@ -1557,31 +1557,59 @@ generateBtn.addEventListener('click', () => {
 
   var line = null, modeSel = null;
 
-  function controls(box) {
-    if (line) return;
-    line = document.createElement('span');
+  /* The REPORT lives above the preview, which only exists once something has
+   * been generated. The CONTROL has to be usable before that, so it goes in the
+   * left sidebar directly above Generate Design — visible on the blank state,
+   * before the first click. */
+  function buildModeControl() {
+    if (modeSel) return;
+    var actions = document.querySelector('.form-actions');
+    var generate = document.getElementById('generateBtn');
+    if (!actions || !generate) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'devAssetModeWrap';
+    wrap.style.cssText = 'margin-bottom:10px;padding:8px 10px;border:1px solid #e4e4e8;'
+      + 'border-radius:6px;background:#f7f7f9;';
+
+    var label = document.createElement('label');
+    label.setAttribute('for', 'devAssetMode');
+    label.textContent = 'Asset Mode';
+    label.style.cssText = 'display:block;margin-bottom:4px;color:#71717a;'
+      + 'font:600 10px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;'
+      + 'letter-spacing:.08em;text-transform:uppercase;';
+
     modeSel = document.createElement('select');
     modeSel.id = 'devAssetMode';
-    modeSel.style.cssText = 'margin-left:10px;font:inherit;padding:0 4px;'
-      + 'border:1px solid #d4d4d8;border-radius:3px;background:#fff;color:#3f3f46;';
+    modeSel.style.cssText = 'width:100%;box-sizing:border-box;padding:5px 7px;'
+      + 'border:1px solid #d4d4d8;border-radius:4px;background:#fff;color:#3f3f46;'
+      + 'font:500 12px/1.3 system-ui,-apple-system,Segoe UI,Arial,sans-serif;';
     [['auto', 'Auto'], ['force', 'Force Asset'], ['off', 'No Asset']].forEach(function (o) {
       var opt = document.createElement('option');
-      opt.value = o[0]; opt.textContent = 'Asset Mode: ' + o[1];
+      opt.value = o[0]; opt.textContent = o[1];
       modeSel.appendChild(opt);
     });
-    /* Read at selection time by the engine — it changes which asset is chosen,
+    /* Read at selection time by the engine — it changes WHICH asset is chosen,
      * never HOW it is chosen, so Force uses the identical local code path. */
     modeSel.value = window.SMPAssetMode || 'auto';
     window.SMPAssetMode = modeSel.value;
     modeSel.addEventListener('change', function () { window.SMPAssetMode = modeSel.value; });
+
+    wrap.appendChild(label);
+    wrap.appendChild(modeSel);
+    actions.insertBefore(wrap, generate);
+  }
+
+  function reportLine(box) {
+    if (line) return;
+    line = document.createElement('span');
     box.appendChild(line);
-    box.appendChild(modeSel);
   }
 
   function render(sel) {
     var box = host();
     if (!box) return;
-    controls(box);
+    reportLine(box);
     var assets = (sel && sel.assets) || [];
     var timing = (sel && typeof sel.selectMs === 'number') ? '  (' + sel.selectMs + 'ms)' : '';
     var fmt = (sel && sel.format) ? '  \u00b7 ' + sel.format : '';
@@ -1603,6 +1631,9 @@ generateBtn.addEventListener('click', () => {
      * check has to wait for that — reading it while this file is still parsing
      * would always find it undefined and silently skip the indicator. */
     if (!(window.SMPWeb03Dev && window.SMPWeb03Dev.active)) return;
+    /* Built first and independently of any generation, so it is there on the
+     * blank state before Generate Design has ever been clicked. */
+    buildModeControl();
     window.addEventListener('smp:assets-selected', function (e) { render(e.detail); });
     /* A generation may already have run before this listener existed. */
     render(window.SMPLastAssetSelection || { assets: [] });
