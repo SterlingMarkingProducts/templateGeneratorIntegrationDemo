@@ -402,8 +402,7 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     }
     if (el.tagName === 'IMG' && el.currentSrc && !el.currentSrc.startsWith('data:image/svg')) {
       el.setAttribute('data-tg-extract', '1');
-      objects.push(makeImageObject(el.currentSrc, el.naturalWidth || r.width, el.naturalHeight || r.height,
-                                   left, top, width, height, angle, style));
+      objects.push(imageObjectRespectingFit(el, left, top, width, height, angle, style));
       continue;
     }
 
@@ -496,6 +495,84 @@ function svgElementToDataUri(el, doc, cssW, cssH) {
   const markup = new XMLSerializer().serializeToString(clone);
   if (!markup || markup.length > 500000) return null; // guard runaway markup
   return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(markup)));
+}
+
+/* CSS `object-position` -> fractional crop origin. "50% 50%" is the default;
+ * keywords already arrive resolved to percentages in computed style. */
+function parseObjectPosition(op) {
+  const parts = String(op || '50% 50%').trim().split(/\s+/);
+  const frac = (v) => {
+    const m = /^(-?[\d.]+)%$/.exec(v || '');
+    return m ? Math.min(1, Math.max(0, parseFloat(m[1]) / 100)) : 0.5;
+  };
+  return { x: frac(parts[0]), y: frac(parts[1] || parts[0]) };
+}
+
+/* The Designer's Fabric build sizes an image by its NATURAL dimensions plus
+ * independent scaleX/scaleY. The Generator's panels crop with
+ * `object-fit: cover` (and letterbox with `contain`), so handing Fabric the
+ * panel box with the image's full naturals stretched every cropped photo the
+ * moment it left the preview: the browser had CROPPED, Fabric STRETCHED.
+ *
+ * cover  -> a cropped DERIVATIVE is produced here (the same source-rect the
+ *           browser painted, object-position honoured), so the pushed object's
+ *           naturals match its box aspect and no axis distorts. The existing
+ *           pipeline already ships data URIs as asset parts, so nothing new
+ *           travels — a correctly cropped image does.
+ * contain / scale-down -> the object shrinks to the CONTENT box the browser
+ *           actually painted (no crop, no stretch), positioned as rendered.
+ * fill   -> the browser itself stretches; Fabric matching it IS faithful.
+ * A tainted canvas (a cross-origin customer image URL) falls back to the old
+ * uncropped behaviour rather than failing the push. */
+function imageObjectRespectingFit(el, left, top, width, height, angle, style) {
+  const nw = el.naturalWidth || 0, nh = el.naturalHeight || 0;
+  const fit = (style.objectFit || 'fill');
+  const boxAspect = width / height;
+  const imgAspect = nw && nh ? nw / nh : boxAspect;
+  const mismatched = Math.abs(imgAspect - boxAspect) / boxAspect > 0.01;
+
+  if (nw > 0 && nh > 0 && mismatched && fit === 'cover') {
+    let sw = nw, sh = nh;
+    if (imgAspect > boxAspect) sw = Math.max(1, Math.round(nh * boxAspect));
+    else sh = Math.max(1, Math.round(nw / boxAspect));
+    const pos = parseObjectPosition(style.objectPosition);
+    const sx = Math.round((nw - sw) * pos.x);
+    const sy = Math.round((nh - sh) * pos.y);
+    try {
+      const cv = document.createElement('canvas');
+      /* Cap the derivative so a cropped 4K photo cannot balloon the payload. */
+      const scale = Math.min(1, 2200 / Math.max(sw, sh));
+      cv.width = Math.max(1, Math.round(sw * scale));
+      cv.height = Math.max(1, Math.round(sh * scale));
+      cv.getContext('2d').drawImage(el, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
+      let src = cv.toDataURL('image/png');
+      if (src.length * 0.75 > 2.5 * 1024 * 1024) {
+        /* Photographic crops: JPEG over white, like the background raster. */
+        const flat = document.createElement('canvas');
+        flat.width = cv.width; flat.height = cv.height;
+        const fctx = flat.getContext('2d');
+        fctx.fillStyle = '#ffffff';
+        fctx.fillRect(0, 0, flat.width, flat.height);
+        fctx.drawImage(cv, 0, 0);
+        const jpeg = flat.toDataURL('image/jpeg', 0.92);
+        if (jpeg.length < src.length) src = jpeg;
+      }
+      return makeImageObject(src, cv.width, cv.height, left, top, width, height, angle, style);
+    } catch (e) { /* tainted or draw failure — keep the old behaviour below */ }
+  }
+
+  if (nw > 0 && nh > 0 && mismatched && (fit === 'contain' || fit === 'scale-down')) {
+    let cw = width, ch = height;
+    if (imgAspect > boxAspect) ch = width / imgAspect;
+    else cw = height * imgAspect;
+    const pos = parseObjectPosition(style.objectPosition);
+    return makeImageObject(el.currentSrc, nw, nh,
+      left + (width - cw) * pos.x, top + (height - ch) * pos.y,
+      round2(cw), round2(ch), angle, style);
+  }
+
+  return makeImageObject(el.currentSrc, nw || width, nh || height,
+    left, top, width, height, angle, style);
 }
 
 function makeImageObject(src, naturalW, naturalH, left, top, width, height, angle, style) {
@@ -1043,9 +1120,17 @@ async function extractMaskMarks(doc, rootEl, factor) {
       ctx.fillStyle = fill;
       ctx.fillRect(0, 0, cv.width, cv.height);
       el.setAttribute('data-tg-extract', '1');
+      /* The mask shorthand renders center/contain: the silhouette keeps its
+       * own aspect inside the div. Hand Fabric that CONTENT box, not the div
+       * box, or a wide badge div would stretch the mark. */
+      const bw = r.width * factor, bh = r.height * factor;
+      const mAspect = cv.width / cv.height;
+      let cw = bw, ch = bh;
+      if (mAspect > bw / bh) ch = bw / mAspect; else cw = bh * mAspect;
       out.push(makeImageObject(cv.toDataURL('image/png'), cv.width, cv.height,
-        (r.left - rootRect.left) * factor, (r.top - rootRect.top) * factor,
-        r.width * factor, r.height * factor, rotationOf(st), st));
+        (r.left - rootRect.left) * factor + (bw - cw) / 2,
+        (r.top - rootRect.top) * factor + (bh - ch) / 2,
+        round2(cw), round2(ch), rotationOf(st), st));
     } catch (e) { /* an unloadable mark stays in the raster attempt */ }
   }
   return out;
