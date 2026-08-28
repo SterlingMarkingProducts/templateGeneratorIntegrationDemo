@@ -427,6 +427,7 @@ const DIRECTION_STYLE_CHIPS = {
   'Elegant Serif':        'elegant-serif',
   'Organic Botanical':    'organic-botanical',
   'Soft Sophisticated':   'soft-sophisticated',
+  'Watercolor':           'watercolor',
   'Colourful Expressive': 'colourful-expressive',
   'Collage Editorial':    'collage-editorial',
   'Dark Luxe':            'dark-luxe',
@@ -562,6 +563,10 @@ const DESIGN_DIRECTIONS = [
     brief: 'Collage / Editorial — a cut-and-pasted print sensibility: overlapping paper and photographic fragments with rough torn or cut edges, a mixture of two or three type personalities at contrasting sizes, tape, stamp, or margin-note accents, and a muted printed palette (newsprint grey, ink black, faded red, oat) with one bright interruption; layered and tactile, arranged with an editor\'s eye rather than scattered',
   },
   {
+    key: 'watercolor', density: 'balanced',
+    brief: 'Watercolor — sophisticated watercolour: translucent layered pigment washes taken from the SUPPLIED watercolour design assets (never simulated with stacks of CSS/SVG blobs or gradients pretending to be paint), soft organic colour transitions, generous paper-white space, tasteful artistic texture; refined editorial composition with polished, completely legible typography (an elegant serif or quiet humanist sans); feminine or neutral as the industry calls for; artistic without kitsch — and watercolour does NOT mean flowers: botanical imagery only ever comes from a supplied design asset, never drawn',
+  },
+  {
     key: 'soft-sophisticated', density: 'restrained',
     brief: 'Soft Sophisticated — low-contrast and quietly premium: a muted palette of blush, greige, sand, oat, dusty clay, or pale sage with tone-on-tone layering; a light modern sans or a delicate serif at modest scale, wide tracking, and very little else — one soft shape, one hairline, or one gentle field edge; the ground and the type sit close in value so the piece feels calm, tactile, and expensive; nothing shouts',
   },
@@ -584,7 +589,9 @@ const DIRECTION_BY_KEY = DESIGN_DIRECTIONS.reduce((m, d) => { m[d.key] = d; retu
  * "Playful" style chip and any typed playful/fun/kids style direction — where
  * the user actually wants that language. */
 const DEFAULT_DIRECTION_POOL = DESIGN_DIRECTIONS
-  .filter((d) => d.key !== 'playful-contemporary')
+  /* playful-contemporary and watercolor are explicit choices (a chip or typed
+     words), never part of the Auto rotation. */
+  .filter((d) => d.key !== 'playful-contemporary' && d.key !== 'watercolor')
   .map((d) => d.key);
 
 /* Added to an intent-narrowed pool on large format only: bold but professional
@@ -696,6 +703,7 @@ const DIRECTION_ASSET_FAMILIES = {
   'modern-luxury':        ['gold-frame', 'ring-frame', 'texture-neutral'],
   'elegant-serif':        ['gold-frame', 'ring-frame', 'texture-neutral'],
   'soft-sophisticated':   ['watercolour-wash', 'texture-neutral', 'botanical-spray'],
+  'watercolor':           ['watercolour-wash', 'texture-neutral', 'botanical-spray'],
   'organic-botanical':    ['botanical-spray', 'watercolour-wash', 'texture-neutral', 'flat-blob'],
   'collage-editorial':    ['torn-paper', 'tape', 'brushstroke', 'texture-neutral'],
   'bold-modernist':       ['geometric-solid', 'geometric-system', 'brushstroke'],
@@ -750,6 +758,74 @@ function isLargeFormatForAssets(templateType, widthIn, heightIn) {
   if (LARGE_FORMAT_FOR_ASSETS.test(templateType || '')) return true;
   const longest = Math.max(Number(widthIn) || 0, Number(heightIn) || 0);
   return longest >= LARGE_FORMAT_MIN_INCHES;
+}
+
+/* ═══ Semantic relevance: the user's words → library items ═════════════════
+ *
+ * Selection used to be direction-driven with a thin regex gate, so an
+ * explicit "watercolor" in Special Instructions could never reach the
+ * watercolour-wash family while the direction preferred gold frames, and
+ * "hair salon" never surfaced the line-art face. The scorer below reads the
+ * EXISTING manifest metadata (filename, family, category, mood, use_cases,
+ * visual_style, tags) against the user's own words, expanded through a small
+ * alias table so both spellings, plurals and near-synonyms land. Randomness
+ * then chooses BETWEEN relevant candidates — never an irrelevant one over a
+ * clear match. */
+const CONCEPT_STOPWORDS = /^(with|and|the|for|from|that|this|nice|very|some|our|your|their|into|onto|over|under|about|has|have|had|was|were|are|can|could|should|make|use|using|please|want|need|like|style|design|designs|look|feel|them|then|than|will|would|really|more|less|most|just|kind|sort|type)$/;
+function conceptTokens(text) {
+  return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ')
+    .filter(function (w) { return w.length >= 3 && !CONCEPT_STOPWORDS.test(w); });
+}
+/* A user word on the left finds items whose metadata says any term on the
+ * right. Terms describe what the files genuinely are — nothing is tagged into
+ * existence. Both spellings of watercolour already exist in the manifest
+ * (filenames say Watercolor, visual_style says watercolour). */
+const CONCEPT_ALIASES = [
+  [/^watercolou?rs?$|^washe?s?$|^pigments?$/, ['watercolour', 'watercolor', 'wash']],
+  [/^sparkles?$|^sparks?$|^glints?$|^shimmers?$|^glitters?$|^stars?$|^starbursts?$/, ['sparkle', 'star', 'starburst']],
+  [/^eyes?$|^vision$/, ['eye']],
+  [/^torn$|^ripped$/, ['torn']],
+  [/^tape$|^masking$/, ['tape', 'masking']],
+  [/^collage$|^zine$|^scrapbook$|^cutout$|^cutouts$/, ['collage', 'newsprint', 'torn', 'tape', 'halftone']],
+  [/^hair$|^salons?$|^stylists?$|^barbers?$|^beauty$|^beauticians?$|^hairdressers?$|^lashes?$|^brows?$/, ['salon', 'beauty', 'face', 'portrait', 'single-line']],
+  [/^faces?$|^portraits?$|^woman$|^women$|^figures?$|^figurative$/, ['face', 'portrait', 'figurative', 'single-line', 'bust']],
+  [/^florals?$|^flowers?$|^botanicals?$|^florists?$|^foliage$|^plants?$|^greenery$/, ['floral', 'botanical', 'foliage', 'peony', 'hydrangea', 'pampas']],
+  [/^geometric$|^geometry$|^abstract$|^shapes?$/, ['geometric', 'abstract', 'arch', 'modernist']],
+  [/^marble$|^luxury$|^luxe$|^golds?$|^ornate$|^gilded$/, ['gold', 'ornate', 'luxury', 'metallic']],
+  [/^corporate$|^professional$|^minimal$|^minimalist$/, ['minimal', 'texture', 'grid', 'precise']],
+  [/^halftone$|^dots?$|^dotted$/, ['halftone', 'dot']],
+  [/^lines?$|^lineart$|^outline$/, ['single-line', 'line art', 'line']],
+  [/^medical$|^dental$|^dentists?$|^chiropract(or|ors|ic)$|^wellness$|^therapy$|^clinics?$/, ['clinic', 'medical', 'wellness', 'therapy']],
+  [/^(house|houses|home|homes|property|properties|realtors?)$/, ['architecture', 'property', 'house']],
+  [/^paint$|^painted$|^brushstrokes?$|^ink$/, ['paint', 'ink', 'stroke', 'brush']],
+];
+function expandConceptTerms(text) {
+  const terms = [];
+  conceptTokens(text).forEach(function (w) {
+    if (terms.indexOf(w) === -1) terms.push(w);
+    CONCEPT_ALIASES.forEach(function (pair) {
+      if (pair[0].test(w)) pair[1].forEach(function (t) { if (terms.indexOf(t) === -1) terms.push(t); });
+    });
+  });
+  return terms;
+}
+/* Everything the manifest says about an asset, as one searchable string. */
+function assetHaystack(a) {
+  if (!a.__hay) {
+    a.__hay = [a.filename, a.family, a.category, a.mood, a.visual_style,
+      Array.isArray(a.use_cases) ? a.use_cases.join(' ') : a.use_cases,
+      Array.isArray(a.tags) ? a.tags.join(' ') : a.tags]
+      .filter(Boolean).join(' ').toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+  }
+  return a.__hay;
+}
+function semanticHits(terms, hay) {
+  /* Whole-word (or whole-phrase) matches only: "star" must find "star" or the
+     "starburst" ALIAS term, never the inside of "stark". */
+  const padded = ' ' + hay + ' ';
+  return (terms || []).filter(function (t) {
+    return padded.indexOf(' ' + t.replace(/[^a-z0-9]+/g, ' ') + ' ') !== -1;
+  });
 }
 
 /* A gated family is only reachable when the brief actually asks for it. */
@@ -867,7 +943,7 @@ function assetMode() {
 let lastAssetReason = '';
 
 function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType,
-    widthIn, heightIn, photoSelected, logoSelected) {
+    widthIn, heightIn, photoSelected, logoSelected, specialInstructions, industryText) {
   lastAssetReason = '';
   const mode = assetMode();
   if (mode === 'off') { lastAssetReason = 'asset mode is No Asset'; return []; }
@@ -883,8 +959,11 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
   if (!lib) { lastAssetReason = 'library still loading'; return []; }
   if (!lib.assets.length) { lastAssetReason = 'library is empty'; return []; }
   if (/stamp/i.test(templateType || '')) { lastAssetReason = 'stamps use no assets'; return []; }
+  const instrTerms = expandConceptTerms(specialInstructions);
+  const industryTerms = expandConceptTerms(industryText);
   if (!DIRECTION_ASSET_FAMILIES[directionKey]
-      && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))) {
+      && !Object.keys(GATED_FAMILY_TRIGGERS).some((f) => gatedFamilyAllowed(f, brief))
+      && !instrTerms.length && !industryTerms.length) {
     lastAssetReason = 'no families are compatible with this direction';
     return [];
   }
@@ -894,6 +973,53 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
   const classPolicy = assetClass === 'nameplate' ? PRODUCT_VISUAL_POLICY.nameplate : null;
   const noneCeiling = classPolicy && classPolicy.assetCap != null
     ? 1 - classPolicy.assetCap : null;
+  /* ── Semantic candidate ranking ──────────────────────────────────────────
+     Priority: SPECIAL INSTRUCTIONS (explicit user intent) > INDUSTRY >
+     STYLE DIRECTION > rotation/recency > random tiebreak. A generic asset can
+     no longer beat a directly relevant one merely because the generic one has
+     not been used recently — recency is a small penalty, not an authority. */
+  const dirFams = candidateFamilies(directionKey, brief, memoryKey);
+  const famRank = {};
+  dirFams.forEach(function (f, i) { famRank[f] = i; });
+  const recent = recentAssetFamilies.get(memoryKey) || [];
+  const scored = [];
+  for (const a of lib.assets) {
+    if (!doubleSided && a.preferred_side === 'back') continue;
+    const hay = assetHaystack(a);
+    const instrHits = semanticHits(instrTerms, hay);
+    const indHits = semanticHits(industryTerms, hay);
+    const inDirection = famRank[a.family] !== undefined;
+    /* Gated families stay gated — reachable by their trigger in the brief OR
+       a genuine semantic match from the user's own words. */
+    const gateRe = GATED_FAMILY_TRIGGERS[a.family];
+    if (gateRe && !gateRe.test(brief || '') && !instrHits.length && !indHits.length) continue;
+    /* General aesthetic compatibility: an asset with no semantic claim must
+       at least belong to the direction's own families. */
+    if (!inDirection && !instrHits.length && !indHits.length) continue;
+    /* A stock photograph is the hero: only quiet families may join it —
+       unless the user EXPLICITLY asked for this very treatment. */
+    if (photoSelected && PHOTO_SAFE_ASSET_FAMILIES.indexOf(a.family) === -1
+        && !instrHits.length) continue;
+    let score = 0;
+    const why = [];
+    if (instrHits.length) { score += 100 + 5 * instrHits.length; why.push('special-instruction match "' + instrHits[0] + '"'); }
+    if (indHits.length) { score += 80 + 2 * indHits.length; why.push('industry match "' + indHits[0] + '"'); }
+    if (inDirection) { score += 60 - 5 * famRank[a.family]; if (!why.length) why.push('style-direction family'); }
+    if (recent.indexOf(a.family) !== -1) score -= (a.family === recent[0] ? 30 : 15);
+    score += Math.random() * 10;   // variety BETWEEN comparable candidates
+    scored.push({ a: a, score: score, why: why });
+  }
+  if (!scored.length) {
+    lastAssetReason = photoSelected
+      ? 'a stock photo is the hero and no quiet family suits this direction'
+      : 'no asset in the compatible families fitted this brief';
+    return [];
+  }
+  scored.sort(function (x, y) { return y.score - x.score; });
+  const hasExplicitMatch = scored.some(function (s) {
+    return s.why.length && s.why[0].indexOf('special-instruction') === 0;
+  });
+
   let want = mode === 'force'
     ? Math.max(1, assetCountFor(density, directionKey, large, noneCeiling))
     : assetCountFor(density, directionKey, large, noneCeiling);
@@ -903,37 +1029,30 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
   /* A brand mark consumes a signature-element slot: it never ADDS to the
      decoration, so the asset budget gives one slot up to it. */
   if (logoSelected) want = Math.min(want, photoSelected ? 1 : 2);
+  /* EXPLICIT VISUAL REQUEST RULE: when Special Instructions name a treatment
+     an existing library asset genuinely provides, using it is effectively
+     required — the density contract cannot draw it away. (Stamps never get
+     here: they returned above with no assets at all.) */
+  if (!want && hasExplicitMatch) want = 1;
   /* A generation that uses nothing must NOT wipe the memory — otherwise the run
      after it is free to repeat the family used two runs ago. */
   if (!want) { lastAssetReason = 'the density contract drew none this time'; return []; }
 
-  let families = candidateFamilies(directionKey, brief, memoryKey);
-  if (photoSelected) {
-    families = families.filter((f) => PHOTO_SAFE_ASSET_FAMILIES.indexOf(f) !== -1);
-    if (!families.length) {
-      lastAssetReason = 'a stock photo is the hero and no quiet family suits this direction';
-      return [];
-    }
-  }
+  /* Two assets must not do the same job — the second one has to earn its
+     place by being a different kind of thing (a different family). */
   const chosen = [];
   const usedFamilies = [];
-  for (const family of families) {
+  for (const s of scored) {
     if (chosen.length >= want) break;
-    const pool = (lib.byFamily[family] || []).filter((a) => {
-      if (!doubleSided && a.preferred_side === 'back') return false;
-      return true;
-    });
-    if (!pool.length) continue;
-    /* Two assets must not do the same job — the second one has to earn its
-       place by being a different kind of thing. */
-    chosen.push(pool[Math.floor(Math.random() * pool.length)]);
-    usedFamilies.push(family);
+    if (usedFamilies.indexOf(s.a.family) !== -1) continue;
+    chosen.push(Object.assign({}, s.a,
+      { selectionReason: s.why.join(' · ') || 'direction aesthetic' }));
+    usedFamilies.push(s.a.family);
   }
   if (!chosen.length) {
     lastAssetReason = 'no asset in the compatible families fitted this product';
   }
   if (chosen.length) {
-    const recent = recentAssetFamilies.get(memoryKey) || [];
     recentAssetFamilies.set(memoryKey,
       usedFamilies.concat(recent.filter((f) => usedFamilies.indexOf(f) === -1))
         .slice(0, ASSET_FAMILY_MEMORY));
@@ -1445,13 +1564,40 @@ function pickStockPhoto(opts) {
      substituted: a one-photo industry legitimately repeats. */
   const notLast = safe.filter((p) => p.id !== recent[0]);
   const finalPool = fresh.length ? fresh : (notLast.length ? notLast : safe);
-  const photo = finalPool[Math.floor(Math.random() * finalPool.length)];
+  /* WITHIN the industry-gated pool, the most semantically appropriate
+     candidate wins: the brief's own words (industry, business name, special
+     instructions) are scored against what each photograph actually shows.
+     Randomness chooses BETWEEN the top-scoring candidates only. */
+  const briefTerms = expandConceptTerms(opts.industryText);
+  const photoScore = (p) => {
+    const hay = [p.subject, (p.depicts || []).join(' '), p.setting, p.mood,
+      (p.suitable_roles || []).join(' ')].filter(Boolean).join(' ')
+      .toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+    let sc = 0;
+    (p.depicts || []).forEach((sl) => { if (tierSlugs.indexOf(sl) !== -1) sc += 3; });
+    briefTerms.forEach((t) => { if (hay.indexOf(t) !== -1) sc += 1; });
+    return sc;
+  };
+  let best = -1;
+  finalPool.forEach((p) => { const sc = photoScore(p); if (sc > best) best = sc; });
+  /* A one-point band around the best keeps rotation alive among photos that
+     are EQUALLY right for the industry (their scores differ only by echoes of
+     the same words), while a clear semantic standout — "woman with nice
+     hair" against a salon portrait — still wins outright. */
+  const topPool = finalPool.filter((p) => photoScore(p) >= best - 1);
+  const photo = topPool[Math.floor(Math.random() * topPool.length)];
   recentStockPhotos.set(opts.memoryKey,
     [photo.id].concat(recent.filter((id) => id !== photo.id)).slice(0, STOCK_PHOTO_MEMORY));
 
   const matched = (photo.depicts || []).filter((sl) => tierSlugs.indexOf(sl) !== -1);
+  lastStockReason = (generalPool
+    ? 'general-purpose pool (no industry given)'
+    : 'industry match "' + (matched[0] || tierSlugs[0]) + '"')
+    + ' \u00b7 ' + productClass + ' '
+    + Math.round((1 - (policy.none || 0)) * 100) + '% draw';
   return {
     photo: photo,
+    reason: lastStockReason,
     industry: generalPool ? 'general-purpose' : (matched[0] || tierSlugs[0]),
     generalPurpose: generalPool,
     matchedIndustries: matched,
@@ -1707,7 +1853,7 @@ function rotateDirection(candidates, memoryKey) {
 
 function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
     variationKey, doubleSided, widthIn, heightIn, stockSelection, logoSelection,
-    customerPhoto) {
+    customerPhoto, specialInstructions) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -1742,14 +1888,18 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
     : 'Design at portfolio quality — one clear idea, real craft, and a print-shop finish appropriate to this direction.';
 
   const memoryKey = variationKey || `${templateType}|${raw}|${industry}`;
-  const briefText = [raw, industry, templateType].filter(Boolean).join(' ');
+  /* Special Instructions are explicit user intent — they belong in the brief
+     the asset gates and the semantic scorer read. Their absence here is
+     exactly why "watercolor" used to select a gold divider. */
+  const briefText = [raw, industry, specialInstructions, templateType].filter(Boolean).join(' ');
 
   const compose = (brief, density, reference, directionKey) => {
     const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
       templateType, widthIn, heightIn,
       !!(stockSelection && stockSelection.photo) || !!customerPhoto,
-      !!(logoSelection && logoSelection.logo));
+      !!(logoSelection && logoSelection.logo),
+      specialInstructions, [industry, styleDirection].filter(Boolean).join(' '));
     const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     return { text: [
       brief,
@@ -1775,8 +1925,11 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   if (raw && !GENERIC_STYLE.test(raw)) {
     /* A visible chip that IS a Phase 1 direction resolves straight to it —
        deterministically: same brief, same density, same asset families. */
-    if (DIRECTION_STYLE_CHIPS[raw]) {
-      const d = DIRECTION_BY_KEY[DIRECTION_STYLE_CHIPS[raw]];
+    /* Typed aliases: "watercolor" / "watercolour" in any case are the
+       Watercolor chip. */
+    const aliasKey = /^watercolou?r$/i.test(raw) ? 'Watercolor' : raw;
+    if (DIRECTION_STYLE_CHIPS[aliasKey]) {
+      const d = DIRECTION_BY_KEY[DIRECTION_STYLE_CHIPS[aliasKey]];
       return compose(d.brief, d.density, null, d.key);
     }
     const expanded = expandStyleDirection(raw);
@@ -2445,7 +2598,7 @@ async function handleGenerate(body, send) {
       }())
     : chooseCreativeDirection(styleDirection, industry, templateType,
         creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection,
-        hasCustomerPhoto);
+        hasCustomerPhoto, specialInstructions);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
@@ -2466,6 +2619,7 @@ async function handleGenerate(body, send) {
     assets: chosenAssets.map((a) => ({
       filename: a.filename, family: a.family, family_role: a.family_role, url: a.url,
       card_background_safe: a.card_background_safe,
+      selectionReason: a.selectionReason || '',
     })),
     reason: creative.assetReason || '',
     selectMs: creative.assetSelectMs,
@@ -2488,6 +2642,7 @@ async function handleGenerate(body, send) {
         url: stockSelection.photo.url,
         subject: stockSelection.photo.subject,
         industry: stockSelection.industry,
+        reason: stockSelection.reason || '',
         matchedIndustries: stockSelection.matchedIndustries,
         orientation: stockSelection.photo.orientation,
         roles: stockSelection.roles,

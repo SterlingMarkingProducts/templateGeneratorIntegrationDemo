@@ -1853,6 +1853,7 @@ generateBtn.addEventListener('click', () => {
       return;
     }
     photoLine.textContent = 'Photo: ' + sel.file + ' \u00b7 Industry: ' + sel.industry
+      + (sel.reason ? ' \u00b7 Reason: ' + sel.reason : '')
       + (sel.requiresScrim ? ' \u00b7 scrim required' : '') + fmt + timing;
     photoLine.title = sel.url + '\n' + (sel.subject || '')
       + '\nmatched: ' + ((sel.matchedIndustries || []).join(', ') || sel.industry);
@@ -1873,7 +1874,8 @@ generateBtn.addEventListener('click', () => {
       return;
     }
     line.textContent = assets.map(function (a) {
-      return 'Asset: ' + pretty(a.filename) + ' \u00b7 Family: ' + a.family;
+      return 'Asset: ' + pretty(a.filename) + ' \u00b7 Family: ' + a.family
+        + (a.selectionReason ? ' \u00b7 Reason: ' + a.selectionReason : '');
     }).join('   |   ') + fmt + timing;
     line.title = assets.map(function (a) { return a.url; }).join('\n');
   }

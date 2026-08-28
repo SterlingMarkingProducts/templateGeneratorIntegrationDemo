@@ -26,11 +26,12 @@ const chips = [...HTML.matchAll(/class="style-chip(?: style-chip--surprise)?"(?:
 const WANT = ['Editorial Minimal', 'Modern Luxury', 'Bold Modernist', 'Clean Corporate',
   'Elegant Serif', 'Organic Botanical', 'Soft Sophisticated', 'Colourful Expressive',
   'Collage Editorial', 'Playful Contemporary', 'Japanese Minimal', 'Dark Luxe',
-  'Geometric Professional', 'Art Deco', 'Fashion Editorial', 'Heritage Press', 'Gilded Emerald'];
-is(chips.length === 18, 'eighteen chips: seventeen styles plus Surprise Me', chips.length + '');
-is(JSON.stringify(chips.slice(0, 17).map((c) => c.style)) === JSON.stringify(WANT),
+  'Geometric Professional', 'Art Deco', 'Fashion Editorial', 'Heritage Press', 'Gilded Emerald',
+  'Watercolor'];
+is(chips.length === 19, 'nineteen chips: eighteen styles plus Surprise Me', chips.length + '');
+is(JSON.stringify(chips.slice(0, 18).map((c) => c.style)) === JSON.stringify(WANT),
    'in the requested order, with data-style names intact');
-is(/Surprise Me/.test(chips[17].label) && chips[17].style === null,
+is(/Surprise Me/.test(chips[18].label) && chips[18].style === null,
    'Surprise Me closes the list and carries no style of its own');
 const REMOVED = ['Synthwave', 'Psychedelic', 'Y2K Chrome', 'Pop Art', 'Primary Pop',
   'Memphis Bold', 'Neo-Brutalism', 'Cosmic', 'Dark Tech', 'Luxury Max', 'Sage Standard',
