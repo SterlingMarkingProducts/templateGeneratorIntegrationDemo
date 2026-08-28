@@ -616,12 +616,32 @@ function loadReferenceFromFile(file) {
     return;
   }
   const reader = new FileReader();
-  reader.onload = () => {
-    const result = reader.result;
-    const match = /^data:([^;]+);base64,(.+)$/.exec(result);
+  reader.onload = async () => {
+    let result = reader.result;
+    let match = /^data:([^;]+);base64,(.+)$/.exec(result);
     if (!match) {
       showError('Could not read the reference image.');
       return;
+    }
+    /* Normalise BIG references before they travel: the vision API refuses
+     * oversized images outright (pixel and byte limits), and a refused
+     * analysis used to degrade a recreation silently. Anything past the
+     * API's own 1568px sweet spot or ~1.5 MB is downscaled/re-encoded here —
+     * the analysis sees the same design either way, only reliably. */
+    const bytes = Math.round(match[2].length * 0.75);
+    const needsNormalize = bytes > 1.5 * 1024 * 1024 || await (async () => {
+      const dims = await new Promise((res) => {
+        const im = new Image();
+        im.onload = () => res({ w: im.naturalWidth, h: im.naturalHeight });
+        im.onerror = () => res(null);
+        im.src = result;
+      });
+      return dims && Math.max(dims.w, dims.h) > 1568;
+    })();
+    if (needsNormalize) {
+      const resized = await resizeDataUrl(result, 1568, 0.9);
+      const m2 = /^data:([^;]+);base64,(.+)$/.exec(resized);
+      if (m2) { result = resized; match = m2; }
     }
     referenceImageData = { mediaType: match[1], data: match[2] };
     if (referenceImageUrl) referenceImageUrl.value = '';
@@ -1569,7 +1589,7 @@ generateBtn.addEventListener('click', () => {
   }
 
   var line = null, modeSel = null, photoLine = null, photoSel = null;
-  var logoLine = null, logoSel = null;
+  var logoLine = null, logoSel = null, refLine = null;
 
   /* Force/No modes are TESTING controls, not product UI. They render only when
    * the page is opened with ?visualDebug=1; the normal Generator runs Auto and
@@ -1654,9 +1674,30 @@ generateBtn.addEventListener('click', () => {
     photoLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;';
     logoLine = document.createElement('span');
     logoLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;';
+    refLine = document.createElement('span');
+    refLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;display:none;';
     box.appendChild(line);
     box.appendChild(photoLine);
     box.appendChild(logoLine);
+    box.appendChild(refLine);
+  }
+
+  /* Reference: active · <what the vision pass actually saw> — shown only when
+   * a reference is in play, so the normal three lines stay uncluttered. */
+  function renderReference(sel) {
+    var box = host();
+    if (!box) return;
+    reportLine(box);
+    if (!sel || !sel.active) { refLine.style.display = 'none'; return; }
+    refLine.style.display = '';
+    if (sel.error) {
+      refLine.textContent = 'Reference: FAILED \u00b7 ' + sel.error;
+      refLine.title = sel.error;
+      return;
+    }
+    refLine.textContent = 'Reference: active (' + sel.mode + ', '
+      + sel.analysisChars + ' chars) \u00b7 ' + (sel.summary || '(no summary)');
+    refLine.title = sel.summary || '';
   }
 
   /* Logo: None · Reason: <reason>   or   Logo: <name> · Family/Type: <type> */
@@ -1726,10 +1767,12 @@ generateBtn.addEventListener('click', () => {
     window.addEventListener('smp:assets-selected', function (e) { render(e.detail); });
     window.addEventListener('smp:stock-photo-selected', function (e) { renderPhoto(e.detail); });
     window.addEventListener('smp:logo-selected', function (e) { renderLogo(e.detail); });
+    window.addEventListener('smp:reference-analyzed', function (e) { renderReference(e.detail); });
     /* A generation may already have run before these listeners existed. */
     render(window.SMPLastAssetSelection || { assets: [] });
     renderPhoto(window.SMPLastStockPhoto || null);
     renderLogo(window.SMPLastLogoSelection || null);
+    renderReference(window.SMPLastReference || null);
   }
 
   if (document.readyState === 'loading') {

@@ -67,7 +67,25 @@ LOGO / ICONS
 [Describe the logo mark precisely enough to rebuild in CSS/SVG — shape, style, colours. List every icon (phone, mail, globe, pin, tooth, etc.) and how contact lines use them.]
 
 TYPOGRAPHY
-[Heading vs body font personality (serif/sans, weight, letter-spacing), and any two-tone or all-caps treatments.]
+[Heading vs body font personality — serif or sans FIRST, then weight, width, letter-spacing, case, and any two-tone treatment. State the HEADLINE SCALE relative to the canvas (e.g. "the name spans ~70% of the width, roughly 1/5 of the height").]
+
+GEOMETRY — every major region
+[EVERY major geometric region/shape as its own line: kind (rectangle/circle/bar/rule/wave), its colour (hex), its approximate POSITION and SIZE as percentages of the canvas (e.g. "cobalt circle, ~40% canvas width, centred at ~80% x / 45% y", "yellow rectangular field, right third, full height"). Include horizontal/vertical rules with weight and colour.]
+
+SCALE & HIERARCHY
+[Reading order and relative scale: what dominates, what is secondary, the strongest size contrast.]
+
+WHITESPACE
+[Where the empty space lives and roughly how much of the canvas it holds.]
+
+TEXTURE / EFFECTS
+[Grain, halftone, foil, shadows, gradients, curved/arc-following text — or "none".]
+
+PHOTO REGIONS
+[Any photographic areas: position, size, subject — or "none".]
+
+DISTINCTIVE FEATURES
+[The 2–3 things a viewer would name first when recognising this design.]
 
 LAYOUT — FRONT
 [Exact composition: logo position, each text block's placement and alignment, decorative shapes (waves, diagonal splits, rounded corners), and where everything sits relative to the edges.]
@@ -77,6 +95,34 @@ LAYOUT — BACK
 
 FIDELITY MANDATE
 [One sentence: reproduce this design faithfully — same brand, colours, content and layout — adapting only to the given product dimensions.]`;
+
+/* Read-only DEV reporting for the reference path, like the asset/photo/logo
+ * indicators: it changes nothing, it only proves what the vision pass saw. */
+function publishReferenceDiagnostic(ok, mode, analysis, img, errorMessage) {
+  if (typeof window === 'undefined') return;
+  const line = (name) => {
+    const m = new RegExp('^' + name + '\\s*\\n\\[?([^\\n]+)', 'm').exec(analysis || '');
+    return m ? m[1].replace(/\]$/, '').trim() : '';
+  };
+  window.SMPLastReference = ok
+    ? {
+        active: true, mode: mode,
+        mediaType: (img && img.mediaType) || '',
+        bytes: img && img.data ? Math.round(img.data.length * 0.75) : 0,
+        analysisChars: (analysis || '').length,
+        summary: [line('COLORS'), line('TYPOGRAPHY'), line('GEOMETRY — every major region')]
+          .filter(Boolean).join(' · ').slice(0, 220),
+        error: '',
+      }
+    : { active: true, mode: mode, summary: '', analysisChars: 0,
+        error: errorMessage || 'analysis failed' };
+  try {
+    window.dispatchEvent(new CustomEvent('smp:reference-analyzed',
+      { detail: window.SMPLastReference }));
+  } catch (e) { /* older browsers — the global is still there */ }
+  console.info('[generator] reference ' + mode + ': '
+    + (ok ? (analysis || '').length + ' chars of analysis' : 'FAILED — ' + errorMessage));
+}
 
 async function fetchReferenceImageFromUrl(url) {
   const res = await fetch(url, { redirect: 'follow' });
@@ -106,7 +152,7 @@ async function analyzeReferenceImage(image, mode) {
         { type: 'text', text: recreate ? REFERENCE_RECREATE_PROMPT : REFERENCE_INSPIRATION_PROMPT },
       ],
     }],
-    max_tokens: recreate ? 1800 : 900,
+    max_tokens: recreate ? 2600 : 900,
     ...tempParam(MODEL_SPEC, recreate ? 0.2 : 0.5),
   });
   return getTextContent(response);
@@ -1936,6 +1982,7 @@ HOW TO APPROACH THIS:
 4. Compose with intent — asymmetry, strict grid, or diagonal as the concept demands; never a centered stack on a flat fill. Keep decorative shapes out of the text-safe zone.
 5. Build the design at the DENSITY the Style Direction's contract specifies. A rich contract wants a layered background and 4–6 integrated graphic elements; a restrained contract wants a calm ground, 1–3 precise elements, and whitespace composed with real tension. Either way the craft is the same: a dominant hero, a real hierarchy, and nothing present merely to fill space.
 6. If an Image URL is provided, describe its crop/frame/overlay and how it connects to type (IMAGE INTEGRATION). If a User SVG is provided, describe its exact placement, size, and relationship to the composition (SVG INTEGRATION).
+7. If the Style Direction contains a REFERENCE DESIGN TO RECREATE block, its analysis sections are BINDING DATA, not inspiration: your COLOR PALETTE must be its hex values, your TYPOGRAPHY the same category (serif stays serif, bold sans stays bold sans) at the stated headline scale, and your GRAPHICS/LAYOUT must rebuild each region in its GEOMETRY section at the stated positions and proportions. Do not substitute a different direction.
 
 Return ONLY the spec in this exact format — no explanation, no code, no preamble:
 
@@ -2041,6 +2088,10 @@ TECHNICAL REQUIREMENTS
 - Large-scale shapes MUST be built with CSS clip-path, SVG path elements, or pure CSS geometry
 - Typography MUST match the spec font exactly — do not substitute a different font family
 - The layout MUST honor the LAYOUT direction from the spec — do not default to centered-text stacks
+
+REFERENCE DESIGN TO RECREATE — when the Style Direction contains that block:
+- Its analysis sections are BINDING: use its exact hex values, its typography category and headline scale, and rebuild every region in its GEOMETRY section as editable HTML/CSS/inline-SVG at the stated positions and proportions
+- Never substitute serif for sans (or the reverse), never swap the palette, never replace its major geometry with unrelated decoration
 
 SUPPLIED BRAND MARK — when the Style Direction supplies one:
 - Reference the file with its exact given path. Use it as <img> when it stays black (or filter:invert(1) for white); to recolour it to the palette, use a div sized to the mark with style="background:[colour];-webkit-mask:url([src]) center/contain no-repeat;mask:url([src]) center/contain no-repeat"
@@ -2420,7 +2471,18 @@ async function handleGenerate(body, send) {
       const img = hasRefUpload
         ? referenceImage
         : await fetchReferenceImageFromUrl(referenceImageUrl.trim());
-      const inspiration = await analyzeReferenceImage(img, recreateRef ? 'recreate' : 'inspire');
+      /* One retry: a proxy hiccup must not silently turn a recreation into an
+         unrelated default design. */
+      let inspiration;
+      try {
+        inspiration = await analyzeReferenceImage(img, recreateRef ? 'recreate' : 'inspire');
+      } catch (firstErr) {
+        console.warn('Reference analysis attempt 1 failed, retrying:', firstErr.message);
+        inspiration = await analyzeReferenceImage(img, recreateRef ? 'recreate' : 'inspire');
+      }
+      /* DEV diagnostic: WHAT the vision pass actually saw, provable at a
+         glance. Summary only — the colours, typography and geometry lines. */
+      publishReferenceDiagnostic(true, recreateRef ? 'recreate' : 'inspire', inspiration, img, null);
       if (recreateRef) {
         recreatingRef = true;
         refImageForGen = img;
@@ -2429,7 +2491,20 @@ async function handleGenerate(body, send) {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }
     } catch (err) {
-      console.warn('Reference image analysis skipped:', err.message);
+      publishReferenceDiagnostic(false, recreateRef ? 'recreate' : 'inspire', '', null, err.message);
+      if (recreateRef) {
+        /* THE bug this replaces: analysis failure fell through to a normal
+           generation, so a recreate request silently produced an unrelated
+           design (a dark-green serif "luxury" card for a cobalt modernist
+           reference). A recreation without its reference is not a design the
+           user asked for — stop and say so instead. */
+        send({ error: 'The reference design could not be analysed ('
+          + err.message + '). The design was NOT generated, because without the '
+          + 'analysis it could not match your reference. Try again, or remove '
+          + 'the reference to generate normally.' });
+        return;
+      }
+      console.warn('Reference image analysis skipped (inspiration mode):', err.message);
     }
   }
 
