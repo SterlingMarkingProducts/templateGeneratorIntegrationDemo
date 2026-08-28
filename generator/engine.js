@@ -204,7 +204,14 @@ HARD FAILS (never ship these):
 - PowerPoint / Word / Canva-grade layouts — a centered text stack with arbitrary spacing and no compositional thinking.
 - Any text clipped, cut off, hidden, or overlapping other text.
 - Ignoring the density contract in either direction — padding a restrained brief, or thinning a rich one.
-- Reaching for the same typeface or the same palette regardless of the brief.`;
+- Reaching for the same typeface or the same palette regardless of the brief.
+- Hand-drawing ANY floral or foliage artwork (see the hard rule below).
+
+HARD RULE — NEVER HAND-DRAW FLOWERS OR FOLIAGE (applies to EVERY product, EVERY style direction, and Reference Design recreation — nothing overrides it):
+You must NEVER draw floral or botanical artwork yourself: no flowers, floral arrangements, bouquets, petals, leaves, foliage, vines, branches, stems, botanical sprigs, wreaths, floral borders, botanical line art, ornamental plant drawings, abstract flower drawings, or decorative plant silhouettes. Do NOT approximate them with SVG paths, circles/ellipses, CSS shapes, clip-path, hand-built line art, pseudo-elements, or any generated icon-like geometry. Hand-drawn botanicals always read as clip-art and fail print quality.
+- If the composition would benefit from flowers/foliage, use a floral/botanical file from the SUPPLIED DESIGN ASSETS in this brief if one is supplied; a supplied brand MARK may fill the role only where it genuinely serves as the logo. If nothing suitable was supplied, OMIT the botanical decoration and redesign the composition without it — that is always the better outcome.
+- Reference recreation is NOT an exception: when a reference design contains flower/leaf/botanical drawings, reproduce the overall composition, placement, scale and balance, and fill that floral role with a supplied design-asset file — or simplify/omit it. Never write your own SVG flower paths because the reference has one.
+- CUSTOMER-SUPPLIED artwork is exempt: a floral logo, floral photograph, or floral SVG the customer supplied is their content — place it normally. The prohibition is on INVENTING botanical artwork, never on using what was supplied.`;
 
 // ── Portfolio design archetypes — used when style is generic or empty ────────
 const GENERIC_STYLE = /^(corporate|professional|business|clean|simple|modern|legal|law|minimal|minimalist|elegant|classic)?$/i;
@@ -536,7 +543,7 @@ const DESIGN_DIRECTIONS = [
   },
   {
     key: 'organic-botanical', density: 'balanced',
-    brief: 'Organic / Botanical — a natural, hand-touched calm: sage, terracotta, clay, oat, and warm cream; delicate botanical line art (a leaf, a stem, a seed head) or a soft biomorphic shape as the motif; a humanist sans or a gentle rounded serif (Nunito, Quicksand, Lato, or a soft old-style serif), fluid asymmetric placement, and a paper-warm ground; wellness, artisan, and studio-florist warmth without kitsch',
+    brief: 'Organic / Botanical — a natural, hand-touched calm: sage, terracotta, clay, oat, and warm cream; the motif is a supplied botanical design-asset file where one is provided, otherwise a soft biomorphic shape (never hand-drawn plant artwork); a humanist sans or a gentle rounded serif (Nunito, Quicksand, Lato, or a soft old-style serif), fluid asymmetric placement, and a paper-warm ground; wellness, artisan, and studio-florist warmth without kitsch',
   },
   {
     key: 'elegant-serif', density: 'restrained',
