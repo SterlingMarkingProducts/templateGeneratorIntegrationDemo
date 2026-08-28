@@ -1512,6 +1512,72 @@ generateBtn.addEventListener('click', () => {
   if (validate(payload)) generate(payload);
 });
 
+/* ── DEV asset indicator (web03 dev clones only) ─────
+ *
+ * "Is the design asset library actually doing anything?" is not answerable from
+ * looking at a card — a well-integrated asset is meant to be invisible as an
+ * asset. This reports what the engine chose, beside the preview toolbar, so a
+ * generation can be checked against its selection.
+ *
+ * DEV CLONES ONLY (window.SMPWeb03Dev.active, set by web03-dev-bootstrap.js on
+ * the /generator-web03-dev-e2e…/ paths). It lives in the page chrome, never in
+ * the generated design or the preview iframe, and it reads a decision that has
+ * already been made — it changes nothing. */
+(function () {
+  var el = null;
+  function host() {
+    if (el) return el;
+    var left = document.querySelector('.result-toolbar .toolbar-left');
+    if (!left) return null;
+    el = document.createElement('span');
+    el.id = 'devAssetIndicator';
+    el.style.cssText = 'display:block;margin-top:2px;font:500 10px/1.45 ui-monospace,'
+      + 'SFMono-Regular,Menlo,monospace;color:#71717a;letter-spacing:.02em;';
+    left.appendChild(el);
+    return el;
+  }
+
+  /* 35_Ornate_Gold_Oval_Frame.png -> "Ornate Gold Oval Frame" */
+  function pretty(filename) {
+    return String(filename || '')
+      .replace(/\.png$/i, '')
+      .replace(/^\d+_/, '')
+      .replace(/_/g, ' ')
+      .trim();
+  }
+
+  function render(sel) {
+    var box = host();
+    if (!box) return;
+    var assets = (sel && sel.assets) || [];
+    if (!assets.length) {
+      box.textContent = 'Asset: None';
+      box.title = 'The engine chose no library asset for this generation.';
+      return;
+    }
+    box.textContent = assets.map(function (a) {
+      return 'Asset: ' + pretty(a.filename) + '  ·  Family: ' + a.family;
+    }).join('   |   ');
+    box.title = assets.map(function (a) { return a.url; }).join('\n');
+  }
+
+  function start() {
+    /* web03-dev-bootstrap.js publishes SMPWeb03Dev on DOMContentLoaded, so the
+     * check has to wait for that — reading it while this file is still parsing
+     * would always find it undefined and silently skip the indicator. */
+    if (!(window.SMPWeb03Dev && window.SMPWeb03Dev.active)) return;
+    window.addEventListener('smp:assets-selected', function (e) { render(e.detail); });
+    /* A generation may already have run before this listener existed. */
+    render(window.SMPLastAssetSelection || { assets: [] });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(start, 0); });
+  } else {
+    setTimeout(start, 0);
+  }
+}());
+
 /* ── Event: Regenerate button ──────────────────────── */
 regenBtn.addEventListener('click', () => {
   if (lastPayload) generate(lastPayload);

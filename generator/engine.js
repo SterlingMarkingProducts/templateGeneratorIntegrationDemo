@@ -1312,6 +1312,21 @@ async function handleGenerate(body, send) {
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
     + ' | assets: ' + (chosenAssets.map((a) => a.family + '/' + a.filename).join(', ') || 'none'));
 
+  /* Published for the DEV asset indicator in app.js. Read-only reporting of a
+     decision already made — nothing here influences selection, the prompts, or
+     the generated design, and the page decides whether to show it. */
+  window.SMPLastAssetSelection = {
+    direction: creative.direction || null,
+    assets: chosenAssets.map((a) => ({
+      filename: a.filename, family: a.family, family_role: a.family_role, url: a.url,
+      card_background_safe: a.card_background_safe,
+    })),
+  };
+  try {
+    window.dispatchEvent(new CustomEvent('smp:assets-selected',
+      { detail: window.SMPLastAssetSelection }));
+  } catch (e) { /* older browsers — the global is still there */ }
+
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;
   const hasRefUrl = (referenceImageUrl || '').trim();
   const recreateRef = referenceMode === 'recreate';
