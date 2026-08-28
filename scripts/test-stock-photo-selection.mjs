@@ -81,8 +81,9 @@ is(STOCK.photos.every((p) => Array.isArray(p.depicts) && p.depicts.length),
    'every photo declares what it DEPICTS');
 is(STOCK.photos.every((p) => Array.isArray(p.audit_associations)),
    'and keeps the audit\'s looser associations separately, for provenance');
-is(!/\bp\.industries\b|\.industries \|\| \[\]/.test(ENGINE_SRC),
-   'the engine never reads the loose associations');
+is(!/\bp\.industries\b/.test(ENGINE_SRC)
+   && !/photo\.industries|photos\[[^\]]*\]\.industries/.test(ENGINE_SRC),
+   'stock selection never reads the loose associations');
 
 console.log('\n2  the three libraries stay separate');
 const stockFiles = new Set(STOCK.photos.map((p) => p.file));
@@ -90,8 +91,8 @@ is(ASSETS.assets.every((a) => !stockFiles.has(a.filename)), 'no file appears in 
 is(ASSETS.assets.every((a) => !a.url.includes('stock-photo-library'))
    && STOCK.photos.every((p) => !p.url.includes('design-library')),
    'neither manifest points into the other directory');
-is(!ENGINE_SRC.includes('logo-library') && !ENGINE_SRC.includes('logo-manifest'),
-   'the engine references no logo library at all');
+is(/loadLogoLibrary[\s\S]{0,400}logo-asset-manifest\.json/.test(ENGINE_SRC),
+   'the logo library has its own loader and manifest, separate from both');
 is(/loadAssetLibrary[\s\S]{0,400}design-asset-manifest\.json/.test(ENGINE_SRC)
    && /loadStockPhotoLibrary[\s\S]{0,400}stock-photo-manifest\.json/.test(ENGINE_SRC),
    'each library has its own loader and its own manifest');
@@ -344,9 +345,14 @@ is(P.STOCK_PRODUCT_POLICY.stamp.none === 1 && P.STOCK_PRODUCT_POLICY.nameplate.n
    'stamps and nameplates are policy zero, not a low probability');
 
 const RATE_RUNS = RUNS * 4;
+/* Repeated generations of the SAME brief — the sequence a person actually
+   produces, and the one the no-two-consecutive-misses guard acts on. */
 const rate = (text, geom) => {
   let hit = 0;
-  for (let i = 0; i < RATE_RUNS; i++) if (pick(text, geom)) hit++;
+  for (let i = 0; i < RATE_RUNS; i++) {
+    if (P.pickStockPhoto({ industryText: text, explicitIndustry: text,
+      memoryKey: 'rate|' + text + '|' + geom.templateType, hasCustomerPhoto: false, ...geom })) hit++;
+  }
   return hit / RATE_RUNS;
 };
 const cardRate = rate('dentist', CARD);
@@ -538,8 +544,10 @@ globalThis.window.SMPStockPhotoMode = 'auto';
 /* 4. Auto uses the same hierarchy at the same product rates. */
 let blankSign = 0, blankCard = 0;
 for (let i = 0; i < RATE_RUNS; i++) {
-  if (pickBlank('', SIGN)) blankSign++;
-  if (pickBlank('', CARD)) blankCard++;
+  if (P.pickStockPhoto({ industryText: '', explicitIndustry: '', memoryKey: 'bs',
+    hasCustomerPhoto: false, ...SIGN })) blankSign++;
+  if (P.pickStockPhoto({ industryText: '', explicitIndustry: '', memoryKey: 'bc',
+    hasCustomerPhoto: false, ...CARD })) blankCard++;
 }
 const bs = blankSign / RATE_RUNS, bc = blankCard / RATE_RUNS;
 console.log(`     blank industry: sign ${(bs * 100).toFixed(1)}%   business card ${(bc * 100).toFixed(1)}%`);
@@ -557,6 +565,37 @@ globalThis.window.SMPStockPhotoMode = 'force';
 let blankCustomer = 0;
 for (let i = 0; i < 100; i++) if (pickBlank('', SIGN, { hasCustomerPhoto: true })) blankCustomer++;
 is(blankCustomer === 0, 'and the customer\'s own photograph still wins over the general pool');
+globalThis.window.SMPStockPhotoMode = 'auto';
+
+console.log('\n14  repeated large-format generations never miss twice in a row');
+let consecMiss = 0, cardConsecMiss = 0;
+for (let b = 0; b < 20; b++) {
+  let prevMiss = false;
+  for (let i = 0; i < 200; i++) {
+    const r = P.pickStockPhoto({ industryText: 'dentist', explicitIndustry: 'dentist',
+      memoryKey: 'streak-' + b, hasCustomerPhoto: false, ...SIGN });
+    if (!r && prevMiss) consecMiss++;
+    prevMiss = !r;
+  }
+  prevMiss = false;
+  for (let i = 0; i < 200; i++) {
+    const r = P.pickStockPhoto({ industryText: 'dentist', explicitIndustry: 'dentist',
+      memoryKey: 'cstreak-' + b, hasCustomerPhoto: false, ...CARD });
+    if (!r && prevMiss) cardConsecMiss++;
+    prevMiss = !r;
+  }
+}
+is(consecMiss === 0, 'a sign brief with a valid pool never misses twice consecutively',
+   '4000 generations');
+is(cardConsecMiss > 0, 'business cards keep their pure sparing draw — no streak guard there');
+const idSeen = new Set();
+globalThis.window.SMPStockPhotoMode = 'force';
+for (let i = 0; i < 60; i++) {
+  const r = P.pickStockPhoto({ industryText: 'chiropractor', explicitIndustry: 'chiropractor',
+    memoryKey: 'rot-chiro', hasCustomerPhoto: false, ...SIGN });
+  if (r) idSeen.add(r.photo.id);
+}
+is(idSeen.size >= 8, 'photo ids rotate through the chiropractic pool', idSeen.size + ' of 10 seen');
 globalThis.window.SMPStockPhotoMode = 'auto';
 
 console.log('\n12  performance');

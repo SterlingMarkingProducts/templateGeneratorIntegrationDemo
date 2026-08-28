@@ -79,30 +79,45 @@ const off = await page.evaluate(async () => {
 is(String(off).startsWith('blocked'), 'while the guard still blocks everything else',
    String(off).slice(0, 60));
 
-console.log('\nC  the DEV controls');
-const ctrls = await page.evaluate(() => {
+console.log('\nC  Force controls are testing UI: hidden normally, shown under ?visualDebug=1');
+const normal = await page.evaluate(() => ({
+  asset: !!document.getElementById('devAssetMode'),
+  photo: !!document.getElementById('devStockPhotoMode'),
+  logo: !!document.getElementById('devLogoMode'),
+}));
+is(!normal.asset && !normal.photo && !normal.logo,
+   'the normal Generator shows no Asset/Photo/Logo mode controls', JSON.stringify(normal));
+
+const dbg = await ctx.newPage();
+await dbg.goto(`http://web03.sterling.ca:${PORT}${FOLDER}generator/index.html?visualDebug=1`,
+  { waitUntil: 'domcontentloaded' });
+await dbg.waitForTimeout(1500);
+const debugCtrls = await dbg.evaluate(() => {
   const vis = (el) => { if (!el) return null; const r = el.getBoundingClientRect();
     return { w: Math.round(r.width), h: Math.round(r.height), top: Math.round(r.top) }; };
   const asset = document.getElementById('devAssetMode');
   const photo = document.getElementById('devStockPhotoMode');
+  const logo = document.getElementById('devLogoMode');
   const gen = document.getElementById('generateBtn');
   return {
-    asset: vis(asset), photo: vis(photo), gen: vis(gen),
+    asset: vis(asset), photo: vis(photo), logo: vis(logo), gen: vis(gen),
     photoOptions: photo ? [...photo.options].map((o) => o.value + ':' + o.textContent) : null,
-    photoDefault: photo ? photo.value : null,
-    globalDefault: window.SMPStockPhotoMode,
+    logoOptions: logo ? [...logo.options].map((o) => o.value + ':' + o.textContent) : null,
+    defaults: [window.SMPAssetMode, window.SMPStockPhotoMode, window.SMPLogoMode],
   };
 });
-is(ctrls.photo && ctrls.photo.w > 0 && ctrls.photo.h > 0,
-   'Stock Photo Mode is rendered and visible before any generation', JSON.stringify(ctrls.photo));
-is(ctrls.photo && ctrls.gen && ctrls.photo.top < ctrls.gen.top,
-   'directly above Generate Design');
-is(ctrls.asset && ctrls.photo && ctrls.asset.top < ctrls.photo.top,
-   'and beside the existing Asset Mode control');
-is(JSON.stringify(ctrls.photoOptions) === JSON.stringify(
-     ['auto:Auto', 'force:Force Photo', 'off:No Photo']),
-   'offering Auto | Force Photo | No Photo', JSON.stringify(ctrls.photoOptions));
-is(ctrls.photoDefault === 'auto' && ctrls.globalDefault === 'auto', 'defaulting to Auto');
+is(debugCtrls.asset && debugCtrls.photo && debugCtrls.logo
+   && debugCtrls.photo.w > 0 && debugCtrls.logo.w > 0,
+   '?visualDebug=1 exposes all three mode controls', JSON.stringify(debugCtrls.logo));
+is(debugCtrls.logo.top < debugCtrls.gen.top, 'above Generate Design');
+is(JSON.stringify(debugCtrls.photoOptions) === JSON.stringify(
+     ['auto:Auto', 'force:Force Photo', 'off:No Photo'])
+   && JSON.stringify(debugCtrls.logoOptions) === JSON.stringify(
+     ['auto:Auto', 'force:Force Logo', 'off:No Logo']),
+   'with the full Auto | Force | Off sets', JSON.stringify(debugCtrls.logoOptions));
+is(JSON.stringify(debugCtrls.defaults) === JSON.stringify(['auto', 'auto', 'auto']),
+   'all defaulting to Auto');
+await dbg.close();
 
 console.log('\nD  the indicator above the preview');
 const ind = await page.evaluate(() => {
@@ -112,9 +127,9 @@ const ind = await page.evaluate(() => {
   return { text: box.textContent, lines: box.children.length,
     w: Math.round(r.width), top: Math.round(r.top) };
 });
-is(ind && ind.lines === 2, 'two lines: the asset and the photograph', JSON.stringify(ind && ind.lines));
-is(ind && /Photo: None · Reason: /.test(ind.text),
-   'the photo line reads "Photo: None · Reason: …" before the first generation',
+is(ind && ind.lines === 3, 'three lines: asset, photograph, logo', JSON.stringify(ind && ind.lines));
+is(ind && /Photo: None · Reason: /.test(ind.text) && /Logo: None · Reason: /.test(ind.text),
+   'the photo and logo lines read "None · Reason: …" before the first generation',
    ind && ind.text);
 const belowPhoto = await page.evaluate(() => {
   const box = document.getElementById('devAssetIndicator');
@@ -141,6 +156,22 @@ const live = await page.evaluate(async () => {
 is(/Photo: 04-vertical-dentist-with-patient\.png · Industry: dental/.test(live.text || ''),
    'the indicator names the file and the matched industry', live.text);
 is(/scrim required/.test(live.text || ''), 'and flags the scrim requirement');
+const logoLive = await page.evaluate(async () => {
+  window.dispatchEvent(new CustomEvent('smp:logo-selected', { detail: {
+    file: '22_dental_tooth.png', name: 'dental tooth',
+    url: 'assets/logo-library/22_dental_tooth.png', tier: 'B',
+    type: 'tooth with a sparkle', reason: '', selectMs: 0.05, mode: 'auto' } }));
+  await new Promise((r) => setTimeout(r, 50));
+  const box = document.getElementById('devAssetIndicator');
+  return box ? box.textContent : null;
+});
+is(/Logo: dental tooth · Family\/Type: industry mark · tooth with a sparkle/.test(logoLive || ''),
+   'the logo line names the mark and its type', logoLive);
+const logoLib = await page.evaluate(async () => {
+  const r = await fetch('assets/logo-asset-manifest.json').then((x) => x.json()).catch(() => null);
+  return r && r.file_count;
+});
+is(logoLib === 30, 'the guard serves the logo manifest too');
 
 console.log('\nF  nothing was downloaded that did not need to be');
 is(pngs.length <= 1, 'at most the one photograph this test rendered on purpose',

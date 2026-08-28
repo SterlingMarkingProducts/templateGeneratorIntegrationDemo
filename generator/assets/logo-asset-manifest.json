@@ -1,0 +1,1109 @@
+{
+  "library": "logo-library",
+  "version": "2026-08-28",
+  "file_count": 30,
+  "base_path": "assets/logo-library/",
+  "source_audit": "30 transparent PNG marks, audited; tier B may only serve its own industries.",
+  "selection_contract": {
+    "independent_of": [
+      "design-asset-library",
+      "stock-photo-library"
+    ],
+    "customer_logo_wins": "A user-supplied SVG/logo disables library selection entirely.",
+    "tiers": "A = broadly usable abstract/geometric marks. B = literal industry marks, HARD-gated to their industries[] \u2014 a wrong-industry mark is never a fallback.",
+    "max_per_design": 1,
+    "recolour": "Black silhouettes; the design may recolour them to the palette (mask technique) or keep black/white. Transparency preserved; never stretched. Stamps keep them pure black.",
+    "budget": "A logo consumes a signature-element slot; it never widens the decoration budget."
+  },
+  "logos": [
+    {
+      "filename": "01_orbital_loop.png",
+      "name": "orbital loop",
+      "url": "assets/logo-library/01_orbital_loop.png",
+      "sha1": "01a892bef0c9d724e0009ef166b120a8c6263271",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "tech",
+        "consulting",
+        "agency",
+        "energy"
+      ],
+      "symbol_type": "orbiting loops around a spark",
+      "logo_style": "abstract modern",
+      "mood": "dynamic, connected, forward",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.19,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.594,
+          0.8
+        ],
+        "has_transparency": true,
+        "bytes": 185722
+      }
+    },
+    {
+      "filename": "02_rising_ribbons.png",
+      "name": "rising ribbons",
+      "url": "assets/logo-library/02_rising_ribbons.png",
+      "sha1": "0a278480b832ecb651d1f1685f13f695787b97b7",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "construction",
+        "tech",
+        "finance",
+        "logistics"
+      ],
+      "symbol_type": "isometric rising ribbons",
+      "logo_style": "geometric corporate",
+      "mood": "structural, ambitious, solid",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.32,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.894,
+          0.931
+        ],
+        "has_transparency": true,
+        "bytes": 234384
+      }
+    },
+    {
+      "filename": "03_interlocking_links.png",
+      "name": "interlocking links",
+      "url": "assets/logo-library/03_interlocking_links.png",
+      "sha1": "77ad523b6f7b37323d676d7714c5e8657835c3b2",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "partnership",
+        "consulting",
+        "insurance",
+        "HR"
+      ],
+      "symbol_type": "interlocking infinity links",
+      "logo_style": "minimal geometric",
+      "mood": "connected, dependable, continuous",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.382,
+        "mean_luminance": 0.013,
+        "bbox": [
+          0.8,
+          0.802
+        ],
+        "has_transparency": true,
+        "bytes": 769657
+      }
+    },
+    {
+      "filename": "04_rotating_aperture.png",
+      "name": "rotating aperture",
+      "url": "assets/logo-library/04_rotating_aperture.png",
+      "sha1": "aed62cdcc9c690f6958461b92baace821c0a07d7",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "photography",
+        "media",
+        "tech",
+        "marketing"
+      ],
+      "symbol_type": "rotating pinwheel / aperture",
+      "logo_style": "geometric minimal",
+      "mood": "precise, kinetic, modern",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.154,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.675,
+          0.681
+        ],
+        "has_transparency": true,
+        "bytes": 151728
+      }
+    },
+    {
+      "filename": "05_rising_path.png",
+      "name": "rising path",
+      "url": "assets/logo-library/05_rising_path.png",
+      "sha1": "53a4853af499313d98e3a04de603f52b0202fe5f",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "coaching",
+        "education",
+        "wellness",
+        "HR"
+      ],
+      "symbol_type": "figure on a rising path",
+      "logo_style": "abstract minimal",
+      "mood": "aspirational, human, progressive",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.165,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.613,
+          0.7
+        ],
+        "has_transparency": true,
+        "bytes": 143766
+      }
+    },
+    {
+      "filename": "06_compass_spark.png",
+      "name": "compass spark",
+      "url": "assets/logo-library/06_compass_spark.png",
+      "sha1": "323e7f53cf9712a2d0d87ee629452cc8b2db2221",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "travel",
+        "navigation",
+        "consulting",
+        "finance"
+      ],
+      "symbol_type": "compass star / four-point spark",
+      "logo_style": "minimal geometric",
+      "mood": "guiding, precise, classic",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.138,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.9,
+          0.938
+        ],
+        "has_transparency": true,
+        "bytes": 161581
+      }
+    },
+    {
+      "filename": "07_leaf_spark.png",
+      "name": "leaf spark",
+      "url": "assets/logo-library/07_leaf_spark.png",
+      "sha1": "030856f7b7052cfc7f6e4c6dcbc9af976a45adcd",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "wellness",
+        "eco",
+        "spa",
+        "organic",
+        "garden"
+      ],
+      "symbol_type": "leaf with a spark",
+      "logo_style": "botanical",
+      "mood": "natural, fresh, caring",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.208,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.637,
+          0.875
+        ],
+        "has_transparency": true,
+        "bytes": 191497
+      }
+    },
+    {
+      "filename": "08_protective_check.png",
+      "name": "protective check",
+      "url": "assets/logo-library/08_protective_check.png",
+      "sha1": "5e017b3ef0c8e445f64288e5d4f54e632dc08fab",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "insurance",
+        "security",
+        "legal",
+        "IT",
+        "trades"
+      ],
+      "symbol_type": "shield with a check",
+      "logo_style": "corporate",
+      "mood": "trustworthy, safe, assured",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.208,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.681,
+          0.8
+        ],
+        "has_transparency": true,
+        "bytes": 176959
+      }
+    },
+    {
+      "filename": "09_summit_layers.png",
+      "name": "summit layers",
+      "url": "assets/logo-library/09_summit_layers.png",
+      "sha1": "8306d2326f0022461e8d4975335e630a2b577fe1",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "outdoors",
+        "finance",
+        "consulting",
+        "sport"
+      ],
+      "symbol_type": "layered mountain summit",
+      "logo_style": "geometric",
+      "mood": "aspirational, steady, bold",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.148,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.637,
+          0.689
+        ],
+        "has_transparency": true,
+        "bytes": 440778
+      }
+    },
+    {
+      "filename": "10_modular_blocks.png",
+      "name": "modular blocks",
+      "url": "assets/logo-library/10_modular_blocks.png",
+      "sha1": "2fb9f0e474c7593d11b53bd58ad996a590ce6dbc",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "tech",
+        "logistics",
+        "manufacturing",
+        "SaaS"
+      ],
+      "symbol_type": "interlocking modular blocks",
+      "logo_style": "geometric corporate",
+      "mood": "systematic, modular, engineered",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.45,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.75,
+          0.738
+        ],
+        "has_transparency": true,
+        "bytes": 270469
+      }
+    },
+    {
+      "filename": "11_wave_orbit.png",
+      "name": "wave orbit",
+      "url": "assets/logo-library/11_wave_orbit.png",
+      "sha1": "83b1167f364ca4ff4afa7e1b95c51cb2fb7b0d90",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "water",
+        "wellness",
+        "media",
+        "energy"
+      ],
+      "symbol_type": "circular wave orbit",
+      "logo_style": "abstract minimal",
+      "mood": "flowing, calm, continuous",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.265,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.8,
+          0.819
+        ],
+        "has_transparency": true,
+        "bytes": 219018
+      }
+    },
+    {
+      "filename": "12_open_gateway.png",
+      "name": "open gateway",
+      "url": "assets/logo-library/12_open_gateway.png",
+      "sha1": "58db38b79f89d2fff42d415b773f3702c013670f",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "hospitality",
+        "real estate",
+        "wellness",
+        "non-profit"
+      ],
+      "symbol_type": "paired wings / open gateway",
+      "logo_style": "abstract",
+      "mood": "welcoming, uplifting, open",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.227,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.65,
+          0.875
+        ],
+        "has_transparency": true,
+        "bytes": 186256
+      }
+    },
+    {
+      "filename": "13_bridge_arc.png",
+      "name": "bridge arc",
+      "url": "assets/logo-library/13_bridge_arc.png",
+      "sha1": "f124e0d237f9cb199fb1169da6030b5738b69b45",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "finance",
+        "engineering",
+        "community",
+        "non-profit"
+      ],
+      "symbol_type": "arched bridge",
+      "logo_style": "minimal geometric",
+      "mood": "connecting, civic, dependable",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.193,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.912,
+          0.509
+        ],
+        "has_transparency": true,
+        "bytes": 425807
+      }
+    },
+    {
+      "filename": "14_diamond_spark.png",
+      "name": "diamond spark",
+      "url": "assets/logo-library/14_diamond_spark.png",
+      "sha1": "1ad545fcf57a8c0e7ced9ecf4d37fb088b4725da",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "luxury",
+        "beauty",
+        "jewellery",
+        "events"
+      ],
+      "symbol_type": "four-point diamond spark",
+      "logo_style": "luxury minimal",
+      "mood": "refined, bright, premium",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.106,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.775,
+          0.85
+        ],
+        "has_transparency": true,
+        "bytes": 124860
+      }
+    },
+    {
+      "filename": "15_ascending_bird.png",
+      "name": "ascending bird",
+      "url": "assets/logo-library/15_ascending_bird.png",
+      "sha1": "b869d45d76d55de095f69207784840475205e2b6",
+      "tier": "B",
+      "industries": [
+        "non-profit",
+        "sports",
+        "outdoor-recreation",
+        "travel"
+      ],
+      "affinity": [
+        "aviation",
+        "freedom brands",
+        "consulting",
+        "sport"
+      ],
+      "symbol_type": "ascending bird / wings",
+      "logo_style": "abstract",
+      "mood": "soaring, free, confident",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.135,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.738,
+          0.811
+        ],
+        "has_transparency": true,
+        "bytes": 446286
+      }
+    },
+    {
+      "filename": "16_continuous_knot.png",
+      "name": "continuous knot",
+      "url": "assets/logo-library/16_continuous_knot.png",
+      "sha1": "f2a2d2969220bd66a9d52e27e7713eab93b77ab0",
+      "tier": "B",
+      "industries": [
+        "legal",
+        "events-weddings",
+        "boutique-retail"
+      ],
+      "affinity": [
+        "heritage",
+        "craft",
+        "legal",
+        "textile",
+        "culture"
+      ],
+      "symbol_type": "celtic continuous knot",
+      "logo_style": "heritage geometric",
+      "mood": "timeless, intricate, rooted",
+      "best_role": "secondary mark",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.266,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.863,
+          0.863
+        ],
+        "has_transparency": true,
+        "bytes": 239360
+      }
+    },
+    {
+      "filename": "17_motion_rings.png",
+      "name": "motion rings",
+      "url": "assets/logo-library/17_motion_rings.png",
+      "sha1": "49ef9253b2de1d97ddf7701ba83453781252956d",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "media",
+        "tech",
+        "fitness",
+        "broadcast"
+      ],
+      "symbol_type": "concentric motion rings",
+      "logo_style": "abstract modern",
+      "mood": "kinetic, energetic, modern",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.313,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.938,
+          0.894
+        ],
+        "has_transparency": true,
+        "bytes": 260833
+      }
+    },
+    {
+      "filename": "18_flame_drop.png",
+      "name": "flame drop",
+      "url": "assets/logo-library/18_flame_drop.png",
+      "sha1": "84e9c52eb6f1bec2b07ec7efae8cc45df02a19d7",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "energy",
+        "plumbing",
+        "spa",
+        "restaurant"
+      ],
+      "symbol_type": "flame / droplet hybrid",
+      "logo_style": "abstract",
+      "mood": "warm, elemental, vital",
+      "best_role": "icon mark",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1024,
+          1536
+        ],
+        "coverage": 0.238,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.736,
+          0.831
+        ],
+        "has_transparency": true,
+        "bytes": 479444
+      }
+    },
+    {
+      "filename": "19_hex_network.png",
+      "name": "hex network",
+      "url": "assets/logo-library/19_hex_network.png",
+      "sha1": "8c4e00ea11547ab5e85c83d7dc797e98487ffe03",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "tech",
+        "science",
+        "logistics",
+        "manufacturing"
+      ],
+      "symbol_type": "hexagonal network cell",
+      "logo_style": "geometric corporate",
+      "mood": "technical, networked, precise",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.34,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.725,
+          0.831
+        ],
+        "has_transparency": true,
+        "bytes": 245072
+      }
+    },
+    {
+      "filename": "20_balanced_wings.png",
+      "name": "balanced wings",
+      "url": "assets/logo-library/20_balanced_wings.png",
+      "sha1": "ab86bc3a09561c3a24025424ee0b4c287c311b10",
+      "tier": "A",
+      "industries": [],
+      "affinity": [
+        "aviation",
+        "legal",
+        "wellness",
+        "non-profit"
+      ],
+      "symbol_type": "symmetrical wings pair",
+      "logo_style": "abstract",
+      "mood": "balanced, uplifting, formal",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.224,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.825,
+          0.775
+        ],
+        "has_transparency": true,
+        "bytes": 210422
+      }
+    },
+    {
+      "filename": "21_chiropractic_spine.png",
+      "name": "chiropractic spine",
+      "url": "assets/logo-library/21_chiropractic_spine.png",
+      "sha1": "df74af7673ec723d13e02bd928a9a9164aafc4d5",
+      "tier": "B",
+      "industries": [
+        "chiropractic",
+        "physiotherapy",
+        "rehab",
+        "sports-medicine"
+      ],
+      "affinity": [
+        "chiropractic",
+        "physiotherapy",
+        "osteopathy"
+      ],
+      "symbol_type": "spine within a curve",
+      "logo_style": "industry literal",
+      "mood": "clinical, caring, specialist",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1024,
+          1536
+        ],
+        "coverage": 0.173,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.547,
+          0.894
+        ],
+        "has_transparency": true,
+        "bytes": 482705
+      }
+    },
+    {
+      "filename": "22_dental_tooth.png",
+      "name": "dental tooth",
+      "url": "assets/logo-library/22_dental_tooth.png",
+      "sha1": "7b1733b2a769210ff6ae0f4e80abe83c9d92a5d5",
+      "tier": "B",
+      "industries": [
+        "dental",
+        "orthodontics"
+      ],
+      "affinity": [
+        "dentistry",
+        "orthodontics",
+        "hygiene"
+      ],
+      "symbol_type": "tooth with a sparkle",
+      "logo_style": "industry literal",
+      "mood": "clean, clinical, friendly",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1278,
+          1230
+        ],
+        "coverage": 0.164,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.7,
+          0.791
+        ],
+        "has_transparency": true,
+        "bytes": 177143
+      }
+    },
+    {
+      "filename": "23_legal_scales.png",
+      "name": "legal scales",
+      "url": "assets/logo-library/23_legal_scales.png",
+      "sha1": "a498a9b3370ada8421ef8ba768674fe428f13129",
+      "tier": "B",
+      "industries": [
+        "legal",
+        "notary"
+      ],
+      "affinity": [
+        "law",
+        "arbitration",
+        "compliance",
+        "notary"
+      ],
+      "symbol_type": "scales of justice",
+      "logo_style": "industry literal",
+      "mood": "formal, authoritative, traditional",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.184,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.812,
+          0.819
+        ],
+        "has_transparency": true,
+        "bytes": 195766
+      }
+    },
+    {
+      "filename": "24_healthcare_heart.png",
+      "name": "healthcare heart",
+      "url": "assets/logo-library/24_healthcare_heart.png",
+      "sha1": "0035278351dc24b851e8a7cdd1ec7e783a6ccf1e",
+      "tier": "B",
+      "industries": [
+        "medical-clinic",
+        "family-practice",
+        "nursing",
+        "home-care",
+        "pharmacy"
+      ],
+      "affinity": [
+        "healthcare",
+        "clinic",
+        "home care",
+        "paramedic"
+      ],
+      "symbol_type": "cross with heart and ECG line",
+      "logo_style": "industry literal",
+      "mood": "caring, medical, reassuring",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.295,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.85,
+          0.85
+        ],
+        "has_transparency": true,
+        "bytes": 205995
+      }
+    },
+    {
+      "filename": "25_real_estate_entry.png",
+      "name": "real estate entry",
+      "url": "assets/logo-library/25_real_estate_entry.png",
+      "sha1": "336b3d145c9fa31a6df9bb5daeca6a85efaca2a6",
+      "tier": "B",
+      "industries": [
+        "real-estate",
+        "mortgage",
+        "home-builder",
+        "commercial-property",
+        "home-staging"
+      ],
+      "affinity": [
+        "real estate",
+        "property",
+        "mortgage",
+        "building"
+      ],
+      "symbol_type": "house roof / doorway",
+      "logo_style": "industry literal",
+      "mood": "homely, solid, welcoming",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.236,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.725,
+          0.7
+        ],
+        "has_transparency": true,
+        "bytes": 178388
+      }
+    },
+    {
+      "filename": "26_construction_beams.png",
+      "name": "construction beams",
+      "url": "assets/logo-library/26_construction_beams.png",
+      "sha1": "49d0ff31d054c9d9e92bd3afbbd89b4b5b180a26",
+      "tier": "B",
+      "industries": [
+        "construction",
+        "general-contractor",
+        "engineering",
+        "home-renovation"
+      ],
+      "affinity": [
+        "construction",
+        "engineering",
+        "trades",
+        "surveying"
+      ],
+      "symbol_type": "isometric beams and blocks",
+      "logo_style": "industry literal",
+      "mood": "industrial, sturdy, technical",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.335,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.787,
+          0.863
+        ],
+        "has_transparency": true,
+        "bytes": 264344
+      }
+    },
+    {
+      "filename": "27_finance_growth.png",
+      "name": "finance growth",
+      "url": "assets/logo-library/27_finance_growth.png",
+      "sha1": "33a48228881fe063245b3efa927b34e266597ba2",
+      "tier": "B",
+      "industries": [
+        "finance",
+        "accounting",
+        "bookkeeping",
+        "financial-planning",
+        "tax",
+        "payroll",
+        "insurance"
+      ],
+      "affinity": [
+        "finance",
+        "accounting",
+        "investment",
+        "brokerage"
+      ],
+      "symbol_type": "rising bar chart in a swoosh",
+      "logo_style": "industry literal",
+      "mood": "growth, upward, businesslike",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1254,
+          1254
+        ],
+        "coverage": 0.232,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.713,
+          0.875
+        ],
+        "has_transparency": true,
+        "bytes": 199520
+      }
+    },
+    {
+      "filename": "28_hospitality_cloche.png",
+      "name": "hospitality cloche",
+      "url": "assets/logo-library/28_hospitality_cloche.png",
+      "sha1": "707e0ce47992b4ce4dd28b5d5a8d7a68079ba9c3",
+      "tier": "B",
+      "industries": [
+        "restaurant",
+        "catering",
+        "food-service",
+        "culinary-school",
+        "cafe"
+      ],
+      "affinity": [
+        "restaurant",
+        "catering",
+        "hotel",
+        "chef"
+      ],
+      "symbol_type": "serving cloche",
+      "logo_style": "industry literal",
+      "mood": "hospitable, culinary, classic",
+      "best_role": "main logo",
+      "complexity": "simple",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.24,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.662,
+          0.708
+        ],
+        "has_transparency": true,
+        "bytes": 403677
+      }
+    },
+    {
+      "filename": "29_education_book_spark.png",
+      "name": "education book spark",
+      "url": "assets/logo-library/29_education_book_spark.png",
+      "sha1": "c3b78010f79b5c5cef49e39451786a4b0d668464",
+      "tier": "B",
+      "industries": [
+        "school",
+        "tutoring",
+        "library",
+        "education-non-profit",
+        "daycare",
+        "preschool"
+      ],
+      "affinity": [
+        "school",
+        "tutoring",
+        "publisher",
+        "library"
+      ],
+      "symbol_type": "open book with a star",
+      "logo_style": "industry literal",
+      "mood": "scholarly, aspirational, bright",
+      "best_role": "main logo",
+      "complexity": "medium",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.218,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.725,
+          0.783
+        ],
+        "has_transparency": true,
+        "bytes": 522224
+      }
+    },
+    {
+      "filename": "30_wellness_lotus.png",
+      "name": "wellness lotus",
+      "url": "assets/logo-library/30_wellness_lotus.png",
+      "sha1": "f45840eac5cbfe70da400491400a97c6422db3f6",
+      "tier": "B",
+      "industries": [
+        "spa",
+        "yoga",
+        "wellness",
+        "medspa",
+        "skincare",
+        "massage",
+        "pilates",
+        "studio-fitness",
+        "mental-health"
+      ],
+      "affinity": [
+        "spa",
+        "yoga",
+        "meditation",
+        "holistic therapy"
+      ],
+      "symbol_type": "lotus with a profile",
+      "logo_style": "industry literal",
+      "mood": "serene, holistic, feminine",
+      "best_role": "main logo",
+      "complexity": "detailed",
+      "colour": "solid black silhouette on transparency \u2014 recolourable",
+      "metrics": {
+        "px": [
+          1536,
+          1024
+        ],
+        "coverage": 0.243,
+        "mean_luminance": 0.0,
+        "bbox": [
+          0.75,
+          0.764
+        ],
+        "has_transparency": true,
+        "bytes": 498460
+      }
+    }
+  ]
+}

@@ -407,8 +407,12 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
       continue;
     }
 
+    // A masked brand mark is NOT a solid shape: its background colour is the
+    // mark's fill, and extractMaskMarks() composites it into a real image.
+    const maskRef = (style.webkitMaskImage && style.webkitMaskImage !== 'none')
+      || (style.maskImage && style.maskImage !== 'none');
     // Native solid shape (not the card root, not a text-owner)
-    if (el !== rootEl && !hasDirectText(el) && isCleanSolid(style)) {
+    if (!maskRef && el !== rootEl && !hasDirectText(el) && isCleanSolid(style)) {
       const fill = cssColorToHex(style.backgroundColor, doc);
       if (fill) {
         const shape = classifyNativeShape(style, left, top, width, height, angle, fill, factor);
@@ -980,6 +984,14 @@ async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
   const factor = targetW / rootRect.width;
 
   const objects = extractObjectsFromDoc(doc, rootEl, factor, substitutions);
+  /* Recoloured brand marks: the engine's documented technique is a div whose
+   * CSS mask is the silhouette PNG and whose background is the palette colour.
+   * The whole-card SVG snapshot cannot load an external mask, so without this
+   * step a recoloured logo silently vanished from the pushed design. Each one
+   * is composited here (mask 'source-in' fill) into a data-URI image object,
+   * and the source div is marked extracted so the raster hides it. */
+  const maskObjects = await extractMaskMarks(doc, rootEl, factor);
+  objects.push(...maskObjects);
   const bg = await rasterizeBackground(doc, rootEl, targetW, targetH);
   rootEl.querySelectorAll('[data-tg-extract]').forEach(el => el.removeAttribute('data-tg-extract'));
   const all = bg ? [bg, ...objects] : objects;
@@ -996,6 +1008,47 @@ async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
    * import accepts it, as before. */
   if (transportMode === 'import') await inlineLibraryImages(all);
   return { objects: all, bleedAuthored };
+}
+
+/* Find div-with-mask brand marks and turn each into a real image object. */
+async function extractMaskMarks(doc, rootEl, factor) {
+  const rootRect = rootEl.getBoundingClientRect();
+  const out = [];
+  const els = rootEl.querySelectorAll('*');
+  for (const el of els) {
+    if (el.hasAttribute('data-tg-extract')) continue;
+    const st = doc.defaultView.getComputedStyle(el);
+    const mask = st.webkitMaskImage && st.webkitMaskImage !== 'none'
+      ? st.webkitMaskImage
+      : (st.maskImage && st.maskImage !== 'none' ? st.maskImage : '');
+    const m = /url\("?([^")]+)"?\)/.exec(mask || '');
+    if (!m) continue;
+    if (st.display === 'none' || st.visibility === 'hidden') continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) continue;
+    let u;
+    try { u = new URL(m[1], doc.baseURI || window.location.href); } catch (e) { continue; }
+    if (u.origin !== window.location.origin) continue;
+    const fill = cssColorToHex(st.backgroundColor, doc) || '#000000';
+    try {
+      const img = new Image();
+      img.src = u.href;
+      await img.decode();
+      const cv = document.createElement('canvas');
+      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+      const ctx = cv.getContext('2d');
+      /* contain, centred — the same geometry the mask shorthand renders */
+      ctx.drawImage(img, 0, 0);
+      ctx.globalCompositeOperation = 'source-in';
+      ctx.fillStyle = fill;
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      el.setAttribute('data-tg-extract', '1');
+      out.push(makeImageObject(cv.toDataURL('image/png'), cv.width, cv.height,
+        (r.left - rootRect.left) * factor, (r.top - rootRect.top) * factor,
+        r.width * factor, r.height * factor, rotationOf(st), st));
+    } catch (e) { /* an unloadable mark stays in the raster attempt */ }
+  }
+  return out;
 }
 
 async function inlineLibraryImages(objects) {

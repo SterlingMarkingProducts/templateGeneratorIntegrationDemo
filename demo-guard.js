@@ -130,7 +130,9 @@
          separate directory — but the same reasoning: blocking it would silently
          turn every generation into "Photo: None". */
       || rest === 'generator/assets/stock-photo-manifest.json'
-      || /^generator\/assets\/stock-photo-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
+      || /^generator\/assets\/stock-photo-library\/[A-Za-z0-9._-]+\.png$/.test(rest)
+      || rest === 'generator/assets/logo-asset-manifest.json'
+      || /^generator\/assets\/logo-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
   }
 
   function isDevAllowed(u, allowDevImport) {

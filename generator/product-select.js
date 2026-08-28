@@ -75,15 +75,28 @@
     ['label',         'Name Badge'],
   ];
 
-  function templateTypeFromClassification(p) {
-    var groups = (p && p.classification && p.classification.productInformation) || [];
+  function typeFromText(text) {
+    var hay = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
     for (var i = 0; i < TEMPLATE_TYPE_BY_PHRASE.length; i++) {
-      var phrase = TEMPLATE_TYPE_BY_PHRASE[i][0];
-      for (var g = 0; g < groups.length; g++) {
-        var hay = ((groups[g].title || '') + ' ' + (groups[g].productTable || ''))
-          .toLowerCase().replace(/[^a-z0-9]+/g, ' ');
-        if (hay.indexOf(phrase) !== -1) return TEMPLATE_TYPE_BY_PHRASE[i][1];
-      }
+      if (hay.indexOf(TEMPLATE_TYPE_BY_PHRASE[i][0]) !== -1) return TEMPLATE_TYPE_BY_PHRASE[i][1];
+    }
+    return '';
+  }
+
+  /* The PRODUCT'S OWN NAME is the most specific authoritative words the
+   * database holds for a part: "Light Gauge Plastic Sign" IS a sign whatever
+   * broader page it is merchandised under. DS21824 proved the need — its
+   * product-group chain does not name a type its own description states
+   * plainly. Order: the part's own name; then its product groups; both are
+   * designCentral's own text, and nothing here reads part numbers or
+   * dimensions. */
+  function templateTypeFromClassification(p) {
+    var fromName = typeFromText(p && p.name);
+    if (fromName) return fromName;
+    var groups = (p && p.classification && p.classification.productInformation) || [];
+    for (var g = 0; g < groups.length; g++) {
+      var t = typeFromText((groups[g].title || '') + ' ' + (groups[g].productTable || ''));
+      if (t) return t;
     }
     return '';
   }

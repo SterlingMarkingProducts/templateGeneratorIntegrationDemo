@@ -99,8 +99,8 @@ is(f2.filter((u) => u.includes('stock-photo-manifest.json')).length === 2,
 console.log('\n4  the library is warmed at page load, alongside the asset library');
 is(/if \(typeof window !== 'undefined'\) \{\s*try \{ loadStockPhotoLibrary\(\); \}/.test(ENGINE_SRC),
    'loadStockPhotoLibrary\(\) runs as the script parses');
-is(/await Promise\.all\(\[loadAssetLibrary\(\), loadStockPhotoLibrary\(\)\]\)/.test(ENGINE_SRC),
-   'and handleGenerate awaits both in parallel, never in series');
+is(/await Promise\.all\(\[loadAssetLibrary\(\), loadStockPhotoLibrary\(\), loadLogoLibrary\(\)\]\)/.test(ENGINE_SRC),
+   'and handleGenerate awaits all three in parallel, never in series');
 
 console.log('\n5  the DEV report');
 is(/window\.SMPLastStockPhoto = /.test(ENGINE_SRC), 'the selection is published for the indicator');

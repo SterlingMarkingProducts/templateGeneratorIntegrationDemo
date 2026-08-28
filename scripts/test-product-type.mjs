@@ -389,10 +389,132 @@ const CATALOGUE = {
     "portraitAvailable": true,
     "landscapeAvailable": true
    }
+  },
+  {
+   "maxLines": 0,
+   "bleed": {
+    "left": 0,
+    "bottom": 0,
+    "right": 0,
+    "top": 0
+   },
+   "partNumber": "DS21824",
+   "status": {
+    "retired": false,
+    "active": true
+   },
+   "pages": {
+    "min": 1,
+    "max": 1
+   },
+   "classification": {
+    "productInformation": []
+   },
+   "dimensions": {
+    "heightDisplay": "18",
+    "displayUnit": "in",
+    "heightIn": 18,
+    "widthDisplay": "24",
+    "widthIn": 24
+   },
+   "name": "Light Gauge Plastic Sign 24x18",
+   "id": 7010,
+   "shape": "rect",
+   "legacy": {
+    "designerVariationCode": 3,
+    "isProStamp": false,
+    "bandString": "",
+    "greenInkAvailable": true,
+    "borders": {
+     "left": 0,
+     "bottom": 0,
+     "width": 2,
+     "right": 0,
+     "top": 0
+    },
+    "daterBox": {
+     "height": 0,
+     "width": 0
+    },
+    "margins": {
+     "left": 0,
+     "bottom": 0,
+     "right": 0,
+     "top": 0
+    }
+   },
+   "orientation": {
+    "portraitAvailable": true,
+    "landscapeAvailable": true
+   }
+  },
+  {
+   "maxLines": 0,
+   "bleed": {
+    "left": 0,
+    "bottom": 0,
+    "right": 0,
+    "top": 0
+   },
+   "partNumber": "DS-CONFLICT",
+   "status": {
+    "retired": false,
+    "active": true
+   },
+   "pages": {
+    "min": 1,
+    "max": 1
+   },
+   "classification": {
+    "productInformation": [
+     {
+      "id": 999,
+      "productTable": "business-cards",
+      "title": "Vibrant Colour Business Cards"
+     }
+    ]
+   },
+   "dimensions": {
+    "heightDisplay": "12",
+    "displayUnit": "in",
+    "heightIn": 12,
+    "widthDisplay": "18",
+    "widthIn": 18
+   },
+   "name": "Premium Yard Sign",
+   "id": 7011,
+   "shape": "rect",
+   "legacy": {
+    "designerVariationCode": 3,
+    "isProStamp": false,
+    "bandString": "",
+    "greenInkAvailable": true,
+    "borders": {
+     "left": 0,
+     "bottom": 0,
+     "width": 2,
+     "right": 0,
+     "top": 0
+    },
+    "daterBox": {
+     "height": 0,
+     "width": 0
+    },
+    "margins": {
+     "left": 0,
+     "bottom": 0,
+     "right": 0,
+     "top": 0
+    }
+   },
+   "orientation": {
+    "portraitAvailable": true,
+    "landscapeAvailable": true
+   }
   }
  ],
  "truncated": false,
- "count": 6,
+ "count": 8,
  "source": "designCentral-dev (live, read-only)",
  "prioritised": [
   "BCDP-CM",
@@ -445,7 +567,7 @@ console.log('\n1  the endpoint fixture is the real thing');
 is(CATALOGUE.source === 'designCentral-dev (live, read-only)'
    && CATALOGUE.products.length >= 6, 'live-shape catalogue with the example products');
 const byPart = Object.fromEntries(CATALOGUE.products.map((p) => [p.partNumber, p]));
-is(['DS21218', 'TBDP-CG', 'HB2436DS', 'NB13', 'BCDP-CM', 'MYSTERY-1']
+is(['DS21218', 'DS21824', 'TBDP-CG', 'HB2436DS', 'NB13', 'BCDP-CM', 'MYSTERY-1']
      .every((k) => byPart[k]), 'sign, brochure, banner, name badge, card and an unclassified part');
 is(CATALOGUE.products.every((p) => p.classification
      && Array.isArray(p.classification.productInformation)),
@@ -481,6 +603,8 @@ const pickType = (part) => page.evaluate(async (part) => {
 const CASES = [
   ['BCDP-CM',  'Business Card'],
   ['DS21218',  'Sign'],
+  ['DS21824',  'Sign'],          // the live failure: no group names a type; the NAME does
+  ['DS-CONFLICT', 'Sign'],       // the part's own name beats a broader merchandising group
   ['TBDP-CG',  'Brochure'],
   ['HB2436DS', 'Banner'],
   ['NB13',     'Name Badge'],

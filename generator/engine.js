@@ -504,6 +504,23 @@ const DIRECTION_BY_KEY = DESIGN_DIRECTIONS.reduce((m, d) => { m[d.key] = d; retu
  * concepts with visibly different layout languages. */
 const LARGE_FORMAT_EXTRA_DIRECTIONS = ['bold-modernist', 'colourful-expressive', 'collage-editorial'];
 
+/* Register alternation for large-format DEFAULTS. The soft register is where
+ * the sameness lives — beige/cream grounds, sage-and-rust, elegant serif
+ * luxury. One soft design is a fine choice; two in a row is the monotony the
+ * user sees. After a soft draw, the next default large-format draw for the
+ * same brief comes from the bold register (and a bold draw prefers, but does
+ * not force, a change of register the other way). */
+const SOFT_REGISTER_DIRECTIONS = ['editorial-minimal', 'soft-sophisticated', 'elegant-serif',
+  'organic-botanical', 'clean-corporate', 'modern-luxury'];
+const lastLargeFormatRegister = new Map();
+
+function alternateRegister(candidates, memoryKey) {
+  const lastSoft = lastLargeFormatRegister.get(memoryKey);
+  if (lastSoft !== true) return candidates;
+  const bold = candidates.filter((k) => SOFT_REGISTER_DIRECTIONS.indexOf(k) === -1);
+  return bold.length ? bold : candidates;
+}
+
 function pickDirection(keys) {
   const pool = (keys && keys.length)
     ? keys.map((k) => DIRECTION_BY_KEY[k]).filter(Boolean)
@@ -754,7 +771,7 @@ function assetMode() {
 let lastAssetReason = '';
 
 function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType,
-    widthIn, heightIn, photoSelected) {
+    widthIn, heightIn, photoSelected, logoSelected) {
   lastAssetReason = '';
   const mode = assetMode();
   if (mode === 'off') { lastAssetReason = 'asset mode is No Asset'; return []; }
@@ -780,9 +797,11 @@ function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templa
     ? Math.max(1, assetCountFor(density, directionKey, large))
     : assetCountFor(density, directionKey, large);
   /* A stock photograph is a major visual element. It never stacks with loud
-     decoration: at most ONE quiet texture or frame may join it. This is the
-     ONLY change Phase 2C makes to design-asset selection. */
+     decoration: at most ONE quiet texture or frame may join it. */
   if (photoSelected) want = Math.min(want, 1);
+  /* A brand mark consumes a signature-element slot: it never ADDS to the
+     decoration, so the asset budget gives one slot up to it. */
+  if (logoSelected) want = Math.min(want, photoSelected ? 1 : 2);
   /* A generation that uses nothing must NOT wipe the memory — otherwise the run
      after it is free to repeat the family used two runs ago. */
   if (!want) { lastAssetReason = 'the density contract drew none this time'; return []; }
@@ -1133,8 +1152,15 @@ const STOCK_PRODUCT_POLICY = {
   stamp:     { none: 1, reason: 'stamps never use photography' },
   nameplate: { none: 1, reason: 'name badges and nameplates never use photography' },
   card:      { none: 0.86 },
-  general:   { none: 0.195 },
+  /* With the never-two-consecutive-misses guard below, the long-run photo rate
+     on general printed material is 1/(1+none): 0.24 -> 80.6%. */
+  general:   { none: 0.24 },
 };
+
+/* Whether the LAST generation of each brief drew no photo despite a valid
+ * pool. Repeated large-format generations must never miss twice in a row —
+ * two consecutive photo-less signs reads as "the photos stopped working". */
+const lastStockDrawMissed = new Map();
 const STOCK_STAMP_RE     = /stamp/i;
 const STOCK_NAMEPLATE_RE = /nameplate|name\s*badge|name\s*tag|badge/i;
 const STOCK_CARD_RE      = /business\s*card|calling\s*card/i;
@@ -1259,12 +1285,21 @@ function pickStockPhoto(opts) {
     return null;
   }
 
-  /* ── Frequency. The only thing Force skips. ── */
-  if (mode !== 'force' && Math.random() < policy.none) {
-    lastStockReason = productClass === 'card'
-      ? 'business cards use photography sparingly; this generation drew none'
-      : 'a match existed; this generation drew none';
-    return null;
+  /* ── Frequency. The only thing Force skips. On general printed material a
+        miss is never repeated: if the previous generation of this same brief
+        drew none from a valid pool, this one takes a photo. Business cards
+        keep their pure ~14% draw. ── */
+  if (mode !== 'force') {
+    const missedLastTime = productClass === 'general'
+      && lastStockDrawMissed.get(opts.memoryKey) === true;
+    if (!missedLastTime && Math.random() < policy.none) {
+      lastStockDrawMissed.set(opts.memoryKey, productClass === 'general');
+      lastStockReason = productClass === 'card'
+        ? 'business cards use photography sparingly; this generation drew none'
+        : 'a match existed; this generation drew none';
+      return null;
+    }
+    lastStockDrawMissed.set(opts.memoryKey, false);
   }
 
   /* ── Variety, never at the cost of relevance. ── */
@@ -1344,6 +1379,134 @@ function renderStockPhotoBlock(sel) {
     + `photo — a band, a panel, a corner crop — not less of the type.`;
 }
 
+/* ── LOGO LIBRARY (Phase 2D) ───────────────────────────────────────────────
+ *
+ * The third and last independent visual source: 30 transparent black
+ * silhouette marks in generator/assets/logo-library/, described by
+ * generator/assets/logo-asset-manifest.json. Separate manifest, loader,
+ * selector and budget — a logo is IDENTITY, not decoration and not content.
+ *
+ *   1. THE CUSTOMER'S OWN LOGO ALWAYS WINS. A supplied SVG (or logo image)
+ *      disables library selection entirely, in every mode.
+ *   2. Tier B marks are literal (a tooth, scales, a spine): HARD-gated to
+ *      their own industries through the same matcher the stock photos use.
+ *      Tier A marks are abstract and may serve any brief. A wrong-industry
+ *      literal mark is never a fallback — a neutral Tier A mark is.
+ *   3. ONE mark per design, and it consumes a signature-element slot in the
+ *      existing visual budget — it never widens it.
+ *   4. Every product class may carry a mark, stamps included (a black
+ *      silhouette is exactly what a stamp can print).
+ */
+let logoLibrary = null;
+let logoLibraryLoading = null;
+let logoLibraryError = null;
+
+function loadLogoLibrary() {
+  if (logoLibrary) return Promise.resolve(logoLibrary);
+  if (logoLibraryLoading) return logoLibraryLoading;
+  logoLibraryLoading = fetch('assets/logo-asset-manifest.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+    .then((doc) => {
+      logoLibrary = { logos: doc.logos || [] };
+      logoLibraryError = null;
+      logoLibraryLoading = null;
+      return logoLibrary;
+    })
+    .catch((e) => {
+      logoLibraryError = (e && e.message) || 'manifest unavailable';
+      logoLibraryLoading = null;
+      console.warn('[generator] logo library unavailable: ' + logoLibraryError);
+      return { logos: [] };
+    });
+  return logoLibraryLoading;
+}
+if (typeof window !== 'undefined') {
+  try { loadLogoLibrary(); } catch (e) { /* ignore */ }
+}
+
+/* A mark should appear when the composition benefits from one — roughly half
+ * the time — never in every design. Force skips only this draw. */
+const LOGO_NONE = { stamp: 0.50, nameplate: 0.45, card: 0.50, general: 0.50 };
+
+const recentLogos = new Map();
+const LOGO_MEMORY = 2;
+
+function logoMode() {
+  const m = (typeof window !== 'undefined' && window.SMPLogoMode) || 'auto';
+  return (m === 'force' || m === 'off') ? m : 'auto';
+}
+
+let lastLogoReason = '';
+
+function pickLogo(opts) {
+  lastLogoReason = '';
+  const mode = logoMode();
+  if (opts.hasCustomerLogo) {
+    lastLogoReason = 'the customer supplied their own logo';
+    return null;
+  }
+  if (mode === 'off') { lastLogoReason = 'logo mode is No Logo'; return null; }
+  const lib = logoLibrary;
+  if (logoLibraryError && (!lib || !lib.logos.length)) {
+    lastLogoReason = 'library did not load (' + logoLibraryError + ')';
+    return null;
+  }
+  if (!lib) { lastLogoReason = 'library still loading'; return null; }
+  if (!lib.logos.length) { lastLogoReason = 'library is empty'; return null; }
+
+  const productClass = stockProductClass(opts.templateType, opts.widthIn, opts.heightIn);
+  if (mode !== 'force') {
+    const none = LOGO_NONE[productClass] !== undefined ? LOGO_NONE[productClass] : 0.5;
+    if (Math.random() < none) {
+      lastLogoReason = 'this composition draws no mark';
+      return null;
+    }
+  }
+
+  /* Tier B first, through the SAME strict matcher as the stock photos: a
+     literal mark only for its own trade. No B match -> the neutral A pool. */
+  const stock = stockLibrary;
+  const slugs = (stock && stock.terms) ? matchStockIndustries(opts.industryText, stock) : [];
+  const bPool = lib.logos.filter((l) => l.tier === 'B'
+    && (l.industries || []).some((sl) => slugs.indexOf(sl) !== -1));
+  const aPool = lib.logos.filter((l) => l.tier === 'A');
+  let pool = bPool.length ? bPool : aPool;
+  let tier = bPool.length ? 'B' : 'A';
+  if (!pool.length) { lastLogoReason = 'no suitable mark in the library'; return null; }
+
+  const recent = recentLogos.get(opts.memoryKey) || [];
+  const fresh = pool.filter((l) => recent.indexOf(l.filename) === -1);
+  const notLast = pool.filter((l) => l.filename !== recent[0]);
+  const finalPool = fresh.length ? fresh : (notLast.length ? notLast : pool);
+  const logo = finalPool[Math.floor(Math.random() * finalPool.length)];
+  recentLogos.set(opts.memoryKey,
+    [logo.filename].concat(recent.filter((f) => f !== logo.filename)).slice(0, LOGO_MEMORY));
+  return { logo: logo, tier: tier, matchedIndustries: slugs, mode: mode };
+}
+
+/* Only the chosen mark reaches the model — a URL and a few words. */
+function renderLogoBlock(sel, isStamp) {
+  if (!sel || !sel.logo) return '';
+  const l = sel.logo;
+  const colour = isStamp
+    ? '- STAMP: keep it PURE BLACK (#000000) — the silhouette as shipped is exactly what a stamp prints. No recolouring, no grey.'
+    : '- COLOUR: the file is a solid black silhouette on transparency. Recolour it to the palette when black conflicts: '
+      + 'wrap it in a div sized to the mark and use the mask technique — '
+      + 'style="background:[palette colour];-webkit-mask:url([the src]) center/contain no-repeat;mask:url([the src]) center/contain no-repeat" '
+      + '— or keep <img> as-is for black, or add filter:invert(1) for white. Never a colour that disappears into the ground.';
+  return 'SUPPLIED BRAND MARK — one logo file chosen for this brief:\n'
+    + '- ' + l.filename + '\n'
+    + '    src: ' + l.url + '  (a real file — reference it with this exact path)\n'
+    + '    shows: ' + l.symbol_type + ' · reads as: ' + l.mood + '\n'
+    + '    natural use: ' + l.best_role + '\n\n'
+    + 'HOW TO USE IT:\n'
+    + '- It is this design\'s brand mark — use it as the primary mark, a monogram/symbol area, a secondary signature, or a small icon, whichever the composition wants. AT MOST ONE appearance as the hero mark (a small repeated watermark is not this file\'s job).\n'
+    + colour + '\n'
+    + '- Preserve its aspect ratio and transparency exactly — contain, never stretch, never crop through the silhouette.\n'
+    + '- It CONSUMES one signature/graphic-element slot in the density contract — it does not extend the budget. If the design already has a strong hero (a photograph, a dominant asset), the mark steps down to a small signature.\n'
+    + '- USING IT IS OPTIONAL: if the composition is genuinely better as pure typography, leave it out.';
+}
+
 /* ── Direction rotation for the DEFAULT path ───────────────────────────────
  *
  * A direction is a complete, internally coherent concept — its typography,
@@ -1379,7 +1542,7 @@ function rotateDirection(candidates, memoryKey) {
 }
 
 function chooseCreativeDirection(styleDirection, industry, templateType, creativityLevel,
-    variationKey, doubleSided, widthIn, heightIn, stockSelection) {
+    variationKey, doubleSided, widthIn, heightIn, stockSelection, logoSelection) {
   const raw = (styleDirection || '').trim();
   const creativityDirective = getCreativityDirective(creativityLevel || 'balanced');
 
@@ -1392,7 +1555,8 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
        imagery and overlapping shapes outright. */
     lastAssetReason = 'stamps use no assets';
     lastStockReason = lastStockReason || 'stamps never use photography';
-    return { text: `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [], assetReason: lastAssetReason,
+    const stampLogoBlock = renderLogoBlock(logoSelection, true);
+    return { text: (stampLogoBlock ? stampLogoBlock + '\n\n' : '') + `STAMP DESIGN — monochromatic black ink on white ONLY, SUPER SIMPLE flat layout. EXECUTE ARCHETYPE: ${archetype}. CREATIVE MANDATE: ${moment} ABSOLUTE STAMP RULES: (1) Only #000000 and #ffffff permitted — zero color, zero grey; (2) Bold/heavy type weights only — thin fonts blur in stamp impression; (3) Text is a simple vertical stack of straight horizontal lines — NO arced text, NO curved text, NO rotated text, NO circular text paths, NO radial bursts, NO ovals, NO icons or shapes overlapping type; (4) Simple clean geometry only: straight borders, solid bars, thin horizontal rules; (5) Every element must survive actual rubber stamp impression quality. ${creativityDirective}`, direction: null, assets: [], assetReason: lastAssetReason,
       assetSelectMs: 0, largeFormat: false, assetMode: assetMode() };
   }
 
@@ -1418,13 +1582,15 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
   const compose = (brief, density, reference, directionKey) => {
     const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const assets = pickAssets(directionKey, density, briefText, memoryKey, !!doubleSided,
-      templateType, widthIn, heightIn, !!(stockSelection && stockSelection.photo));
+      templateType, widthIn, heightIn, !!(stockSelection && stockSelection.photo),
+      !!(logoSelection && logoSelection.logo));
     const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     return { text: [
       brief,
       reference ? `INSPIRATION DIRECTION (a reference to riff on — take its spirit, do not copy it): ${reference}` : '',
       DENSITY_CONTRACTS[density] || DENSITY_CONTRACTS.balanced,
       renderStockPhotoBlock(stockSelection),
+      renderLogoBlock(logoSelection, false),
       renderAssetBlock(assets, density),
       `${formatNote} ${creativityDirective}`,
     ].filter(Boolean).join('\n\n'),
@@ -1464,12 +1630,18 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
      that still read as professional. The quiet directions stay in the pool,
      so nothing is forced loud; consecutive generations simply have somewhere
      genuinely different to go. Small formats are untouched. */
-  if (keys && keys.length && isLargeFormatForAssets(templateType, widthIn, heightIn)) {
+  const largeDefault = isLargeFormatForAssets(templateType, widthIn, heightIn);
+  if (keys && keys.length && largeDefault) {
     LARGE_FORMAT_EXTRA_DIRECTIONS.forEach((k) => {
       if (candidates.indexOf(k) === -1) candidates = candidates.concat(k);
     });
   }
+  if (largeDefault) candidates = alternateRegister(candidates, memoryKey);
   const direction = rotateDirection(candidates, memoryKey);
+  if (largeDefault) {
+    lastLargeFormatRegister.set(memoryKey,
+      SOFT_REGISTER_DIRECTIONS.indexOf(direction.key) !== -1);
+  }
   return compose(direction.brief, direction.density, null, direction.key);
 }
 
@@ -1800,11 +1972,17 @@ TECHNICAL REQUIREMENTS
 - CSS custom properties (--var) for every color, font stack, and key measurement from the spec
 - Google Fonts @import in <head> for all fonts named in TYPOGRAPHY
 - @media print: margin:0; and @page { size: [W]px [H]px; margin: 0; }
-- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL, for a supplied photograph, and for any supplied design asset, and for nothing else.
+- Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL, for a supplied photograph, for a supplied brand mark, and for any supplied design asset, and for nothing else.
 - Implement the techniques listed under CSS TECHNIQUES in the spec
 - Large-scale shapes MUST be built with CSS clip-path, SVG path elements, or pure CSS geometry
 - Typography MUST match the spec font exactly — do not substitute a different font family
 - The layout MUST honor the LAYOUT direction from the spec — do not default to centered-text stacks
+
+SUPPLIED BRAND MARK — when the Style Direction supplies one:
+- Reference the file with its exact given path. Use it as <img> when it stays black (or filter:invert(1) for white); to recolour it to the palette, use a div sized to the mark with style="background:[colour];-webkit-mask:url([src]) center/contain no-repeat;mask:url([src]) center/contain no-repeat"
+- Preserve its aspect ratio and transparency — contain, never stretch
+- ONE appearance as the design's mark; it consumes a graphic-element slot in the density contract
+- Leaving it out is legitimate if pure typography serves the design better
 
 SUPPLIED PHOTOGRAPH — when the Style Direction supplies one:
 - Reference it with <img src="[the exact src given]"> — the path is relative to this page and resolves as written. Do not rename it, do not inline it, do not invent a different file
@@ -1980,7 +2158,13 @@ async function handleGenerate(body, send) {
         && isLargeFormatForAssets(templateType, lfTrimWin, lfTrimHin)
         && !/stamp/i.test(templateType || '')) {
       const stanceKey = JSON.stringify([templateType, industry || '', businessName || '']);
-      colorSchemeFinal = colorScheme + '\n\n' + rotateColorStance(stanceKey);
+      /* The stance LEADS. Trailing it after the industry pool's refined
+         suggestion let the model settle into the tasteful mid-register anyway;
+         at display scale the stance is the palette decision and the industry
+         reads as context, not as the starting point. */
+      colorSchemeFinal = rotateColorStance(stanceKey)
+        + '\nThe stance above is the palette decision for this piece — commit to it. '
+        + 'Suit it to the industry without retreating to a default beige, cream, or sage-and-rust scheme.';
     }
   }
 
@@ -1997,7 +2181,7 @@ async function handleGenerate(body, send) {
      separate files, separate caches and separate selectors — a stock photo is
      content, a design asset is decoration, and neither can reach the other's
      pool. The logo library is not touched by any of this. */
-  await Promise.all([loadAssetLibrary(), loadStockPhotoLibrary()]);
+  await Promise.all([loadAssetLibrary(), loadStockPhotoLibrary(), loadLogoLibrary()]);
   /* Trim size in inches, so a real sign is recognised as large format even when
      the Template Type still says Business Card — which is exactly what happens
      on web03, where the live catalogue supplies no productFamily. */
@@ -2025,8 +2209,23 @@ async function handleGenerate(body, send) {
   const tStock1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
   const stockSelectMs = Math.round((tStock1 - tStock0) * 1000) / 1000;
 
+  /* THE CUSTOMER'S OWN LOGO ALWAYS WINS: a supplied SVG is the brand mark and
+     the library stays out of it entirely, in every mode. */
+  const hasCustomerLogo = !!((svgContent || '').trim());
+  const tLogo0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+  const logoSelection = pickLogo({
+    industryText: [industry, businessName, specialInstructions].filter(Boolean).join(' '),
+    templateType: templateType,
+    widthIn: trimWin,
+    heightIn: trimHin,
+    hasCustomerLogo: hasCustomerLogo,
+    memoryKey: variationKey,
+  });
+  const tLogo1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+  const logoSelectMs = Math.round((tLogo1 - tLogo0) * 1000) / 1000;
+
   const creative = chooseCreativeDirection(styleDirection, industry, templateType,
-    creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection);
+    creativityLevel, variationKey, doubleSided, trimWin, trimHin, stockSelection, logoSelection);
   let styleDirFinal = creative.text;
   const chosenAssets = creative.assets || [];
   console.info('[generator] direction: ' + (creative.direction || 'user-chosen')
@@ -2090,6 +2289,19 @@ async function handleGenerate(body, send) {
   try {
     window.dispatchEvent(new CustomEvent('smp:stock-photo-selected',
       { detail: window.SMPLastStockPhoto }));
+  } catch (e) { /* older browsers — the global is still there */ }
+
+  /* Published for the DEV logo indicator — read-only reporting, like the rest. */
+  window.SMPLastLogoSelection = logoSelection
+    ? { file: logoSelection.logo.filename, name: logoSelection.logo.name,
+        url: logoSelection.logo.url, tier: logoSelection.tier,
+        type: logoSelection.logo.symbol_type, reason: '',
+        selectMs: logoSelectMs, mode: logoSelection.mode }
+    : { file: null, reason: lastLogoReason || 'unknown',
+        selectMs: logoSelectMs, mode: logoMode() };
+  try {
+    window.dispatchEvent(new CustomEvent('smp:logo-selected',
+      { detail: window.SMPLastLogoSelection }));
   } catch (e) { /* older browsers — the global is still there */ }
 
   const hasRefUpload = referenceImage?.data && referenceImage?.mediaType;

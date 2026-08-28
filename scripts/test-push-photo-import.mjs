@@ -75,6 +75,7 @@ const run = (kind) => page.evaluate(async (kind) => {
       repeating-radial-gradient(circle at 30% 40%,#fff1 0 6px,transparent 6px 14px)"></div>
     ${Array.from({ length: 24 }, (_, i) =>
       `<div style="position:absolute;border-radius:50%;filter:blur(2px);left:${(i * 137) % 1600}px;top:${(i * 89) % 1000}px;width:${120 + i * 13}px;height:${100 + i * 9}px;background:hsla(${i * 37},70%,55%,.5)"></div>`).join('')}`;
+  const LOGO = 'assets/logo-library/22_dental_tooth.png';
   const html = `<!DOCTYPE html><html><head><style>body{margin:0}
     .card{position:relative;width:${W}px;height:${H}px;overflow:hidden;font-family:Arial;
       background:${kind === 'flat' ? '#f5f1e8'
@@ -82,9 +83,15 @@ const run = (kind) => page.evaluate(async (kind) => {
     .photo-panel{position:absolute;left:0;top:0;width:${Math.round(W * 0.38)}px;height:${H}px;overflow:hidden}
     .photo-panel img{width:100%;height:100%;object-fit:cover}
     .head{position:absolute;left:${Math.round(W * 0.42)}px;top:160px;font-size:120px;font-weight:800;color:#fff}
+    .mark{position:absolute;right:80px;bottom:80px;width:160px;height:160px;
+      background:#c46a2b;-webkit-mask:url('${LOGO}') center/contain no-repeat;
+      mask:url('${LOGO}') center/contain no-repeat}
+    .mark2{position:absolute;right:280px;bottom:80px;width:120px;height:120px}
   </style></head><body><div class="card">
     ${kind === 'flat' ? '' : busy}
     <div class="photo-panel"><img src="${PHOTO}"></div>
+    <div class="mark"></div>
+    <img class="mark2" src="${LOGO}">
     <div class="head">Lakeside Dental</div>
   </div></body></html>`;
   generatedHtml = html;
@@ -111,15 +118,18 @@ const run = (kind) => page.evaluate(async (kind) => {
   }
 }, kind);
 
-console.log('\n1  a photo panel design imports, with the photo as an ASSET');
+console.log('\n1  a photo + brand-mark design imports, everything as ASSETS');
 const flat = await run('flat');
 is(flat.ok === true, 'the push completes against the import contract', flat.error || ('templateId ' + flat.templateId));
-is(flat.stats.uniqueAssets === 2, 'two asset parts: the background raster and the photograph',
+is(flat.stats.uniqueAssets === 4,
+   'four asset parts: raster, photograph, the recoloured mask mark, the plain mark',
    flat.stats.uniqueAssets + ' assets');
 is(flat.srcs.every((s) => s.startsWith('ref:')), 'every image in the outgoing canvas is an asset reference',
    flat.srcs.join(' | '));
-is(!flat.srcs.some((s) => /git|generator|stock-photo-library|http/.test(s)),
-   'no clone URL survives into the outgoing canvas');
+is(!flat.srcs.some((s) => /git|generator|stock-photo-library|logo-library|http/.test(s)),
+   'no clone URL survives into the outgoing canvas — logo included');
+is(flat.srcs.length === 4, 'the mask-recoloured mark became a real image object',
+   flat.srcs.join(' | '));
 
 console.log('\n2  a BUSY large-format design stays under the payload class the gateway kills');
 const busy = await run('busy');

@@ -1569,6 +1569,16 @@ generateBtn.addEventListener('click', () => {
   }
 
   var line = null, modeSel = null, photoLine = null, photoSel = null;
+  var logoLine = null, logoSel = null;
+
+  /* Force/No modes are TESTING controls, not product UI. They render only when
+   * the page is opened with ?visualDebug=1; the normal Generator runs Auto and
+   * shows nothing. The DEV diagnostic lines above the preview stay regardless
+   * (dev clones only). */
+  function visualDebug() {
+    try { return new URLSearchParams(window.location.search).get('visualDebug') === '1'; }
+    catch (e) { return false; }
+  }
 
   /* One builder for both DEV selects, so the stock-photo control is visibly and
    * behaviourally the same kind of thing as the asset control beside it. */
@@ -1612,6 +1622,7 @@ generateBtn.addEventListener('click', () => {
    * before the first click. */
   function buildModeControl() {
     if (modeSel) return;
+    if (!visualDebug()) return;
     var actions = document.querySelector('.form-actions');
     var generate = document.getElementById('generateBtn');
     if (!actions || !generate) return;
@@ -1621,12 +1632,16 @@ generateBtn.addEventListener('click', () => {
     modeSel = asset.sel;
     actions.insertBefore(asset.wrap, generate);
 
-    /* The stock photo library is a separate source with its own selector, so it
-     * gets its own control rather than sharing the asset one. */
+    /* Each source is its own selector, so each gets its own control. */
     var photo = makeModeSelect('devStockPhotoMode', 'Stock Photo Mode',
       [['auto', 'Auto'], ['force', 'Force Photo'], ['off', 'No Photo']], 'SMPStockPhotoMode');
     photoSel = photo.sel;
     actions.insertBefore(photo.wrap, generate);
+
+    var logo = makeModeSelect('devLogoMode', 'Logo Mode',
+      [['auto', 'Auto'], ['force', 'Force Logo'], ['off', 'No Logo']], 'SMPLogoMode');
+    logoSel = logo.sel;
+    actions.insertBefore(logo.wrap, generate);
   }
 
   function reportLine(box) {
@@ -1637,8 +1652,28 @@ generateBtn.addEventListener('click', () => {
     line = document.createElement('span');
     photoLine = document.createElement('span');
     photoLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;';
+    logoLine = document.createElement('span');
+    logoLine.style.cssText = 'max-width:100%;overflow:hidden;text-overflow:ellipsis;';
     box.appendChild(line);
     box.appendChild(photoLine);
+    box.appendChild(logoLine);
+  }
+
+  /* Logo: None · Reason: <reason>   or   Logo: <name> · Family/Type: <type> */
+  function renderLogo(sel) {
+    var box = host();
+    if (!box) return;
+    reportLine(box);
+    var timing = (sel && typeof sel.selectMs === 'number') ? '  (' + sel.selectMs + 'ms)' : '';
+    if (!sel || !sel.file) {
+      var why = (sel && sel.reason) || 'not generated yet';
+      logoLine.textContent = 'Logo: None \u00b7 Reason: ' + why + timing;
+      logoLine.title = 'No library mark was used. Reason: ' + why;
+      return;
+    }
+    logoLine.textContent = 'Logo: ' + sel.name + ' \u00b7 Family/Type: '
+      + (sel.tier === 'B' ? 'industry mark' : 'abstract mark') + ' \u00b7 ' + sel.type + timing;
+    logoLine.title = sel.url;
   }
 
   /* Photo: None · Reason: <reason>   or   Photo: <file> · Industry: <slug> */
@@ -1690,9 +1725,11 @@ generateBtn.addEventListener('click', () => {
     buildModeControl();
     window.addEventListener('smp:assets-selected', function (e) { render(e.detail); });
     window.addEventListener('smp:stock-photo-selected', function (e) { renderPhoto(e.detail); });
+    window.addEventListener('smp:logo-selected', function (e) { renderLogo(e.detail); });
     /* A generation may already have run before these listeners existed. */
     render(window.SMPLastAssetSelection || { assets: [] });
     renderPhoto(window.SMPLastStockPhoto || null);
+    renderLogo(window.SMPLastLogoSelection || null);
   }
 
   if (document.readyState === 'loading') {
