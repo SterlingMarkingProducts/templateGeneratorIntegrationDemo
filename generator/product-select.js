@@ -41,12 +41,52 @@
     'name badge': 'Name Badge',
     /* Families the test inventory adds. Each maps to the nearest creative
      * template the Generator already knows how to design for. */
-    'banner': 'Poster',
+    'banner': 'Banner',
+    'banners': 'Banner',
     'decal': 'Sign',
     'label': 'Name Badge',
     'magnet': 'Sign',
     'postcard': 'Business Card',
   };
+
+  /* The live designCentral-dev catalogue carries no family string — it
+   * carries `classification.productInformation`: the product-group rows the
+   * database itself maps the part to (products.id -> productinformationmap ->
+   * productinformation), verbatim. This resolves those AUTHORITATIVE titles
+   * and slugs to the Generator's creative template type by phrase, most
+   * specific first, so "Light Gauge Plastic Signs" is a Sign and "Name Badges"
+   * is a Name Badge rather than a Nameplate. It reads nothing but the
+   * database's own words: no part-number guessing, no geometry. An unmatched
+   * or absent classification returns '' — unknown, never Business Card. */
+  var TEMPLATE_TYPE_BY_PHRASE = [
+    ['business card', 'Business Card'],
+    ['name badge',    'Name Badge'],
+    ['name tag',      'Name Badge'],
+    ['nameplate',     'Nameplate'],
+    ['name plate',    'Nameplate'],
+    ['stamp',         'Stamp'],
+    ['brochure',      'Brochure'],
+    ['banner',        'Banner'],
+    ['poster',        'Poster'],
+    ['sign',          'Sign'],
+    ['decal',         'Sign'],
+    ['magnet',        'Sign'],
+    ['postcard',      'Business Card'],
+    ['label',         'Name Badge'],
+  ];
+
+  function templateTypeFromClassification(p) {
+    var groups = (p && p.classification && p.classification.productInformation) || [];
+    for (var i = 0; i < TEMPLATE_TYPE_BY_PHRASE.length; i++) {
+      var phrase = TEMPLATE_TYPE_BY_PHRASE[i][0];
+      for (var g = 0; g < groups.length; g++) {
+        var hay = ((groups[g].title || '') + ' ' + (groups[g].productTable || ''))
+          .toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+        if (hay.indexOf(phrase) !== -1) return TEMPLATE_TYPE_BY_PHRASE[i][1];
+      }
+    }
+    return '';
+  }
 
   /* Two catalogues, one picker. The CMS-verified records load first so an
    * exact part number always resolves to the verified record when both
@@ -391,7 +431,11 @@
     /** Creative template type implied by the product family, or '' if unknown. */
     templateTypeFor: function (p) {
       if (!p) return '';
-      return TEMPLATE_TYPE_BY_FAMILY[String(p.productFamily || '').toLowerCase()] || '';
+      /* The database's own product groups first; the catalogue-file family
+       * string second (the committed files still carry one). '' means the
+       * source did not say — the caller shows unknown, it never invents. */
+      return templateTypeFromClassification(p)
+        || TEMPLATE_TYPE_BY_FAMILY[String(p.productFamily || '').toLowerCase()] || '';
     },
     /** Subscribe to selection changes. Called with the record or null. */
     onChange: function (fn) { if (typeof fn === 'function') listeners.push(fn); },

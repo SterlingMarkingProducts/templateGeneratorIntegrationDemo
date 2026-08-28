@@ -142,6 +142,7 @@ const PRODUCT_PRESETS = {
   'Business Card': { w: 3.5,    h: 2,       unit: 'in', note: 'Double-sided: Front = contact details, Back = branding.' },
   'Brochure':      { w: 11,     h: 8.5,     unit: 'in', note: 'Tri-fold, letter size. Generates outside and inside spreads (double-sided). Flat/open: 11"×8.5". Each panel: ~3.67"×8.5".' },
   'Poster':        { w: 18,     h: 24,      unit: 'in', note: '' },
+  'Banner':        { w: 72,     h: 24,      unit: 'in', note: '' },
   'Stamp':         { w: 2.25,   h: 0.8125,  unit: 'in', note: 'Standard self-inking stamp. Max 6 lines of text.' },
   'Nameplate':     { w: 8,      h: 2,       unit: 'in', note: '' },
   'Name Badge':    { w: 3,      h: 1,       unit: 'in', note: '' },
@@ -363,19 +364,31 @@ function applyProductToForm(product) {
    * the same physical size either way. */
   applyOrientationToDimensions();
 
-  /* Creative family, if this product maps to one the Generator knows. */
+  /* Template Type comes from the product's own classification — the
+   * database's product-group rows, resolved by templateTypeFor(). When the
+   * source names no type the Generator can map, the field goes BLANK and
+   * stays editable: an unknown product must never silently keep the previous
+   * selection (which is how every sign, banner and badge read "Business
+   * Card"), and never be defaulted for the user. */
   const tt = window.SMPProductSelection?.templateTypeFor(product) || '';
-  if (tt && templateType.querySelector(`option[value="${tt}"]`)) {
+  const known = !!(tt && templateType.querySelector(`option[value="${tt}"]`));
+  if (known) {
     templateType.value = tt;
     /* Re-run the Generator's own hint logic, then re-apply product geometry —
      * the preset must not win over the real product. */
+    templateType.dispatchEvent(new Event('change'));
+    applyOrientationToDimensions();
+  } else {
+    templateType.value = '';
     templateType.dispatchEvent(new Event('change'));
     applyOrientationToDimensions();
   }
 
   dimWidth.readOnly = true;
   dimHeight.readOnly = true;
-  templateType.disabled = true;
+  /* A mapped type is a product fact and locks; an unknown one leaves the
+   * select open so the person can say what this product is. */
+  templateType.disabled = known;
   groups.forEach(g => { g.classList.add('is-product-driven'); setProductBadge(g, true); });
 }
 

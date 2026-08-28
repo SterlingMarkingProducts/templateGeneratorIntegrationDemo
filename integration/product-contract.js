@@ -103,6 +103,13 @@
       partNumber: str(o.partNumber),
       name: str(o.name),
       productFamily: o.productFamily === undefined ? null : o.productFamily,
+      /* The database's own product-group rows (productinformation via
+       * productinformationmap), carried verbatim from the source. null = the
+       * source did not say. This is a PRODUCT FACT, not a creative category:
+       * mapping it to a template type happens in the consumer, and an
+       * unmapped classification stays visibly unknown. */
+      classification: (o.classification && typeof o.classification === 'object')
+        ? o.classification : null,
 
       /* ---- PRODUCT FACTS -------------------------------------------- */
       dimensions: {

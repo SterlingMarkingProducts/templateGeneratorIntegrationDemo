@@ -1136,15 +1136,23 @@ const STOCK_STAMP_RE     = /stamp/i;
 const STOCK_NAMEPLATE_RE = /nameplate|name\s*badge|name\s*tag|badge/i;
 const STOCK_CARD_RE      = /business\s*card|calling\s*card/i;
 
-/* The product class this brief is being designed for. Geometry has the last
- * word on cards: web03's live catalogue carries no productFamily, so a real
- * 18x12 sign still arrives with Template Type "Business Card". */
+/* The product class this brief is being designed for. The Template Type is now
+ * fed from the product's own database classification, so the NAME is the
+ * authoritative signal. Geometry is the fallback, in exactly two places: an
+ * empty/unknown type (the source did not say) is classified by size alone,
+ * and a named card whose physical size is unmistakably large format is
+ * treated as what it physically is. */
 function stockProductClass(templateType, widthIn, heightIn) {
-  const t = templateType || '';
+  const t = (templateType || '').trim();
   if (STOCK_STAMP_RE.test(t)) return 'stamp';
   if (STOCK_NAMEPLATE_RE.test(t)) return 'nameplate';
   if (STOCK_CARD_RE.test(t)) {
     return isLargeFormatForAssets(t, widthIn, heightIn) ? 'general' : 'card';
+  }
+  if (!t) {
+    /* No authoritative type at all: size decides, and small pieces take the
+       conservative card policy rather than the 80% general one. */
+    return isLargeFormatForAssets('', widthIn, heightIn) ? 'general' : 'card';
   }
   return 'general';
 }

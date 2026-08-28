@@ -278,6 +278,7 @@
     return C().createProduct({
       id: raw.id, partNumber: raw.partNumber, name: raw.name,
       productFamily: raw.productFamily,
+      classification: raw.classification,
       widthIn: d.widthIn, heightIn: d.heightIn, dpi: d.dpi,
       displayUnit: d.displayUnit, widthDisplay: d.widthDisplay, heightDisplay: d.heightDisplay,
       bleedTop: b.top, bleedRight: b.right, bleedBottom: b.bottom, bleedLeft: b.left,
