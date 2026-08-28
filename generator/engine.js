@@ -478,7 +478,7 @@ const DESIGN_DIRECTIONS = [
   },
   {
     key: 'colourful-expressive', density: 'rich',
-    brief: 'Colourful Expressive — confident colour as the whole idea: three to five saturated hues meeting in bold fields, arcs, or diagonal bands, a heavy contemporary sans or a characterful display face, knocked-out type on colour, and one unexpected chromatic pairing that makes the card memorable; energetic and modern, held together by strict alignment so the colour reads as intentional rather than noisy',
+    brief: 'Colourful Expressive — confident colour as the whole idea: three to five saturated hues meeting in bold fields, arcs, or diagonal bands, a heavy contemporary grotesque (Space Grotesk, Archivo Black, Barlow, Inter Tight) at decisive scale, knocked-out type on colour, and one unexpected chromatic pairing that makes the piece memorable; energetic, modern and ADULT — sharp geometry and strict alignment, no rounded cartoon type, no dots, squiggles, stars or blob shapes; the colour reads as intentional editorial confidence, never as a kids\' brand',
   },
   {
     key: 'collage-editorial', density: 'rich',
@@ -499,6 +499,16 @@ const DESIGN_DIRECTIONS = [
 ];
 
 const DIRECTION_BY_KEY = DESIGN_DIRECTIONS.reduce((m, d) => { m[d.key] = d; return m; }, {});
+
+/* Directions AUTO may draw when the user chose nothing. Playful Contemporary
+ * is deliberately absent: its chunky rounded type, confetti dots, squiggles
+ * and blob shapes read as a kids' brand, which no business should receive
+ * UNASKED. It stays fully reachable through the explicit routes — the
+ * "Playful" style chip and any typed playful/fun/kids style direction — where
+ * the user actually wants that language. */
+const DEFAULT_DIRECTION_POOL = DESIGN_DIRECTIONS
+  .filter((d) => d.key !== 'playful-contemporary')
+  .map((d) => d.key);
 
 /* Added to an intent-narrowed pool on large format only: bold but professional
  * concepts with visibly different layout languages. */
@@ -611,7 +621,9 @@ const DIRECTION_ASSET_FAMILIES = {
   'collage-editorial':    ['torn-paper', 'tape', 'brushstroke', 'texture-neutral'],
   'bold-modernist':       ['geometric-solid', 'geometric-system', 'brushstroke'],
   'playful-contemporary': ['flat-blob', 'doodle', 'geometric-solid'],
-  'colourful-expressive': ['flat-blob', 'geometric-solid', 'brushstroke', 'doodle'],
+  /* Geometry and paint only: the blob and doodle families belong to the
+     explicitly-requested playful language, not to default colour. */
+  'colourful-expressive': ['geometric-solid', 'brushstroke'],
   'dark-luxe':            ['gold-frame', 'ring-frame', 'texture-neutral'],
   'retro-futurist':       ['glossy-3d', 'geometric-system', 'texture-neutral'],
   /* Clean Corporate is deliberately near-empty: a considered texture at most,
@@ -1621,7 +1633,7 @@ function chooseCreativeDirection(styleDirection, industry, templateType, creativ
 
   // ── Generic or empty: intent first, then a rotated draw ──────────────────
   const keys = intentKeysFor(raw) || intentKeysFor(industry);
-  let candidates = (keys && keys.length) ? keys : DESIGN_DIRECTIONS.map((d) => d.key);
+  let candidates = (keys && keys.length) ? keys : DEFAULT_DIRECTION_POOL.slice();
   /* On LARGE FORMAT, an industry-narrowed pool is the repetition the user
      sees: "legal" or "professional" collapses to four quiet, near-identical
      directions, and rotation inside that set just shuffles the same look. A

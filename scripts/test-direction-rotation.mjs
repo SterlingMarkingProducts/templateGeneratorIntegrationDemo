@@ -38,13 +38,18 @@ console.log('\n1  consecutive default generations rotate concepts');
   is(backToBack === 0, 'never the same direction twice in a row');
   is(within2 === 0, 'never one of the last 2 directions');
   is(within3 === 0, 'never one of the last 3 directions (12 options available)');
-  is(new Set(seq).size === P.DESIGN_DIRECTIONS.length,
-     'all 12 concepts are reached', `${new Set(seq).size}/${P.DESIGN_DIRECTIONS.length}`);
+  /* Playful Contemporary is deliberately excluded from the Auto/default pool
+     (a kids-brand look must be asked for), so the default rotation now cycles
+     the other eleven. */
+  const AUTO_POOL = P.DESIGN_DIRECTIONS.length - 1;
+  is(new Set(seq).size === AUTO_POOL && !seq.includes('playful-contemporary'),
+     'all 11 default concepts are reached and the playful one never is',
+     `${new Set(seq).size}/${AUTO_POOL}`);
   /* Even RATES, not even counts: with ~33 draws per direction the max/min ratio
      of a fair sample swings past 1.6 on its own, so a tight ratio was testing
      the sampler rather than the rotation. Compare each direction's share with
      the fair share instead, which is stable at this sample size. */
-  const fair = seq.length / P.DESIGN_DIRECTIONS.length;
+  const fair = seq.length / AUTO_POOL;
   const shares = [...new Set(seq)].map((k) => seq.filter((x) => x === k).length / fair);
   const worst = Math.max(...shares.map((x) => Math.abs(x - 1)));
   is(worst < 0.5, 'and they are reached at roughly even rates',

@@ -16,6 +16,7 @@ const ENGINE_SRC = readFileSync(REPO + '/generator/engine.js', 'utf8');
 let src = ENGINE_SRC.replace('window.handleGenerate = handleGenerate;',
   'globalThis.__p = { chooseCreativeDirection, rotateColorStance, intentKeysFor,'
   + ' LARGE_FORMAT_COLOR_STANCES, LARGE_FORMAT_EXTRA_DIRECTIONS, DESIGN_DIRECTIONS,'
+  + ' DEFAULT_DIRECTION_POOL, DIRECTION_ASSET_FAMILIES,'
   + ' recentDirections, recentColorStances };');
 src = src.replace('window.handleGenerateJson = handleGenerateJson;', '');
 // eslint-disable-next-line no-eval
@@ -104,6 +105,44 @@ is(/DISTANCE IMPACT/.test(big.text) && /LARGER colour fields/.test(big.text),
    'large format carries the distance-impact directive');
 const small = P.chooseCreativeDirection('', 'dentist', 'Business Card', 'balanced', 'x4', false, 3.5, 2, null);
 is(!/DISTANCE IMPACT/.test(small.text), 'business cards do not');
+
+console.log('\n7  the playful/cartoon language never appears unasked');
+is(P.DEFAULT_DIRECTION_POOL.indexOf('playful-contemporary') === -1
+   && P.DESIGN_DIRECTIONS.some((d) => d.key === 'playful-contemporary'),
+   'playful-contemporary exists but is OUT of the Auto/default pool');
+P.recentDirections.clear();
+const drawn = new Set();
+const BRIEFS = [['', ''], ['', 'dentist'], ['', 'daycare'], ['', 'florist'], ['', 'auto repair']];
+for (const [style, ind] of BRIEFS) {
+  for (const [type, w, h] of [['Sign', 36, 24], ['Poster', 24, 18], ['Business Card', 3.5, 2]]) {
+    for (let i = 0; i < 120; i++) {
+      const c = P.chooseCreativeDirection(style, ind, type, 'balanced',
+        'np-' + ind + type + (i % 15), false, w, h, null);
+      if (c.direction) drawn.add(c.direction);
+    }
+  }
+}
+is(!drawn.has('playful-contemporary'),
+   'thousands of default draws across products and industries never land on it',
+   drawn.size + ' distinct directions drawn');
+is(drawn.size >= 10, 'while the default pool stays broad and varied', [...drawn].join(', '));
+const explicit = P.chooseCreativeDirection('Playful', 'daycare', 'Sign', 'balanced', 'ex1', false, 36, 24, null);
+is(/chunky rounded sans \(Fredoka/.test(explicit.text),
+   'the explicit "Playful" style chip still gets the full playful language');
+const typed = P.chooseCreativeDirection('fun and playful for kids', 'daycare', 'Sign', 'balanced', 'ex2', false, 36, 24, null);
+is(/Fredoka|confetti|sticker|playful/i.test(typed.text),
+   'and a typed playful/fun style still routes to it');
+is(JSON.stringify(P.DIRECTION_ASSET_FAMILIES['colourful-expressive'])
+     === JSON.stringify(['geometric-solid', 'brushstroke']),
+   'default colour draws no blob or doodle assets',
+   P.DIRECTION_ASSET_FAMILIES['colourful-expressive'].join(', '));
+const ce = P.DESIGN_DIRECTIONS.find((d) => d.key === 'colourful-expressive').brief;
+is(/no rounded cartoon type, no dots, squiggles, stars or blob shapes/.test(ce)
+   && !/characterful display face/.test(ce),
+   'and its brief forbids the cartoon ingredients outright');
+is(P.DESIGN_DIRECTIONS.filter((d) => /confetti|sticker/i.test(d.brief)).length === 1
+   && P.DESIGN_DIRECTIONS.filter((d) => /squiggles/i.test(d.brief) && !/no dots, squiggles/.test(d.brief)).length === 1,
+   'playful-contemporary is the only direction that PRESCRIBES that vocabulary');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
