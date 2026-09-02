@@ -58,9 +58,9 @@ const pickBlank = (briefText, geom = SIGN, extra = {}) => P.pickStockPhoto(Objec
 }, geom, extra));
 
 console.log('\n1  the library is present, complete and served from this clone');
-is(STOCK.file_count === 45 && STOCK.photos.length === 45,
-   'the manifest describes the 45 v2 photographs');
-is(STOCK.version && STOCK.version.indexOf('v2') !== -1, 'and is the v2 library', STOCK.version);
+is(STOCK.file_count === 75 && STOCK.photos.length === 75,
+   'the manifest describes the 75 photographs (45 v2 + 30 generic-business)');
+is(STOCK.version && /v[3-9]/.test(STOCK.version), 'and is the v3 (or later) library', STOCK.version);
 is(!STOCK.photos.some((p) => /^(01-florist-bouquet|35-peaceful-coastal-landscape|04-dentist-with-patient)\.png$/.test(p.file)),
    'no v1 filename survives in the manifest');
 is(STOCK.photos.every((p) => Array.isArray(p.suitable_roles) && p.suitable_roles.length),
@@ -500,10 +500,10 @@ globalThis.window.SMPStockPhotoMode = 'auto';
 
 console.log('\n13  blank industry: inference first, then the general-purpose pool');
 const GENERAL_IDS = STOCK.photos.filter((p) => p.general_purpose === true).map((p) => p.id);
-is(GENERAL_IDS.length >= 8 && GENERAL_IDS.length <= 15,
-   'the manifest flags a real general-purpose pool', GENERAL_IDS.length + ' photos');
+is(GENERAL_IDS.length >= 8 && GENERAL_IDS.length <= 45,
+   'the manifest flags a real general-purpose pool (never the whole library)', GENERAL_IDS.length + ' photos');
 is(STOCK.photos.filter((p) => p.general_purpose).every((p) =>
-     /headshot|business-professionals|technology-team|city-buildings|living-room|mountain|coastal|cafe|family-outdoors|senior-couple/.test(p.id)),
+     /headshot|business-professionals|technology-team|city-buildings|living-room|mountain|coastal|cafe|family-outdoors|senior-couple|laptop|headset|team-meeting|window|writing-notes|tablet|handshake|colleagues|office-interior|reception|storefront|business-street|commercial-building|order-packing|boutique|workspace|browsing-retail|consultation|family-modern-home|desktop|lounge-interior/.test(p.id)),
    'and only genuinely neutral files carry the flag', GENERAL_IDS.join(', '));
 
 globalThis.window.SMPStockPhotoMode = 'force';

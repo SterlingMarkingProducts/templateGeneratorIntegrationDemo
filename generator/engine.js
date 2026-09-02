@@ -1171,7 +1171,7 @@ const STOCK_INDUSTRY_SYNONYMS = {
   'construction':       'builder|building|framing|concrete|excavation|site work',
   'general-contractor': 'contractor|contracting',
   'engineering':        'engineer|engineers',
-  'industrial':         'industry|plant|works',
+  'industrial':         'industry|plant|works|warehouse|warehousing|logistics|fulfillment|fulfilment|distribution centre|distribution center',
   'safety':             'workplace safety|occupational|ppe|site safety',
   'plumbing':           'plumber|drain|drains|pipefitting',
   'hvac':               'heating|cooling|furnace|air conditioning|ac repair|ductwork',
@@ -1224,7 +1224,7 @@ const STOCK_INDUSTRY_SYNONYMS = {
   'outdoor-recreation': 'outdoors|hiking|camping|adventure|paddling',
   'sports':             'athletics|sports club|sports team',
   'photography':        'photographer|photo studio',
-  'urban-services':     'city services|municipal services',
+  'urban-services':     'city services|municipal services|courier|delivery service|parcel delivery|last mile',
   'payroll':            'payroll services',
   'pilates':            'reformer pilates',
 };
