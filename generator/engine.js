@@ -3089,7 +3089,7 @@ PORTFOLIO BOLD — make the CONCEPT and HERO MOMENT unmistakable and the canvas 
     const message =
       err?.error?.message ||
       err?.message ||
-      'Anthropic API request failed. Check your API key and try again.';
+      'The AI service request failed. Please try again.';
     send({ error: message });
   }
 }

@@ -44,15 +44,11 @@
   var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase2c/', '/generator-web03-dev-e2e-phase1/',
     '/generator-web03-dev-e2e/'];
   var DEV_IMPORT_PATH  = '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm';
-  /* The same-origin AI proxy. It adds the Anthropic key server-side, so the
-   * request that reaches it carries no credentials — exactly like the import. */
-  var DEV_AI_PROXY_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiProxy.cfm';
-  /* The proxy's read-only companion. It answers one question — does this server
-   * hold an Anthropic key of its own — with a boolean, makes no upstream call
-   * and returns nothing derived from a key. Without this exception the dev
-   * clone cannot ask, so it would prompt for a key even where the server
-   * already has one. */
-  var DEV_AI_STATUS_PATH = '/git/web03-dev-e2e/tests/web03-dev-e2e/aiKeyStatus.cfm';
+  /* Sterling's server-side Anthropic endpoint, shipped INSIDE this clone
+   * (generator/api/claude.cfm). It owns the Anthropic credentials entirely,
+   * so the request that reaches it carries none — exactly like the import.
+   * Clone-relative, so the same rule covers every dev clone folder. */
+  var DEV_AI_ENDPOINT_REST = 'generator/api/claude.cfm';
   /* The dev product picker's source: designCentral-dev, read-only, SELECT only.
    * The clone reads its own product catalogue from it instead of the
    * spreadsheet files, so without this exception the picker has no source at
@@ -81,19 +77,14 @@
     return u.pathname === DEV_IMPORT_PATH;
   }
 
-  /* The AI proxy, and only it. Same shape as the import exception: the page
-   * must be the dev clone, the request must be same-origin, and the path must
-   * match this constant exactly. It is checked WITHOUT requiring the bootstrap,
-   * because browser-api.js issues its request from the page's own load path and
-   * the two constants are independent by design. */
-  function isDevAiProxy(u) {
-    return u.pathname === DEV_AI_PROXY_PATH;
-  }
-
-  /* The key-status probe, and only it. Same shape and same reasoning as the
-   * proxy exception above: one exact path, fixed in source. */
-  function isDevAiKeyStatus(u) {
-    return u.pathname === DEV_AI_STATUS_PATH;
+  /* The server AI endpoint, and only it. Same shape as the import exception:
+   * the page must be the dev clone, the request must be same-origin, and the
+   * path must be exactly this clone's generator/api/claude.cfm. Checked
+   * WITHOUT requiring the bootstrap, because browser-api.js issues its
+   * request from the page's own load path and the two constants are
+   * independent by design. */
+  function isDevAiEndpoint(u, root) {
+    return u.pathname === root + DEV_AI_ENDPOINT_REST;
   }
 
   /* The live product catalogue, and only it. Same shape as the two above: one
@@ -140,8 +131,8 @@
     if (!root || u.origin !== window.location.origin) return false;
     return isDevCloneData(u, root)
       || isDevCloneAsset(u, root)
-      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiProxy(u)
-                             || isDevAiKeyStatus(u) || isDevCatalogue(u)));
+      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiEndpoint(u, root)
+                             || isDevCatalogue(u)));
   }
 
   function isBlocked(url, allowDevImport) {

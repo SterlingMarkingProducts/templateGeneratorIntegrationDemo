@@ -30,7 +30,7 @@ const server = createServer(async (req,res)=>{
   const url = new URL(req.url,'http://x');
   if (url.pathname.endsWith('devProductCatalogue.cfm')) { res.writeHead(200,{'content-type':'application/json'}); res.end(JSON.stringify(CATALOGUE)); return; }
   if (url.pathname.endsWith('aiKeyStatus.cfm')) { res.writeHead(200,{'content-type':'application/json'}); res.end('{"serverKeyConfigured":true}'); return; }
-  if (url.pathname.endsWith('aiProxy.cfm')) {
+  if (url.pathname.endsWith('/generator/api/claude.cfm')) {
     let body=''; for await (const c of req) body+=c;
     if (mode === 'hang') return;                 // accept and never answer
     let parsed={}; try { parsed=JSON.parse(body); } catch {}
