@@ -19,7 +19,7 @@ const TYPES = { '.html':'text/html','.js':'text/javascript','.json':'application
 const CAT_SRC = readFileSync(join(REPO,'scripts/test-product-type.mjs'),'utf8');
 const CATALOGUE = JSON.parse(CAT_SRC.slice(CAT_SRC.indexOf('const CATALOGUE = ')+18, CAT_SRC.indexOf(';\n', CAT_SRC.indexOf('const CATALOGUE = '))));
 
-let mode = 'sse';                 // 'sse' | 'buffered' | 'error' | 'hang'
+let mode = 'sse';   // sse | sse-plain | sse-json-header | buffered-sse | buffered | error | err-plain | malformed | hang
 let requests = [];                // { path, headers, body }
 const AI_HTML = '```html\n<!DOCTYPE html>\n<html><head><style>.card{position:relative;width:360px;height:216px;background:#fff}</style></head><body><div class="card card--front"><h1>Endpoint Co</h1></div></body></html>\n```';
 
@@ -32,8 +32,28 @@ const server = createServer(async (req,res)=>{
     if (mode === 'hang') return;
     if (mode === 'error') { res.writeHead(500,{'content-type':'application/json'});
       res.end(JSON.stringify({ error:{ message:'The server could not reach Anthropic (test error).' } })); return; }
+    if (mode === 'err-plain') { res.writeHead(500,{'content-type':'text/html'});
+      res.end('<html><body><h1>Lucee 5 Error</h1><p>could not read ANTHROPIC key sk-ant-api03-FAKEFAKEFAKE from environment</p></body></html>'); return; }
+    if (mode === 'malformed') { res.writeHead(200,{'content-type':'application/json'});
+      res.end('<<<not json, not sse>>>'); return; }
     let parsed={}; try { parsed=JSON.parse(body); } catch {}
+    const sseBody = (payloadText) => {
+      const mid = [];
+      for (let i=0;i<payloadText.length;i+=300) mid.push(payloadText.slice(i,i+300));
+      return 'event: message_start\ndata: ' + JSON.stringify({type:'message_start',message:{id:'msg_b',type:'message',role:'assistant'}})
+        + '\n\nevent: content_block_start\ndata: {"type":"content_block_start","index":0}\n\n'
+        + mid.map(t=>'event: content_block_delta\ndata: '+JSON.stringify({type:'content_block_delta',delta:{type:'text_delta',text:t}})).join('\n\n')
+        + '\n\nevent: content_block_stop\ndata: {"type":"content_block_stop","index":0}\n\n'
+        + 'event: message_delta\ndata: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}\n\n'
+        + 'event: message_stop\ndata: {"type":"message_stop"}\n';
+    };
     if (!parsed.stream) {
+      // the live claude.cfm was seen returning SSE text even for non-stream
+      // calls, under a JSON content-type — reproduce that in the SSE modes
+      if (mode === 'sse-json-header') { res.writeHead(200,{'content-type':'application/json'});
+        res.end(sseBody('STYLE SPEC: clean modern grid.')); return; }
+      if (mode === 'sse-plain') { res.writeHead(200,{'content-type':'text/plain'});
+        res.end(sseBody('STYLE SPEC: clean modern grid.')); return; }
       res.writeHead(200,{'content-type':'application/json'});
       res.end(JSON.stringify({ content:[{type:'text',text:'STYLE SPEC: clean modern grid.'}] })); return;
     }
@@ -42,6 +62,10 @@ const server = createServer(async (req,res)=>{
       res.end(JSON.stringify({ id:'msg_test', type:'message', role:'assistant',
         content:[{type:'text',text:AI_HTML}] })); return;
     }
+    if (mode === 'sse-json-header') { res.writeHead(200,{'content-type':'application/json'});
+      res.end(sseBody(AI_HTML)); return; }
+    if (mode === 'sse-plain' || mode === 'buffered-sse') { res.writeHead(200,{'content-type':'text/plain'});
+      res.end(sseBody(AI_HTML)); return; }
     res.writeHead(200,{'content-type':'text/event-stream'});
     const parts=[]; for (let i=0;i<AI_HTML.length;i+=300) parts.push(AI_HTML.slice(i,i+300));
     let idx=0;
@@ -122,7 +146,23 @@ is(requests.length && requests.some(q=>q.body.includes('circle cx')), 'the SVG r
 r = await generate('');
 is(r.result, 'regeneration works', r.toast || 'ok');
 
+console.log('4b  SSE bodies under WRONG or missing stream headers (the live bug)');
+for (const m of ['sse-json-header', 'sse-plain', 'buffered-sse']) {
+  requests=[]; mode=m;
+  r = await generate('');
+  is(r.result && !r.toast, m + ': generation completes (no JSON.parse of "event:")', r.toast || 'result shown');
+}
+
 console.log('5  failures stay visible — never an infinite spinner');
+requests=[]; mode='err-plain';
+r = await generate('');
+is(!!r.toast && /failed \(500\)/.test(r.toast||'') && /Lucee 5 Error/.test(r.toast||''),
+  'a 500 with a plain CFML body shows the server\'s own words', (r.toast||'').slice(0,90));
+is(!!r.toast && !(r.toast||'').includes('FAKEFAKEFAKE') && /sk-ant-\[redacted\]/.test(r.toast||''),
+  'anything key-shaped in the server body is REDACTED before display');
+mode='malformed';
+r = await generate('');
+is(!!r.toast && /unreadable response/.test(r.toast||''), 'a malformed 200 body fails visibly with a safe snippet', (r.toast||'').slice(0,80));
 mode='error';
 r = await generate();
 is(!r.result || r.toast, 'server error surfaces');

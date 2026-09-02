@@ -28,13 +28,75 @@ function anthropicHeaders() {
   return { 'content-type': 'application/json' };
 }
 
-async function readAnthropicError(res) {
-  let message = `The AI service request failed (${res.status}).`;
+/* Anything resembling an Anthropic key is struck from text BEFORE it can
+   reach the console or a toast — even if the server accidentally echoes one. */
+function redactSecrets(text) {
+  return String(text || '').replace(/sk-ant-[A-Za-z0-9_-]{4,}/g, 'sk-ant-[redacted]');
+}
+
+/* Does this body carry SSE framing? Content-Type alone is NOT trusted: the
+   live claude.cfm was observed returning Anthropic SSE text under a JSON (or
+   missing) Content-Type, and JSON.parse('event: message_start…') is exactly
+   the "Unexpected token 'e'" failure the Generator showed. */
+function looksLikeSse(text) {
+  const t = String(text || '').replace(/^\uFEFF/, '').replace(/^\s+/, '');
+  if (/^(event|data):/.test(t)) return true;
+  return /(^|\n)event: *[A-Za-z_.]+ *\r?\n/.test(t.slice(0, 4096));
+}
+
+/* One complete SSE body -> its data payloads, in order. Blank lines, SSE
+   comments, unknown event types and non-JSON data lines are ignored; an
+   explicit error event is surfaced. Tolerates every standard Anthropic
+   framing event (message_start … message_stop). */
+function parseSseText(text) {
+  const events = [];
+  for (const line of String(text || '').split(/\r?\n/)) {
+    if (line.indexOf('data:') !== 0) continue;
+    const data = line.slice(5).trim();
+    if (!data || data === '[DONE]') continue;
+    let event;
+    try { event = JSON.parse(data); } catch { continue; }
+    if (event && event.type === 'error') {
+      throw new Error(redactSecrets((event.error && event.error.message) || 'Anthropic streaming error.'));
+    }
+    events.push(event);
+  }
+  return events;
+}
+
+/* Assemble a complete Messages-shaped response from buffered SSE events, so a
+   non-streaming caller receives the same object either way. */
+function messageFromSseEvents(events) {
+  let text = '';
+  let base = null;
+  for (const e of events) {
+    if (!e) continue;
+    if (e.type === 'message_start' && e.message) base = e.message;
+    if (e.type === 'content_block_delta' && e.delta && e.delta.type === 'text_delta') {
+      text += e.delta.text || '';
+    }
+  }
+  const msg = base ? Object.assign({}, base) : { type: 'message', role: 'assistant' };
+  msg.content = [{ type: 'text', text: text }];
+  return msg;
+}
+
+/* A non-OK answer becomes a visible, SAFE error: the server's own words,
+   truncated and redacted — never a bare status with the reason hidden. A
+   fuller (still redacted) body goes to the console for diagnosis. */
+function httpError(status, bodyText) {
+  const raw = redactSecrets(String(bodyText || ''));
+  let message = '';
   try {
-    const data = await res.json();
-    message = data?.error?.message || message;
-  } catch { /* non-JSON body */ }
-  return new Error(message);
+    const data = JSON.parse(raw);
+    message = (data && data.error && data.error.message) || '';
+  } catch (e) { /* not JSON — use the text itself */ }
+  if (!message) {
+    message = raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+  }
+  try { console.warn('[ai-endpoint] HTTP ' + status + ' body: ' + raw.slice(0, 2000)); } catch (e) { /* logging only */ }
+  return new Error('The AI service request failed (' + status + ')'
+    + (message ? ': ' + message : '.'));
 }
 
 /* FAIL LOUD, NEVER SPIN FOREVER. A server endpoint may BUFFER the whole
@@ -52,20 +114,26 @@ function aiTimeouts() {
   };
 }
 
-async function fetchAiWithDeadline(params, ms, what) {
+/* POST once under a deadline and read the WHOLE body as text (the body read
+   stays inside the deadline: the abort signal cancels a stalled body too).
+   The body is read exactly once; detection happens on the text. */
+async function fetchAiText(params, ms, what) {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), ms);
   try {
-    return await fetch(ANTHROPIC_ENDPOINT, {
+    const res = await fetch(ANTHROPIC_ENDPOINT, {
       method: 'POST',
       headers: anthropicHeaders(),
       body: JSON.stringify(params),
       signal: ctl.signal,
     });
+    const text = await res.text();
+    return { status: res.status, ok: res.ok,
+      ctype: (res.headers.get('content-type') || '').toLowerCase(), text: text };
   } catch (err) {
     if (ctl.signal.aborted) {
       throw new Error(what + ' did not respond within ' + Math.round(ms / 1000)
-        + 's. The server may be overloaded or the AI proxy stalled — please try again.');
+        + 's. The server may be overloaded or the AI endpoint stalled — please try again.');
     }
     throw err;
   } finally {
@@ -73,22 +141,42 @@ async function fetchAiWithDeadline(params, ms, what) {
   }
 }
 
+/* Text body -> a complete Messages response, whatever the server sent:
+   SSE framing (live-relayed or fully buffered) is assembled from its events;
+   plain JSON is parsed; anything else fails visibly with a safe snippet. */
+function messageFromBody(text) {
+  const trimmed = String(text || '').replace(/^\uFEFF/, '').trim();
+  if (looksLikeSse(trimmed)) {
+    return messageFromSseEvents(parseSseText(trimmed));
+  }
+  let data;
+  try { data = JSON.parse(trimmed); }
+  catch (e) {
+    throw new Error('The AI service returned an unreadable response: '
+      + redactSecrets(trimmed.replace(/\s+/g, ' ').slice(0, 200)));
+  }
+  if (data && data.error) {
+    throw new Error(redactSecrets((data.error && data.error.message) || 'The AI service returned an error.'));
+  }
+  return data;
+}
+
 const anthropic = {
   messages: {
     async create(params) {
-      const res = await fetchAiWithDeadline(params, aiTimeouts().create, 'The AI service');
-      if (!res.ok) throw await readAnthropicError(res);
-      return res.json();
+      const r = await fetchAiText(params, aiTimeouts().create, 'The AI service');
+      if (!r.ok) throw httpError(r.status, r.text);
+      return messageFromBody(r.text);
     },
 
     // Async generator yielding the same event objects the SDK stream emits
     // (engine.js only consumes content_block_delta / text_delta events).
     stream(params) {
       return (async function* () {
-        /* One deadline covers the whole exchange: on the buffered web03 proxy
-         * the entire response arrives in one burst near the end, so a
-         * per-chunk watchdog would be meaningless — either the burst arrives
-         * inside the budget or the request is dead. */
+        /* One deadline covers the whole exchange: a buffering server delivers
+         * the entire response in one burst near the end, so a per-chunk
+         * watchdog would be meaningless — either the burst arrives inside the
+         * budget or the request is dead. */
         const budget = aiTimeouts().stream;
         const ctl = new AbortController();
         const timer = setTimeout(() => ctl.abort(), budget);
@@ -99,18 +187,31 @@ const anthropic = {
           body: JSON.stringify({ ...params, stream: true }),
           signal: ctl.signal,
         });
-        if (!res.ok) throw await readAnthropicError(res);
+        if (!res.ok) throw httpError(res.status, await res.text());
 
-        /* ADAPT TO THE SERVER'S RESPONSE TRANSPORT. An SSE relay
-           (text/event-stream) is parsed event by event exactly as before. A
-           server that BUFFERS the upstream call and answers with one complete
-           Anthropic message JSON is translated into the same events, so
-           engine.js sees no difference either way. */
+        /* ADAPT TO THE SERVER'S ACTUAL RESPONSE. Only a declared
+           text/event-stream is read incrementally (a live relay). EVERYTHING
+           else is read fully once, then detected by CONTENT: SSE framing
+           under a wrong or missing Content-Type (what the live claude.cfm
+           was observed doing) parses as SSE; a complete Anthropic message
+           JSON becomes synthetic delta events; anything else fails visibly.
+           A body beginning "event:" can never reach JSON.parse. */
         const ctype = (res.headers.get('content-type') || '').toLowerCase();
         if (ctype.indexOf('text/event-stream') === -1) {
-          const data = await res.json();
+          const text = await res.text();
+          const trimmed = text.replace(/^\uFEFF/, '').trim();
+          if (looksLikeSse(trimmed)) {
+            for (const event of parseSseText(trimmed)) yield event;
+            return;
+          }
+          let data;
+          try { data = JSON.parse(trimmed); }
+          catch (e) {
+            throw new Error('The AI service returned an unreadable response: '
+              + redactSecrets(trimmed.replace(/\s+/g, ' ').slice(0, 200)));
+          }
           if (data && data.error) {
-            throw new Error(data.error.message || 'The AI service returned an error.');
+            throw new Error(redactSecrets((data.error && data.error.message) || 'The AI service returned an error.'));
           }
           const blocks = (data && data.content) || [];
           for (const block of blocks) {
@@ -131,13 +232,13 @@ const anthropic = {
           buffer = chunks.pop();
           for (const chunk of chunks) {
             for (const line of chunk.split('\n')) {
-              if (!line.startsWith('data: ')) continue;
-              const data = line.slice(6).trim();
+              if (line.indexOf('data:') !== 0) continue;
+              const data = line.slice(5).trim();
               if (!data || data === '[DONE]') continue;
               let event;
               try { event = JSON.parse(data); } catch { continue; }
               if (event.type === 'error') {
-                throw new Error(event.error?.message || 'Anthropic streaming error.');
+                throw new Error(redactSecrets(event.error?.message || 'Anthropic streaming error.'));
               }
               yield event;
             }
@@ -147,7 +248,7 @@ const anthropic = {
           if (ctl.signal.aborted) {
             throw new Error('The AI design service did not respond within '
               + Math.round(budget / 1000) + 's. The server may be overloaded or the '
-              + 'AI proxy stalled — please try again.');
+              + 'AI endpoint stalled — please try again.');
           }
           throw err;
         } finally {
