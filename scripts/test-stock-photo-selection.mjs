@@ -114,8 +114,11 @@ is(/hasCustomerPhoto\s*=\s*!!\(\(imageUrl \|\| ''\)\.trim\(\)\)/.test(ENGINE_SRC
    'handleGenerate derives that gate from the brief\'s own Image URL');
 
 console.log('\n4  industry match is a HARD gate');
+/* 'Trucking and Logistics' used to sit in this list; the library now carries
+   warehouse/logistics photography, so it is a MATCHED industry and lives in
+   the positive tests instead. */
 const NONSENSE = ['Quantum Widget Foundry', 'Zorbtronic Systems', 'Blivet Manufacturing',
-  'Cryptocurrency Mining', 'Trucking and Logistics', 'Municipal Fire Service'];
+  'Cryptocurrency Mining', 'Meteorite Brokerage', 'Municipal Fire Service'];
 let nonsenseHits = 0;
 NONSENSE.forEach((n) => { for (let i = 0; i < 60; i++) if (pick(n)) nonsenseHits++; });
 is(nonsenseHits === 0, 'no photo is ever returned for an unmatched industry',
@@ -321,7 +324,7 @@ globalThis.window.SMPStockPhotoMode = 'force';
 for (let i = 0; i < 200; i++) if (pick('dentist', CARD)) forcedHits++;
 is(forcedHits === 200, 'Force takes a matched photo every time, even on a business card',
    forcedHits + '/200');
-const forcedMiss = pick('Trucking and Logistics', SIGN);
+const forcedMiss = pick('Meteorite Brokerage', SIGN);
 is(forcedMiss === null && P.lastStockReason === 'no industry match in the stock library',
    'Force reports no compatible photo rather than reaching for an unrelated one',
    P.lastStockReason);
