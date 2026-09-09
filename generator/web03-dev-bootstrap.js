@@ -39,9 +39,16 @@
   var DEV = {
     /* TemplateImportTransport appends /templateImport.cfm to this. */
     importBase:   '/git/web03-dev-e2e/tests/web03-dev-e2e',
-    /* The FULL-UI dev clone: it runs the real templateDesigner.cfm and shows its
-     * real toolbar, menus and controls. Not the earlier canvas-only harness. */
-    designerPage: '/git/web03-dev-e2e/tests/web03-dev-e2e/templateDesignerFullDev.cfm',
+    /* THE CANONICAL HANDOFF. Jesse's site-independent Template Designer, the
+     * one production will use: a real page at its own root, not a dev clone,
+     * not our old templateDesignerFullDev.cfm wrapper, and never
+     * template=blank. Site-independent means it needs no site context — the
+     * numeric template id and the real Sterling product id are the whole
+     * contract:
+     *   /templateDesigner/templateDesigner.cfm?template=<id>&product=<id>
+     * Host-relative on purpose: served from web03 it stays on web03, and no
+     * hostname is hardcoded here. */
+    designerPage: '/templateDesigner/templateDesigner.cfm',
     /* The published dev-only test token from web03DevSecurity.cfc. Not a
      * secret: it exists so the real endpoint's CSRF check is exercised rather
      * than bypassed, and it grants nothing anywhere else. */
