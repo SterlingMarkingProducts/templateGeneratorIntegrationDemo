@@ -137,7 +137,18 @@
       || rest === 'generator/assets/stock-photo-manifest.json'
       || /^generator\/assets\/stock-photo-library\/[A-Za-z0-9._-]+\.png$/.test(rest)
       || rest === 'generator/assets/logo-asset-manifest.json'
-      || /^generator\/assets\/logo-library\/[A-Za-z0-9._-]+\.png$/.test(rest);
+      || /^generator\/assets\/logo-library\/[A-Za-z0-9._-]+\.png$/.test(rest)
+      /* The ICON BANK — the manifest and the 825 SVGs beside it, shipped in
+         this same clone under generator/icons/ rather than generator/assets/.
+         It was the one shipped library this list forgot, so on every
+         sterling.ca host IconBank.loadManifest() caught the block, returned
+         { icons: [] }, and EVERY <i data-icon="NAME"> the design asked for
+         collapsed to an empty <span>: the icon a design specified was never
+         the icon that reached the push. Same reasoning and the same shape as
+         the entries above — this page's own root plus a fixed sub-path, so it
+         can only ever reach files shipped with this clone. */
+      || rest === 'generator/icons/manifest.json'
+      || /^generator\/icons\/[A-Za-z0-9_-]+\/[A-Za-z0-9._-]+\.svg$/.test(rest);
   }
 
   function isDevAllowed(u, allowDevImport) {
