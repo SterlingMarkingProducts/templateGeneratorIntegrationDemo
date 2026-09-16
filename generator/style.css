@@ -1566,3 +1566,11 @@ html, body {
 .sp-conf.is-verified .sp-conf-dot { background: var(--success); }
 
 .sp-result-part { display: flex; align-items: center; }
+
+/* LIVE MODE (?mode=live): the product came from CCA and is locked for this
+   session. The temporary dev search control is hidden; the selected-product
+   card stays visible so the person can see what they are designing for. */
+.sterling-product-group.is-live-locked .sp-search-wrap,
+.sterling-product-group.is-live-locked .sp-results,
+.sterling-product-group.is-live-locked .sp-hint { display: none !important; }
+.sterling-product-group.is-live-locked .sp-clear { display: none !important; }

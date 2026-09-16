@@ -87,6 +87,20 @@
     return u.pathname === root + DEV_AI_ENDPOINT_REST;
   }
 
+  /* The LIVE site-independent Template Designer's two integration endpoints,
+   * and only those two. The production handoff calls them same-origin: the
+   * CSRF nonce first, then the import itself. Exact paths, fixed in source —
+   * nothing is read from the URL or the page, so no crafted link can widen
+   * this. Unlike the dev exceptions these do not require a dev clone root:
+   * the live Generator is not served from one. */
+  var LIVE_DESIGNER_PATHS = [
+    '/templateDesigner/templateImportToken.cfm',
+    '/templateDesigner/templateImport.cfm'
+  ];
+  function isLiveDesignerEndpoint(u) {
+    return LIVE_DESIGNER_PATHS.indexOf(u.pathname) !== -1;
+  }
+
   /* The live product catalogue, and only it. Same shape as the two above: one
    * exact path, fixed in source. */
   function isDevCatalogue(u) {
@@ -127,8 +141,13 @@
   }
 
   function isDevAllowed(u, allowDevImport) {
+    if (u.origin !== window.location.origin) return false;
+    /* The live Designer handoff, checked before the dev-clone requirement:
+     * these two endpoints are the production path and are valid whether or
+     * not this page is being served from a dev clone. */
+    if (isLiveDesignerEndpoint(u)) return true;
     var root = devCloneRoot();
-    if (!root || u.origin !== window.location.origin) return false;
+    if (!root) return false;
     return isDevCloneData(u, root)
       || isDevCloneAsset(u, root)
       || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiEndpoint(u, root)

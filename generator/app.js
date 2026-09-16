@@ -329,6 +329,13 @@ function resetOrientationToDefault(preferred) {
   return setOrientation(next, 'default', true);
 }
 
+/* The ONLY orientation entry point the live CCA handoff uses. It goes through
+ * setOrientation, so the value is still clamped to what the product actually
+ * supports — an unsupported request cannot produce an impossible canvas. */
+window.setGeneratorOrientation = function (next) {
+  return setOrientation(next, 'user');
+};
+
 orientationToggle?.addEventListener('click', (e) => {
   const btn = e.target.closest('.orient-btn');
   if (!btn || btn.disabled) return;

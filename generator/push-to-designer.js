@@ -1555,13 +1555,27 @@ async function pushToDesigner() {
       const product = window.SMPProductSelection && window.SMPProductSelection.get
         ? window.SMPProductSelection.get() : null;
       const productId = Number(product && product.id);
-      const dev = window.SMPWeb03Dev;
-      if (!dev || !dev.designerPage || !Number.isInteger(productId)) {
+      /* LIVE first (the production CCA handoff), the dev clone second. Both
+         publish the same one field, so this line is the only place that has
+         to know there are two. */
+      const target = window.SMPDesignerTarget || window.SMPWeb03Dev;
+      if (!target || !target.designerPage || !Number.isInteger(productId)) {
         throw new Error('Import mode is configured without a Template Designer target.');
+      }
+      /* THE PRODUCT MUST NOT DRIFT. In live mode the id that entered from CCA
+         is the id the Designer has to open with; if the selection no longer
+         matches it, refuse rather than hand off a different product. */
+      const sel = window.SMPProductSelection;
+      if (sel && typeof sel.isLiveMode === 'function' && sel.isLiveMode()) {
+        const fromCca = sel.liveProductId();
+        if (Number.isInteger(fromCca) && fromCca !== productId) {
+          throw new Error('The product changed after this Generator was opened '
+            + '(expected ' + fromCca + ', found ' + productId + '). Nothing was handed off.');
+        }
       }
       /* Built from the id the SERVER returned — never a stale hardcoded one,
          and never response.openUrl, which points at the production page. */
-      const url = dev.designerPage
+      const url = target.designerPage
         + '?template=' + encodeURIComponent(templateId)
         + '&product=' + encodeURIComponent(productId);
       (window.showSuccess || showError)('Draft ' + templateId

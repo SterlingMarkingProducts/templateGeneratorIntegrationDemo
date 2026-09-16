@@ -438,13 +438,83 @@
         setStatus('Dev clone: ' + catalogueSize + ' live product'
           + (catalogueSize === 1 ? '' : 's') + ' from designCentral-dev.');
       }
-      applyDefaultSelection();
+      if (isLiveMode()) { applyLiveSelection(); } else { applyDefaultSelection(); }
     }).catch(function (e) {
       input.disabled = true;
       setStatus(IMPORTABLE_ONLY
         ? 'Live designCentral-dev catalogue unavailable — no products can be offered.'
         : 'Product catalogue unavailable — the Generator still works without a product.', true);
       console.warn('[product-select] catalogue load failed', e);
+    });
+  }
+
+  /* ── LIVE MODE (?product=<numeric products.id>&mode=live) ───────────────
+   *
+   * The production entry: CCA links here with the product the person is
+   * already working on, so the Generator must open on THAT product and must
+   * not let it be changed. The id is resolved through the SAME provider a
+   * manual pick uses (provider.getById) — there is no second lookup path and
+   * nothing is invented: an id the catalogue does not carry selects nothing
+   * and says so.
+   *
+   * Nothing here runs unless mode=live is present, so the standalone/dev
+   * picker behaves exactly as it always has. */
+  function liveRequest() {
+    var q;
+    try { q = new URLSearchParams(window.location.search); } catch (e) { return null; }
+    if (String(q.get('mode') || '').toLowerCase() !== 'live') { return null; }
+    var raw = String(q.get('product') || '').trim();
+    /* products.id is numeric. A non-numeric value is refused rather than
+     * guessed at — never a part-number fallback, never a default product. */
+    if (!/^[0-9]+$/.test(raw)) { return { id: null, orientation: null, invalid: raw }; }
+    var o = String(q.get('orientation') || '').trim().toLowerCase();
+    return { id: parseInt(raw, 10), invalid: null,
+      orientation: (o === 'landscape' || o === 'portrait') ? o : null };
+  }
+  var LIVE = liveRequest();
+
+  /** True when this page was opened as the production CCA handoff. */
+  function isLiveMode() { return !!LIVE; }
+
+  /* The temporary dev picker is presentation only; live mode hides it and
+   * locks the selection for the life of the page. The product-driven form
+   * locking (dimensions, template type, pages) already happens inside
+   * applyProductToForm() the moment a product is selected — live mode adds
+   * only the "and it cannot be swapped" half. */
+  function applyLiveLock() {
+    if (!LIVE) return;
+    if (groupEl) { groupEl.classList.add('is-live-locked'); }
+    if (input) { input.disabled = true; }
+    hideResults();
+    /* Clear Product must not exist in live mode: the product came from CCA
+     * and the rest of the flow (import, Designer URL) depends on it. */
+    var clear = cardEl ? cardEl.querySelector('.sp-clear') : null;
+    if (clear) { clear.remove(); }
+  }
+
+  function applyLiveSelection() {
+    if (!LIVE || !provider) return;
+    if (LIVE.id === null) {
+      setStatus('This link did not carry a valid product id, so no product was '
+        + 'preselected. Open the Generator from the product page again.', true);
+      applyLiveLock();
+      return;
+    }
+    userChose = true;               // never let the default selection win
+    provider.getById(LIVE.id).then(function (p) {
+      select(p);                    // the SAME call a manual pick makes
+      applyLiveLock();
+      if (LIVE.orientation && typeof window.setGeneratorOrientation === 'function') {
+        /* Only ever a PREFERENCE: setOrientation clamps it to what the
+         * product actually supports, so an unsupported value cannot produce
+         * an impossible canvas. */
+        try { window.setGeneratorOrientation(LIVE.orientation); } catch (e) { /* keep product default */ }
+      }
+    }).catch(function (e) {
+      setStatus('Product ' + LIVE.id + ' is not available in this catalogue, so '
+        + 'no product was preselected.', true);
+      applyLiveLock();
+      console.warn('[product-select] live product ' + LIVE.id + ' unavailable', e);
     });
   }
 
@@ -467,6 +537,13 @@
   window.SMPProductSelection = {
     /** The selected normalized Product record, or null. */
     get: function () { return selected; },
+    /** True when this page was opened as the production CCA handoff
+     *  (?product=<id>&mode=live). Read by the Generator to use the live
+     *  importer and to keep the product locked. */
+    isLiveMode: isLiveMode,
+    /** The numeric products.id this page was opened with in live mode, or
+     *  null. This is the id that must survive all the way to the Designer. */
+    liveProductId: function () { return LIVE ? LIVE.id : null; },
     /** Creative template type implied by the product family, or '' if unknown. */
     templateTypeFor: function (p) {
       if (!p) return '';
