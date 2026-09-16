@@ -43,6 +43,19 @@
    * no crafted link can turn dev behaviour on anywhere else. */
   var DEV_CLONE_FOLDERS = ['/generator-web03-dev-e2e-phase2c/', '/generator-web03-dev-e2e-phase1/',
     '/generator-web03-dev-e2e/'];
+  /* The PRODUCTION Generator folder. Same idea as the dev clones above and the
+   * same constant-in-source rule, but it grants strictly less: a page served
+   * from here may read the files shipped beside it and nothing else. None of
+   * the dev exceptions (the dev import endpoint, the dev AI endpoint, the dev
+   * product catalogue) are reachable from it.
+   *
+   * Without this the production app could not read its OWN libraries: on
+   * web03.sterling.ca every same-origin fetch matches BLOCKED_HOST, and the
+   * "files shipped beside the page" exceptions were reachable only from a dev
+   * clone path. The design-asset library, the stock photographs, the logo
+   * library, the icon bank and the demo samples were all refused before they
+   * left the page, on the one deployment that is meant to be used for real. */
+  var APP_FOLDERS = ['/templateGenerator/'];
   var DEV_IMPORT_PATH  = '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm';
   /* Sterling's server-side Anthropic endpoint, shipped INSIDE this clone
    * (generator/api/claude.cfm). It owns the Anthropic credentials entirely,
@@ -59,14 +72,21 @@
   /* The clone directory this page is being served from, or null when it is not
    * being served from the dev clone at all. Built from the page's OWN path, so
    * it cannot be pointed anywhere else. */
-  function devCloneRoot() {
+  function rootFrom(folders) {
     var here = window.location.pathname;
-    for (var i = 0; i < DEV_CLONE_FOLDERS.length; i++) {
-      var at = here.indexOf(DEV_CLONE_FOLDERS[i]);
-      if (at !== -1) { return here.slice(0, at + DEV_CLONE_FOLDERS[i].length); }
+    for (var i = 0; i < folders.length; i++) {
+      var at = here.indexOf(folders[i]);
+      if (at !== -1) { return here.slice(0, at + folders[i].length); }
     }
     return null;
   }
+
+  function devCloneRoot() { return rootFrom(DEV_CLONE_FOLDERS); }
+
+  /* The production Generator directory this page is being served from, or null.
+   * Built from the page's OWN path, exactly like devCloneRoot(), so it cannot
+   * be pointed anywhere else. */
+  function appRoot() { return rootFrom(APP_FOLDERS); }
 
   /* The verified dev import endpoint, and only it. Two independent constants —
    * this one and the bootstrap's — have to name the same URL. */
@@ -114,26 +134,28 @@
     return u.pathname === DEV_CATALOGUE_PATH;
   }
 
-  /* The clone's OWN committed catalogue and demo files, read from its own
+  /* The build's OWN committed catalogue and demo files, read from its own
    * directory. product-select.js and demo-samples.js fetch these; on web03 the
-   * clone is served from web03.sterling.ca, so the guard was refusing the page
-   * its own static assets — which is what emptied the product picker and
-   * removed the demo shortcuts entirely. The path is composed from this page's
-   * own directory plus a plain file name, so it can only ever reach a file
-   * beside the page itself. */
-  function isDevCloneData(u, root) {
+   * page is served from web03.sterling.ca, so the guard was refusing it its
+   * own static assets — which is what emptied the product picker and removed
+   * the demo shortcuts entirely. The path is composed from this page's own
+   * directory plus a plain file name, so it can only ever reach a file beside
+   * the page itself. `root` is the dev clone root or the production app root;
+   * the rule is identical either way, because the question it answers is
+   * "is this a file shipped beside this page?". */
+  function isOwnDataFile(u, root) {
     var rest = u.pathname.indexOf(root) === 0 ? u.pathname.slice(root.length) : null;
     if (rest === null || rest.indexOf('data/') !== 0) return false;
     return DEV_DATA_FILE.test(rest.slice('data/'.length));
   }
 
-  /* The clone's OWN design asset library — the manifest and the PNGs beside it.
+  /* The build's OWN design asset library — the manifest and the PNGs beside it.
    * Same reasoning as the data files above: served from this page's own
    * directory, and blocking them means the Generator silently loses the whole
    * asset library on any sterling.ca host. The path is composed from this
    * page's own root plus a fixed sub-path, so it can only ever reach files
-   * shipped with this clone. */
-  function isDevCloneAsset(u, root) {
+   * shipped with this build. */
+  function isOwnAssetFile(u, root) {
     var rest = u.pathname.indexOf(root) === 0 ? u.pathname.slice(root.length) : null;
     if (rest === null) return false;
     return rest === 'generator/assets/design-asset-manifest.json'
@@ -146,30 +168,38 @@
       || rest === 'generator/assets/logo-asset-manifest.json'
       || /^generator\/assets\/logo-library\/[A-Za-z0-9._-]+\.png$/.test(rest)
       /* The ICON BANK — the manifest and the 825 SVGs beside it, shipped in
-         this same clone under generator/icons/ rather than generator/assets/.
+         this same build under generator/icons/ rather than generator/assets/.
          It was the one shipped library this list forgot, so on every
          sterling.ca host IconBank.loadManifest() caught the block, returned
          { icons: [] }, and EVERY <i data-icon="NAME"> the design asked for
          collapsed to an empty <span>: the icon a design specified was never
          the icon that reached the push. Same reasoning and the same shape as
          the entries above — this page's own root plus a fixed sub-path, so it
-         can only ever reach files shipped with this clone. */
+         can only ever reach files shipped with this build. */
       || rest === 'generator/icons/manifest.json'
       || /^generator\/icons\/[A-Za-z0-9_-]+\/[A-Za-z0-9._-]+\.svg$/.test(rest);
   }
 
   function isDevAllowed(u, allowDevImport) {
     if (u.origin !== window.location.origin) return false;
-    /* The live Designer handoff, checked before the dev-clone requirement:
-     * these two endpoints are the production path and are valid whether or
-     * not this page is being served from a dev clone. */
+    /* The live Designer handoff, checked before any folder requirement: these
+     * endpoints are the production path and are valid whether or not this page
+     * is being served from a dev clone. */
     if (isLiveDesignerEndpoint(u)) return true;
     var root = devCloneRoot();
-    if (!root) return false;
-    return isDevCloneData(u, root)
-      || isDevCloneAsset(u, root)
-      || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiEndpoint(u, root)
-                             || isDevCatalogue(u)));
+    if (root) {
+      return isOwnDataFile(u, root)
+        || isOwnAssetFile(u, root)
+        || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiEndpoint(u, root)
+                               || isDevCatalogue(u)));
+    }
+    /* The PRODUCTION Generator: its own shipped files, and strictly nothing
+     * else. Deliberately NOT the dev import endpoint, NOT the dev AI endpoint
+     * and NOT the dev product catalogue — those stay reachable only from a dev
+     * clone, and this branch cannot reach them however this page is linked. */
+    var app = appRoot();
+    if (!app) return false;
+    return isOwnDataFile(u, app) || isOwnAssetFile(u, app);
   }
 
   function isBlocked(url, allowDevImport) {
