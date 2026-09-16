@@ -129,6 +129,11 @@ const icon = await page.evaluate(async () => {
 is(icon.isSvg && icon.len > 100, 'IconBank.getSvg("phone") returns real SVG markup',
    icon.len + ' bytes');
 
+console.log('\n   and the app\'s OWN server-side AI endpoint is reachable');
+const ai = await probe(['api/claude.cfm']);
+is(ai[0] === 'allowed',
+   'generator/api/claude.cfm under the production root is allowed', ai[0]);
+
 console.log('\n6  the live product endpoint still works from this path');
 const live = await page.evaluate(() =>
   fetch('/templateDesigner/productInfo.cfm?product=6505')
@@ -141,7 +146,14 @@ const deny = [
   ['a cross-origin Sterling host', 'https://designercentral.sterling.ca/anything.json'],
   ['the dev import endpoint', '/git/web03-dev-e2e/tests/web03-dev-e2e/templateImport.cfm'],
   ['the dev product catalogue', '/git/web03-dev-e2e/tests/web03-dev-e2e/devProductCatalogue.cfm'],
-  ['the dev AI endpoint', 'api/claude.cfm'],
+  ['a different .cfm beside the AI endpoint', 'api/other.cfm'],
+  ['a near-miss on the AI endpoint name', 'api/claude.cfm.bak'],
+  ['a path below the AI endpoint', 'api/claude.cfm/extra'],
+  ['an arbitrary .cfm under the production root', '../anything.cfm'],
+  ['an arbitrary .cfm beside the page', 'report.cfm'],
+  ['the DEV clone AI endpoint', '/git/generator-web03-dev-e2e-phase2c/generator/api/claude.cfm'],
+  ['a cross-origin copy of the AI endpoint',
+   'https://designercentral.sterling.ca/templateGenerator/generator/api/claude.cfm'],
   ['any other TemplateDesigner page', '/templateDesigner/templateDesigner.cfm'],
   ['a file outside the shipped libraries', '../config/secrets.json'],
   ['a nested data path', '../data/nested/thing.json'],

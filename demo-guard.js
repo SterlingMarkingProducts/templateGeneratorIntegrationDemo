@@ -107,6 +107,23 @@
     return u.pathname === root + DEV_AI_ENDPOINT_REST;
   }
 
+  /* The PRODUCTION Generator's own server-side AI endpoint, and only it:
+   *   /templateGenerator/generator/api/claude.cfm
+   * Shipped inside this build, same origin, and it owns the Anthropic
+   * credentials entirely — the request that reaches it carries none, exactly
+   * like the import. Without this exception the live Generator cannot generate
+   * a design at all on a sterling.ca host.
+   *
+   * ONE exact path, composed from this page's own app root plus a constant
+   * fixed in source. It is a string equality, so it cannot admit another .cfm
+   * under generator/api/, another path under the app root, a query-string
+   * variant, or anything on another host. `root` here is only ever appRoot()
+   * — the dev clone has its own exception above and does not reach this. */
+  var APP_AI_ENDPOINT_REST = 'generator/api/claude.cfm';
+  function isAppAiEndpoint(u, root) {
+    return u.pathname === root + APP_AI_ENDPOINT_REST;
+  }
+
   /* The LIVE site-independent Template Designer's two integration endpoints,
    * and only those two. The production handoff calls them same-origin: the
    * CSRF nonce first, then the import itself. Exact paths, fixed in source —
@@ -193,13 +210,16 @@
         || (allowDevImport && (isDevImportEndpoint(u, root) || isDevAiEndpoint(u, root)
                                || isDevCatalogue(u)));
     }
-    /* The PRODUCTION Generator: its own shipped files, and strictly nothing
-     * else. Deliberately NOT the dev import endpoint, NOT the dev AI endpoint
-     * and NOT the dev product catalogue — those stay reachable only from a dev
-     * clone, and this branch cannot reach them however this page is linked. */
+    /* The PRODUCTION Generator: its own shipped files, its own AI endpoint, and
+     * strictly nothing else. Deliberately NOT the dev import endpoint, NOT the
+     * dev AI endpoint and NOT the dev product catalogue — those stay reachable
+     * only from a dev clone, and this branch cannot reach them however this
+     * page is linked. The AI exception is fetch-only, like the dev one: XHR and
+     * sendBeacon keep the unconditional guard. */
     var app = appRoot();
     if (!app) return false;
-    return isOwnDataFile(u, app) || isOwnAssetFile(u, app);
+    return isOwnDataFile(u, app) || isOwnAssetFile(u, app)
+      || (allowDevImport && isAppAiEndpoint(u, app));
   }
 
   function isBlocked(url, allowDevImport) {
