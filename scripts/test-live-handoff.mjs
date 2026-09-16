@@ -21,6 +21,15 @@ const TYPES = { '.html':'text/html','.js':'text/javascript','.json':'application
 const CAT_SRC = readFileSync(join(REPO,'scripts/test-product-type.mjs'),'utf8');
 const CATALOGUE = JSON.parse(CAT_SRC.slice(CAT_SRC.indexOf('const CATALOGUE = ')+18, CAT_SRC.indexOf(';\n', CAT_SRC.indexOf('const CATALOGUE = '))));
 
+/* The one live product this handoff test opens on, in the shape productInfo.cfm
+   returns — taken from the catalogue fixture so the two agree. */
+const LIVE_PRODUCTS = (function () {
+  const out = {};
+  (CATALOGUE.products || []).forEach(function (p) { if (p && p.id) out[p.id] = p; });
+  return out;
+}());
+let productHits = 0;
+
 const TOKEN = 'a'.repeat(64);
 const SERVER_TEMPLATE_ID = 41022;      // whatever the importer returns, used verbatim
 let tokenHits = 0, importReqs = [];
@@ -28,6 +37,21 @@ let tokenHits = 0, importReqs = [];
 const server = createServer(async (req,res)=>{
   const url = new URL(req.url,'http://x');
   if (url.pathname.endsWith('devProductCatalogue.cfm')) { res.writeHead(200,{'content-type':'application/json'}); res.end(JSON.stringify(CATALOGUE)); return; }
+  /* Live mode resolves its product from Sterling on every launch, never from
+     the bundled snapshot, so the harness has to answer the read-only product
+     lookup the same way productInfo.cfm does. Values are BCDP-CM's real ones;
+     test-live-product-lookup.mjs is where the dynamic behaviour is proved. */
+  if (url.pathname === '/templateDesigner/productInfo.cfm') {
+    productHits++;
+    const id = Number(url.searchParams.get('product'));
+    const hit = LIVE_PRODUCTS[id];
+    res.writeHead(hit ? 200 : 404, {'content-type':'application/json','cache-control':'no-store'});
+    res.end(JSON.stringify(hit
+      ? { found: true, source: 'designCentral (live, read-only)', via: 'products', product: hit }
+      : { found: false, error: { code: 'not-found',
+          message: 'Sterling holds no active product with id ' + id + '.' } }));
+    return;
+  }
   if (url.pathname === '/templateDesigner/templateImportToken.cfm') {
     tokenHits++;
     res.writeHead(200,{'content-type':'application/json','cache-control':'no-store'});
@@ -89,6 +113,7 @@ const live = await page.evaluate(()=>{
 });
 is(live.isLive === true && live.liveId === 6505, 'live mode is active for the numeric id', String(live.liveId));
 is(live.id === 6505 && live.part === 'BCDP-CM', 'the REAL product is resolved via the existing provider', live.part);
+is(productHits === 1, 'resolved by ONE read-only live product lookup, not the bundled catalogue', String(productHits));
 is(!live.searchVisible && live.searchDisabled, 'the temporary product search is hidden and disabled');
 is(!live.clearVisible, 'Clear Product is not available');
 is(live.locked === true, 'the selection is locked for this session');

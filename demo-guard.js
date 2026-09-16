@@ -95,7 +95,14 @@
    * the live Generator is not served from one. */
   var LIVE_DESIGNER_PATHS = [
     '/templateDesigner/templateImportToken.cfm',
-    '/templateDesigner/templateImport.cfm'
+    '/templateDesigner/templateImport.cfm',
+    /* The read-only live product lookup. In live mode the Generator resolves
+       ?product=<numeric id> against Sterling's CURRENT product data through
+       this endpoint instead of any bundled catalogue, so without it the
+       production handoff cannot open on its product at all. GET only, one
+       numeric id, no writes — and, like the two above, an exact path fixed in
+       source. */
+    '/templateDesigner/productInfo.cfm'
   ];
   function isLiveDesignerEndpoint(u) {
     return LIVE_DESIGNER_PATHS.indexOf(u.pathname) !== -1;

@@ -155,6 +155,37 @@
    * time so both have to agree. */
   var LIVE_CATALOGUE_URL = '/git/web03-dev-e2e/tests/web03-dev-e2e/devProductCatalogue.cfm';
 
+  /* ── LIVE MODE: Sterling's CURRENT product data, queried every load ──────
+   *
+   * The two catalogue files above are a SNAPSHOT, and a snapshot is
+   * DEV/STANDALONE DATA ONLY. It is fine for the temporary picker, where a
+   * person browses whatever it happens to hold — it is not a source of truth
+   * for production. CCA links here with whatever active products.id the person
+   * is working on, most of Sterling's catalogue was never in the snapshot, and
+   * a product whose size, pages, orientation, bleed or designer variation
+   * changed in designCentral would keep the stale value until somebody rebuilt
+   * and redeployed a JSON file. Resolving a live handoff against it is exactly
+   * how ?product=6504&mode=live answered "not available in this catalogue" for
+   * a perfectly valid product.
+   *
+   * So in live mode the snapshot is NOT CONSULTED AT ALL — not as a source, not
+   * as a fallback. The numeric id is queried against Sterling's live product
+   * data on every launch, through a read-only GET beside the Designer's other
+   * two integration endpoints (same origin, same internal-network protection,
+   * site-family-free Foundry product model). Change a value in designCentral
+   * and the next launch has it; nothing is rebuilt and nothing is redeployed.
+   *
+   * The record it returns is the SAME clean shape the catalogue files carry, so
+   * it goes through the SAME normalizer, the SAME contract validation and the
+   * SAME select() call a manual pick makes. There is no second product model
+   * and nothing is invented: if the live source has no active product for that
+   * id, nothing is selected and the page says so.
+   *
+   * A CONSTANT, like every other integration endpoint in this build. Nothing is
+   * read from the URL or the page, and demo-guard.js holds the same path a
+   * second time so both have to agree. */
+  var LIVE_PRODUCT_URL = '/templateDesigner/productInfo.cfm';
+
   /* Belt and braces over the live source. The rule sterling-legacy.js applies
    * before an id may travel:
    *   productList: (pc.authoritative && typeof pc.productId === 'number'
@@ -406,6 +437,16 @@
       if (e.key === 'Escape') { hideResults(); input.blur(); }
     });
 
+    /* LIVE MODE takes no part in any of this. The picker is hidden and locked,
+     * the one product comes from Sterling's live data, and the bundled
+     * snapshot is never read — not for the selection, not for a fallback, not
+     * even loaded. Everything below is the standalone/dev picker. */
+    if (isLiveMode()) {
+      input.disabled = true;
+      applyLiveSelection();
+      return;
+    }
+
     /* The catalogue is FETCHED, not embedded — the same way the future API
      * provider will obtain records. */
     var loadRecords = IMPORTABLE_ONLY ? loadLiveRecords() : loadFileRecords();
@@ -438,7 +479,7 @@
         setStatus('Dev clone: ' + catalogueSize + ' live product'
           + (catalogueSize === 1 ? '' : 's') + ' from designCentral-dev.');
       }
-      if (isLiveMode()) { applyLiveSelection(); } else { applyDefaultSelection(); }
+      applyDefaultSelection();   // live mode returned above; this is dev/standalone only
     }).catch(function (e) {
       input.disabled = true;
       setStatus(IMPORTABLE_ONLY
@@ -472,6 +513,9 @@
       orientation: (o === 'landscape' || o === 'portrait') ? o : null };
   }
   var LIVE = liveRequest();
+  /* applyLiveSelection() is reachable from boot() directly now, not only from
+   * the catalogue load; it must still run exactly once. */
+  var liveSelectionRan = false;
 
   /** True when this page was opened as the production CCA handoff. */
   function isLiveMode() { return !!LIVE; }
@@ -492,8 +536,49 @@
     if (clear) { clear.remove(); }
   }
 
+  /** One product, queried live from Sterling on every call. Resolves to a
+   *  NORMALIZED product record. Rejects for every other outcome — no active
+   *  product, endpoint unreachable, unexpected shape — because live mode has
+   *  no second source to fall back to and must never show stale or invented
+   *  product facts. */
+  function fetchLiveProduct(id) {
+    return fetch(LIVE_PRODUCT_URL + '?product=' + encodeURIComponent(id),
+                 { method: 'GET', credentials: 'same-origin', cache: 'no-store' })
+      .then(function (res) {
+        return res.text().then(function (body) {
+          var doc = null;
+          try { doc = JSON.parse(body); } catch (e) { doc = null; }
+          if (!doc || typeof doc !== 'object') {
+            throw new Error('live product lookup returned a non-JSON response (HTTP '
+              + res.status + ')');
+          }
+          if (doc.found === false || (doc.error && doc.error.code === 'not-found')) {
+            throw new Error('Sterling holds no active product with id ' + id + '.');
+          }
+          if (!res.ok) {
+            throw new Error('live product lookup HTTP ' + res.status
+              + (doc.error && doc.error.message ? ': ' + doc.error.message : ''));
+          }
+          var raw = doc.product || doc;
+          if (!raw || raw.id === undefined || raw.id === null) {
+            throw new Error('live product lookup returned no product record');
+          }
+          /* THE SAME normalizer, contract validation and selectability rules a
+           * catalogue record goes through — one product model, one code path.
+           * The provider is built around this ONE live record; the bundled
+           * catalogue is not involved and is not even loaded in live mode. */
+          var one = new window.SMPProductProvider.CatalogueProductProvider({
+            records: [raw], source: 'sterling-templatedesigner-live' });
+          return one.getById(raw.id);
+        });
+      });
+  }
+
   function applyLiveSelection() {
-    if (!LIVE || !provider) return;
+    /* Deliberately NOT gated on `provider`: live mode never loads the bundled
+     * catalogue, so there is no provider to wait for. */
+    if (!LIVE || liveSelectionRan) return;
+    liveSelectionRan = true;
     if (LIVE.id === null) {
       setStatus('This link did not carry a valid product id, so no product was '
         + 'preselected. Open the Generator from the product page again.', true);
@@ -501,8 +586,11 @@
       return;
     }
     userChose = true;               // never let the default selection win
-    provider.getById(LIVE.id).then(function (p) {
+    setStatus('Loading product ' + LIVE.id + ' from Sterling…');
+    fetchLiveProduct(LIVE.id).then(function (p) {
       select(p);                    // the SAME call a manual pick makes
+      setStatus('Product ' + LIVE.id + (p.partNumber ? ' — ' + p.partNumber : '')
+        + ', read live from Sterling.');
       applyLiveLock();
       if (LIVE.orientation && typeof window.setGeneratorOrientation === 'function') {
         /* Only ever a PREFERENCE: setOrientation clamps it to what the
@@ -511,8 +599,10 @@
         try { window.setGeneratorOrientation(LIVE.orientation); } catch (e) { /* keep product default */ }
       }
     }).catch(function (e) {
-      setStatus('Product ' + LIVE.id + ' is not available in this catalogue, so '
-        + 'no product was preselected.', true);
+      /* No fallback, by design. Static catalogue data must never stand in for
+       * a live product fact. */
+      setStatus('Product ' + LIVE.id + ' could not be loaded from Sterling, so no '
+        + 'product was preselected. Open the Generator from the product page again.', true);
       applyLiveLock();
       console.warn('[product-select] live product ' + LIVE.id + ' unavailable', e);
     });
