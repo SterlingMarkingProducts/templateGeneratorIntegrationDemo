@@ -563,13 +563,31 @@
           if (!raw || raw.id === undefined || raw.id === null) {
             throw new Error('live product lookup returned no product record');
           }
+          /* CCA's numeric products.id is AUTHORITATIVE. A record for any other
+           * product is refused here, before it can be normalized or selected:
+           * a Generator opened for one product must never quietly become a
+           * Generator for another, and nothing downstream re-checks the id
+           * against the URL. */
+          if (Number(raw.id) !== Number(id)) {
+            throw new Error('The live product lookup answered with product '
+              + raw.id + ' for a request for product ' + id + '.');
+          }
           /* THE SAME normalizer, contract validation and selectability rules a
            * catalogue record goes through — one product model, one code path.
            * The provider is built around this ONE live record; the bundled
            * catalogue is not involved and is not even loaded in live mode. */
           var one = new window.SMPProductProvider.CatalogueProductProvider({
             records: [raw], source: 'sterling-templatedesigner-live' });
-          return one.getById(raw.id);
+          return one.getById(id).then(function (p) {
+            /* Checked again on the NORMALIZED record — the one select() would
+             * receive — so no step between here and the selection can change
+             * which product this is. */
+            if (!p || Number(p.id) !== Number(id)) {
+              throw new Error('The live product lookup resolved to product '
+                + (p && p.id) + ' for a request for product ' + id + '.');
+            }
+            return p;
+          });
         });
       });
   }
@@ -600,9 +618,14 @@
       }
     }).catch(function (e) {
       /* No fallback, by design. Static catalogue data must never stand in for
-       * a live product fact. */
-      setStatus('Product ' + LIVE.id + ' could not be loaded from Sterling, so no '
-        + 'product was preselected. Open the Generator from the product page again.', true);
+       * a live product fact, and neither may a DIFFERENT live product. */
+      var mismatch = /answered with product|resolved to product/.test(e && e.message || '');
+      setStatus(mismatch
+        ? 'Product mismatch: this Generator was opened for product ' + LIVE.id
+          + ', but Sterling answered with a different product. Nothing was '
+          + 'preselected. Open the Generator from the product page again.'
+        : 'Product ' + LIVE.id + ' could not be loaded from Sterling, so no '
+          + 'product was preselected. Open the Generator from the product page again.', true);
       applyLiveLock();
       console.warn('[product-select] live product ' + LIVE.id + ' unavailable', e);
     });

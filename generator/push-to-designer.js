@@ -1398,6 +1398,24 @@ async function inlineLibraryImages(objects) {
   }
 }
 
+/* In live mode the selected product MUST still be the numeric products.id CCA
+ * opened this Generator with. Throws otherwise; a no-op outside live mode and
+ * when no live id was supplied. `observed` lets a caller check an id it has
+ * already read, so both call sites judge exactly the same thing. */
+function assertLiveProductUnchanged(observed) {
+  const sel = window.SMPProductSelection;
+  if (!sel || typeof sel.isLiveMode !== 'function' || !sel.isLiveMode()) return;
+  const fromCca = sel.liveProductId();
+  if (!Number.isInteger(fromCca)) return;
+  const product = (typeof sel.get === 'function' && sel.get()) || null;
+  const productId = observed === undefined ? Number(product && product.id) : Number(observed);
+  if (productId === fromCca) return;
+  throw new Error('The product changed after this Generator was opened '
+    + '(expected ' + fromCca + ', found '
+    + (Number.isFinite(productId) ? productId : 'no product')
+    + '). Nothing was sent to the importer and no draft was created.');
+}
+
 /* Public: convert the current generated design. Returns {template, substitutions}. */
 /* Render an HTML string in a temporary, laid-out (but off-screen) iframe and
  * extract one page from it. Used for reliable double-sided extraction. */
@@ -1546,6 +1564,16 @@ async function pushToDesigner() {
        falls back — a failed import must surface as a failure, not quietly
        become a localStorage transfer. */
     if (transportMode === 'import') {
+      /* ── PRE-FLIGHT: the product must not have drifted ──────────────────
+         THIS RUNS BEFORE ANYTHING REACHES THE SERVER. In live mode the id
+         that entered from CCA is the id the Designer has to open with, and
+         the importer WRITES: it mints a draft template and stores its assets.
+         The same check used to sit after pushViaImport(), which meant a
+         mismatch was reported only once a production draft had already been
+         created for the wrong product — and reported as "Nothing was handed
+         off", which was untrue. Refusing here costs nothing: no token fetch,
+         no multipart POST, no asset upload, no draft, no redirect. */
+      assertLiveProductUnchanged();
       btn.textContent = 'Importing…';
       const { response } = await pushViaImport();
       const templateId = Number(response && response.templateId);
@@ -1562,17 +1590,11 @@ async function pushToDesigner() {
       if (!target || !target.designerPage || !Number.isInteger(productId)) {
         throw new Error('Import mode is configured without a Template Designer target.');
       }
-      /* THE PRODUCT MUST NOT DRIFT. In live mode the id that entered from CCA
-         is the id the Designer has to open with; if the selection no longer
-         matches it, refuse rather than hand off a different product. */
-      const sel = window.SMPProductSelection;
-      if (sel && typeof sel.isLiveMode === 'function' && sel.isLiveMode()) {
-        const fromCca = sel.liveProductId();
-        if (Number.isInteger(fromCca) && fromCca !== productId) {
-          throw new Error('The product changed after this Generator was opened '
-            + '(expected ' + fromCca + ', found ' + productId + '). Nothing was handed off.');
-        }
-      }
+      /* The same check again, on the id that is about to be put in the URL.
+         The pre-flight above is the one that protects the database; this one
+         catches a selection that changed DURING the import and keeps a wrong
+         product out of the Designer link. */
+      assertLiveProductUnchanged(productId);
       /* Built from the id the SERVER returned — never a stale hardcoded one,
          and never response.openUrl, which points at the production page. */
       const url = target.designerPage
