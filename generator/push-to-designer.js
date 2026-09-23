@@ -817,6 +817,64 @@ function round4(n) { return Math.round(n * 10000) / 10000; }
  * the card's real background, then draw each decorative block and each inline
  * SVG individually (standalone SVGs decode reliably). Worst case still yields a
  * legible, on-brand background instead of white. */
+/* Render the page EXACTLY as it looks — every element, nothing hidden — into a
+ * PNG data URI, for Sterling's proof/thumbnail pair.
+ *
+ * templateDesignerSubmit.cfm stores a proof PNG per page and a 300px thumbnail
+ * beside it, and records both names on templatepages; the CCA template chooser
+ * renders <TEMPLATEASSETURL>/thumb/<proofFileName>. An imported draft had no
+ * such file, which is why every Generator template showed there as a broken
+ * image. This produces the same artefact the Designer's own save produces.
+ *
+ * MUST run before extractObjectsFromDoc(), which marks elements data-tg-extract
+ * for the background raster to hide: a proof hides nothing. The snapshot is the
+ * same whole-card foreignObject technique rasterizeBackground() uses — kept
+ * separate rather than shared so the background path is untouched. */
+const PROOF_MAX_SIDE = 1200;
+async function renderPageProof(doc, rootEl) {
+  try {
+    const rect = rootEl.getBoundingClientRect();
+    if (rect.width < 2 || rect.height < 2) return null;
+    const scale = Math.min(2, PROOF_MAX_SIDE / Math.max(rect.width, rect.height));
+    const cw = Math.max(1, Math.round(rect.width * scale));
+    const ch = Math.max(1, Math.round(rect.height * scale));
+    const clone = rootEl.cloneNode(true);
+    clone.querySelectorAll('link, script').forEach(el => el.remove());
+    clone.querySelectorAll('img').forEach(el => {
+      if (!(el.getAttribute('src') || '').startsWith('data:')) el.remove();
+    });
+    const styles = [...doc.querySelectorAll('style')].map(st => st.textContent).join('\n');
+    const cssSafe = styles.replace(/@import[^;]+;/g, '').replace(/\]\]>/g, ']]&gt;');
+    const cs = doc.defaultView.getComputedStyle(rootEl);
+    const varDecls = [...new Set(styles.match(/--[\w-]+/g) || [])]
+      .map(n => [n, cs.getPropertyValue(n).trim()])
+      .filter(([, v]) => v)
+      .map(([n, v]) => n + ':' + v).join(';');
+    const wrapStyle = 'width:' + rect.width + 'px;height:' + rect.height + 'px;overflow:hidden;' + varDecls;
+    const html = '<div xmlns="http://www.w3.org/1999/xhtml" style="' + wrapStyle + '">'
+      + '<style><![CDATA[' + cssSafe + ']]></style>'
+      + new XMLSerializer().serializeToString(clone) + '</div>';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + rect.width + '" height="' + rect.height + '">'
+      + '<foreignObject width="100%" height="100%">' + html + '</foreignObject></svg>';
+    const img = new Image();
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    await img.decode();
+    const cv = document.createElement('canvas');
+    cv.width = cw; cv.height = ch;
+    const ctx = cv.getContext('2d');
+    /* The proof is what a person looks at: paper is white, never transparent. */
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cw, ch);
+    ctx.drawImage(img, 0, 0, cw, ch);
+    return cv.toDataURL('image/png');
+  } catch (e) {
+    /* No proof is the old behaviour: the import still succeeds, the template
+     * just has no thumbnail. Never fail a push over one. */
+    console.warn('[push] page proof could not be rendered:', e && e.message);
+    return null;
+  }
+}
+
 async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
   const rect = rootEl.getBoundingClientRect();
   /* Render at ~300 dpi (print standard) so the background stays crisp when the
@@ -1145,7 +1203,15 @@ function buildSterlingTemplate(pages, payload) {
   window.SMPPush = window.SMPPush || {};
   window.SMPPush.lastNormalizedDesign = doc;
 
-  return window.SterlingLegacyAdapter.toSterlingTemplate(doc);
+  const template = window.SterlingLegacyAdapter.toSterlingTemplate(doc);
+  /* Page proofs travel BESIDE the canvas, not inside it: they are artefacts for
+   * Sterling's proof/thumb store, never design objects. Null for any page that
+   * has none (a synthesized back page, or a render that failed), which the
+   * importer treats exactly as it treated every page before proofs existed. */
+  template.pageProofs = pages.map(function (pg, i) {
+    return { pageNumber: i, dataUri: (pg && pg.proof) || null };
+  });
+  return template;
 }
 
 /* Preview-only decorations the generator injects for ON-SCREEN fitting. They
@@ -1226,6 +1292,9 @@ async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
   const targetH = bleedAuthored ? bleedH : trimH;
   const factor = targetW / rootRect.width;
 
+  /* BEFORE extraction marks anything: a proof shows the page as it is. */
+  const proof = await renderPageProof(doc, rootEl);
+
   const objects = extractObjectsFromDoc(doc, rootEl, factor, substitutions);
   /* Recoloured brand marks: the engine's documented technique is a div whose
    * CSS mask is the silhouette PNG and whose background is the palette colour.
@@ -1250,7 +1319,7 @@ async function extractPage(frame, trimW, trimH, bleedPx, substitutions) {
    * room for photo bytes. A fetch failure leaves the URL in place — the
    * import accepts it, as before. */
   if (transportMode === 'import') await inlineLibraryImages(all);
-  return { objects: all, bleedAuthored };
+  return { objects: all, bleedAuthored, proof };
 }
 
 /* Find div-with-mask brand marks and turn each into a real image object. */
@@ -1580,8 +1649,8 @@ async function pushToDesigner() {
       if (!Number.isInteger(templateId) || templateId <= 0) {
         throw new Error('The import succeeded but returned no numeric templateId.');
       }
-      const product = window.SMPProductSelection && window.SMPProductSelection.get
-        ? window.SMPProductSelection.get() : null;
+      const sel = window.SMPProductSelection;
+      const product = sel && sel.get ? sel.get() : null;
       const productId = Number(product && product.id);
       /* LIVE first (the production CCA handoff), the dev clone second. Both
          publish the same one field, so this line is the only place that has
@@ -1597,9 +1666,14 @@ async function pushToDesigner() {
       assertLiveProductUnchanged(productId);
       /* Built from the id the SERVER returned — never a stale hardcoded one,
          and never response.openUrl, which points at the production page. */
+      /* CCA's site family id, carried straight through when it supplied one.
+         The Designer uses it to preselect the Sites control; it takes no part
+         in product resolution at either end. */
+      const siteId = (sel && typeof sel.liveSiteId === 'function') ? sel.liveSiteId() : null;
       const url = target.designerPage
         + '?template=' + encodeURIComponent(templateId)
-        + '&product=' + encodeURIComponent(productId);
+        + '&product=' + encodeURIComponent(productId)
+        + (Number.isInteger(siteId) ? '&site=' + encodeURIComponent(siteId) : '');
       (window.showSuccess || showError)('Draft ' + templateId
         + ' created (not live, no mappings). Opening the Template Designer…');
       const opened = window.open(url, 'sterlingTemplateDesigner');

@@ -70,6 +70,13 @@
     return { eligible: true, reason: 'ok', message: '' };
   }
 
+  function base64ToBytes(b64) {
+    var bin = atob(b64);
+    var out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
   function AE() {
     var m = root.SMPAssetExtract;
     if (!m) throw new Error('integration/adapters/asset-extract.js must load before transport-import.js');
@@ -143,8 +150,21 @@
       },
     };
 
+    /* Page proofs: one PNG per page, for Sterling's proof/thumb store. They are
+     * NOT canvas content and never enter the manifest JSON — the importer
+     * matches them to pages by the part name alone. A template with none
+     * imports exactly as it did before they existed. */
+    var proofs = [];
+    (template.pageProofs || []).forEach(function (p) {
+      if (!p || typeof p.dataUri !== 'string' || !p.dataUri) return;
+      var parsed;
+      try { parsed = AE().parseDataUri(p.dataUri); } catch (e) { return; }
+      if (parsed.mime !== 'image/png') return;
+      proofs.push({ pageNumber: p.pageNumber, bytes: base64ToBytes(parsed.base64) });
+    });
+
     return { manifest: manifest, assets: extracted.assets, stats: extracted.stats,
-             pageSizes: sizes };
+             pageSizes: sizes, proofs: proofs };
   }
 
   /** Assemble the multipart body from a built request. */
@@ -152,6 +172,12 @@
     if (typeof FormData === 'undefined') throw ImportError('bad-request', 'FormData is unavailable.');
     var fd = new FormData();
     fd.append('manifest', JSON.stringify(built.manifest));
+    (built.proofs || []).forEach(function (p) {
+      /* proof_<pageNumber>. The importer validates the bytes itself; the name
+       * carries nothing but a page index this client already numbered. */
+      fd.append('proof_' + p.pageNumber, new Blob([p.bytes], { type: 'image/png' }),
+                'proof_' + p.pageNumber + '.png');
+    });
     built.assets.forEach(function (a) {
       /* The filename is a generated refId + a MIME-derived extension. It is
        * never a user-supplied name, and the server must still derive the real

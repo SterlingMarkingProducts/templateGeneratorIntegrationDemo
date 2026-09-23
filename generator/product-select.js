@@ -507,9 +507,16 @@
     var raw = String(q.get('product') || '').trim();
     /* products.id is numeric. A non-numeric value is refused rather than
      * guessed at — never a part-number fallback, never a default product. */
-    if (!/^[0-9]+$/.test(raw)) { return { id: null, orientation: null, invalid: raw }; }
+    if (!/^[0-9]+$/.test(raw)) { return { id: null, site: null, orientation: null, invalid: raw }; }
     var o = String(q.get('orientation') || '').trim().toLowerCase();
+    /* CCA's own site family id, carried through for ASSIGNMENT ONLY: the
+     * Designer uses it to preselect the Sites control on the imported draft.
+     * It never narrows a product lookup — Foundry product resolution is
+     * site-family-free and stays that way. Numeric or absent; anything else
+     * is dropped rather than guessed at. */
+    var st = String(q.get('site') || '').trim();
     return { id: parseInt(raw, 10), invalid: null,
+      site: /^[0-9]+$/.test(st) ? parseInt(st, 10) : null,
       orientation: (o === 'landscape' || o === 'portrait') ? o : null };
   }
   var LIVE = liveRequest();
@@ -657,6 +664,10 @@
     /** The numeric products.id this page was opened with in live mode, or
      *  null. This is the id that must survive all the way to the Designer. */
     liveProductId: function () { return LIVE ? LIVE.id : null; },
+    /** The numeric sitefamilies.id CCA opened this page with, or null.
+     *  ASSIGNMENT ONLY — it preselects the Designer's Sites control and is
+     *  never used to resolve or filter a product. */
+    liveSiteId: function () { return LIVE ? LIVE.site : null; },
     /** Creative template type implied by the product family, or '' if unknown. */
     templateTypeFor: function (p) {
       if (!p) return '';
