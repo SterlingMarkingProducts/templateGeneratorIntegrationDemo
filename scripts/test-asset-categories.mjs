@@ -477,6 +477,31 @@ is(byId.backHero && byId.backHero.guard === 'removed' && !byId.backHero.shown,
 is(byId.backOk && byId.backOk.guard === null && byId.backOk.shown && byId.backOk.vw === 16,
    'back: the 16px phone beside the number is kept', JSON.stringify(byId.backOk));
 
+/* 7g — the second live report (build tier1-30): a two-sided 8914 card whose
+ * front has a cream copy panel and a photo panel, the phone number wrapped in a
+ * narrow column at the bottom right of the copy panel, and a huge phone icon at
+ * the bottom left running off the card. Both a ~150px and a ~100px version. */
+const PHOTO_PANEL = `<img src="${PHOTO}" style="position:absolute;left:248px;top:0;width:112px;height:216px;object-fit:cover" alt="">`;
+const SECOND = (iconStyle) => `<!DOCTYPE html><html><head><style>body{margin:0}
+  .card{position:relative;width:360px;height:216px;background:#f1ece2;overflow:hidden;font-family:Georgia}
+  .t{position:absolute;color:#2f3a34}</style></head><body>
+  <div class="card card--front">
+    <div class="t" style="left:18px;top:66px;font-size:16px;white-space:nowrap">Dr. Elena Marsh</div>
+    <div class="t" style="left:18px;top:96px;font-size:8px;letter-spacing:3px;white-space:nowrap">DOCTOR OF CHIROPRACTIC</div>
+    <div class="t" style="left:182px;top:176px;width:30px;font-size:9px;line-height:12px">+1 415 208 7740</div>
+    ${ico('phone', PHONE_SVG, 'liveHero', iconStyle)}
+    ${PHOTO_PANEL}
+  </div>
+  <div class="card card--back" style="display:none"><div class="t" style="left:120px;top:90px;font-size:18px">MERIDIAN</div></div>
+  </body></html>`;
+for (const [label, st] of [['150px', 'left:18px;top:117px;width:150px;height:130px'],
+                           ['100px', 'left:18px;top:110px;width:100px;height:100px']]) {
+  const r = await renderIcons(SECOND(st));
+  const hero = r.icons.find((i) => i.id === 'liveHero');
+  is(hero && hero.guard === 'removed' && !hero.shown,
+     `the ${label} phone at the bottom left of the reported card is removed`, JSON.stringify(hero));
+}
+
 /* 7f — and the push of that two-sided design carries neither misplaced phone */
 const twoPush = await page.evaluate(async (html) => {
   generatedHtml = html;
