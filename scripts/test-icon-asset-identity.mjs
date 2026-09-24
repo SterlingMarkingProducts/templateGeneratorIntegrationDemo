@@ -148,6 +148,7 @@ const result = await page.evaluate(async ({ html }) => {
     const parts = [];
     for (const [k, v] of fd.entries()) {
       if (k === 'manifest') continue;
+      if (k.indexOf('proof_') === 0) continue;   // page proofs are not assets
       parts.push({ name: k, size: v.size, type: v.type });
     }
     return { ok: true, objs, parts,
