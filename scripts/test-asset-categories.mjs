@@ -133,7 +133,16 @@ const rendered = await page.evaluate(() => {
   const html = '<!DOCTYPE html><html><head></head><body><div class="card"></div></body></html>';
   const out = renderPreviewHtml(html, { templateType: 'Business Card', width: 3.75, height: 2.25, unit: 'in' });
   const stripped = window.SMPPush.stripPreviewDecorations(out);
+  const two = renderPreviewHtml('<!DOCTYPE html><html><head></head><body>'
+    + '<div class="card card--front"><div>Camille Rousseau</div></div>'
+    + '<div class="card card--back" style="display:none"><div>Back</div></div></body></html>',
+    { templateType: 'Business Card', width: 3.5, height: 2, unit: 'in', doubleSided: true });
+  const gi = out.indexOf('id="asset-category-guard"');
   return {
+    inHead: gi > -1 && gi < out.indexOf('</head>'),
+    /* the same rendered card with and without the guard must read the same */
+    contactSide: detectContactDomSideFromHtml(two) === detectContactDomSideFromHtml(
+      two.replace(/<script id="asset-category-guard">[\s\S]*?<\/script>/, '')) ? 'unchanged' : 'changed',
     guardInPreview: out.includes('id="asset-category-guard"'),
     guardSurvivesStrip: stripped.includes('id="asset-category-guard"'),
     layoutScriptStripped: !stripped.includes('id="layout-safety-script"'),
@@ -142,13 +151,16 @@ const rendered = await page.evaluate(() => {
 });
 is(rendered.guardInPreview, 'renderPreviewHtml injects the asset-category guard');
 is(rendered.once === 1, 'exactly once', String(rendered.once));
+is(rendered.inHead, 'the guard lives in <head>, outside every card\'s markup');
+is(rendered.contactSide === 'unchanged',
+   'the guard\'s own source never tips contact-side detection toward the back card', rendered.contactSide);
 is(rendered.guardSurvivesStrip && rendered.layoutScriptStripped,
    'the guard is not a preview decoration: it survives stripping while layout scripts are removed');
 
 /* ───────────────────────────────────────────────────────────────────────── */
 /* The design under test: a business card at the reference 360x216 with
  *   · a HERO phone icon (160px, top-right, no text within reach)  -> must go
- *   · a 90px phone icon glued to the e-mail line                   -> clamped
+ *   · a 60px phone icon beside a second phone number               -> clamped
  *   · an 18px phone icon beside the phone number                   -> kept as is
  *   · an 18px mail icon beside the e-mail                          -> kept as is
  *   · the library logo in a 120x40 box with object-fit: cover       -> contain
@@ -166,9 +178,10 @@ const DESIGN_HTML = `<!DOCTYPE html><html><head><style>body{margin:0}
   .hero{position:absolute;right:8px;top:8px;width:160px;height:160px;color:#c98a2b}
   .name{position:absolute;left:140px;top:64px;color:#123a5e;font-size:16px;font-weight:700}
   .ico{position:absolute;width:18px;height:18px;color:#123a5e}
-  .big{position:absolute;left:140px;top:128px;width:90px;height:90px;color:#123a5e}
+  .big{position:absolute;left:140px;top:124px;width:60px;height:60px;color:#123a5e}
   .p{position:absolute;left:164px;top:100px;color:#123a5e;font-size:11px;line-height:18px}
-  .e{position:absolute;left:236px;top:164px;color:#123a5e;font-size:11px;line-height:18px}
+  .p2{position:absolute;left:206px;top:146px;color:#123a5e;font-size:11px;line-height:18px}
+  .e{position:absolute;left:164px;top:192px;color:#123a5e;font-size:11px;line-height:18px}
 </style></head><body><div class="card">
   <img class="photo" src="${PHOTO}" alt="">
   <img class="accent" src="${DESIGN}" alt="">
@@ -179,7 +192,8 @@ const DESIGN_HTML = `<!DOCTYPE html><html><head><style>body{margin:0}
   <span class="ico" style="left:140px;top:100px" data-icon-name="phone">${PHONE_SVG}</span>
   <div class="p">555-0100</div>
   <span class="big" data-icon-name="phone">${PHONE_SVG}</span>
-  <span class="ico" style="left:214px;top:164px" data-icon-name="mail">${MAIL_SVG}</span>
+  <div class="p2">555-0199</div>
+  <span class="ico" style="left:140px;top:192px" data-icon-name="mail">${MAIL_SVG}</span>
   <div class="e">hello@lakeside.ca</div>
 </div></body></html>`;
 
@@ -217,7 +231,7 @@ const big = guard.icons.find((i) => i.cls === 'big');
 const small = guard.icons.filter((i) => /\bico\b/.test(i.cls));
 is(hero && hero.guard === 'removed' && !hero.shown, 'the 160px hero PHONE is removed (an icon has no hero placement)', JSON.stringify(hero));
 is(big && big.guard === 'clamped' && big.shown && big.w <= 36 && big.h <= 36 && big.w >= 16,
-   'the 90px phone beside a contact line is shrunk to the 16-36px band', JSON.stringify(big));
+   'the 60px phone beside its phone number is shrunk to the 16-36px band', JSON.stringify(big));
 is(small.length === 2 && small.every((i) => i.guard === null && i.shown && i.w === 18 && i.h === 18),
    'the 18px phone + mail beside their lines are left exactly as drawn', JSON.stringify(small));
 is(guard.icons.every((i) => i.kind === 'icon'), 'every icon-bank span is tagged data-asset-kind="icon"');
@@ -340,7 +354,7 @@ const scaled = await page.evaluate(async (html) => {
   /* the same card at 2x: a 60px icon there is a 30px icon on the reference canvas */
   const big = html.replace('width:360px;height:216px', 'width:720px;height:432px')
     .replace('class="big"', 'class="big" style="width:60px;height:60px;left:280px;top:256px"')
-    .replace('class="p"', 'class="p" style="left:344px;top:200px"');
+    .replace('class="p2"', 'class="p2" style="left:344px;top:276px"');
   const out = renderPreviewHtml(big, { templateType: 'Business Card', width: 7.5, height: 4.5, unit: 'in' });
   const f = document.createElement('iframe');
   f.style.cssText = 'position:fixed;left:-5000px;top:0;width:800px;height:500px;border:0';
@@ -354,6 +368,128 @@ const scaled = await page.evaluate(async (html) => {
 }, DESIGN_HTML);
 is(scaled.limits.absoluteMax === 96 && scaled.limits.normalMax === 72, 'limits scale with the canvas short side', JSON.stringify(scaled.limits));
 is(scaled.guard === null && scaled.w === 60, 'a 60px icon on a 720x432 canvas is within band and untouched', JSON.stringify(scaled));
+
+/* ───────────────────────────────────────────────────────────────────────── */
+console.log('\n7  an icon must sit beside the information it stands for — on either side of the card');
+/* Render `html` exactly as the preview does, optionally flip to the back the
+ * way the app does (inline display toggle, no reload), and report every icon. */
+async function renderIcons(html, opts = {}) {
+  return page.evaluate(async ({ html, opts }) => {
+    const out = renderPreviewHtml(html, { templateType: 'Business Card', width: 3.75, height: 2.25, unit: 'in' });
+    const f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;left:-5000px;top:0;width:' + (opts.frameW || 400) + 'px;height:300px;border:0';
+    document.body.appendChild(f);
+    await new Promise((r) => { f.addEventListener('load', r, { once: true }); f.srcdoc = out; });
+    await new Promise((r) => setTimeout(r, 900));
+    const d = f.contentDocument;
+    if (opts.flip) {
+      d.querySelector('.card--front').style.display = 'none';
+      d.querySelector('.card--back').style.display = 'block';
+      await new Promise((r) => setTimeout(r, 900));
+    }
+    const icons = [...d.querySelectorAll('[data-icon-name]')].map((s) => {
+      const r = s.getBoundingClientRect(), root = s.closest('.card') || d.body, rr = root.getBoundingClientRect();
+      const k = rr.width ? root.offsetWidth / rr.width : 1;         // undo the preview's body scale only
+      return { id: s.id || s.className, name: s.getAttribute('data-icon-name'),
+        guard: s.getAttribute('data-asset-guard'), reason: s.getAttribute('data-asset-guard-reason'),
+        shown: getComputedStyle(s).display !== 'none' && getComputedStyle(s).visibility !== 'hidden',
+        vw: Math.round(r.width * k), vh: Math.round(r.height * k) };
+    });
+    const report = f.contentWindow.__smpAssetGuardReport;
+    f.remove();
+    return { icons, report };
+  }, { html, opts });
+}
+const ico = (name, svg, id, style) => `<span id="${id}" data-icon-name="${name}" style="position:absolute;display:inline-block;color:#333;${style}">${svg}</span>`;
+const GLOBE_SVG = await readFile(join(REPO, 'generator/icons/minimal/globe.svg'), 'utf8');
+const PIN_SVG = await readFile(join(REPO, 'generator/icons/minimal/map-pin.svg'), 'utf8');
+const STAR_SVG = await readFile(join(REPO, 'generator/icons/minimal/star.svg'), 'utf8');
+const CARD = (inner, extraCss = '') => `<!DOCTYPE html><html><head><style>body{margin:0}
+  .card{position:relative;width:360px;height:216px;background:#f3eee4;overflow:hidden;font-family:Georgia}
+  .t{position:absolute;color:#333;white-space:nowrap}${extraCss}</style></head><body><div class="card">${inner}</div></body></html>`;
+
+/* 7a — the reported card: a ~64px phone beside the NAME/TITLE, no phone number anywhere */
+const shot = await renderIcons(CARD(`
+  <div class="t" style="left:120px;top:30px;font-size:26px">Eleanor Vance</div>
+  <div class="t" style="left:120px;top:66px;font-size:13px;font-style:italic">Doctor of Chiropractic</div>
+  ${ico('phone', PHONE_SVG, 'shotPhone', 'left:20px;top:84px;width:64px;height:56px')}`));
+const sp = shot.icons.find((i) => i.id === 'shotPhone');
+is(sp && sp.guard === 'removed' && !sp.shown,
+   'a 64px phone next to "Doctor of Chiropractic" with no phone number is REMOVED, not merely shrunk', JSON.stringify(sp));
+
+/* 7b — even a correctly-sized phone is not placed beside the wrong information */
+const wrong = await renderIcons(CARD(`
+  <div class="t" style="left:44px;top:66px;font-size:13px">Doctor of Chiropractic</div>
+  ${ico('phone', PHONE_SVG, 'smallWrong', 'left:20px;top:66px;width:18px;height:18px')}
+  <div class="t" style="left:44px;top:120px;font-size:12px">www.vancechiro.ca</div>
+  ${ico('mail', MAIL_SVG, 'mailWrong', 'left:20px;top:120px;width:18px;height:18px')}`));
+is(wrong.icons.every((i) => i.guard === 'removed' && !i.shown),
+   'an 18px phone beside a job title, and an 18px envelope beside a web address, are both removed',
+   JSON.stringify(wrong.icons.map((i) => [i.id, i.guard, i.reason])));
+
+/* 7c — contact rows: each small icon beside ITS OWN line is kept exactly as drawn */
+const rows = await renderIcons(CARD(`
+  ${ico('phone', PHONE_SVG, 'rPhone', 'left:20px;top:40px;width:16px;height:16px')}
+  <div class="t" style="left:42px;top:40px;font-size:12px">(416) 555-0100</div>
+  ${ico('mail', MAIL_SVG, 'rMail', 'left:20px;top:70px;width:16px;height:16px')}
+  <div class="t" style="left:42px;top:70px;font-size:12px">eleanor@vancechiro.ca</div>
+  ${ico('globe', GLOBE_SVG, 'rWeb', 'left:20px;top:100px;width:16px;height:16px')}
+  <div class="t" style="left:42px;top:100px;font-size:12px">vancechiro.ca</div>
+  ${ico('map-pin', PIN_SVG, 'rPin', 'left:20px;top:130px;width:16px;height:16px')}
+  <div class="t" style="left:42px;top:130px;font-size:12px">12 King St W, Toronto ON M5H 1A1</div>
+  ${ico('star', STAR_SVG, 'rStar', 'left:20px;top:160px;width:16px;height:16px')}
+  <div class="t" style="left:42px;top:160px;font-size:12px">Sports injury care</div>`));
+is(rows.icons.length === 5 && rows.icons.every((i) => i.guard === null && i.shown && i.vw === 16),
+   'phone, envelope, globe, pin and a generic star beside their own lines are all kept at 16px',
+   JSON.stringify(rows.icons.map((i) => [i.id, i.guard, i.reason, i.vw])));
+
+/* 7d — an icon made large by transform, or shown by an !important rule, cannot slip past */
+const sneaky = await renderIcons(CARD(`
+  ${ico('phone', PHONE_SVG, 'scaled', 'left:40px;top:90px;width:18px;height:18px;transform:scale(3.5)')}
+  <div class="t" style="left:112px;top:90px;font-size:12px">416-555-0100</div>
+  <span id="forced" class="forced" data-icon-name="phone" style="position:absolute;left:180px;top:20px;width:150px;height:150px">${PHONE_SVG}</span>`,
+  '.forced{display:inline-block!important;visibility:visible!important}'));
+const sc = sneaky.icons.find((i) => i.id === 'scaled'), fo = sneaky.icons.find((i) => i.id === 'forced');
+is(sc && sc.shown && sc.vw <= 36 && sc.vh <= 36, 'a phone blown up with transform:scale(3.5) is measured as drawn and brought back to ≤36px',
+   JSON.stringify(sc));
+is(fo && !fo.shown && fo.guard === 'removed', 'a hero phone forced visible with display/visibility !important is still removed', JSON.stringify(fo));
+
+/* 7e — two-sided product: the BACK is judged too, including after the app flips to it */
+const TWO_SIDED = `<!DOCTYPE html><html><head><style>body{margin:0}
+  .card{position:relative;width:360px;height:216px;background:#f3eee4;overflow:hidden;font-family:Georgia}
+  .t{position:absolute;color:#333;white-space:nowrap}</style></head><body>
+  <div class="card card--front">
+    <div class="t" style="left:120px;top:30px;font-size:26px">Eleanor Vance</div>
+    <div class="t" style="left:120px;top:66px;font-size:13px">Doctor of Chiropractic</div>
+    ${ico('phone', PHONE_SVG, 'frontPhone', 'left:20px;top:84px;width:64px;height:56px')}
+  </div>
+  <div class="card card--back" style="display:none">
+    <div class="t" style="left:120px;top:40px;font-size:18px">Vance Chiropractic</div>
+    ${ico('phone', PHONE_SVG, 'backHero', 'left:16px;top:60px;width:90px;height:90px')}
+    ${ico('phone', PHONE_SVG, 'backOk', 'left:120px;top:120px;width:16px;height:16px')}
+    <div class="t" style="left:142px;top:120px;font-size:12px">(416) 555-0100</div>
+  </div></body></html>`;
+const back = await renderIcons(TWO_SIDED, { flip: true });
+const byId = Object.fromEntries(back.icons.map((i) => [i.id, i]));
+is(byId.frontPhone && byId.frontPhone.guard === 'removed', 'front: the phone beside the title is removed', JSON.stringify(byId.frontPhone));
+is(byId.backHero && byId.backHero.guard === 'removed' && !byId.backHero.shown,
+   'back: the 90px phone is removed once the back is shown', JSON.stringify(byId.backHero));
+is(byId.backOk && byId.backOk.guard === null && byId.backOk.shown && byId.backOk.vw === 16,
+   'back: the 16px phone beside the number is kept', JSON.stringify(byId.backOk));
+
+/* 7f — and the push of that two-sided design carries neither misplaced phone */
+const twoPush = await page.evaluate(async (html) => {
+  generatedHtml = html;
+  lastPayload = { templateType: 'Business Card', width: 3.75, height: 2.25, unit: 'in', doubleSided: true };
+  const { template } = await window.SMPPush.convertCurrentDesign();
+  return template.pages.map((pg) => {
+    const objs = (typeof pg.canvasData === 'string' ? JSON.parse(pg.canvasData) : pg.canvasData).objects || [];
+    return objs.filter((o) => o.sterlingAssetKind === 'icon').map((o) => Math.round(o.width * (o.scaleX || 1)));
+  });
+}, TWO_SIDED);
+is(twoPush.length === 2, 'both sides are pushed', JSON.stringify(twoPush));
+is(twoPush.flat().length === 1 && twoPush.flat()[0] <= 17,
+   'across both pages exactly one icon is pushed: the 16px phone beside the number', JSON.stringify(twoPush));
 
 await br.close(); server.close();
 console.log(`\n${pass} passed, ${fail} failed`);

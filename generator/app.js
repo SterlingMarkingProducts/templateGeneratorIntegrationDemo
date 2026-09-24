@@ -1258,7 +1258,10 @@ ${bodyFill}
     const guardTag = window.SMPAssetCategory.guardScript({
       photoPrefix: designPhotoData ? String(designPhotoData).slice(0, 96) : '',
     });
-    out = out.includes('</body>') ? out.replace('</body>', guardTag + '</body>') : out + guardTag;
+    /* In <head>, never the body: the app's contact-side detection reads the
+     * card markup up to </body>, and the guard's own source (its email/URL
+     * patterns) must not be mistaken for a card's contact lines. */
+    out = out.includes('</head>') ? out.replace('</head>', guardTag + '</head>') : guardTag + out;
   }
   return appendUniversalFit(out);
 }

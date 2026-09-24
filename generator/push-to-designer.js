@@ -1266,7 +1266,7 @@ function normalizeHtmlForExtraction(html) {
       photoPrefix: (typeof designPhotoData !== 'undefined' && designPhotoData)
         ? String(designPhotoData).slice(0, 96) : '',
     });
-    clean = clean.includes('</body>') ? clean.replace('</body>', tag + '</body>') : clean + tag;
+    clean = clean.includes('</head>') ? clean.replace('</head>', tag + '</head>') : tag + clean;   // head: see injectLayoutSafety
   }
   return clean.includes('</head>')
     ? clean.replace('</head>', EXTRACT_NORMALIZE_CSS + '</head>')
