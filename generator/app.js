@@ -1248,6 +1248,18 @@ ${bodyFill}
   const fitScript = `<script id="layout-safety-script">(function(){var bp=${bottomPad},gap=8,minScale=${minScale};function R(c){var copy=c.querySelector(".zone-copy"),contact=c.querySelector(".zone-contact"),ch=c.clientHeight,cr=c.getBoundingClientRect();if(copy)copy.style.transform="";if(contact){contact.style.transform="";contact.style.top="";contact.style.bottom="";}c.querySelectorAll(".layout-hidden").forEach(function(el){el.classList.remove("layout-hidden");el.style.display="";});if(copy&&contact){var ch2=contact.scrollHeight;function sc(mx){var av=mx-copy.offsetTop;if(av>0&&copy.scrollHeight>av){var s=Math.max(minScale,av/copy.scrollHeight);copy.style.transform="scale("+s+")";copy.style.transformOrigin="top left";}}if(ch<=240){sc(ch-bp-ch2-gap);var cb=copy.getBoundingClientRect().bottom-cr.top,ct=Math.round(cb+gap),mct=ch-bp-ch2;if(ct>mct){sc(mct-gap);cb=copy.getBoundingClientRect().bottom-cr.top;ct=Math.min(mct,Math.round(cb+gap));}contact.style.bottom="auto";contact.style.top=ct+"px";}else{var mh=contact.offsetTop-gap;if(mh>copy.offsetTop+20)sc(mh);var cb2=copy.getBoundingClientRect().bottom-cr.top;if(cb2>contact.offsetTop-gap){contact.style.bottom="auto";contact.style.top=Math.min(ch-bp-ch2,cb2+gap)+"px";}}${isBold ? '' : 'var cpr=copy.getBoundingClientRect(),ct2=contact.offsetTop,cbt=ct2+contact.offsetHeight;c.querySelectorAll(".rule-line,[class*=\'rule-line\'],[class*=\'divider-line\']").forEach(function(l){var lr=l.getBoundingClientRect(),lt=l.offsetTop,cb3=copy.getBoundingClientRect().bottom-cr.top,cross=cpr&&lr.bottom>cpr.top+2&&lr.top<cpr.bottom-2,inBand=lt>=(copy.offsetTop||0)-4&&lt<=cbt+4;if(cross||inBand||(lt>=cb3-4&&lt<=ct2+4)){l.classList.add("layout-hidden");l.style.display="none";}});'}}else{c.querySelectorAll(".zone-copy,.zone-contact").forEach(function(z){z.style.transform="";var a=ch-z.offsetTop-bp;if(z.scrollHeight>a&&a>0){var s=Math.max(minScale,a/z.scrollHeight);z.style.transform="scale("+s+")";z.style.transformOrigin="top left";}});}}function f(){var c=document.querySelector(".card")||document.querySelector('[class*="card"]');if(c)R(c);}function r(){f();setTimeout(f,50);setTimeout(f,200);setTimeout(f,600);}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(r);else r();window.addEventListener("load",r);})();</script>`;
   let out = html.includes('</head>') ? html.replace('</head>', styleTag + '</head>') : styleTag + html;
   out = out.includes('</body>') ? out.replace('</body>', fitScript + '</body>') : out + fitScript;
+  /* ASSET CATEGORY GUARD. Every library-backed element is classified from its
+   * SOURCE (icon bank, library manifests, uploads) and the category rules are
+   * enforced in the frame itself — the prompt is not trusted to size an icon.
+   * Injected on every render, preview or extraction, and deliberately NOT a
+   * preview decoration: it must stay in the HTML the extraction frames and the
+   * download see, so what is pushed is what was corrected. */
+  if (window.SMPAssetCategory && !out.includes('id="asset-category-guard"')) {
+    const guardTag = window.SMPAssetCategory.guardScript({
+      photoPrefix: designPhotoData ? String(designPhotoData).slice(0, 96) : '',
+    });
+    out = out.includes('</body>') ? out.replace('</body>', guardTag + '</body>') : out + guardTag;
+  }
   return appendUniversalFit(out);
 }
 

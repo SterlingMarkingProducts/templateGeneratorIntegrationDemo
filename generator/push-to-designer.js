@@ -535,7 +535,7 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
             if (uri) {
               el.setAttribute('data-tg-extract', '1');
               const obj = makeImageObject(uri, round2(r.width), round2(r.height),
-                left, top, width, height, angle, style);
+                left, top, width, height, angle, style, assetKindOf(el, doc));
               /* Inline SVG kept as vector art rather than rasterized. The
                * adapter maps this role onto whatever the target designer calls
                * it (Sterling: sterlingType 'vectorArt'). */
@@ -551,7 +551,10 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     }
     if (el.tagName === 'IMG' && el.currentSrc && !el.currentSrc.startsWith('data:image/svg')) {
       el.setAttribute('data-tg-extract', '1');
-      objects.push(imageObjectRespectingFit(el, left, top, width, height, angle, style));
+      const imgObj = imageObjectRespectingFit(el, left, top, width, height, angle, style);
+      const ak = assetKindOf(el, doc);
+      if (ak) imgObj.assetKind = ak;
+      objects.push(imgObj);
       continue;
     }
 
@@ -737,14 +740,27 @@ function imageObjectRespectingFit(el, left, top, width, height, angle, style) {
     left, top, width, height, angle, style);
 }
 
-function makeImageObject(src, naturalW, naturalH, left, top, width, height, angle, style) {
+/* The SOURCE category of a rendered library asset — photo | icon | logo |
+ * designAsset — read from the guard's data-asset-kind tag, or resolved by the
+ * same authoritative rules (icon-bank span, library roots) when the tag is
+ * absent. null means "not a library asset" (a colour block, a snapshot). */
+function assetKindOf(el, doc) {
+  const AC = window.SMPAssetCategory;
+  if (!AC || !el) return null;
+  try { return AC.resolveElement(el, doc); } catch (e) { return null; }
+}
+
+function makeImageObject(src, naturalW, naturalH, left, top, width, height, angle, style, assetKind) {
   /* NORMALIZED image element: intrinsic size and target size are kept separate;
-   * the adapter derives Fabric's width/height + scaleX/scaleY from them. */
+   * the adapter derives Fabric's width/height + scaleX/scaleY from them.
+   * assetKind is the SOURCE category (photo | icon | logo | designAsset); a
+   * snapshot the Generator produced itself is 'raster'. */
   return window.SMPNormalized.image({
     x: round2(left), y: round2(top),
     width, height,
     naturalWidth: naturalW, naturalHeight: naturalH,
     rotation: angle, src, opacity: parseFloat(style.opacity),
+    assetKind: assetKind || 'raster',
   });
 }
 
@@ -1238,7 +1254,20 @@ function stripPreviewDecorations(html) {
 
 /* Strip preview decorations and pin the artboard to intrinsic geometry. */
 function normalizeHtmlForExtraction(html) {
-  const clean = stripPreviewDecorations(html);
+  let clean = stripPreviewDecorations(html);
+  /* The asset-category guard is NOT a preview decoration: it must run in the
+   * extraction frame too, so an icon the model drew as hero artwork is
+   * corrected before its box is lifted. The rendered HTML normally carries it
+   * already (injectLayoutSafety); a design handed to extraction some other way
+   * (a JSON upload, a test) gets it here. */
+  const AC = window.SMPAssetCategory;
+  if (AC && !clean.includes('id="' + AC.GUARD_SCRIPT_ID + '"')) {
+    const tag = AC.guardScript({
+      photoPrefix: (typeof designPhotoData !== 'undefined' && designPhotoData)
+        ? String(designPhotoData).slice(0, 96) : '',
+    });
+    clean = clean.includes('</body>') ? clean.replace('</body>', tag + '</body>') : clean + tag;
+  }
   return clean.includes('</head>')
     ? clean.replace('</head>', EXTRACT_NORMALIZE_CSS + '</head>')
     : EXTRACT_NORMALIZE_CSS + clean;
@@ -1365,7 +1394,7 @@ async function extractMaskMarks(doc, rootEl, factor) {
       out.push(makeImageObject(cv.toDataURL('image/png'), cv.width, cv.height,
         (r.left - rootRect.left) * factor + (bw - cw) / 2,
         (r.top - rootRect.top) * factor + (bh - ch) / 2,
-        round2(cw), round2(ch), rotationOf(st), st));
+        round2(cw), round2(ch), rotationOf(st), st, assetKindOf(el, doc)));
     } catch (e) { /* an unloadable mark stays in the raster attempt */ }
   }
   return out;

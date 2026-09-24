@@ -106,10 +106,20 @@
    * An adapter derives whatever scale representation it needs from the two.
    * `role` distinguishes card artwork that must bleed off every edge from
    * foreground content that must stay inside the trim. */
+  var ASSET_KINDS = ['photo', 'icon', 'logo', 'designAsset', 'raster'];
+
   function imageElement(o) {
+    /* assetKind is the asset's SOURCE category — photo, icon, logo or
+     * designAsset from the library it came from, 'raster' for a snapshot the
+     * Generator itself produced — and it is immutable from here on: adapters
+     * carry it as metadata, they never reinterpret it. Anything else is
+     * refused rather than guessed. */
+    var ak = o.assetKind === undefined || o.assetKind === null ? 'raster' : o.assetKind;
+    if (ASSET_KINDS.indexOf(ak) === -1) throw new Error('image assetKind must be one of ' + ASSET_KINDS.join('|') + ', got ' + ak);
     return {
       kind: 'image',
       role: o.role || 'content',            // 'background' | 'content'
+      assetKind: ak,
       x: round2(o.x), y: round2(o.y),
       width: round2(o.width), height: round2(o.height),
       naturalWidth: round2(o.naturalWidth), naturalHeight: round2(o.naturalHeight),
@@ -187,5 +197,6 @@
     ellipse: ellipseElement,
     polygon: polygonElement,
     image: imageElement,
+    ASSET_KINDS: ASSET_KINDS,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

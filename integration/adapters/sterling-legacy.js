@@ -97,6 +97,11 @@
      * 'backgroundArt' additionally drives bleed cover-scaling below. */
     if (el.role === 'background') o.sterlingType = 'backgroundArt';
     else if (el.role === 'vector') o.sterlingType = 'vectorArt';
+    /* The asset's source category, carried through the handoff as metadata.
+     * Distinct from sterlingType (which says how the Designer treats the
+     * object): an icon is an icon whether it travels as vectorArt or as a
+     * raster, and nothing downstream may reinterpret it. */
+    if (el.assetKind) o.sterlingAssetKind = el.assetKind;
     return o;
   }
 
