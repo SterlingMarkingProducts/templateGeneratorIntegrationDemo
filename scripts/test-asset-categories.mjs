@@ -516,6 +516,46 @@ is(twoPush.length === 2, 'both sides are pushed', JSON.stringify(twoPush));
 is(twoPush.flat().length === 1 && twoPush.flat()[0] <= 17,
    'across both pages exactly one icon is pushed: the 16px phone beside the number', JSON.stringify(twoPush));
 
+/* ───────────────────────────────────────────────────────────────────────── */
+console.log('\n8  plant artwork the model drew itself never reaches the preview');
+const FOLIAGE = 'assets/design-library/02_Soft_Green_Foliage_Spray.png';
+const botan = await page.evaluate(({ FOLIAGE, PHONE_SVG }) => {
+  const customer = '<svg class="leaf-logo" viewBox="0 0 10 10"><path d="M1 9 C 3 1, 7 1, 9 9"/></svg>';
+  document.getElementById('svgPaste').value = customer;
+  const html = '<!DOCTYPE html><html><head><style>.card{position:relative;width:360px;height:216px}</style></head><body>'
+    + '<div class="card card--front">'
+    + '<div class="sprig sprig--tl"><svg viewBox="0 0 40 80"><path d="M20 80 C 20 40, 20 20, 20 0"/><ellipse cx="14" cy="20" rx="6" ry="3"/></svg></div>'
+    + '<svg class="corner" viewBox="0 0 10 10"><!-- leaf spray --><g id="leaf-3"><ellipse cx="5" cy="5" rx="3" ry="1"/></g></svg>'
+    + '<div class="botanical-border" style="background:url(&quot;data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'/>&quot;)"></div>'
+    + '<svg class="arc-rule" viewBox="0 0 100 10"><path d="M0 10 Q 50 0 100 10"/></svg>'
+    + '<span data-icon-name="leaf">' + PHONE_SVG + '</span>'
+    + customer
+    + '<img class="spray" src="' + FOLIAGE + '" style="position:absolute;width:60px">'
+    + '<div class="name">Olivia Wilson</div></div>'
+    + '<div class="card card--back" style="display:none"><div class="name">Back</div></div></body></html>';
+  const out = renderPreviewHtml(html, { templateType: 'Business Card', width: 3.5, height: 2, unit: 'in', doubleSided: true });
+  const d = new DOMParser().parseFromString(out, 'text/html');
+  document.getElementById('svgPaste').value = '';
+  return {
+    removed: window.SMPLastBotanicalStrip,
+    sprig: !!d.querySelector('.sprig'), leafGroup: !!d.querySelector('#leaf-3'),
+    border: !!d.querySelector('.botanical-border'), arc: !!d.querySelector('.arc-rule'),
+    icon: !!d.querySelector('[data-icon-name="leaf"] svg'), customer: !!d.querySelector('svg.leaf-logo'),
+    library: !!d.querySelector('img.spray[src="' + FOLIAGE + '"]'),
+    back: /class="card card--back" style="display:none"/.test(out), doctype: /^<!DOCTYPE html>/i.test(out),
+    name: /Olivia Wilson/.test(out),
+  };
+}, { FOLIAGE, PHONE_SVG });
+console.log('     removed: ' + JSON.stringify(botan.removed));
+is(!botan.sprig, 'an inline SVG in a "sprig" wrapper is removed, wrapper and all');
+is(!botan.leafGroup, 'an SVG whose own parts are named leaf / commented "leaf spray" is removed');
+is(!botan.border, 'an SVG data-URI background named botanical is removed');
+is(botan.arc, 'an unlabelled decorative arc SVG stays (recreations may draw shapes)');
+is(botan.icon, 'an icon-bank icon stays (the icon rules judge it)');
+is(botan.customer, 'the customer\'s own SVG stays, even a leaf logo');
+is(botan.library, 'the botanical LIBRARY file stays — that is where plant artwork comes from');
+is(botan.back && botan.doctype && botan.name, 'the rest of the design is untouched (doctype, text, hidden back card)');
+
 await br.close(); server.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

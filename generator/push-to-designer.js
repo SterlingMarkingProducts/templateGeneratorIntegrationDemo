@@ -328,6 +328,53 @@ function rotationOf(style) {
   return Math.round(Math.atan2(b, a) * (180 / Math.PI) * 100) / 100;
 }
 
+/* Where a TRANSFORMED image really sits, for Fabric (origin left/top).
+ *
+ * getBoundingClientRect() of a rotated element is its enlarged axis-aligned
+ * box, and rotationOf() reads a mirror (scaleX(-1)) as a 180° turn. Handing
+ * those to Fabric put a rotated image in the wrong place at the wrong size,
+ * and a mirrored one upside down. This decomposes the computed matrix into a
+ * rotation, a mirror and a scale, takes the element's own layout size, and
+ * places the rotated box so its CENTRE lands where the browser drew it.
+ * Null for no transform, a pure translation (the box is already right) or a
+ * 3D matrix (left to the old behaviour). All results are in canvas units. */
+function placeRotated(cx, cy, w, h, deg) {
+  const t = deg * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
+  return { left: cx - (w / 2 * c - h / 2 * s), top: cy - (w / 2 * s + h / 2 * c) };
+}
+function transformedBox(el, style, r, rootRect, factor) {
+  const tr = style.transform;
+  if (!tr || tr === 'none') return null;
+  const m = /^matrix\(([^)]+)\)/.exec(tr);
+  if (!m) return null;
+  const [a, b, c, d] = m[1].split(',').map(parseFloat);
+  if (Math.abs(a - 1) < 1e-3 && Math.abs(b) < 1e-3 && Math.abs(c) < 1e-3 && Math.abs(d - 1) < 1e-3) return null;
+  const flipX = (a * d - b * c) < 0;
+  const theta = flipX ? Math.atan2(-b, -a) : Math.atan2(b, a);
+  const sx = Math.hypot(a, b), sy = Math.hypot(c, d);
+  let lw = el.offsetWidth, lh = el.offsetHeight;
+  if (!(lw > 0 && lh > 0)) { lw = parseFloat(style.width); lh = parseFloat(style.height); }
+  if (!(lw > 0 && lh > 0)) return null;
+  const w = lw * sx * factor, h = lh * sy * factor;
+  const cx = (r.left + r.width / 2 - rootRect.left) * factor;
+  const cy = (r.top + r.height / 2 - rootRect.top) * factor;
+  const angle = Math.round(theta * 180 / Math.PI * 100) / 100;
+  const p = placeRotated(cx, cy, w, h, angle);
+  return { left: p.left, top: p.top, width: w, height: h, angle, flipX, cx, cy, cssW: lw * sx, cssH: lh * sy };
+}
+/* Re-seat an image object whose CONTENT box (after object-fit) was computed in
+ * the unrotated frame of `tb`, so it rotates and mirrors about the right centre. */
+function seatInTransformedBox(obj, tb) {
+  const ox = obj.x + obj.width / 2 - tb.width / 2, oy = obj.y + obj.height / 2 - tb.height / 2;
+  const fx = tb.flipX ? -ox : ox;
+  const t = tb.angle * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
+  const p = placeRotated(tb.cx + fx * c - oy * s, tb.cy + fx * s + oy * c, obj.width, obj.height, tb.angle);
+  obj.x = round2(p.left); obj.y = round2(p.top);
+  obj.rotation = tb.angle;
+  if (tb.flipX) obj.flipX = true;
+  return obj;
+}
+
 /* True when a computed transform is at most a pure rotation (uniform, no
  * mirror/scale/skew/translate) — the only case an axis-anchored i-text overlay
  * can reproduce faithfully. Anything else (scaleX(-1), skew, translate) stays
@@ -531,11 +578,16 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
       if (logoSized) {
         try {
           if (r.width > 1 && r.height > 1) {
-            const uri = svgElementToDataUri(el, doc, r.width, r.height);
+            const tb = transformedBox(el, style, r, rootRect, factor);
+            const rw = tb ? tb.cssW : r.width, rh = tb ? tb.cssH : r.height;
+            const uri = svgElementToDataUri(el, doc, rw, rh);
             if (uri) {
               el.setAttribute('data-tg-extract', '1');
-              const obj = makeImageObject(uri, round2(r.width), round2(r.height),
-                left, top, width, height, angle, style, assetKindOf(el, doc));
+              const obj = tb
+                ? makeImageObject(uri, round2(rw), round2(rh), tb.left, tb.top, tb.width, tb.height, tb.angle, style, assetKindOf(el, doc))
+                : makeImageObject(uri, round2(r.width), round2(r.height),
+                    left, top, width, height, angle, style, assetKindOf(el, doc));
+              if (tb && tb.flipX) obj.flipX = true;
               /* Inline SVG kept as vector art rather than rasterized. The
                * adapter maps this role onto whatever the target designer calls
                * it (Sterling: sterlingType 'vectorArt'). */
@@ -551,7 +603,10 @@ function extractObjectsFromDoc(doc, rootEl, factor, substitutions) {
     }
     if (el.tagName === 'IMG' && el.currentSrc && !el.currentSrc.startsWith('data:image/svg')) {
       el.setAttribute('data-tg-extract', '1');
-      const imgObj = imageObjectRespectingFit(el, left, top, width, height, angle, style);
+      const tb = transformedBox(el, style, r, rootRect, factor);
+      const imgObj = tb
+        ? seatInTransformedBox(imageObjectRespectingFit(el, 0, 0, tb.width, tb.height, 0, style), tb)
+        : imageObjectRespectingFit(el, left, top, width, height, angle, style);
       const ak = assetKindOf(el, doc);
       if (ak) imgObj.assetKind = ak;
       objects.push(imgObj);
@@ -1415,14 +1470,17 @@ async function extractMaskMarks(doc, rootEl, factor) {
       /* The mask shorthand renders center/contain: the silhouette keeps its
        * own aspect inside the div. Hand Fabric that CONTENT box, not the div
        * box, or a wide badge div would stretch the mark. */
-      const bw = r.width * factor, bh = r.height * factor;
+      const tb = transformedBox(el, st, r, rootRect, factor);
+      const bw = tb ? tb.width : r.width * factor, bh = tb ? tb.height : r.height * factor;
       const mAspect = cv.width / cv.height;
       let cw = bw, ch = bh;
       if (mAspect > bw / bh) ch = bw / mAspect; else cw = bh * mAspect;
-      out.push(makeImageObject(cv.toDataURL('image/png'), cv.width, cv.height,
+      const mark = makeImageObject(cv.toDataURL('image/png'), cv.width, cv.height,
         (r.left - rootRect.left) * factor + (bw - cw) / 2,
         (r.top - rootRect.top) * factor + (bh - ch) / 2,
-        round2(cw), round2(ch), rotationOf(st), st, assetKindOf(el, doc)));
+        round2(cw), round2(ch), rotationOf(st), st, assetKindOf(el, doc));
+      if (tb) { mark.x = (bw - cw) / 2; mark.y = (bh - ch) / 2; seatInTransformedBox(mark, tb); }
+      out.push(mark);
     } catch (e) { /* an unloadable mark stays in the raster attempt */ }
   }
   return out;

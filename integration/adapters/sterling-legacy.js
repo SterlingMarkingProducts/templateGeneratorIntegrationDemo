@@ -102,6 +102,7 @@
      * object): an icon is an icon whether it travels as vectorArt or as a
      * raster, and nothing downstream may reinterpret it. */
     if (el.assetKind) o.sterlingAssetKind = el.assetKind;
+    if (el.flipX === true) o.flipX = true;
     return o;
   }
 

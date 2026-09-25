@@ -1287,6 +1287,18 @@ function renderPreviewHtml(htmlStr, payload) {
   if (designPhotoData && htmlStr.includes(UPLOADED_PHOTO_URL)) {
     htmlStr = htmlStr.split(UPLOADED_PHOTO_URL).join(designPhotoData);
   }
+  /* HARD RULE, enforced: plant artwork the model drew itself never reaches the
+   * preview, the download or the push. Library botanical files are untouched,
+   * and so is the customer's own SVG. */
+  if (window.SMPAssetCategory && window.SMPAssetCategory.stripDrawnBotanicals) {
+    const botan = window.SMPAssetCategory.stripDrawnBotanicals(htmlStr,
+      { customerSvg: (typeof svgPaste !== 'undefined' && svgPaste) ? svgPaste.value : '' });
+    if (botan.removed.length) {
+      console.warn('[generator] removed hand-drawn plant artwork (hard rule): ' + botan.removed.join(', '));
+      htmlStr = botan.html;
+    }
+    window.SMPLastBotanicalStrip = botan.removed;
+  }
   if (payload.templateType === 'Business Card') {
     contactDomSide = detectContactDomSideFromHtml(htmlStr);
   }

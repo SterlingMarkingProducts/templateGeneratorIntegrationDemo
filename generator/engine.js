@@ -84,6 +84,9 @@ TEXTURE / EFFECTS
 PHOTO REGIONS
 [Any photographic areas: position, size, subject — or "none".]
 
+BOTANICAL MOTIFS
+[Every flower, leaf, sprig, branch, vine, wreath, grass or other plant artwork, one per line: what it is (e.g. "thin leafy sprig", "peony cluster", "pampas grass"), its drawing style (line art / watercolour / flat illustration / photographic), its colour (hex), and its position, size and orientation as percentages of the canvas (e.g. "top-left corner, ~20% width, pointing down-right"). Write "none" if there is no plant artwork.]
+
 DISTINCTIVE FEATURES
 [The 2–3 things a viewer would name first when recognising this design.]
 
@@ -942,6 +945,92 @@ function assetMode() {
    blocked manifest is never mistaken for "the engine chose nothing". */
 let lastAssetReason = '';
 
+/* BOTANICAL FILES FOR A REFERENCE BEING RECREATED.
+ *
+ * Recreation supplies no decorative assets (the reference is the visual
+ * authority), which left a reference with leaf sprigs or flowers only two
+ * options: omit them, or break the hard rule and draw them. The model drew
+ * them. So when the reference's BOTANICAL MOTIFS section names plant artwork,
+ * the closest files from the library's botanical families are supplied for it.
+ *
+ * "Closest" is read from the analysis text against each file's manifest
+ * record: leaves/sprigs/ferns lean to the foliage spray, named flowers to the
+ * matching cluster, grasses to pampas; colour words against colour_family;
+ * line-art / monochrome motifs are matched on shape and recoloured by mask
+ * (the files are colour artwork, the library has no line art).
+ * Returns { assets: [...], motifText, monochrome } or null for "none". */
+const BOTANICAL_WORDS = /\b(flowers?|floral|florals|blooms?|blossoms?|petals?|peon(y|ies)|roses?|hydrangeas?|tulips?|daisy|daisies|lotus|wildflowers?|bouquets?|leaf|leaves|leafy|foliage|sprigs?|branch(es)?|twigs?|vines?|ferns?|fronds?|eucalyptus|olive branch|laurels?|wreaths?|garlands?|greenery|botanicals?|stems?|pampas|grass(es)?|wheat|ivy)\b/i;
+function referenceBotanicalSection(text) {
+  const t = String(text || '');
+  const m = /BOTANICAL MOTIFS\s*\n([\s\S]*?)(?:\n[A-Z][A-Z &/—-]{3,}\n|$)/.exec(t);
+  if (m) {
+    const body = m[1].replace(/^\s*\[|\]\s*$/g, '').trim();
+    if (!body || /^none\.?$/i.test(body) || !BOTANICAL_WORDS.test(body)) return '';
+    return body;
+  }
+  /* an older/partial analysis without the section: fall back to the text */
+  const lines = t.split('\n').filter((l) => BOTANICAL_WORDS.test(l));
+  return lines.join('\n');
+}
+function pickReferenceBotanicals(analysisText) {
+  const motif = referenceBotanicalSection(analysisText);
+  if (!motif || !assetLibrary) return null;
+  const pool = assetLibrary.assets.filter((a) => a.category === 'floral'
+    || a.family === 'botanical-spray' || a.family === 'floral-cluster');
+  if (!pool.length) return null;
+  const t = motif.toLowerCase();
+  const has = (re) => re.test(t);
+  const leafy = has(/\b(leaf|leaves|leafy|foliage|sprigs?|branch|twigs?|vines?|ferns?|fronds?|eucalyptus|olive|laurels?|greenery|stems?|ivy|wreaths?|garlands?)\b/);
+  const flowery = has(/\b(flowers?|floral|blooms?|blossoms?|petals?|peon|roses?|hydrangea|tulips?|daisy|daisies|wildflowers?|bouquets?)\b/);
+  const grassy = has(/\b(pampas|grass|grasses|wheat|dried)\b/);
+  const monochrome = has(/\b(line[- ]?art|line drawing|outline|outlined|thin line|linear|monochrome|single[- ]colou?r|one[- ]colou?r|black|charcoal|dark grey|dark gray|ink|sketch|engraved|silhouette)\b/);
+  const scored = pool.map((a) => {
+    const rec = [a.filename, a.family, a.visual_style, a.colour_family, a.mood].join(' ').toLowerCase();
+    let sc = 0;
+    if (leafy && a.family === 'botanical-spray' && /foliage|green/.test(rec)) sc += 6;
+    if (leafy && a.family === 'botanical-spray') sc += 2;
+    if (grassy && /pampas|grass/.test(rec)) sc += 7;
+    if (flowery && a.family === 'floral-cluster') sc += 4;
+    ['peony', 'rose', 'hydrangea', 'doodle', 'pampas'].forEach((w) => {
+      if (t.indexOf(w) !== -1 && rec.indexOf(w === 'rose' ? 'peony' : w) !== -1) sc += 5;
+    });
+    ['pink', 'blue', 'green', 'cream', 'coral', 'teal', 'sage', 'tan'].forEach((c) => {
+      if (t.indexOf(c) !== -1 && rec.indexOf(c) !== -1) sc += 1;
+    });
+    if (has(/\b(watercolou?r|painterly|painted)\b/) && /watercolour|painterly/.test(rec)) sc += 2;
+    if (has(/\b(flat|illustrat|folk|playful|colourful|colorful)\w*/) && /flat|doodle/.test(rec)) sc += 3;
+    /* a monochrome motif is matched on SHAPE: the recolourable spray reads
+       closest to a sprig; a dense painterly cluster does not */
+    if (monochrome && a.family === 'botanical-spray') sc += 2;
+    return { a: a, sc: sc };
+  }).filter((x) => x.sc > 0).sort((x, y) => y.sc - x.sc || x.a.filename.localeCompare(y.a.filename));
+  if (!scored.length) return null;
+  const out = [scored[0].a];
+  /* a reference with BOTH flowers and foliage may take one of each */
+  if (leafy && flowery) {
+    const other = scored.find((x) => x.a.family !== scored[0].a.family);
+    if (other) out.push(other.a);
+  }
+  return { assets: out, motifText: motif, monochrome: monochrome };
+}
+
+/* The prompt block that hands those files to the model, with the exact way to
+ * rebuild the reference's plant artwork from them. */
+function referenceBotanicalBlock(sel) {
+  if (!sel || !sel.assets.length) return '';
+  const files = sel.assets.map((a) => '- ' + a.filename + '\n    src: ' + a.url
+    + '  (a real file — reference it with this exact path)\n    shows: ' + a.visual_style
+    + ' · colours: ' + a.colour_family).join('\n');
+  return '\n\nSUPPLIED BOTANICAL ASSETS FOR THE REFERENCE\'S PLANT ARTWORK — the reference contains flowers/foliage, listed under BOTANICAL MOTIFS above. The Generator never draws plant artwork (the HARD RULE holds in recreation too), so rebuild EACH botanical element from these files instead, at the reference\'s position, size, angle and mirroring:\n'
+    + files + '\n'
+    + 'HOW:\n'
+    + '- Place each as <img src="[src]" style="position:absolute;...;object-fit:contain"> sized and positioned like the reference element; rotate or mirror it with transform (rotate(), scaleX(-1)) so it points the same way; repeat the same file for each occurrence (e.g. two opposite corners).\n'
+    + (sel.monochrome
+      ? '- The reference draws its plants in ONE colour (line art / monochrome). Match that: recolour the file with a div sized to it — style="background:[the reference hex];-webkit-mask:url([src]) center/contain no-repeat;mask:url([src]) center/contain no-repeat" — and keep it delicate: a small scale and, if the reference is light, a reduced opacity.\n'
+      : '- Keep the file\'s own colours unless the reference is clearly a different single colour; then recolour it with the mask technique: a div with background:[hex];-webkit-mask:url([src]) center/contain no-repeat;mask:url([src]) center/contain no-repeat.\n')
+    + '- Never write SVG paths, shapes or CSS for any leaf, stem, petal or flower. If a botanical element cannot be matched with these files, leave it out.';
+}
+
 function pickAssets(directionKey, density, brief, memoryKey, doubleSided, templateType,
     widthIn, heightIn, photoSelected, logoSelected, specialInstructions, industryText) {
   lastAssetReason = '';
@@ -1146,7 +1235,7 @@ const STOCK_INDUSTRY_SYNONYMS = {
   'dental':             'dentist|dentistry|dental office',
   'orthodontics':       'orthodontist|braces|invisalign',
   'physiotherapy':      'physio|physiotherapist|physical therapy|physical therapist',
-  'chiropractic':       'chiropractor',
+  'chiropractic':       'chiropractor|chiro|spine|spinal|spine care|spinal care|spine health|back pain|back care|back clinic|posture|subluxation',
   'massage':            'massage therapy|massage therapist|rmt',
   'rehab':              'rehabilitation|recovery clinic',
   'sports-medicine':    'sports med|athletic therapy',
@@ -1369,12 +1458,16 @@ function stockCompositionOk(photo, largeFormat) {
  *             composition restraint (a photo keeps decoration quiet) is
  *             handled downstream, never by cancelling another draw. */
 const PRODUCT_VISUAL_POLICY = {
-  stamp:     { stock: 0,    logo: 0.50, assetsForbidden: true },
-  nameplate: { stock: 0.20, logo: 0.60, assetCap: 0.85 },   // badges + nameplates
-  card:      { stock: 0.14, logo: 0.50 },                   // unchanged: photography is the exception
-  brochure:  { stock: 1.0,  logo: 0.50 },
-  promo:     { stock: 0.80, logo: 0.50 },                   // postcard / sign / poster / banner / flyer …
+  stamp:     { stock: 0,    logo: 0.50, industryLogo: 0.50, assetsForbidden: true },
+  nameplate: { stock: 0.20, logo: 0.60, industryLogo: 0.90, assetCap: 0.85 },   // badges + nameplates
+  card:      { stock: 0.14, logo: 0.50, industryLogo: 0.90 },                   // unchanged: photography is the exception
+  brochure:  { stock: 1.0,  logo: 0.50, industryLogo: 0.90 },
+  promo:     { stock: 0.80, logo: 0.50, industryLogo: 0.90 },                   // postcard / sign / poster / banner / flyer …
 };
+/*   industryLogo  the mark chance when the brief's trade has its OWN literal
+ *                 mark in the library (a spine for a chiropractor, a tooth for
+ *                 a dentist). `logo` is the chance for every other brief, which
+ *                 can only get a neutral abstract mark. */
 
 /* ── Product policy (stock photography), derived from the table above ─────
  *
@@ -1737,6 +1830,19 @@ const LOGO_NONE = {
   brochure:  1 - PRODUCT_VISUAL_POLICY.brochure.logo,
   general:   1 - PRODUCT_VISUAL_POLICY.promo.logo,
 };
+/* ...and when the trade has its own literal mark. */
+const LOGO_NONE_INDUSTRY = {
+  stamp:     1 - PRODUCT_VISUAL_POLICY.stamp.industryLogo,
+  nameplate: 1 - PRODUCT_VISUAL_POLICY.nameplate.industryLogo,
+  card:      1 - PRODUCT_VISUAL_POLICY.card.industryLogo,
+  brochure:  1 - PRODUCT_VISUAL_POLICY.brochure.industryLogo,
+  general:   1 - PRODUCT_VISUAL_POLICY.promo.industryLogo,
+};
+/* Trades so broad that a brief naming a specific trade as well is really
+ * about the specific one: "chiropractic clinic" is chiropractic, not a
+ * general medical clinic; "chiropractic wellness" is not a yoga studio. */
+const BROAD_INDUSTRY_SLUGS = ['medical-clinic', 'wellness', 'family-practice', 'specialist', 'spa',
+  'small-business', 'corporate', 'consulting', 'sports'];
 
 const recentLogos = new Map();
 const LOGO_MEMORY = 2;
@@ -1765,20 +1871,25 @@ function pickLogo(opts) {
   if (!lib.logos.length) { lastLogoReason = 'library is empty'; return null; }
 
   const productClass = stockProductClass(opts.templateType, opts.widthIn, opts.heightIn);
-  if (mode !== 'force') {
-    const none = LOGO_NONE[productClass] !== undefined ? LOGO_NONE[productClass] : 0.5;
-    if (Math.random() < none) {
-      lastLogoReason = 'this composition draws no mark';
-      return null;
-    }
-  }
 
   /* Tier B first, through the SAME strict matcher as the stock photos: a
      literal mark only for its own trade. No B match -> the neutral A pool. */
   const stock = stockLibrary;
   const slugs = (stock && stock.terms) ? matchStockIndustries(opts.industryText, stock) : [];
-  const bPool = lib.logos.filter((l) => l.tier === 'B'
-    && (l.industries || []).some((sl) => slugs.indexOf(sl) !== -1));
+  const markFor = (list) => lib.logos.filter((l) => l.tier === 'B'
+    && (l.industries || []).some((sl) => list.indexOf(sl) !== -1));
+  /* The SPECIFIC trade's own mark wins over a broad one the brief also names. */
+  const specific = slugs.filter((sl) => BROAD_INDUSTRY_SLUGS.indexOf(sl) === -1);
+  const bPool = markFor(specific).length ? markFor(specific) : markFor(slugs);
+
+  if (mode !== 'force') {
+    const table = bPool.length ? LOGO_NONE_INDUSTRY : LOGO_NONE;
+    const none = table[productClass] !== undefined ? table[productClass] : 0.5;
+    if (Math.random() < none) {
+      lastLogoReason = 'this composition draws no mark';
+      return null;
+    }
+  }
   const aPool = lib.logos.filter((l) => l.tier === 'A');
   let pool = bPool.length ? bPool : aPool;
   let tier = bPool.length ? 'B' : 'A';
@@ -1814,7 +1925,9 @@ function renderLogoBlock(sel, isStamp) {
     + colour + '\n'
     + '- Preserve its aspect ratio and transparency exactly — contain, never stretch, never crop through the silhouette.\n'
     + '- It CONSUMES one signature/graphic-element slot in the density contract — it does not extend the budget. If the design already has a strong hero (a photograph, a dominant asset), the mark steps down to a small signature.\n'
-    + '- USING IT IS OPTIONAL: if the composition is genuinely better as pure typography, leave it out.';
+    + (sel.tier === 'B'
+      ? '- USE IT: this is the mark made for this business\'s own trade, and the customer expects to see it. Place it as the brand mark (it may step down to a small signature beside the name when a photograph is the hero) — do not drop it for pure typography.'
+      : '- USING IT IS OPTIONAL: if the composition is genuinely better as pure typography, leave it out.');
 }
 
 /* ── Direction rotation for the DEFAULT path ───────────────────────────────
@@ -2707,7 +2820,14 @@ async function handleGenerate(body, send) {
       if (recreateRef) {
         recreatingRef = true;
         refImageForGen = img;
-        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. The reference is the PRIMARY VISUAL AUTHORITY for this generation: reproduce its overall composition, its major shapes at their approximate proportions, its visual hierarchy and alignment, its typography personality, its colour relationships, its spacing, its borders and frames, its texture treatment, any image placement, and its distinctive effects — curved or arc-following text, oversized concentric arcs, grain, and the like — using editable HTML/CSS/inline-SVG. CONTENT: where the user supplied their own business name or details, place THEIR content in the SAME typographic role the reference gives its own; where they supplied none, keep the reference's. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt intelligently to this product's real dimensions, bleed and safety margins if the aspect ratio differs — preserve the composition, never letterbox or distort it. This note OVERRIDES every generic instruction elsewhere in this prompt where they conflict: ignore any default direction, density, palette-stance, format-style or "invent an original design" guidance. Match what you see.\n\n${inspiration}`;
+        const refBotanicals = pickReferenceBotanicals(inspiration);
+        console.info('[generator] reference botanicals: ' + (refBotanicals
+          ? refBotanicals.assets.map((a) => a.filename).join(', ') + (refBotanicals.monochrome ? ' (recoloured, monochrome motif)' : '')
+          : 'none named in the reference'));
+        window.SMPLastReferenceBotanicals = refBotanicals
+          ? { assets: refBotanicals.assets.map((a) => a.filename), monochrome: refBotanicals.monochrome, motif: refBotanicals.motifText }
+          : null;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. The reference is the PRIMARY VISUAL AUTHORITY for this generation: reproduce its overall composition, its major shapes at their approximate proportions, its visual hierarchy and alignment, its typography personality, its colour relationships, its spacing, its borders and frames, its texture treatment, any image placement, and its distinctive effects — curved or arc-following text, oversized concentric arcs, grain, and the like — using editable HTML/CSS/inline-SVG. PLANT ARTWORK IS THE ONE EXCEPTION: flowers, leaves, sprigs, branches, vines and wreaths are NEVER drawn in SVG or CSS — they are rebuilt only from the SUPPLIED BOTANICAL ASSETS below, or left out. CONTENT: where the user supplied their own business name or details, place THEIR content in the SAME typographic role the reference gives its own; where they supplied none, keep the reference's. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt intelligently to this product's real dimensions, bleed and safety margins if the aspect ratio differs — preserve the composition, never letterbox or distort it. This note OVERRIDES every generic instruction elsewhere in this prompt where they conflict — EXCEPT the HARD RULE on botanical artwork, which nothing overrides: ignore any default direction, density, palette-stance, format-style or "invent an original design" guidance. Match what you see.\n\n${inspiration}${referenceBotanicalBlock(refBotanicals)}`;
       } else {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }

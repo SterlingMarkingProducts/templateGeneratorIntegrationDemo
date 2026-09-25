@@ -449,6 +449,90 @@
     window.__smpAssetGuardRun = run;
   }
 
+  /* ── hand-drawn plant artwork ─────────────────────────────────────────────
+   * The HARD RULE says the model never draws flowers or foliage; plant artwork
+   * comes only from the botanical design-asset files. The prompt is not
+   * trusted with it any more than with icon sizes: every inline <svg> the
+   * MODEL wrote (not an icon-bank icon, not the customer's own SVG) whose own
+   * markup names plant artwork — in its class/id/aria-label/title/desc, its
+   * children's ids/classes, a comment just before it, or the class/id of the
+   * wrapper around it — is removed before the design is shown or pushed. The
+   * same goes for an element drawing an SVG data URI under such a name.
+   * Library files (<img src="assets/design-library/...">) are never touched. */
+  var BOTANICAL_NAME = /(^|[^a-z])(flowers?|floral|florals|blooms?|blossoms?|petals?|peon(y|ies)|hydrangeas?|tulips?|dais(y|ies)|lotus|wildflowers?|bouquets?|leaf|leaves|leafy|foliage|sprigs?|branch(es)?|twigs?|vines?|ferns?|fronds?|eucalyptus|laurels?|wreaths?|garlands?|greenery|botanic(al|als)?|stems?|pampas|ivy|plants?)(?![a-z])/i;
+  function namesOf(el) {
+    if (!el || !el.getAttribute) return '';
+    return [el.getAttribute('class'), el.getAttribute('id'), el.getAttribute('aria-label'),
+      el.getAttribute('data-name'), el.getAttribute('data-role'), el.getAttribute('title')]
+      .filter(Boolean).join(' ').replace(/[_-]+/g, ' ');
+  }
+  function labelledBotanical(svg) {
+    var text = namesOf(svg);
+    var t = svg.querySelector('title, desc'); if (t) text += ' ' + t.textContent;
+    var inner = svg.querySelectorAll('[id], [class]');
+    for (var i = 0; i < inner.length && i < 60; i++) text += ' ' + namesOf(inner[i]);
+    var p = svg.previousSibling, hops = 0;
+    while (p && hops < 3) { if (p.nodeType === 8) text += ' ' + p.nodeValue; if (p.nodeType === 1) break; p = p.previousSibling; hops++; }
+    var w = svg.parentElement;
+    for (var up = 0; w && up < 2; up++, w = w.parentElement) {
+      if (/^(body|html)$/i.test(w.tagName) || /(^|\s)card(\s|$|--)/.test(w.getAttribute('class') || '')) break;
+      text += ' ' + namesOf(w);
+    }
+    return BOTANICAL_NAME.test(text);
+  }
+  /* The customer's SVG is recognised by its GEOMETRY — the drawing elements
+   * and their shape attributes in order — because the model may re-serialize
+   * it or add a class/style to the <svg> when it embeds it. */
+  function geometryOf(svg) {
+    var parts = [], els = svg.querySelectorAll('path, circle, ellipse, rect, polygon, polyline, line, text');
+    for (var i = 0; i < els.length; i++) {
+      var e = els[i];
+      parts.push(e.tagName.toLowerCase() + ':' + ['d', 'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'width', 'height', 'points', 'x1', 'y1', 'x2', 'y2']
+        .map(function (a) { return (e.getAttribute(a) || '').replace(/\s+/g, ' ').trim(); }).join('|'));
+    }
+    return parts.join(';');
+  }
+  /** Remove model-drawn plant artwork from a design's HTML. Returns
+   *  { html, removed: [label, ...] }. `opts.customerSvg` is the customer's own
+   *  SVG, which is theirs to place and is never removed. */
+  function stripDrawnBotanicals(html, opts) {
+    var out = { html: html, removed: [] };
+    if (!html || typeof DOMParser === 'undefined') return out;
+    if (!/<svg|image\/svg\+xml/i.test(html)) return out;
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var customer = '';
+    if (opts && opts.customerSvg && /<svg/i.test(opts.customerSvg)) {
+      var cs = new DOMParser().parseFromString(opts.customerSvg, 'text/html').querySelector('svg');
+      if (cs) customer = geometryOf(cs);
+    }
+    var svgs = doc.querySelectorAll('svg');
+    var victims = [];
+    for (var i = 0; i < svgs.length; i++) {
+      var svg = svgs[i];
+      if (svg.parentElement && svg.parentElement.closest('svg')) continue;          // nested: judged with its outer svg
+      if (svg.closest('[data-icon-name]')) continue;                                // icon bank
+      if (customer && geometryOf(svg) === customer) continue;                        // the customer's own artwork
+      if (labelledBotanical(svg)) victims.push(svg);
+    }
+    var dataEls = doc.querySelectorAll('[style*="image/svg+xml"], img[src^="data:image/svg+xml"]');
+    for (var j = 0; j < dataEls.length; j++) {
+      var el = dataEls[j];
+      if (BOTANICAL_NAME.test(namesOf(el) + ' ' + namesOf(el.parentElement))) victims.push(el);
+    }
+    if (!victims.length) return out;
+    victims.forEach(function (v) {
+      out.removed.push((namesOf(v) || namesOf(v.parentElement) || v.tagName.toLowerCase()).trim());
+      var parent = v.parentElement;
+      v.remove();
+      /* an emptied botanical wrapper goes too, so no sized hole is left */
+      if (parent && !parent.closest('svg') && !parent.textContent.trim() && !parent.querySelector('img, svg, video, canvas')
+          && BOTANICAL_NAME.test(namesOf(parent))) parent.remove();
+    });
+    var doctype = /^\s*<!doctype[^>]*>/i.exec(html);
+    out.html = (doctype ? doctype[0] : '') + doc.documentElement.outerHTML;
+    return out;
+  }
+
   /** The script tag to inject into a design's HTML. `uploads.photoPrefix` is
    *  the leading bytes of the user's uploaded-photo data URI, so the guard can
    *  recognise it as a photo without the Generator re-tagging the HTML. */
@@ -464,6 +548,7 @@
     kindFromSrc: kindFromSrc,
     resolveElement: resolveElement,
     guardScript: guardScript,
+    stripDrawnBotanicals: stripDrawnBotanicals,
     GUARD_SCRIPT_ID: 'asset-category-guard',
   };
 })(typeof window !== 'undefined' ? window : globalThis);

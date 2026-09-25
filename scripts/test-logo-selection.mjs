@@ -62,6 +62,11 @@ const CASES = [
   ['dentist',            '22_dental_tooth.png'],
   ['dental clinic',      '22_dental_tooth.png'],
   ['chiropractor',       '21_chiropractic_spine.png'],
+  ['chiro',              '21_chiropractic_spine.png'],
+  ['Chiro',              '21_chiropractic_spine.png'],
+  ['chiro practice',     '21_chiropractic_spine.png'],
+  ['spine care',         '21_chiropractic_spine.png'],
+  ['Dr. Elena Marsh chiro', '21_chiropractic_spine.png'],
   ['law firm',           null],   // 23_legal_scales or 16_continuous_knot — both legal
   ['real estate agency', '25_real_estate_entry.png'],
   ['construction',       '26_construction_beams.png'],
@@ -82,6 +87,21 @@ CASES.forEach(([text, file]) => {
   }
 });
 is(tierOk, 'every literal-mark trade receives its own mark');
+/* The specific trade beats a broad one named alongside it. */
+let specificOk = true;
+[['chiropractic clinic', '21_chiropractic_spine.png'], ['chiropractic wellness', '21_chiropractic_spine.png'],
+ ['dental clinic', '22_dental_tooth.png'], ['massage wellness', '30_wellness_lotus.png']].forEach(([t, f]) => {
+  for (let i = 0; i < 40; i++) {
+    const r = pick(t);
+    if (!r || r.logo.filename !== f) { specificOk = false; console.log('     SPEC ' + t + ' -> ' + (r ? r.logo.filename : 'none')); break; }
+  }
+});
+is(specificOk, '"chiropractic clinic" gets the spine, not the general clinic heart; "chiropractic wellness" not the lotus');
+const bBlock = P.renderLogoBlock({ logo: LOGOS.logos.find((l) => l.filename === '21_chiropractic_spine.png'), tier: 'B' }, false);
+const aBlock = P.renderLogoBlock({ logo: LOGOS.logos.find((l) => l.tier === 'A'), tier: 'A' }, false);
+is(/- USE IT: this is the mark made for this business's own trade/.test(bBlock) && !/USING IT IS OPTIONAL/.test(bBlock),
+   'a trade\'s own mark is presented as expected, not optional');
+is(/USING IT IS OPTIONAL/.test(aBlock), 'a neutral abstract mark stays optional');
 let crossed = 0;
 ['dentist', 'law firm', 'construction'].forEach((t) => {
   for (let i = 0; i < 60; i++) {
@@ -151,10 +171,15 @@ is(/SUPPLIED BRAND MARK — when the Style Direction supplies one/.test(P.HTML_P
 console.log('\n6  frequency, variety, performance');
 globalThis.window.SMPLogoMode = 'auto';
 let hits = 0;
-for (let i = 0; i < RUNS * 2; i++) if (pick('dentist', CARD)) hits++;
+for (let i = 0; i < RUNS * 2; i++) if (pick('florist', CARD)) hits++;
 const rate = hits / (RUNS * 2);
-is(rate > 0.35 && rate < 0.65, 'Auto uses a mark about half the time, never always',
+is(rate > 0.35 && rate < 0.65, 'Auto uses a neutral mark about half the time, never always',
    Math.round(rate * 100) + '%');
+let tradeHits = 0;
+for (let i = 0; i < RUNS * 2; i++) if (pick('chiro', CARD)) tradeHits++;
+const tradeRate = tradeHits / (RUNS * 2);
+is(tradeRate > 0.84 && tradeRate < 0.96, 'a trade with its own mark gets it about 90% of the time, still not always',
+   Math.round(tradeRate * 100) + '%');
 globalThis.window.SMPLogoMode = 'force';
 P.recentLogos.clear();
 let repeats = 0, pairs = 0;

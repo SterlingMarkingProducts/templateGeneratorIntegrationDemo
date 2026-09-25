@@ -109,6 +109,13 @@
   var ASSET_KINDS = ['photo', 'icon', 'logo', 'designAsset', 'raster'];
 
   function imageElement(o) {
+    var el = imageElementBase(o);
+    /* A mirrored image (CSS scaleX(-1)) — present only when true, so every
+     * unmirrored element serializes exactly as before. */
+    if (o.flipX === true) el.flipX = true;
+    return el;
+  }
+  function imageElementBase(o) {
     /* assetKind is the asset's SOURCE category — photo, icon, logo or
      * designAsset from the library it came from, 'raster' for a snapshot the
      * Generator itself produced — and it is immutable from here on: adapters

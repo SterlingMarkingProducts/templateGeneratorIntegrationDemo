@@ -17,7 +17,8 @@ globalThis.fetch = async (u) => {
 const ENGINE_SRC = readFileSync(REPO + '/generator/engine.js', 'utf8');
 let src = ENGINE_SRC.replace('window.handleGenerate = handleGenerate;',
   'globalThis.__p = { SYSTEM_DESIGNER, HTML_PROMPT, SPEC_PROMPT, DIRECTION_BY_KEY, DEFAULT_DIRECTION_POOL,'
-  + ' PRODUCT_VISUAL_POLICY, gatedFamilyAllowed, loadAssetLibrary, pickAssets };');
+  + ' PRODUCT_VISUAL_POLICY, gatedFamilyAllowed, loadAssetLibrary, pickAssets,'
+  + ' REFERENCE_RECREATE_PROMPT, pickReferenceBotanicals, referenceBotanicalBlock };');
 src = src.replace('window.handleGenerateJson = handleGenerateJson;', '');
 eval(src);
 const P = globalThis.__p;
@@ -80,6 +81,39 @@ is(V.stamp.stock === 0 && V.stamp.assetsForbidden === true
    && V.nameplate.stock === 0.20 && V.nameplate.logo === 0.60 && V.nameplate.assetCap === 0.85
    && V.card.stock === 0.14 && V.brochure.stock === 1.0 && V.promo.stock === 0.80,
    'every family probability is exactly as before');
+
+console.log('7  a recreated reference with plant artwork gets the closest library files, never a drawing');
+is(/BOTANICAL MOTIFS\n\[Every flower, leaf, sprig/.test(P.REFERENCE_RECREATE_PROMPT),
+   'the reference analysis reports plant artwork in its own section');
+is(/PLANT ARTWORK IS THE ONE EXCEPTION/.test(ENGINE_SRC)
+   && /EXCEPT the HARD RULE on botanical artwork, which nothing overrides/.test(ENGINE_SRC),
+   'the recreate note no longer claims to override the hard rule');
+const analysis = (motifs) => 'COLORS\n[#f6e4e1 background; #4a4a4a text]\n\nBOTANICAL MOTIFS\n' + motifs
+  + '\n\nDISTINCTIVE FEATURES\n[script name]\n';
+const pick = (m) => P.pickReferenceBotanicals(analysis(m));
+/* the reported Olivia Wilson card: thin charcoal leaf sprigs in two corners */
+const olivia = pick('thin leafy sprig, line art, #4a4a4a, top-left corner, ~18% width, pointing down-right\n'
+  + 'thin leafy sprig, line art, #4a4a4a, bottom-right corner, ~18% width, mirrored');
+is(olivia && olivia.assets.length === 1 && olivia.assets[0].filename === '02_Soft_Green_Foliage_Spray.png',
+   'line-art leaf sprigs match the foliage spray', olivia && olivia.assets.map((a) => a.filename).join(','));
+is(olivia && olivia.monochrome === true, 'and are recognised as a one-colour motif to recolour');
+const block = P.referenceBotanicalBlock(olivia);
+is(/assets\/design-library\/02_Soft_Green_Foliage_Spray\.png/.test(block) && /-webkit-mask:url\(\[src\]\)/.test(block)
+   && /scaleX\(-1\)/.test(block) && /Never write SVG paths/.test(block),
+   'the block hands over the file, the mask recolour, mirroring, and the ban on drawing');
+is(pick('peony cluster, watercolour, pink, top-right')?.assets[0].filename === '01_Pink_Peony_Floral_Cluster.png',
+   'a pink peony cluster matches the peony file');
+is(pick('blue hydrangea bloom, watercolour, left edge')?.assets[0].filename === '11_Blue_Hydrangea_Cluster.png',
+   'a blue hydrangea matches the hydrangea file');
+is(pick('dried pampas grass, cream, right side')?.assets[0].filename === '12_Neutral_Pampas_Grass_Spray.png',
+   'pampas grass matches the pampas file');
+const both = pick('rose bouquet with eucalyptus leaves, watercolour, bottom-left');
+is(both && both.assets.length === 2 && new Set(both.assets.map((a) => a.family)).size === 2,
+   'flowers AND foliage may take one of each family', both && both.assets.map((a) => a.filename).join(','));
+is(pick('none') === null, 'a reference with no plant artwork gets nothing');
+is(P.pickReferenceBotanicals('COLORS\n[#000]\n\nBOTANICAL MOTIFS\n[none]\n\nDISTINCTIVE FEATURES\n[a bold rule]') === null,
+   'including the bracketed "none" form');
+is(P.referenceBotanicalBlock(null) === '', 'and no block is added then');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

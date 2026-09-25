@@ -31,7 +31,10 @@ const is = (c, n, d = '') => { c ? pass++ : fail++; console.log(`  ${c ? 'PASS' 
 const inWin = (v, lo, hi) => v >= lo && v <= hi;
 
 let seq = 0;
-function rates(tt, w, h) {
+/* `logoIndustry` is separate on purpose: a trade with its OWN literal mark
+ * (dentist, chiropractor) draws at the industryLogo rate, every other brief at
+ * the base logo rate. The base rates are measured with a trade that has none. */
+function rates(tt, w, h, logoIndustry = 'florist') {
   let stock = 0, logo = 0, asset = 0;
   for (let i = 0; i < N; i++) {
     const key = 'k' + (seq++);   // a fresh brief per run: independent draws
@@ -39,7 +42,7 @@ function rates(tt, w, h) {
       industryText: 'dentist', explicitIndustry: 'dentist', memoryKey: key });
     if (s) stock++;
     const l = P.pickLogo({ templateType: tt, widthIn: w, heightIn: h,
-      industryText: 'dentist', memoryKey: key });
+      industryText: logoIndustry, memoryKey: key });
     if (l) logo++;
     const a = P.pickAssets('modern-luxury', 'balanced', 'dentist', key, false, tt, w, h, !!s, !!l);
     if (a && a.length) asset++;
@@ -77,6 +80,16 @@ for (const [tt, w, h] of [['Name Badge', 3, 1.5], ['Nameplate', 8, 2]]) {
 console.log('business card → unchanged ≈ 14%');
 const bc = rates('Business Card', 3.5, 2);
 is(inWin(bc.stock, 11, 17), 'card stock ≈ 14%', pct(bc.stock));
+
+console.log('a trade with its own mark (chiropractor, dentist) → mark ≈ 90%; stamps unchanged');
+for (const ind of ['chiro', 'chiropractor', 'dentist']) {
+  for (const [tt, w, h] of [['Business Card', 3.5, 2], ['Name Badge', 3, 1.5], ['Brochure', 11, 8.5], ['Sign', 36, 24]]) {
+    const r = rates(tt, w, h, ind);
+    is(inWin(r.logo, 85, 95), tt + ' / ' + ind + ' logo ≈ 90%', pct(r.logo));
+  }
+  is(inWin(rates('Stamp', 2, 1, ind).logo, 40, 60), 'Stamp / ' + ind + ' logo stays ≈ 50%');
+}
+is(inWin(rates('Business Card', 3.5, 2).logo, 45, 55), 'a card for a trade WITHOUT its own mark stays ≈ 50%');
 
 console.log('guards: never an unrelated photo, customer input always wins');
 let miss = 0, cust = 0, brNoPool = 0;
