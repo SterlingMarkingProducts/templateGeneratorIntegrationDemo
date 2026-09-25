@@ -891,6 +891,34 @@ async function renderPageProof(doc, rootEl) {
   }
 }
 
+/* A proof for a page that is one image — the synthesized back of a front-only
+ * design. Same pixel size as `refProof` (the front's proof), white paper,
+ * the image drawn edge to edge exactly as the card snapshot it came from.
+ * Null only when there is no reference proof to size it by. */
+async function proofFromImage(src, refProof) {
+  try {
+    if (!refProof) return null;
+    const ref = new Image();
+    ref.src = refProof;
+    await ref.decode();
+    const cv = document.createElement('canvas');
+    cv.width = ref.naturalWidth; cv.height = ref.naturalHeight;
+    const ctx = cv.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    if (src) {
+      const img = new Image();
+      img.src = src;
+      await img.decode();
+      ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    }
+    return cv.toDataURL('image/png');
+  } catch (e) {
+    console.warn('[push] synthesized page proof could not be rendered:', e && e.message);
+    return null;
+  }
+}
+
 async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
   const rect = rootEl.getBoundingClientRect();
   /* Render at ~300 dpi (print standard) so the background stays crisp when the
@@ -1579,8 +1607,14 @@ async function convertCurrentDesign() {
   while (pages.length && pages.length < minPages) {
     const front = pages[0];
     const bg = (front.objects || []).find((o) => o && o.kind === 'image' && o.role === 'background');
+    /* The synthesized page needs its own proof too: CCA's template chooser
+     * draws the back of a two-page template from page 2's thumbnail, and a
+     * page pushed without one shows no back at all. The page IS the front's
+     * background artwork, so its proof is that artwork at the front proof's
+     * size (plain white paper when there is no background). */
     pages.push({ bleedAuthored: front.bleedAuthored,
-      objects: bg ? [JSON.parse(JSON.stringify(bg))] : [] });
+      objects: bg ? [JSON.parse(JSON.stringify(bg))] : [],
+      proof: await proofFromImage(bg && bg.src, front.proof) });
   }
   return { template: buildSterlingTemplate(pages, lastPayload), substitutions };
 }

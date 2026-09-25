@@ -126,6 +126,11 @@ const pushed = await page.evaluate(async () => {
     pageCount: template.pages.length,
     proofsOnTemplate: (template.pageProofs || []).map((p) => ({ n: p.pageNumber, has: !!p.dataUri })),
     builtProofs: (built.proofs || []).map((p) => ({ n: p.pageNumber, bytes: p.bytes.length })),
+    proofSizes: await Promise.all((template.pageProofs || []).map(async (p) => {
+      if (!p.dataUri) return null;
+      const im = new Image(); im.src = p.dataUri; await im.decode();
+      return im.naturalWidth + 'x' + im.naturalHeight;
+    })),
   };
 });
 is(pushed.pageCount === 2, 'the two-page product produced two pages', String(pushed.pageCount));
@@ -133,6 +138,14 @@ is(pushed.proofsOnTemplate[0] && pushed.proofsOnTemplate[0].has === true,
    'page 0 rendered a proof', JSON.stringify(pushed.proofsOnTemplate));
 is(pushed.builtProofs.length >= 1 && pushed.builtProofs[0].bytes > 1000,
    'the request carries real proof bytes', JSON.stringify(pushed.builtProofs));
+/* This design has only a front; the Generator synthesizes page 2 from its
+ * background. CCA's chooser draws a two-page template's back from page 2's
+ * thumbnail, so that page must carry a proof too. */
+is(pushed.proofsOnTemplate[1] && pushed.proofsOnTemplate[1].has === true
+   && pushed.builtProofs.some((p) => p.n === 1 && p.bytes > 1000),
+   'the synthesized back page carries its own proof as well', JSON.stringify(pushed.builtProofs));
+is(pushed.proofSizes[1] && pushed.proofSizes[1] === pushed.proofSizes[0],
+   'and it is the same size as the front proof', JSON.stringify(pushed.proofSizes));
 
 /* The real button, so the real multipart body and the real redirect are seen. */
 const popupP = ctx.waitForEvent('page', { timeout: 30000 });
@@ -145,6 +158,7 @@ await designer.close().catch(() => {});
 const pnames = parts(lastImport.body, lastImport.contentType).map((p) => p.name);
 console.log('     parts: ' + pnames.join(', '));
 is(pnames.includes('proof_0'), 'the multipart body contains proof_0', pnames.join(', '));
+is(pnames.includes('proof_1'), 'and proof_1 for the back page', pnames.join(', '));
 const proof0 = parts(lastImport.body, lastImport.contentType).find((p) => p.name === 'proof_0');
 is(proof0 && proof0.body.slice(0, 8) === '\x89PNG\r\n\x1a\n',
    'and proof_0 really is a PNG (magic bytes)', proof0 ? proof0.body.slice(1, 4) : 'missing');
