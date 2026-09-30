@@ -30,6 +30,9 @@ const server = createServer(async (req,res)=>{
     let body=''; for await (const c of req) body+=c;
     requests.push({ path: url.pathname, headers: req.headers, body });
     if (mode === 'hang') return;
+    if (mode === 'relay-timeout') {   // the live relay, verbatim, after it gave up mid-copy
+      res.writeHead(500,{'content-type':'application/json'});
+      res.end(JSON.stringify({ error:'Relay error: reached timeout (48607ms) while copying data' })); return; }
     if (mode === 'error') { res.writeHead(500,{'content-type':'application/json'});
       res.end(JSON.stringify({ error:{ message:'The server could not reach Anthropic (test error).' } })); return; }
     if (mode === 'err-plain') { res.writeHead(500,{'content-type':'text/html'});
@@ -167,6 +170,12 @@ mode='error';
 r = await generate();
 is(!r.result || r.toast, 'server error surfaces');
 is(!!r.toast && /could not reach Anthropic/.test(r.toast), 'with the server\'s own message', (r.toast||'').slice(0,70));
+mode='relay-timeout';
+r = await generate();
+is(!!r.toast && /relay stopped this request after 49 seconds/.test(r.toast||''),
+  'the live relay\'s mid-copy timeout is named for what it is, with its own number', (r.toast||'').slice(0,90));
+is(!!r.toast && /timeout has to be raised on the server/.test(r.toast||'') && /48607ms/.test(r.toast||''),
+  'and says where the fix is, keeping the relay\'s own words for the operator');
 mode='hang';
 await page.evaluate(()=>{ window.SMP_AI_TIMEOUTS = { create: 5000, stream: 6000 }; });
 await page.evaluate(()=>{ if (typeof hideError==='function') hideError(); });

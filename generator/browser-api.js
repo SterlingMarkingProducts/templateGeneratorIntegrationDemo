@@ -89,12 +89,31 @@ function httpError(status, bodyText) {
   let message = '';
   try {
     const data = JSON.parse(raw);
-    message = (data && data.error && data.error.message) || '';
+    /* {error:{message}} (Anthropic shape) or {error:"text"} (the live relay) */
+    const e = data && data.error;
+    message = (e && typeof e === 'object' && e.message) || (typeof e === 'string' ? e : '') || '';
   } catch (e) { /* not JSON — use the text itself */ }
   if (!message) {
     message = raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
   }
   try { console.warn('[ai-endpoint] HTTP ' + status + ' body: ' + raw.slice(0, 2000)); } catch (e) { /* logging only */ }
+  /* THE SERVER RELAY GAVE UP MID-GENERATION. The live claude.cfm relay copies
+     Anthropic's response through under its own time limit and answers
+     `Relay error: reached timeout (48607ms) while copying data` when the
+     design is still being written as that limit lands. Nothing the browser
+     does can finish that request: the limit is the relay's, and a brochure
+     (two full 11x8.5 spreads) needs several times longer than a business
+     card. Say so, with the number, instead of echoing the raw JSON. */
+  const relayTimeout = /relay error|gateway|proxy/i.test(message) && /time(d )?out/i.test(message)
+    ? /\((\d+)\s*ms\)/.exec(message) : null;
+  if (relayTimeout || (/reached timeout/i.test(message) && /copying/i.test(message))) {
+    const secs = relayTimeout ? Math.round(Number(relayTimeout[1]) / 1000) : null;
+    return new Error('Sterling\'s AI relay stopped this request after '
+      + (secs ? secs + ' seconds' : 'its time limit') + ', while the design was still being '
+      + 'written. Larger designs (a brochure, a two-sided or large-format piece) take longer than '
+      + 'the relay currently allows; its timeout has to be raised on the server before they can '
+      + 'generate. Nothing was saved. [' + message + ']');
+  }
   return new Error('The AI service request failed (' + status + ')'
     + (message ? ': ' + message : '.'));
 }
