@@ -765,18 +765,9 @@ function imageObjectRespectingFit(el, left, top, width, height, angle, style) {
       cv.width = Math.max(1, Math.round(sw * scale));
       cv.height = Math.max(1, Math.round(sh * scale));
       cv.getContext('2d').drawImage(el, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
-      let src = cv.toDataURL('image/png');
-      if (src.length * 0.75 > 2.5 * 1024 * 1024) {
-        /* Photographic crops: JPEG over white, like the background raster. */
-        const flat = document.createElement('canvas');
-        flat.width = cv.width; flat.height = cv.height;
-        const fctx = flat.getContext('2d');
-        fctx.fillStyle = '#ffffff';
-        fctx.fillRect(0, 0, flat.width, flat.height);
-        fctx.drawImage(cv, 0, 0);
-        const jpeg = flat.toDataURL('image/jpeg', 0.92);
-        if (jpeg.length < src.length) src = jpeg;
-      }
+      /* A photographic crop travels as JPEG once it is big; a crop that
+       * carries transparency (a design asset) keeps its PNG. */
+      const src = encodeRaster(cv, false);
       return makeImageObject(src, cv.width, cv.height, left, top, width, height, angle, style);
     } catch (e) { /* tainted or draw failure — keep the old behaviour below */ }
   }
@@ -974,6 +965,59 @@ async function proofFromImage(src, refProof) {
   }
 }
 
+/* THE WHOLE PUSH HAS TO CLEAR THE WEB03 GATEWAY. It answers a bare 502 to
+ * uploads in the several-megabyte class before templateImport.cfm ever sees
+ * them: a two-sided card with four 2.1MB texture strips (11.6MB) died there,
+ * and so did a tri-fold brochure at 7.4MB — two 2600px background rasters
+ * and a photo crop, each a ~2MB PNG that sat under the old 2.5MB per-image
+ * cap. A business card's raster is a few hundred KB and always passed.
+ *
+ * So every raster the Generator itself produces goes out as PNG only while
+ * it is genuinely small; past this cap an OPAQUE raster (a background drawn
+ * over white, a photographic crop) travels as JPEG at 0.92, visually
+ * lossless for artwork of that kind, at a tenth of the bytes. A raster with
+ * real transparency (a cover crop of a transparent design asset) keeps PNG,
+ * because JPEG has no alpha. Under the cap, bytes are exactly what they were.
+ *
+ * The cap follows the raster's size: a business card's raster (1125x675 at
+ * 300 dpi, under a megapixel) keeps PNG up to 1.5 MB — a gradient card is
+ * flat artwork that PNG keeps crisp, and two of them still clear the
+ * gateway — while a large-format raster (a brochure spread, a sign) turns
+ * to JPEG past 600 KB, since two or three of those are the whole budget. */
+const RASTER_PNG_BYTE_CAP = 600 * 1024;
+const SMALL_RASTER_PNG_BYTE_CAP = 1.5 * 1024 * 1024;
+const SMALL_RASTER_PIXELS = 1000000;
+
+function canvasHasAlpha(cv) {
+  const probe = document.createElement('canvas');
+  const step = Math.max(1, Math.floor(Math.max(cv.width, cv.height) / 64));
+  probe.width = Math.max(1, Math.floor(cv.width / step));
+  probe.height = Math.max(1, Math.floor(cv.height / step));
+  const pctx = probe.getContext('2d');
+  pctx.drawImage(cv, 0, 0, probe.width, probe.height);
+  const px = pctx.getImageData(0, 0, probe.width, probe.height).data;
+  for (let i = 3; i < px.length; i += 4) { if (px[i] < 250) return true; }
+  return false;
+}
+
+/* PNG while small; otherwise JPEG over white for an opaque raster. `opaque`
+ * skips the alpha probe when the caller already knows (a background is drawn
+ * over white). Returns the smaller encoding. */
+function encodeRaster(cv, opaque) {
+  const png = cv.toDataURL('image/png');
+  const cap = cv.width * cv.height <= SMALL_RASTER_PIXELS ? SMALL_RASTER_PNG_BYTE_CAP : RASTER_PNG_BYTE_CAP;
+  if (png.length * 0.75 <= cap) return png;
+  if (!opaque && canvasHasAlpha(cv)) return png;
+  const flat = document.createElement('canvas');
+  flat.width = cv.width; flat.height = cv.height;
+  const fctx = flat.getContext('2d');
+  fctx.fillStyle = '#ffffff';
+  fctx.fillRect(0, 0, flat.width, flat.height);
+  fctx.drawImage(cv, 0, 0);
+  const jpeg = flat.toDataURL('image/jpeg', 0.92);
+  return jpeg.length < png.length ? jpeg : png;
+}
+
 async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
   const rect = rootEl.getBoundingClientRect();
   /* Render at ~300 dpi (print standard) so the background stays crisp when the
@@ -1000,19 +1044,8 @@ async function rasterizeBackground(doc, rootEl, targetWidthPx, targetHeightPx) {
    * PNG, which is both smaller and crisper for them. The background is drawn
    * over white first because JPEG has no alpha and this layer is the bottom
    * of the stack — white is the paper it sits on. */
-  const RASTER_PNG_BYTE_CAP = 2.5 * 1024 * 1024;
-  const rasterSrc = () => {
-    const png = cv.toDataURL('image/png');
-    if (png.length * 0.75 <= RASTER_PNG_BYTE_CAP) return png;
-    const flat = document.createElement('canvas');
-    flat.width = cw; flat.height = ch;
-    const fctx = flat.getContext('2d');
-    fctx.fillStyle = '#ffffff';
-    fctx.fillRect(0, 0, cw, ch);
-    fctx.drawImage(cv, 0, 0);
-    const jpeg = flat.toDataURL('image/jpeg', 0.92);
-    return jpeg.length < png.length ? jpeg : png;
-  };
+  /* The bottom of the stack sits on white paper: opaque by construction. */
+  const rasterSrc = () => encodeRaster(cv, true);
   const toObj = () => window.SMPNormalized.image({
     role: 'background',
     x: 0, y: 0,

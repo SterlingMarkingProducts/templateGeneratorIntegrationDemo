@@ -29,6 +29,13 @@
    * a page can never be silently truncated on insert. */
   var MAX_PAGE_JSON_BYTES = 60000;
   var MAX_TOTAL_ASSET_BYTES = 20 * 1024 * 1024;
+  /* What the web03 gateway in front of templateImport.cfm will carry. It
+   * answers a bare 502 to uploads in the several-megabyte class (7.4MB and
+   * 11.6MB pushes both died there; business-card pushes of 1-2MB pass), so a
+   * body over this is refused HERE, with the number, instead of failing on
+   * the wire with no explanation. The rasters are encoded to stay well under
+   * it (push-to-designer.js encodeRaster); this is the last line. */
+  var GATEWAY_BODY_BYTES = 6 * 1024 * 1024;
 
   function ImportError(code, message, detail) {
     var e = new Error(message);
@@ -163,8 +170,20 @@
       proofs.push({ pageNumber: p.pageNumber, bytes: base64ToBytes(parsed.base64) });
     });
 
+    var bodyBytes = JSON.stringify(manifest).length
+      + extracted.assets.reduce(function (n, a) { return n + a.byteLength; }, 0)
+      + proofs.reduce(function (n, p) { return n + p.bytes.length; }, 0);
+    if (bodyBytes > GATEWAY_BODY_BYTES) {
+      throw ImportError('payload-too-large',
+        'This push is ' + (bodyBytes / 1048576).toFixed(1) + ' MB of images, and the web03 '
+        + 'gateway rejects uploads over about ' + Math.round(GATEWAY_BODY_BYTES / 1048576)
+        + ' MB (a bare 502). Nothing was sent. A design with fewer or smaller photographs '
+        + 'and textures will push; the gateway limit is the server\'s to raise.',
+        { bytes: bodyBytes, limit: GATEWAY_BODY_BYTES });
+    }
+
     return { manifest: manifest, assets: extracted.assets, stats: extracted.stats,
-             pageSizes: sizes, proofs: proofs };
+             pageSizes: sizes, proofs: proofs, bodyBytes: bodyBytes };
   }
 
   /** Assemble the multipart body from a built request. */

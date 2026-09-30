@@ -222,6 +222,17 @@ await check('malformed and unsupported assets stop the import', async () => {
   return 'unsupported-mime and malformed-data-uri both stop the send';
 });
 
+await check('a body the web03 gateway would drop (>6 MB) is refused before it is sent, with the size', async () => {
+  /* two distinct 3.2 MB rasters: 6.4 MB of assets, over the gateway line */
+  const t = new TI.TemplateImportTransport({ baseUrl: BASE, fetchImpl: MOCK.createMockImportEndpoint({ product: bcdp }) });
+  const e = await expectFail(() => t.send(pkg([[img(bigPng('BIG1', 3200)), img(bigPng('BIG2', 3200))]]), bcdp),
+    'payload-too-large', 'gateway-sized body');
+  ok(/web03 gateway/.test(e.message) && /6\.\d MB/.test(e.message) && /Nothing was sent/.test(e.message), 'names the gateway and the size: ' + e.message);
+  const under = await TI.buildRequest(pkg([[img(bigPng('OK', 900))]]), bcdp, {});
+  ok(under.bodyBytes > 900 * 1024 && under.bodyBytes < 1024 * 1024, 'and a 0.9 MB body builds, reporting its size');
+  return 'refused at ' + (e.details && e.details.bytes) + ' bytes; small bodies still build';
+});
+
 for (const [status, code] of [[400, 'bad-request'], [409, 'page-count-mismatch'],
                               [413, 'payload-too-large'], [422, 'invalid-canvas'],
                               [500, 'server-error']]) {
