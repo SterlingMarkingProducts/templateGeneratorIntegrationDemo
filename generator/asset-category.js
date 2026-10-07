@@ -65,6 +65,13 @@
      * side; on a brochure at most 1/18. */
     HANDHELD_MAX_SHORT_SIDE: 1300,
     HANDHELD_MAX_SCALE: 1.25,
+    /* An icon in a ROW beside its information — the phone before a phone
+     * number — is sized to that line, not to the sheet: at most this many
+     * times the line's height (about two cap-heights of the text), and never
+     * above NORMAL_MAX or below NORMAL_MIN. A 15px contact line gets an icon
+     * of about 30px, not a 45px one three times taller than its text. An
+     * icon above or below a heading (a feature icon) keeps the sheet limit. */
+    LINE_RATIO: 1.75,
   };
 
   /* What an icon STANDS FOR, from its icon-bank name (the manifest's own
@@ -339,6 +346,9 @@
         var o = others[i];
         if (o === unit || !shown(o) || o.getAttribute('data-asset-guard') === 'removed') continue;
         var r = o.getBoundingClientRect();
+        /* a hero-sized icon not judged yet is no line's icon: it is about to
+           be removed, and must not get the real one removed as a duplicate */
+        if (Math.max(r.width, r.height) * k > ICON.ABSOLUTE_MAX * s + 0.5) continue;
         var l = r.left * k, rr = r.right * k, t = r.top * k, bt = r.bottom * k;
         var vOver = Math.min(bt, b.b) - Math.max(t, b.t);
         if (vOver <= 0) continue;
@@ -415,6 +425,10 @@
         return remove(unit, report, name, type === 'generic' ? 'no-adjacent-text' : 'no-' + type + '-information', w, h);
       }
       var normalMax = ICON.NORMAL_MAX * s;
+      if (before.side === 'left' || before.side === 'right') {
+        var lineH = before.box.b - before.box.t;
+        if (lineH > 0) normalMax = Math.min(normalMax, Math.max(ICON.NORMAL_MIN * s, lineH * (ICON.LINE_RATIO || 1.75)));
+      }
       if (w > normalMax + 0.5 || h > normalMax + 0.5 || areaFrac > ICON.AREA_FRACTION_HERO) {
         clamp(unit, report, name, w, h, normalMax, unit.offsetWidth);
         /* Shrunk in place, a big icon can end up floating away from the line

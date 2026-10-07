@@ -378,7 +378,7 @@ const scaled = await page.evaluate(async (html) => {
 }, DESIGN_HTML);
 is(scaled.limits.absoluteMax === 60 && scaled.limits.normalMax === 45 && scaled.limits.scale === 1.25,
    'a 7.5x4.5in piece is hand-held: the scale stops at 1.25 (45px normal, 60px absolute)', JSON.stringify(scaled.limits));
-is(scaled.guard === 'clamped' && scaled.w === 45, 'a 60px icon on it beside its number is brought back to 45px', JSON.stringify(scaled));
+is(scaled.guard === 'clamped' && scaled.w >= 20 && scaled.w <= 45, 'a 60px icon on it beside its number is brought back within 45px (to its line\'s size)', JSON.stringify(scaled));
 const lim = await page.evaluate(() => ({ brochure: window.SMPAssetCategory.iconLimits(1056, 816), poster: window.SMPAssetCategory.iconLimits(2304, 1728), card: window.SMPAssetCategory.iconLimits(360, 216), badge: window.SMPAssetCategory.iconLimits(288, 144) }));
 is(lim.brochure.normalMax === 45 && lim.brochure.absoluteMax === 60, 'an 11x8.5 brochure keeps card-scale icons (was 105px / 141px)', JSON.stringify(lim.brochure));
 is(lim.poster.scale > 6 && lim.poster.normalMax > 200, 'a 24x18 poster, read from a distance, still scales with the canvas', JSON.stringify(lim.poster));
@@ -585,6 +585,63 @@ const bro = await renderIcons(`<!DOCTYPE html><html><head><style>body{margin:0}
 const bc = bro.icons.find((i) => i.id === 'broCheck'), bu = bro.icons.find((i) => i.id === 'broUsers');
 is(bc && bc.guard === 'clamped' && bc.vw <= 45 && bc.shown, 'the brochure\'s 220px check beside its label comes down to 45px (not 105px)', JSON.stringify(bc));
 is(bu && bu.guard === 'clamped' && bu.vw <= 45 && bu.shown, 'and the 190px people icon beside its label too', JSON.stringify(bu));
+
+console.log('\n8c  the reported tri-fold: a contact column of phone, mail, pin and globe (build tier1-37)');
+/* Exactly the screenshot: the left panel of an 11x8.5 tri-fold, each contact
+ * line a flex row of icon + text. Run through the app's own steps — police,
+ * icon-bank inlining, the brochure preview — the way a generation is. */
+const TRIFOLD = (css) => `<!DOCTYPE html><html><head><style>
+*{box-sizing:border-box}body{margin:0;font-family:Georgia}
+.card{width:1056px;height:816px;display:grid;grid-template-columns:repeat(3,1fr);background:#fff}
+.panel{padding:48px 36px;display:flex;flex-direction:column;gap:18px}
+.panel--contact{background:#efe8f6;color:#3a2a52}
+.contact-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.contact-list li{display:flex;align-items:center;gap:12px;font-size:15px}
+${css}</style></head><body><div class="card card--front">
+<section class="panel panel--contact"><h3>Visit Us</h3><ul class="contact-list">
+  <li><i data-icon="phone" class="ci"></i><span>(415) 290-7788</span></li>
+  <li><i data-icon="mail" class="ci"></i><span>care@meridianspine.co</span></li>
+  <li><i data-icon="map-pin" class="ci"></i><span>412 Alignment Ave, Suite 3</span></li>
+  <li><i data-icon="globe" class="ci"></i><span>meridianspine.co</span></li>
+</ul></section>
+<section class="panel"><h2>Meridian Spine</h2><p>Gentle chiropractic care.</p></section>
+<section class="panel"><h2>Our Services</h2><p>Adjustments, rehab, massage.</p></section>
+</div></body></html>`;
+async function trifoldIcons(css) {
+  return page.evaluate(async (html) => {
+    const inlined = await IconBank.inline(policeGeneratedHtml(html));
+    const out = renderPreviewHtml(inlined, { templateType: 'Brochure', width: 11, height: 8.5, unit: 'in', doubleSided: true });
+    const f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;left:-5000px;top:0;width:1100px;height:900px;border:0';
+    document.body.appendChild(f);
+    await new Promise((r) => { f.addEventListener('load', r, { once: true }); f.srcdoc = out; });
+    await new Promise((r) => setTimeout(r, 1800));
+    const d = f.contentDocument, root = d.querySelector('.card'), rr = root.getBoundingClientRect();
+    const k = rr.width ? root.offsetWidth / rr.width : 1;
+    const icons = [...d.querySelectorAll('[data-icon-name]')].map((s) => {
+      const b = s.getBoundingClientRect(), t = s.parentElement.querySelector('span');
+      const tb = t.getBoundingClientRect();
+      return { name: s.getAttribute('data-icon-name'), tag: s.tagName.toLowerCase(), guard: s.getAttribute('data-asset-guard'),
+        shown: getComputedStyle(s).display !== 'none', w: Math.round(b.width * k), h: Math.round(b.height * k),
+        lineH: Math.round(tb.height * k), gap: Math.round((tb.left - b.right) * k),
+        sameRow: Math.abs((b.top + b.bottom) / 2 - (tb.top + tb.bottom) / 2) * k < 6 };
+    });
+    f.remove();
+    return { icons, guard: !!d.getElementById('asset-category-guard') };
+  }, TRIFOLD(css));
+}
+const sized = (r, max) => r.icons.length === 4 && r.icons.every((i) => i.shown && i.w <= max && i.h <= max && i.sameRow && i.gap >= 0 && i.gap <= 16);
+const viaTag = await trifoldIcons('.contact-list li i{width:18px;height:18px;color:#6b3fa0;flex:none}');
+is(viaTag.guard && viaTag.icons.every((i) => i.tag === 'i'), 'the icon keeps its <i> element through inlining, so CSS aimed at the tag still applies', JSON.stringify(viaTag.icons.map((i) => i.tag)));
+is(sized(viaTag, 19) && viaTag.icons.every((i) => i.guard === null),
+   'icons the model sized with ".contact-list li i { width:18px }" render at 18px, beside their lines (they filled the panel before)', JSON.stringify(viaTag.icons));
+const unsized = await trifoldIcons('.contact-list li .ci{color:#6b3fa0}');
+is(sized(unsized, 20), 'icons the model never sized are one text line tall (1.25em), not as wide as the panel', JSON.stringify(unsized.icons));
+const viaSvg = await trifoldIcons('.contact-list li svg{width:18px;height:18px}');
+is(sized(viaSvg, 20), 'a model rule on the svg itself ("li svg { width:18px }") is no longer overridden by the inliner', JSON.stringify(viaSvg.icons));
+const huge = await trifoldIcons('.contact-list li .ci{width:130px;height:130px;color:#6b3fa0;flex:none}');
+is(huge.icons.length === 4 && huge.icons.every((i) => i.guard === 'clamped' && i.shown && i.sameRow && i.w <= Math.ceil(i.lineH * 1.75) + 1 && i.w < 45),
+   '130px contact icons are capped to about twice their line\'s height (~30px), not the sheet\'s 45px', JSON.stringify(huge.icons));
 
 console.log('\n9  pictures the model drew itself: swapped for bank icons, or removed; abstract geometry stays');
 const drawn = await page.evaluate(() => {

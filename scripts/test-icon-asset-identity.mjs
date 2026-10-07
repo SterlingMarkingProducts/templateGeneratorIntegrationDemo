@@ -95,10 +95,11 @@ const bank = await page.evaluate(async () => {
   const out = await window.IconBank.inline(html);
   const d = document.createElement('div');
   d.innerHTML = out;
-  return [...d.querySelectorAll('span')].map((s) => ({
-    name: s.getAttribute('data-icon-name'), svg: s.innerHTML }));
+  return [...d.querySelectorAll('[data-icon-name]')].map((s) => ({
+    tag: s.tagName.toLowerCase(), name: s.getAttribute('data-icon-name'), svg: s.innerHTML }));
 });
-is(bank.length === 2, 'both tokens became spans', bank.length + ' spans');
+is(bank.length === 2 && bank.every((b) => b.tag === 'i'),
+   'both tokens became icon units, keeping their own <i> element', JSON.stringify(bank.map((b) => b.tag)));
 is(bank[0] && bank[0].name === 'phone' && sigOf(bank[0].svg) === SIG.phone,
    'the phone token carries the phone artwork', bank[0] && sigOf(bank[0].svg));
 is(bank[1] && bank[1].name === 'mail' && sigOf(bank[1].svg) === SIG.mail,

@@ -66,9 +66,27 @@
   }
 
   /* Replace every <i data-icon="name" ...></i> token in an HTML string with
-   * the corresponding inline <svg>. Attributes (style/class) carry over to a
-   * wrapping <span> so sizing/positioning written by the model is kept.
-   * Unknown names collapse to an empty span (never break the layout). */
+   * the corresponding inline <svg>. The token's own <i> element is KEPT as the
+   * wrapper, attributes and all, so every sizing rule the model wrote still
+   * applies: style="width:18px", a class, and CSS aimed at the tag itself
+   * (".contact i { width:18px }"). Turning it into a <span> silently dropped
+   * that last kind, and the icon then grew to fill its whole panel.
+   * The svg fills its wrapper through a zero-specificity rule (ICON_BASE_CSS),
+   * never an inline style, so a model rule such as "li svg { width:18px }"
+   * still wins, and a wrapper the model never sized is one text line tall
+   * instead of as wide as its container.
+   * Unknown names collapse to an empty element (never break the layout). */
+  const ICON_BASE_CSS = '<style id="icon-bank-base">'
+    + ':where([data-icon-name]){display:inline-block;width:1.25em;height:1.25em;vertical-align:-0.25em;flex:none;font-style:normal;line-height:0}'
+    + ':where([data-icon-name])>svg{width:100%;height:100%;display:block}'
+    + '</style>';
+
+  function withBaseCss(html) {
+    if (html.indexOf('id="icon-bank-base"') !== -1) return html;
+    if (/<\/head>/i.test(html)) return html.replace(/<\/head>/i, ICON_BASE_CSS + '</head>');
+    if (/<body\b[^>]*>/i.test(html)) return html.replace(/<body\b[^>]*>/i, (m) => m + ICON_BASE_CSS);
+    return ICON_BASE_CSS + html;
+  }
   const TOKEN_RE = /<i\b([^>]*?)\bdata-icon\s*=\s*"([^"]+)"([^>]*?)>\s*<\/i>/gi;
 
   async function inline(html) {
@@ -77,17 +95,16 @@
     html.replace(TOKEN_RE, (_m, pre, name) => { jobs.push(name); return _m; });
     const svgs = {};
     await Promise.all([...new Set(jobs)].map(async (n) => { svgs[n] = await getSvg(n); }));
-    return html.replace(TOKEN_RE, (m, pre, name, post) => {
+    const out = html.replace(TOKEN_RE, (m, pre, name, post) => {
       const svg = svgs[name];
       const attrs = (pre + ' ' + post).replace(/\s+/g, ' ').trim();
       if (!svg) {
         console.warn('[IconBank] unknown icon:', name);
-        return '<span ' + attrs + '></span>';
+        return '<i ' + attrs + '></i>';
       }
-      /* size via CSS: make the svg fill its wrapper */
-      const sized = svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block" ');
-      return '<span ' + attrs + ' data-icon-name="' + name + '">' + sized + '</span>';
+      return '<i ' + attrs + ' data-icon-name="' + name + '">' + svg + '</i>';
     });
+    return out === html ? html : withBaseCss(out);
   }
 
   window.IconBank = { inline, getSvg, search, resolve, loadManifest };
