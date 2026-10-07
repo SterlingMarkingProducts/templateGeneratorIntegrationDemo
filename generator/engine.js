@@ -64,7 +64,7 @@ COLORS
 [Exact hex values and where each is used: background(s), primary, secondary/accent, text/light. Give real hex codes.]
 
 LOGO / ICONS
-[Describe the logo mark precisely enough to rebuild in CSS/SVG — shape, style, colours. List every icon (phone, mail, globe, pin, tooth, etc.) and how contact lines use them.]
+[LOGO: what the mark DEPICTS — its subject in plain words (e.g. "a stylised spine", "a tooth", "an abstract orbit of three loops", "letters only: an SB monogram") — its style (line art / solid silhouette / geometric / script), its colour (hex), its position and size as percentages of the canvas. Say "letters only" if the mark is purely typographic. Do NOT describe how to redraw it: a matching library mark is chosen from this description. ICONS: list every small symbol (phone, mail, globe, pin, tooth, etc.) with what each stands for and how contact lines use them.]
 
 TYPOGRAPHY
 [Heading vs body font personality — serif or sans FIRST, then weight, width, letter-spacing, case, and any two-tone treatment. State the HEADLINE SCALE relative to the canvas (e.g. "the name spans ~70% of the width, roughly 1/5 of the height").]
@@ -82,7 +82,10 @@ TEXTURE / EFFECTS
 [Grain, halftone, foil, shadows, gradients, curved/arc-following text — or "none".]
 
 PHOTO REGIONS
-[Any photographic areas: position, size, subject — or "none".]
+[Any photographic areas, one per line: position and size as percentages of the canvas, and the SUBJECT in plain words (who or what is shown, the setting, the mood) — or "none". A matching library photograph is chosen from the subject.]
+
+PICTORIAL ELEMENTS
+[Every illustration, figure, mascot, drawn object, anatomy drawing, device, scene or clip-art element that is NOT a photograph and NOT the logo, one per line: its subject in plain words, its drawing style (line art / flat illustration / 3D / painterly / collage / textured), its colour (hex), and its position and size as percentages of the canvas — or "none". These are never redrawn; a library file is matched to each, or it is left out.]
 
 BOTANICAL MOTIFS
 [Every flower, leaf, sprig, branch, vine, wreath, grass or other plant artwork, one per line: what it is (e.g. "thin leafy sprig", "peony cluster", "pampas grass"), its drawing style (line art / watercolour / flat illustration / photographic), its colour (hex), and its position, size and orientation as percentages of the canvas (e.g. "top-left corner, ~20% width, pointing down-right"). Write "none" if there is no plant artwork.]
@@ -208,9 +211,16 @@ HARD FAILS (never ship these):
 - Any text clipped, cut off, hidden, or overlapping other text.
 - Ignoring the density contract in either direction — padding a restrained brief, or thinning a rich one.
 - Reaching for the same typeface or the same palette regardless of the brief.
-- Hand-drawing ANY floral or foliage artwork (see the hard rule below).
+- Hand-drawing ANY picture — a person, a figure, an animal, a spine or any anatomy, an object, a device, a scene, a mascot, an icon, a flower or a leaf (see the hard rules below).
 
-HARD RULE — NEVER HAND-DRAW FLOWERS OR FOLIAGE (applies to EVERY product, EVERY style direction, and Reference Design recreation — nothing overrides it):
+HARD RULE — NEVER DRAW A PICTURE OF ANYTHING (applies to EVERY product, EVERY style direction, and Reference Design recreation — nothing overrides it):
+You must NEVER draw pictorial artwork yourself: no people, figures, faces, hands, bodies, silhouettes of people, animals, anatomy (spines, vertebrae, bones, joints, organs, teeth), objects, devices, buildings, vehicles, tools, food, scenes, landscapes, mascots, product illustrations, or icons — nothing that depicts a thing. Do NOT approximate them with SVG paths, circles, lines, CSS shapes, clip-path, pseudo-elements or "simple line art": a hand-drawn figure or icon always reads as clip-art and fails print quality.
+- Inline SVG and CSS shapes are for ABSTRACT GEOMETRY ONLY: rules, bars, diagonal and curved splits, rings, concentric arcs, dot grids, chevrons, frames, corner brackets, and a monogram built from the brand's own letters.
+- Everything that depicts a thing comes from a library, or is left out: a SYMBOL from the ICON BANK (<i data-icon="…">), the brand MARK from the SUPPLIED BRAND MARK, PHOTOGRAPHY from the SUPPLIED PHOTOGRAPH or the customer's own image, DECORATION from the SUPPLIED DESIGN ASSETS. If no supplied file fits, OMIT the element and compose without it — that is always the better outcome than drawing it.
+- Reference recreation is NOT an exception: a figure, a mascot, an illustrated object or a pictorial logo in the reference is rebuilt only from the library files supplied for it (listed below the analysis), or left out. Never redraw what the reference drew.
+- The Generator checks this after generation: a drawn picture is replaced by the bank icon its label names, or removed.
+
+HARD RULE — NEVER HAND-DRAW FLOWERS OR FOLIAGE (the same rule, for the plant artwork models most often draw):
 You must NEVER draw floral or botanical artwork yourself: no flowers, floral arrangements, bouquets, petals, leaves, foliage, vines, branches, stems, botanical sprigs, wreaths, floral borders, botanical line art, ornamental plant drawings, abstract flower drawings, or decorative plant silhouettes. Do NOT approximate them with SVG paths, circles/ellipses, CSS shapes, clip-path, hand-built line art, pseudo-elements, or any generated icon-like geometry. Hand-drawn botanicals always read as clip-art and fail print quality.
 - If the composition would benefit from flowers/foliage, use a floral/botanical file from the SUPPLIED DESIGN ASSETS in this brief if one is supplied; a supplied brand MARK may fill the role only where it genuinely serves as the logo. If nothing suitable was supplied, OMIT the botanical decoration and redesign the composition without it — that is always the better outcome.
 - Reference recreation is NOT an exception: when a reference design contains flower/leaf/botanical drawings, reproduce the overall composition, placement, scale and balance, and fill that floral role with a supplied design-asset file — or simplify/omit it. Never write your own SVG flower paths because the reference has one.
@@ -1012,6 +1022,156 @@ function pickReferenceBotanicals(analysisText) {
     if (other) out.push(other.a);
   }
   return { assets: out, motifText: motif, monochrome: monochrome };
+}
+
+/* ── LIBRARY MATCHES FOR EVERYTHING ELSE A REFERENCE DRAWS ─────────────────
+ *
+ * The same rule as the botanicals, for the rest of a reference's artwork:
+ * its logo mark, its photograph(s) and its illustrations/decorations are
+ * never redrawn. The analysis now describes each by SUBJECT (what it
+ * depicts), and the closest library file is supplied for it — a mark from
+ * the logo library, a photograph from the stock library, decoration from the
+ * design-asset library. Nothing matched is left out, never drawn. */
+function referenceSection(text, name) {
+  const re = new RegExp(name.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&') + '\\s*\\n([\\s\\S]*?)(?:\\n[A-Z][A-Z &/—-]{3,}\\n|$)');
+  const m = re.exec(String(text || ''));
+  if (!m) return '';
+  const body = m[1].replace(/^\s*\[|\]\s*$/g, '').trim();
+  return (!body || /^none\.?$/i.test(body)) ? '' : body;
+}
+function wordsOf(text) {
+  return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ').filter((w) => w.length >= 3);
+}
+function wordOverlap(words, hay) {
+  const padded = ' ' + String(hay || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
+  let n = 0;
+  words.forEach((w) => { if (padded.indexOf(' ' + w + ' ') !== -1) n++; });
+  return n;
+}
+const LOGO_STOPWORDS = /^(the|and|with|logo|mark|icon|symbol|style|colou?r|hex|left|right|top|bottom|centre|center|canvas|width|height|size|position|line|art|solid|silhouette|geometric|script|letters|only|monogram|wordmark|typographic|small|large|above|below|beside|inside|white|black|dark|light|grey|gray|navy|blue|green|red|orange|gold|cream)$/;
+const PICTORIAL_LOGO_WORDS = /\b(spine|vertebra|tooth|teeth|scales?|heart|leaf|bird|wings?|house|home|building|cloche|book|lotus|flame|drop|arch|gateway|knot|loop|ribbon|orbit|spark|aperture|path|compass|network|hex|blocks|wave|bridge|diamond|rings|summit|mountain|shield|check|growth|arrow|figure|person|animal|dog|cat|tree|sun|star|key|beam|crane|chart|coin|hand)\b/i;
+function pickReferenceLogo(analysisText, industryText) {
+  const sec = referenceSection(analysisText, 'LOGO / ICONS');
+  if (!sec || !logoLibrary || !logoLibrary.logos.length) return null;
+  const logoPart = sec.split(/\bICONS?\s*:/i)[0];
+  /* No pictorial mark in the reference -> nothing to match. A typographic
+     mark is the model's to set in type; the library is not consulted. */
+  const noMark = /^\s*(none|n\/a)\b|\bno (logo|mark|symbol|emblem)\b|typography is the (mark|logo)|\bwordmark\b|letters? only|purely typographic|typographic (mark|logo)|text[- ]only|type[- ]only/i.test(logoPart);
+  const pictorial = PICTORIAL_LOGO_WORDS.test(logoPart);
+  if (noMark && !pictorial) return null;
+  if (!pictorial) return null;
+  const words = wordsOf(logoPart).filter((w) => !LOGO_STOPWORDS.test(w));
+  const stock = stockLibrary;
+  const slugs = (stock && stock.terms) ? matchStockIndustries(logoPart + ' ' + (industryText || ''), stock) : [];
+  const specific = slugs.filter((sl) => BROAD_INDUSTRY_SLUGS.indexOf(sl) === -1);
+  let best = null;
+  logoLibrary.logos.forEach((l) => {
+    const rec = [l.name, l.symbol_type, (l.affinity || []).join(' '), (l.industries || []).join(' '), l.mood, l.logo_style].join(' ');
+    let sc = wordOverlap(words, rec);
+    /* the trade's own literal mark is the natural match for a pictorial
+       mark of that trade (a spine for a chiropractor) — a bonus, never a
+       match on its own */
+    if (l.tier === 'B' && (l.industries || []).some((sl) => specific.indexOf(sl) !== -1)) sc += 3;
+    else if (l.tier === 'B' && (l.industries || []).some((sl) => slugs.indexOf(sl) !== -1)) sc += 2;
+    if (sc > 0 && (!best || sc > best.sc)) best = { l, sc };
+  });
+  if (!best || best.sc < 2) return null;
+  return { logo: best.l, tier: best.l.tier, matchedIndustries: slugs, mode: 'reference', subject: logoPart.trim().slice(0, 160) };
+}
+function pickReferencePhoto(analysisText, industryText, geom) {
+  const sec = referenceSection(analysisText, 'PHOTO REGIONS');
+  const lib = stockLibrary;
+  if (!sec || !lib || !lib.photos.length) return null;
+  const slugs = matchStockIndustries(sec + ' ' + (industryText || ''), lib);
+  let pool = [];
+  if (slugs.length) {
+    let tier = slugs.filter((sl) => stockSlugTier(sl) === 1);
+    if (!tier.length) tier = slugs.filter((sl) => stockSlugTier(sl) === 2);
+    pool = lib.photos.filter((p) => (p.depicts || []).some((sl) => tier.indexOf(sl) !== -1));
+  }
+  if (!pool.length) pool = lib.photos.filter((p) => p.general_purpose === true);
+  if (!pool.length) return null;
+  const largeFormat = isLargeFormatForAssets(geom.templateType, geom.widthIn, geom.heightIn);
+  const safe = pool.filter((p) => stockCompositionOk(p, largeFormat));
+  if (!safe.length) return null;
+  const words = wordsOf(sec);
+  let best = null;
+  safe.forEach((p) => {
+    const sc = wordOverlap(words, [p.subject, p.setting, p.mood, p.people, (p.depicts || []).join(' ')].join(' '));
+    if (!best || sc > best.sc) best = { p, sc };
+  });
+  return { photo: best.p, roles: [], productClass: stockProductClass(geom.templateType, geom.widthIn, geom.heightIn),
+    largeFormat, industry: slugs[0] || '', matchedIndustries: slugs, briefIndustries: [], mode: 'reference',
+    subject: sec.trim().slice(0, 200) };
+}
+const DESIGN_FAMILY_WORDS = [
+  ['watercolour-wash', /\b(watercolou?r|pigment wash|painted wash|wash of colou?r)\b/],
+  ['torn-paper', /\b(torn|ripped|paper scraps?|collage|kraft|handmade paper|wrinkled paper|paper strip)\b/],
+  ['brushstroke', /\b(brush ?strokes?|ink (stroke|swatch|splatter)|paint stroke|splatter|diagonal stripes?)\b/],
+  ['gold-frame', /\b(gold(en)? (frame|oval|divider|filigree|corner)|ornate (frame|border)|filigree)\b/],
+  ['doodle', /\b(doodles?|squiggles?|sparkles?|scribbles?|hand-?drawn hearts?|dot cluster)\b/],
+  ['tape', /\b(masking tape|washi tape|tape strip|piece of tape)\b/],
+  ['texture-neutral', /\b(grain(y)?|halftone|dot ?grid|marble|linen|paint splatter|noise texture|speckle)\b/],
+  ['flat-blob', /\b(blobs?|organic shapes?|biomorphic|amoeba)\b/],
+  ['glossy-3d', /\b(glossy|3-?d (shape|ribbon|wave|orb)|liquid|ribbon curl|orb|sphere|holographic|iridescent|chrome|pearl(escent)?|capsule|gradient mesh)\b/],
+  ['geometric-system', /\b(overlapping circles|modernist (arch|geometry|shapes)|layered arch(es)?|transparent geometry|bauhaus)\b/],
+  ['geometric-solid', /\b(arch|semicircle|half[- ]circle|triangle|rounded block|geometric (square|circle|shape|block))\b/],
+  ['ring-frame', /\b(stamp ring|rubber stamp|scribble circle|brush ring|glass ring|circular stamp)\b/],
+  ['promo', /\b(starburst|burst badge|sunburst|price burst)\b/],
+  ['newsprint', /\b(newspaper|newsprint)\b/],
+  ['postal', /\b(postal|postmark|cancellation lines|wave lines)\b/],
+  ['figurative', /\b(face|bust|statue|plaster|an eye|eye illustration|portrait line art|line-?art (face|figure|portrait)|figure drawing|human (figure|form))\b/],
+];
+function pickReferenceDesignAssets(analysisText) {
+  if (!assetLibrary) return null;
+  const text = [referenceSection(analysisText, 'PICTORIAL ELEMENTS'), referenceSection(analysisText, 'TEXTURE / EFFECTS'),
+    referenceSection(analysisText, 'DISTINCTIVE FEATURES')].filter(Boolean).join('\n');
+  if (!text) return null;
+  const t = text.toLowerCase();
+  const matched = DESIGN_FAMILY_WORDS.filter(([, re]) => re.test(t)).map(([fam]) => fam).slice(0, 2);
+  if (!matched.length) return null;
+  const words = wordsOf(t);
+  const monochrome = /\b(line[- ]?art|outline|monochrome|single[- ]colou?r|one[- ]colou?r|black|charcoal|ink|silhouette)\b/.test(t);
+  const assets = [];
+  matched.forEach((fam) => {
+    const pool = (assetLibrary.byFamily[fam] || []);
+    let best = null;
+    pool.forEach((a) => {
+      const sc = wordOverlap(words, [a.filename.replace(/[_\d.]+/g, ' '), a.visual_style, a.colour_family, a.mood].join(' '));
+      if (!best || sc > best.sc) best = { a, sc };
+    });
+    if (best) assets.push(best.a);
+  });
+  return assets.length ? { assets, motifText: text.slice(0, 400), monochrome } : null;
+}
+function pickReferenceLibraryMatches(analysisText, industryText, geom) {
+  const logo = pickReferenceLogo(analysisText, industryText);
+  const photo = pickReferencePhoto(analysisText, industryText, geom);
+  const design = pickReferenceDesignAssets(analysisText);
+  if (!logo && !photo && !design) return null;
+  return { logo, photo, design };
+}
+function referenceLibraryBlock(m, isStamp) {
+  if (!m) return '';
+  let out = '';
+  if (m.logo) {
+    out += '\n\nTHE REFERENCE\'S LOGO MARK is described above as: "' + m.logo.subject + '". It is NOT redrawn. The closest library mark is supplied below — place it where the reference places its mark, at the reference\'s size, recoloured to the reference\'s mark colour if needed:\n\n'
+      + renderLogoBlock(m.logo, !!isStamp).replace('- USING IT IS OPTIONAL: if the composition is genuinely better as pure typography, leave it out.', '- USE IT in the mark\'s place.')
+      + '\n- Never draw the reference\'s own mark: this file stands in its place.';
+  }
+  if (m.photo) {
+    out += '\n\nTHE REFERENCE\'S PHOTOGRAPH shows: "' + m.photo.subject + '". It is NOT redrawn or imitated with shapes. The closest library photograph is supplied below — place it in the photo region the reference uses (position and size from PHOTO REGIONS), cropped with object-fit: cover:\n\n'
+      + renderStockPhotoBlock(m.photo);
+  }
+  if (m.design) {
+    out += '\n\nSUPPLIED DESIGN ASSETS FOR THE REFERENCE\'S ARTWORK — the reference\'s illustrations, textures and decorations (PICTORIAL ELEMENTS / TEXTURE above) are never drawn. Rebuild each from these files, at the reference\'s position, size, angle and mirroring:\n'
+      + m.design.assets.map((a) => '- ' + a.filename + '\n    src: ' + a.url + '  (a real file — reference it with this exact path)\n    shows: ' + a.visual_style + ' · colours: ' + a.colour_family).join('\n') + '\n'
+      + 'HOW:\n- Place each as <img src="[src]" style="position:absolute;...;object-fit:contain"> sized and positioned like the reference element; rotate or mirror with transform (rotate(), scaleX(-1)).\n'
+      + (m.design.monochrome ? '- The reference draws it in one colour: recolour the file with a div sized to it — style="background:[hex];-webkit-mask:url([src]) center/contain no-repeat;mask:url([src]) center/contain no-repeat".\n' : '')
+      + '- Never write SVG paths, shapes or CSS for any illustrated object.';
+  }
+  out += '\n\nANY pictorial element of the reference with no library file supplied above (a figure, a mascot, an object drawing) is LEFT OUT of the recreation — reproduce its space and the composition around it, never the drawing.';
+  return out;
 }
 
 /* The prompt block that hands those files to the model, with the exact way to
@@ -2412,7 +2572,7 @@ TECHNICAL REQUIREMENTS
 - Google Fonts @import in <head> for all fonts named in TYPOGRAPHY
 - @media print: margin:0; and @page { size: [W]px [H]px; margin: 0; }
 - Pure HTML and CSS only — no JavaScript. Inline SVG is allowed. <img> is allowed for a user-provided Image URL, for a supplied photograph, for a supplied brand mark, and for any supplied design asset, and for nothing else.
-- ICON BANK (preferred over hand-drawing common icons): the app ships a library of professionally drawn vector icons. To place one, emit an EMPTY tag <i data-icon="NAME" style="..."></i> — the app replaces it with the real inline SVG after generation. Icons inherit CSS color (currentColor), so tint them via the style/class color property, and size them via width/height on the tag (display:inline-block). Use these for contact rows (phone, mail, globe, map-pin), service lists, and common functional symbols — reserve hand-drawn inline SVG for custom logo marks and monograms, and never use a bank icon in place of a supplied brand mark or design asset. Use ONLY names from this list (an unknown name renders as empty space):
+- ICON BANK (preferred over hand-drawing common icons): the app ships a library of professionally drawn vector icons. To place one, emit an EMPTY tag <i data-icon="NAME" style="..."></i> — the app replaces it with the real inline SVG after generation. Icons inherit CSS color (currentColor), so tint them via the style/class color property, and size them via width/height on the tag (display:inline-block). Use these for contact rows (phone, mail, globe, map-pin), service lists, and common functional symbols — inline SVG is for abstract geometry and letter-built monograms only — never draw an icon, a figure or a pictorial mark yourself — and never use a bank icon in place of a supplied brand mark or design asset. Use ONLY names from this list (an unknown name renders as empty space):
   phone, phone-call, smartphone, mail, send, globe, map-pin, home, user, users, briefcase, calendar, clock, watch, star, heart, award, gift, camera, printer, message-circle, instagram, facebook, twitter, linkedin, youtube, wifi, dollar-sign, credit-card, shopping-bag, shopping-cart, truck, tool, settings, zap, sun, moon, cloud, umbrella, droplet, feather, scissors, coffee, key, lock, shield, target, trending-up, bar-chart, pie-chart, activity, compass, flag, bookmark, book-open, box, package, layers, aperture, eye, edit-2, pen-tool, headphones, mic, music, film, video, monitor, cpu, database, code, anchor, airplay, thermometer, sunrise, sunset, life-buoy, crosshair, hexagon, sliders, rss, external-link, navigation, info, check-circle, plus-circle
   (business/medical/finance set — prefix with business-medical/): business-medical/handshake, business-medical/stethoscope, business-medical/tooth, business-medical/syringe, business-medical/first-aid-kit, business-medical/heart-cross, business-medical/medical-cross, business-medical/nurse-cap, business-medical/hospital-bed, business-medical/wheelchair, business-medical/dna, business-medical/lungs, business-medical/pill, business-medical/growth-chart, business-medical/justice-scale, business-medical/gavel, business-medical/graduation-cap, business-medical/coins, business-medical/money-bag, business-medical/cash, business-medical/donation-box, business-medical/paint-brush, business-medical/paint-palette, business-medical/airplane, business-medical/palm-tree, business-medical/desk-globe, business-medical/org-chart, business-medical/presentation-chart, business-medical/team, business-medical/trophy
 - ASSET CATEGORIES ARE FIXED. Every supplied file belongs to exactly one category and is used ONLY as that category: an ICON is a small supporting symbol placed immediately beside the information it stands for, on the same side of the card (a phone icon beside the printed phone number, an envelope beside the email, a pin beside the address — no phone number on that side, no phone icon; never beside the name or title) — on a business card 16–36px, never more than 48px, never a background, never hero artwork, never decoration, never enlarged into a graphic element; if there is nowhere sensible to put it, leave it out. A LOGO is the brand mark — aspect ratio preserved, never cropped, stretched or used as decoration. A PHOTOGRAPH may be the hero, a background or a cropped panel. A DESIGN ASSET (watercolour, sketch, texture, flourish, abstract shape) may be large, background, accent or hero. Never stand one category in for another: an icon is not a design asset, a design asset is not a logo. The Generator enforces this after generation: an icon that is oversized, used as artwork, or not beside its own information is shrunk or removed.
@@ -2821,13 +2981,26 @@ async function handleGenerate(body, send) {
         recreatingRef = true;
         refImageForGen = img;
         const refBotanicals = pickReferenceBotanicals(inspiration);
+        const refLibrary = pickReferenceLibraryMatches(inspiration,
+          [industry, businessName, specialInstructions].filter(Boolean).join(' '),
+          { templateType, widthIn: trimWin, heightIn: trimHin });
+        console.info('[generator] reference library matches: ' + (refLibrary
+          ? ['logo: ' + (refLibrary.logo ? refLibrary.logo.logo.filename : 'none'),
+             'photo: ' + (refLibrary.photo ? refLibrary.photo.photo.file : 'none'),
+             'design: ' + (refLibrary.design ? refLibrary.design.assets.map((a) => a.filename).join(', ') : 'none')].join(' | ')
+          : 'none'));
+        window.SMPLastReferenceLibrary = refLibrary ? {
+          logo: refLibrary.logo ? refLibrary.logo.logo.filename : null,
+          photo: refLibrary.photo ? refLibrary.photo.photo.file : null,
+          design: refLibrary.design ? refLibrary.design.assets.map((a) => a.filename) : [],
+        } : null;
         console.info('[generator] reference botanicals: ' + (refBotanicals
           ? refBotanicals.assets.map((a) => a.filename).join(', ') + (refBotanicals.monochrome ? ' (recoloured, monochrome motif)' : '')
           : 'none named in the reference'));
         window.SMPLastReferenceBotanicals = refBotanicals
           ? { assets: refBotanicals.assets.map((a) => a.filename), monochrome: refBotanicals.monochrome, motif: refBotanicals.motifText }
           : null;
-        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. The reference is the PRIMARY VISUAL AUTHORITY for this generation: reproduce its overall composition, its major shapes at their approximate proportions, its visual hierarchy and alignment, its typography personality, its colour relationships, its spacing, its borders and frames, its texture treatment, any image placement, and its distinctive effects — curved or arc-following text, oversized concentric arcs, grain, and the like — using editable HTML/CSS/inline-SVG. PLANT ARTWORK IS THE ONE EXCEPTION: flowers, leaves, sprigs, branches, vines and wreaths are NEVER drawn in SVG or CSS — they are rebuilt only from the SUPPLIED BOTANICAL ASSETS below, or left out. CONTENT: where the user supplied their own business name or details, place THEIR content in the SAME typographic role the reference gives its own; where they supplied none, keep the reference's. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt intelligently to this product's real dimensions, bleed and safety margins if the aspect ratio differs — preserve the composition, never letterbox or distort it. This note OVERRIDES every generic instruction elsewhere in this prompt where they conflict — EXCEPT the HARD RULE on botanical artwork, which nothing overrides: ignore any default direction, density, palette-stance, format-style or "invent an original design" guidance. Match what you see.\n\n${inspiration}${referenceBotanicalBlock(refBotanicals)}`;
+        styleDirFinal += `\n\nREFERENCE DESIGN TO RECREATE — the user uploaded an existing design and wants it reproduced as an editable template, NOT reinterpreted. The reference is the PRIMARY VISUAL AUTHORITY for this generation: reproduce its overall composition, its major shapes at their approximate proportions, its visual hierarchy and alignment, its typography personality, its colour relationships, its spacing, its borders and frames, its texture treatment, any image placement, and its distinctive effects — curved or arc-following text, oversized concentric arcs, grain, and the like — using editable HTML/CSS/inline-SVG. PLANT ARTWORK IS THE ONE EXCEPTION: flowers, leaves, sprigs, branches, vines and wreaths are NEVER drawn in SVG or CSS — they are rebuilt only from the SUPPLIED BOTANICAL ASSETS below, or left out. CONTENT: where the user supplied their own business name or details, place THEIR content in the SAME typographic role the reference gives its own; where they supplied none, keep the reference's. If the reference shows a FRONT and a BACK, reproduce BOTH sides. Adapt intelligently to this product's real dimensions, bleed and safety margins if the aspect ratio differs — preserve the composition, never letterbox or distort it. This note OVERRIDES every generic instruction elsewhere in this prompt where they conflict — EXCEPT the HARD RULE on botanical artwork, which nothing overrides: ignore any default direction, density, palette-stance, format-style or "invent an original design" guidance. Match what you see.\n\n${inspiration}${referenceBotanicalBlock(refBotanicals)}${referenceLibraryBlock(refLibrary, /stamp/i.test(templateType || ''))}`;
       } else {
         styleDirFinal += `\n\nSTYLE REFERENCE INSPIRATION (channel this creative energy for an ORIGINAL design — do NOT clone or recreate the reference image literally):\n${inspiration}`;
       }

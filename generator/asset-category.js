@@ -53,6 +53,18 @@
     NORMAL_MIN: 16, NORMAL_MAX: 36, ABSOLUTE_MAX: 48,
     /* An icon covering more of the card than this is being used as artwork. */
     AREA_FRACTION_HERO: 0.04,
+    /* HOW THE LIMITS GROW WITH THE CANVAS. A hand-held piece — anything up to
+     * about 13in on its short side: cards, badges, postcards, flyers, tri-fold
+     * brochures — is read at arm's length, so an icon on it is the same
+     * physical thing it is on a card, however big the sheet: the scale stops
+     * at 1.25 (36px -> 45px normal, 48px -> 60px absolute). Scaling straight
+     * with the canvas gave an 11x8.5 brochure 105px/141px icons — a third of
+     * a panel's width. Only distance-read large format (signs, posters,
+     * banners, beyond 13in) keeps scaling with the canvas. In share-of-the-
+     * graphic terms: on a card a normal icon is at most 1/6 of the short
+     * side; on a brochure at most 1/18. */
+    HANDHELD_MAX_SHORT_SIDE: 1300,
+    HANDHELD_MAX_SCALE: 1.25,
   };
 
   /* What an icon STANDS FOR, from its icon-bank name (the manifest's own
@@ -79,7 +91,9 @@
 
   function scaleFor(canvasW, canvasH) {
     var s = Math.min(canvasW / ICON.REF_W, canvasH / ICON.REF_H);
-    return isFinite(s) && s > 0 ? s : 1;
+    if (!(isFinite(s) && s > 0)) return 1;
+    if (Math.min(canvasW, canvasH) <= ICON.HANDHELD_MAX_SHORT_SIDE) s = Math.min(s, ICON.HANDHELD_MAX_SCALE);
+    return s;
   }
 
   function iconLimits(canvasW, canvasH) {
@@ -284,33 +298,77 @@
           var r = rects[i]; if (!r.width || !r.height) continue;
           var l = r.left * k, rr = r.right * k, t = r.top * k, b = r.bottom * k;
           var text = (pe.textContent || '').trim();
+          var box = { l: l, r: rr, t: t, b: b };
           var vOver = Math.min(B, b) - Math.max(T, t);
           if (vOver >= 0.5 * Math.min(B - T, b - t)) {
-            if (l >= R - 2) right.push({ gap: l - R, x: l, text: text });
-            else if (rr <= L + 2) left.push({ gap: L - rr, x: -rr, text: text });
+            if (l >= R - 2) right.push({ gap: l - R, x: l, text: text, box: box });
+            else if (rr <= L + 2) left.push({ gap: L - rr, x: -rr, text: text, box: box });
             continue;
           }
           var hOver = Math.min(R, rr) - Math.max(L, l);
           if (hOver > 0) {
             var vGap = t >= B - 2 ? t - B : (b <= T + 2 ? T - b : -1);
-            if (vGap >= 0 && vGap <= gapCol) column.push(text);
+            if (vGap >= 0 && vGap <= gapCol) column.push({ text: text, box: box, side: t >= B - 2 ? 'below' : 'above' });
           }
         }
       }
-      function row(side) {
-        if (!side.length) return false;
+      /* Returns WHERE the information sits — { side, box } — or null. */
+      function row(side, name) {
+        if (!side.length) return null;
         side.sort(function (a, b) { return a.gap - b.gap; });
-        if (side[0].gap > gapRow) return false;
+        if (side[0].gap > gapRow) return null;
         /* the row's text read outward from the icon, as a person reads it */
         var within = side.filter(function (e) { return e.gap <= 240 * s; })
           .map(function (e) { return e.text; });
         var joined = [], seenT = {};
         within.forEach(function (t) { if (!seenT[t]) { seenT[t] = 1; joined.push(t); } });
-        return test(joined.join(' '));
+        return test(joined.join(' ')) ? { side: name, box: side[0].box } : null;
       }
-      if (row(right) || row(left)) return true;
-      for (var j = 0; j < column.length; j++) if (test(column[j])) return true;
+      var hit = row(right, 'right') || row(left, 'left');
+      if (hit) return hit;
+      for (var j = 0; j < column.length; j++) if (test(column[j].text)) return { side: column[j].side, box: column[j].box };
+      return null;
+    }
+
+    /* Does the information line at `info.box` already have an icon beside it
+     * (another visible icon unit on its row, within an icon's reach)? */
+    function lineHasIcon(unit, root, info, k, s) {
+      var b = info.box, reach = Math.max(16 * s, ICON.NORMAL_MAX * s) * 2;
+      var others = root.querySelectorAll('[data-icon-name]');
+      for (var i = 0; i < others.length; i++) {
+        var o = others[i];
+        if (o === unit || !shown(o) || o.getAttribute('data-asset-guard') === 'removed') continue;
+        var r = o.getBoundingClientRect();
+        var l = r.left * k, rr = r.right * k, t = r.top * k, bt = r.bottom * k;
+        var vOver = Math.min(bt, b.b) - Math.max(t, b.t);
+        if (vOver <= 0) continue;
+        var hGap = l >= b.r ? l - b.r : (rr <= b.l ? b.l - rr : 0);
+        if (hGap <= reach) return true;
+      }
       return false;
+    }
+
+    /* A shrunk icon that was drawn against a line is moved back beside it:
+     * its box was its own, the gap it leaves is not. Only an absolutely
+     * positioned unit needs this — one in a flex/grid row closes up by itself. */
+    function nudgeBeside(unit, info, k, s) {
+      var st = getComputedStyle(unit);
+      if (st.position !== 'absolute' && st.position !== 'fixed') return false;
+      var r = unit.getBoundingClientRect();
+      var ul = r.left * k, ut = r.top * k, uw = r.width * k, uh = r.height * k;
+      var b = info.box, gap = 8 * s, wantL = ul, wantT = ut;
+      if (info.side === 'right') { wantL = b.l - gap - uw; wantT = (b.t + b.b) / 2 - uh / 2; }
+      else if (info.side === 'left') { wantL = b.r + gap; wantT = (b.t + b.b) / 2 - uh / 2; }
+      else if (info.side === 'below') { wantL = (b.l + b.r) / 2 - uw / 2; wantT = b.t - gap - uh; }
+      else if (info.side === 'above') { wantL = (b.l + b.r) / 2 - uw / 2; wantT = b.b + gap; }
+      var dx = wantL - ul, dy = wantT - ut;
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return false;
+      unit.style.setProperty('left', (unit.offsetLeft + dx).toFixed(2) + 'px', 'important');
+      unit.style.setProperty('top', (unit.offsetTop + dy).toFixed(2) + 'px', 'important');
+      unit.style.setProperty('right', 'auto', 'important');
+      unit.style.setProperty('bottom', 'auto', 'important');
+      unit.style.setProperty('transform', 'none', 'important');
+      return [Math.round(dx), Math.round(dy)];
     }
 
     function remove(unit, report, name, reason, w, h) {
@@ -352,17 +410,29 @@
       var background = w >= RW * 0.5 || h >= RH * 0.5 || areaFrac >= 0.25
         || (st.position === 'absolute' && st.inset === '0px') || z < 0;
       if (background) return remove(unit, report, name, 'background', w, h);
-      if (!besideItsInformation(unit, root, type, k, s)) {
+      var before = besideItsInformation(unit, root, type, k, s);
+      if (!before) {
         return remove(unit, report, name, type === 'generic' ? 'no-adjacent-text' : 'no-' + type + '-information', w, h);
       }
       var normalMax = ICON.NORMAL_MAX * s;
       if (w > normalMax + 0.5 || h > normalMax + 0.5 || areaFrac > ICON.AREA_FRACTION_HERO) {
         clamp(unit, report, name, w, h, normalMax, unit.offsetWidth);
         /* Shrunk in place, a big icon can end up floating away from the line
-         * it was drawn against. At icon size it must still be beside it. */
+         * it was drawn against. Move it back beside that line; at icon size
+         * it must still be beside it, or it has no placement. */
         if (!besideItsInformation(unit, root, type, k, s)) {
-          report.corrected.pop();
-          remove(unit, report, name, 'not-beside-' + (type === 'generic' ? 'text' : type + '-information') + '-at-icon-size', w, h);
+          /* the line it was drawn against may already have its own icon:
+             a second one shrunk and moved in beside it is a duplicate */
+          if (lineHasIcon(unit, root, before, k, s)) {
+            report.corrected.pop();
+            return remove(unit, report, name, 'duplicate-icon-for-line', w, h);
+          }
+          var moved = nudgeBeside(unit, before, k, s);
+          if (moved) report.corrected[report.corrected.length - 1].moved = moved;
+          if (!besideItsInformation(unit, root, type, k, s)) {
+            report.corrected.pop();
+            remove(unit, report, name, 'not-beside-' + (type === 'generic' ? 'text' : type + '-information') + '-at-icon-size', w, h);
+          }
         }
       }
     }
@@ -407,6 +477,7 @@
         var rr = root.getBoundingClientRect();
         var k = rr.width > 0 ? RW / rr.width : 1;
         var s = Math.min(RW / ICON.REF_W, RH / ICON.REF_H); if (!(s > 0)) s = 1;
+        if (Math.min(RW, RH) <= ICON.HANDHELD_MAX_SHORT_SIDE) s = Math.min(s, ICON.HANDHELD_MAX_SCALE);   // hand-held: card-scale icons
         var els = root.querySelectorAll(cssNamesLibrary ? '*' : 'img, image, svg, [data-icon-name], [data-asset-kind]');
         var units = [];
         for (var i = 0; i < els.length; i++) {
@@ -533,6 +604,219 @@
     return out;
   }
 
+  /* ── hand-drawn PICTURES ───────────────────────────────────────────────────
+   * The model may draw abstract geometry inline (a rule, a bar, a diagonal
+   * split, a ring, concentric arcs, a chevron pair). It may NOT draw a
+   * picture of anything — a person, a figure, a spine, an animal, an object,
+   * a device, or an icon — those come only from the libraries. Every inline
+   * <svg> the model wrote (not an icon-bank icon, not the customer's own SVG)
+   * is read for what it is:
+   *
+   *   pictorial  — curves plus several parts, or several parts of mixed kinds
+   *                (a circle head on four line limbs): a drawing of something
+   *   icon-like  — two or three parts of mixed kinds sitting beside a short
+   *                label (a drawn check in a drawn circle next to "Experienced
+   *                team"): an icon the bank should have supplied
+   *   abstract   — everything else: one rule, one polygon, one swoosh, a set
+   *                of rings or stripes of one kind
+   *
+   * A pictorial or icon-like drawing is swapped for the icon-bank icon its
+   * label (or its own class/title) names, when one fits, and otherwise
+   * removed; abstract geometry is left alone. Runs on the HTML string before
+   * the design is rendered, so the download, the preview and the push all
+   * see the same thing; the icon token it writes is inlined by IconBank. */
+  var DRAWN_PARTS = 'path, circle, ellipse, rect, line, polyline, polygon, text, image, use, foreignObject';
+  var PICTURE_NAME = /(^|[^a-z])(figures?|persons?|people|man|woman|body|bodies|silhouettes?|spines?|skeletons?|vertebrae?|bones?|anatomy|animals?|dogs?|cats?|mascots?|illustrations?|drawings?|characters?|avatars?|portraits?|faces?|hands?|scenes?|objects?|devices?|buildings?|vehicles?|cars?)(?![a-z])/i;
+  function drawnSvgShape(svg) {
+    var parts = svg.querySelectorAll(DRAWN_PARTS);
+    var kinds = {}, n = 0, curves = 0, arcs = 0, foreign = false;
+    for (var i = 0; i < parts.length; i++) {
+      var tag = parts[i].tagName.toLowerCase();
+      if (tag === 'text' || tag === 'image' || tag === 'use' || tag === 'foreignobject') foreign = true;
+      kinds[tag] = (kinds[tag] || 0) + 1; n++;
+      if (tag === 'path') {
+        var d = parts[i].getAttribute('d') || '';
+        curves += (d.match(/[CcSsQqTt]/g) || []).length;
+        arcs += (d.match(/[Aa]/g) || []).length;
+      }
+    }
+    return { parts: n, kinds: Object.keys(kinds).length, curves: curves, arcs: arcs, foreign: foreign };
+  }
+  function classifyDrawnSvg(svg) {
+    var sh = drawnSvgShape(svg);
+    if (sh.foreign) return 'pictorial';
+    if (sh.curves && sh.parts >= 2) return 'pictorial';
+    if (sh.curves >= 3) return 'pictorial';                       // one path, but a shape drawn with several curves
+    if (sh.parts >= 4 && sh.kinds >= 2) return 'pictorial';       // a head on limbs, a body of mixed parts
+    if (sh.parts >= 2 && sh.kinds >= 2) return 'icon-like';       // a check in a circle, a bar in a ring
+    return 'abstract';
+  }
+  /* Words a label or a class may use, mapped to icon-bank names in order of
+   * preference; the first name the bank actually has wins. */
+  var ICON_SYNONYMS = [
+    [/\b(phone|call|tel|telephone)\b/, ['phone', 'phone-call']],
+    [/\b(e-?mail|envelope|inbox)\b/, ['mail', 'mail-closed']],
+    [/\b(web|website|online|www|globe|internet)\b/, ['globe', 'globe-sphere']],
+    [/\b(address|location|map|directions|clinic location|find us|visit)\b/, ['map-pin', 'map']],
+    [/\b(hours|time|open|schedule|clock|appointment|booking|book)\b/, ['clock', 'calendar']],
+    [/\b(calendar|date|events?)\b/, ['calendar']],
+    [/\b(team|people|patients|clients|families|family|group|community|staff|everyone)\b/, ['users', 'people-group', 'team']],
+    [/\b(person|individual|personal|you|user|member)\b/, ['user', 'person']],
+    [/\b(care|caring|heart|love|wellness|wellbeing|compassion|support|kind)\b/, ['heart', 'hands-heart', 'hand-heart']],
+    [/\b(check|checked|verified|experienced|licensed|certified|qualified|trusted|quality|guarantee|approved|proven|accredited)\b/, ['check-circle', 'shield-check', 'award']],
+    [/\b(award|awards|winner|best|excellence|top rated|rated)\b/, ['award', 'trophy', 'star']],
+    [/\b(star|stars|modern|premium|featured|new)\b/, ['star', 'stars']],
+    [/\b(shield|safe|safety|protect|protection|prevention|secure|insured)\b/, ['shield', 'shield-check']],
+    [/\b(posture|spine|spinal|back|alignment|aligned|adjust|adjustment|chiropractic|mobility|movement|motion|activity|active)\b/, ['activity', 'pulse-line']],
+    [/\b(assessment|analysis|diagnos\w*|screening|evaluation|exam|examination|assess|search|find)\b/, ['search', 'magnifier', 'clipboard']],
+    [/\b(progress|results|growth|improve\w*|recovery|performance|measured|track\w*)\b/, ['trending-up', 'growth-chart', 'chart-rising']],
+    [/\b(target|goal|goals|precision|precise|focus|accuracy|aim)\b/, ['target', 'crosshair']],
+    [/\b(plan|plans|list|checklist|notes|report|form|clipboard)\b/, ['clipboard', 'list', 'document']],
+    [/\b(idea|insight|knowledge|learn|education|tip|tips)\b/, ['lightbulb', 'book-open']],
+    [/\b(energy|fast|quick|power|strength|strong)\b/, ['zap', 'dumbbell']],
+    [/\b(exercise|fitness|training|workout|gym|rehab\w*|therapy)\b/, ['dumbbell', 'activity']],
+    [/\b(medical|health|doctor|physician|nurse|clinic|hospital|treatment|cross)\b/, ['medical-cross', 'stethoscope', 'heart-pulse']],
+    [/\b(dental|dentist|tooth|teeth|smile)\b/, ['tooth', 'smile']],
+    [/\b(home|house|household|residential)\b/, ['home', 'house']],
+    [/\b(building|office|offices|commercial|business)\b/, ['buildings', 'briefcase']],
+    [/\b(tools?|repair|service|maintenance|fix)\b/, ['tool', 'wrench', 'gear']],
+    [/\b(settings|process|system|systems|gear|gears)\b/, ['gear', 'settings']],
+    [/\b(money|price|pricing|cost|affordable|dollar|payment|pay|finance|financing)\b/, ['dollar', 'credit-card', 'coins']],
+    [/\b(gift|gifts|reward|rewards|offer|promo)\b/, ['gift', 'tag']],
+    [/\b(delivery|shipping|truck|transport)\b/, ['truck', 'package']],
+    [/\b(car|auto|vehicle|parking)\b/, ['car']],
+    [/\b(coffee|cafe|drink)\b/, ['coffee']],
+    [/\b(camera|photo|photos|photography)\b/, ['camera']],
+    [/\b(music|audio|sound)\b/, ['music', 'headphones']],
+    [/\b(leaf|natural|nature|organic|eco|green|plant)\b/, ['hand-leaf', 'plant-growth']],
+    [/\b(sun|sunny|light|bright|day)\b/, ['sun']],
+    [/\b(water|drop|hydration|clean)\b/, ['droplet', 'water-drop']],
+    [/\b(fire|flame|hot|heat)\b/, ['flame']],
+    [/\b(lock|private|privacy|confidential)\b/, ['lock', 'padlock']],
+    [/\b(chat|message|messages|talk|consult\w*|conversation|contact)\b/, ['message-circle', 'chat-bubble']],
+    [/\b(document|documents|file|files|paperwork|records)\b/, ['document', 'file']],
+    [/\b(handshake|partner\w*|agreement|deal|welcome)\b/, ['handshake']],
+    [/\b(thumbs? ?up|like|recommend\w*|satisfaction|satisfied|happy)\b/, ['thumbs-up', 'smile']],
+    [/\b(eye|vision|see|sight|look)\b/, ['eye']],
+    [/\b(brain|mind|mental|focus)\b/, ['lightbulb']],
+    [/\b(wheelchair|accessible|accessibility|disability)\b/, ['wheelchair']],
+    [/\b(pill|medication|pharmacy|prescription)\b/, ['pill']],
+    [/\b(flag|goal|milestone|start)\b/, ['flag']],
+    [/\b(rocket|launch|growth|startup)\b/, ['rocket']],
+    [/\b(compass|guide|guidance|navigate|direction)\b/, ['compass', 'navigation']],
+    [/\b(layers|range|options|variety|multiple)\b/, ['layers', 'grid']],
+    [/\b(package|box|product|products|supplies)\b/, ['package', 'box']],
+    [/\b(arrow|next|more|go)\b/, ['arrow-right', 'chevron-right']],
+  ];
+  function iconNameFor(text, has) {
+    var t = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
+    /* the word that comes FIRST in the label leads: "Experienced, caring
+       team" is about being experienced, "Family-friendly care" about families */
+    var best = null;
+    for (var i = 0; i < ICON_SYNONYMS.length; i++) {
+      var m = ICON_SYNONYMS[i][0].exec(t);
+      if (!m) continue;
+      var names = ICON_SYNONYMS[i][1], pick = null;
+      for (var j = 0; j < names.length; j++) if (has(names[j])) { pick = names[j]; break; }
+      if (pick && (!best || m.index < best.at)) best = { at: m.index, name: pick };
+    }
+    return best ? best.name : null;
+  }
+  /* The short label a drawing sits beside: the text of its OWN container (a
+   * feature block, a list row), or of the element right next to it. Never a
+   * design surface (the card, a panel, a column): its text is the whole
+   * design, not a label. */
+  var SURFACE_CLASS = /(^|\s)(card|panel|page|canvas|design|spread|inside|outside|column|col|grid|section|body|wrap|wrapper|container|content|main)(\s|$|--|-|_)/i;
+  function textOf(el, skip) {
+    var out = '', walker = el.ownerDocument.createTreeWalker(el, 4 /* TEXT */), n;
+    while ((n = walker.nextNode())) {
+      if (skip && skip.contains(n)) continue;
+      if (n.parentElement && n.parentElement.closest('svg, script, style')) continue;
+      var v = n.nodeValue.replace(/\s+/g, ' ').trim();
+      if (v) { out += (out ? ' ' : '') + v; if (out.length > 160) break; }
+    }
+    return out.slice(0, 160);
+  }
+  function labelNear(svg) {
+    var p = svg.parentElement;
+    if (!p || /^(body|html)$/i.test(p.tagName)) return '';
+    if (!SURFACE_CLASS.test(p.getAttribute('class') || '') && p.children.length <= 8) {
+      var own = textOf(p, svg);
+      if (own) return own;
+    }
+    var sibs = [svg.nextElementSibling, svg.previousElementSibling];
+    for (var i = 0; i < sibs.length; i++) {
+      var sib = sibs[i];
+      if (!sib || sib.querySelector('svg, img') || SURFACE_CLASS.test(sib.getAttribute('class') || '')) continue;
+      var t = textOf(sib);
+      if (t && t.length <= 120) return t;
+    }
+    return '';
+  }
+  function svgSizeAttrs(svg) {
+    var st = svg.getAttribute('style') || '';
+    var w = svg.getAttribute('width'), h = svg.getAttribute('height');
+    if (w && !/(^|;)\s*width\s*:/.test(st)) st += ';width:' + (/^\d+$/.test(w) ? w + 'px' : w);
+    if (h && !/(^|;)\s*height\s*:/.test(st)) st += ';height:' + (/^\d+$/.test(h) ? h + 'px' : h);
+    return st.replace(/^;/, '');
+  }
+  /** Remove, or swap for a bank icon, every picture the model drew itself.
+   *  `opts.iconNames`: a Set (or array) of icon-bank names, so a swap only
+   *  names an icon the bank has; without it, drawings are removed, never
+   *  swapped. `opts.customerSvg`: the customer's own SVG, never touched.
+   *  Returns { html, replaced:[{label, icon}], removed:[label], kept }. */
+  function enforceLibraryArtwork(html, opts) {
+    var out = { html: html, replaced: [], removed: [], kept: 0 };
+    if (!html || typeof DOMParser === 'undefined' || !/<svg/i.test(html)) return out;
+    opts = opts || {};
+    var names = opts.iconNames ? (opts.iconNames.has ? opts.iconNames : new Set(opts.iconNames)) : null;
+    var has = function (n) { return !!(names && names.has(n)); };
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var customer = '';
+    if (opts.customerSvg && /<svg/i.test(opts.customerSvg)) {
+      var cs = new DOMParser().parseFromString(opts.customerSvg, 'text/html').querySelector('svg');
+      if (cs) customer = geometryOf(cs);
+    }
+    var svgs = doc.querySelectorAll('svg'), changed = false;
+    for (var i = 0; i < svgs.length; i++) {
+      var svg = svgs[i];
+      if (svg.parentElement && svg.parentElement.closest('svg')) continue;
+      if (svg.closest('[data-icon-name]')) continue;
+      if (customer && geometryOf(svg) === customer) continue;
+      var cls = classifyDrawnSvg(svg);
+      if (cls === 'abstract') { out.kept++; continue; }
+      var label = labelNear(svg);
+      var own = namesOf(svg) + ' ' + (svg.querySelector('title') ? svg.querySelector('title').textContent : '');
+      var depicts = BOTANICAL_NAME.test(own) || PICTURE_NAME.test(own);
+      /* a drawn check used as a bullet, with no label and no picture name: left alone */
+      if (cls === 'icon-like' && !label.trim() && !depicts) { out.kept++; continue; }
+      /* a labelled drawing becomes the icon its label names; one named for
+         what it depicts (a figure, a spine) is a picture, never an icon */
+      var icon = label.trim() ? iconNameFor(label, has) : null;
+      if (!icon && !depicts) icon = iconNameFor(own, has);
+      var parent = svg.parentElement;
+      if (icon) {
+        var tok = doc.createElement('i');
+        tok.setAttribute('data-icon', icon);
+        if (svg.getAttribute('class')) tok.setAttribute('class', svg.getAttribute('class'));
+        var st = svgSizeAttrs(svg); if (st) tok.setAttribute('style', st);
+        svg.replaceWith(tok);
+        out.replaced.push({ label: (label || own).trim().slice(0, 60), icon: icon });
+      } else {
+        svg.remove();
+        out.removed.push((label || own).trim().slice(0, 60) || cls);
+        if (parent && !parent.closest('svg') && !parent.textContent.trim()
+            && !parent.querySelector('img, svg, i[data-icon], [data-icon-name], video, canvas')
+            && /\b(figure|illustration|drawing|graphic|mascot|artwork|hero|art|visual|picture|image)\b/i.test(namesOf(parent))) parent.remove();
+      }
+      changed = true;
+    }
+    if (!changed) return out;
+    var doctype = /^\s*<!doctype[^>]*>/i.exec(html);
+    out.html = (doctype ? doctype[0] : '') + doc.documentElement.outerHTML;
+    return out;
+  }
+
   /** The script tag to inject into a design's HTML. `uploads.photoPrefix` is
    *  the leading bytes of the user's uploaded-photo data URI, so the guard can
    *  recognise it as a photo without the Generator re-tagging the HTML. */
@@ -549,6 +833,9 @@
     resolveElement: resolveElement,
     guardScript: guardScript,
     stripDrawnBotanicals: stripDrawnBotanicals,
+    classifyDrawnSvg: classifyDrawnSvg,
+    iconNameFor: iconNameFor,
+    enforceLibraryArtwork: enforceLibraryArtwork,
     GUARD_SCRIPT_ID: 'asset-category-guard',
   };
 })(typeof window !== 'undefined' ? window : globalThis);

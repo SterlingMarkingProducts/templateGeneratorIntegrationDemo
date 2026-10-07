@@ -366,8 +366,13 @@ const scaled = await page.evaluate(async (html) => {
   const res = { guard: el.getAttribute('data-asset-guard'), w: el.offsetWidth, limits: window.SMPAssetCategory.iconLimits(720, 432) };
   f.remove(); return res;
 }, DESIGN_HTML);
-is(scaled.limits.absoluteMax === 96 && scaled.limits.normalMax === 72, 'limits scale with the canvas short side', JSON.stringify(scaled.limits));
-is(scaled.guard === null && scaled.w === 60, 'a 60px icon on a 720x432 canvas is within band and untouched', JSON.stringify(scaled));
+is(scaled.limits.absoluteMax === 60 && scaled.limits.normalMax === 45 && scaled.limits.scale === 1.25,
+   'a 7.5x4.5in piece is hand-held: the scale stops at 1.25 (45px normal, 60px absolute)', JSON.stringify(scaled.limits));
+is(scaled.guard === 'clamped' && scaled.w === 45, 'a 60px icon on it beside its number is brought back to 45px', JSON.stringify(scaled));
+const lim = await page.evaluate(() => ({ brochure: window.SMPAssetCategory.iconLimits(1056, 816), poster: window.SMPAssetCategory.iconLimits(2304, 1728), card: window.SMPAssetCategory.iconLimits(360, 216), badge: window.SMPAssetCategory.iconLimits(288, 144) }));
+is(lim.brochure.normalMax === 45 && lim.brochure.absoluteMax === 60, 'an 11x8.5 brochure keeps card-scale icons (was 105px / 141px)', JSON.stringify(lim.brochure));
+is(lim.poster.scale > 6 && lim.poster.normalMax > 200, 'a 24x18 poster, read from a distance, still scales with the canvas', JSON.stringify(lim.poster));
+is(lim.card.normalMax === 36 && lim.badge.normalMax < 36, 'a card is unchanged and a smaller badge scales down', JSON.stringify([lim.card.normalMax, lim.badge.normalMax]));
 
 /* ───────────────────────────────────────────────────────────────────────── */
 console.log('\n7  an icon must sit beside the information it stands for — on either side of the card');
@@ -555,6 +560,76 @@ is(botan.icon, 'an icon-bank icon stays (the icon rules judge it)');
 is(botan.customer, 'the customer\'s own SVG stays, even a leaf logo');
 is(botan.library, 'the botanical LIBRARY file stays — that is where plant artwork comes from');
 is(botan.back && botan.doctype && botan.name, 'the rest of the design is untouched (doctype, text, hidden back card)');
+
+/* ───────────────────────────────────────────────────────────────────────── */
+console.log('\n8b  the reported brochure icons');
+/* the reported brochure: a 220px check-circle beside "Experienced, caring team" */
+const bro = await renderIcons(`<!DOCTYPE html><html><head><style>body{margin:0}
+  .card{position:relative;width:1056px;height:816px;background:#f4efe6;font-family:Georgia}.t{position:absolute;color:#333}</style></head><body><div class="card">
+  <div class="t" style="left:760px;top:360px;font-size:16px">About Our Clinic</div>
+  ${ico('check-circle', STAR_SVG, 'broCheck', 'left:760px;top:420px;width:220px;height:220px')}
+  <div class="t" style="left:990px;top:510px;font-size:14px;width:120px">Experienced, caring team</div>
+  ${ico('users', PHONE_SVG, 'broUsers', 'left:100px;top:300px;width:190px;height:190px')}
+  <div class="t" style="left:300px;top:380px;font-size:14px;width:120px">Family-Friendly Care</div>
+</div></body></html>`, { frameW: 1100 });
+const bc = bro.icons.find((i) => i.id === 'broCheck'), bu = bro.icons.find((i) => i.id === 'broUsers');
+is(bc && bc.guard === 'clamped' && bc.vw <= 45 && bc.shown, 'the brochure\'s 220px check beside its label comes down to 45px (not 105px)', JSON.stringify(bc));
+is(bu && bu.guard === 'clamped' && bu.vw <= 45 && bu.shown, 'and the 190px people icon beside its label too', JSON.stringify(bu));
+
+console.log('\n9  pictures the model drew itself: swapped for bank icons, or removed; abstract geometry stays');
+const drawn = await page.evaluate(() => {
+  const AC = window.SMPAssetCategory;
+  const names = new Set(['check-circle', 'users', 'heart', 'activity', 'phone', 'search', 'star']);
+  const STICK = '<div class="posture-figure"><svg viewBox="0 0 100 200" style="width:160px;height:320px"><circle cx="50" cy="25" r="18"/><line x1="50" y1="43" x2="50" y2="120"/><line x1="50" y1="60" x2="15" y2="100"/><line x1="50" y1="60" x2="85" y2="100"/><line x1="50" y1="120" x2="25" y2="190"/><line x1="50" y1="120" x2="75" y2="190"/></svg></div>';
+  const CHECK = '<div class="feature"><svg class="feature-icon" viewBox="0 0 24 24" style="width:220px;height:220px"><circle cx="12" cy="12" r="10"/><polyline points="7 12 10 15 17 8"/></svg><h4>Experienced, caring team</h4></div>';
+  const USERS = '<div class="feature"><svg viewBox="0 0 24 24" width="190" height="190"><circle cx="9" cy="7" r="4"/><circle cx="17" cy="8" r="3"/><path d="M1 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 1 4 4v2"/></svg><h4>Family-Friendly Care</h4><p>Gentle care for kids and seniors.</p></div>';
+  const SPINE = '<div class="hero-art"><svg viewBox="0 0 60 200" style="width:120px;height:400px"><path d="M30 5c8 10 8 20 0 30s-8 20 0 30 8 20 0 30-8 20 0 30 8 20 0 30"/><ellipse cx="30" cy="20" rx="10" ry="5"/><ellipse cx="30" cy="50" rx="10" ry="5"/><ellipse cx="30" cy="80" rx="10" ry="5"/></svg></div>';
+  const RULE = '<svg class="rule" viewBox="0 0 400 2" style="width:400px;height:2px"><line x1="0" y1="1" x2="400" y2="1"/></svg>';
+  const SPLIT = '<svg class="split" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,0 60,100 0,100"/></svg>';
+  const RINGS = '<svg class="arcs" viewBox="0 0 200 200"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/></svg>';
+  const SWOOSH = '<svg class="swoosh" viewBox="0 0 300 100"><path d="M0 80 C 100 0, 200 160, 300 20"/></svg>';
+  const CUSTOMER = '<svg class="brand" viewBox="0 0 10 10"><path d="M1 9 C 3 1, 7 1, 9 9"/><circle cx="5" cy="5" r="1"/></svg>';
+  const BANK = '<span data-icon-name="phone"><svg viewBox="0 0 24 24"><path d="M3 5c0 9 7 16 16 16"/><circle cx="5" cy="5" r="2"/></svg></span>';
+  const html = '<!DOCTYPE html><html><head></head><body><div class="card">' + STICK + CHECK + USERS + SPINE + RULE + SPLIT + RINGS + SWOOSH + CUSTOMER + BANK + '<div class="n">Harbour Health</div></div></body></html>';
+  const r = AC.enforceLibraryArtwork(html, { customerSvg: CUSTOMER, iconNames: names });
+  const d = new DOMParser().parseFromString(r.html, 'text/html');
+  return {
+    replaced: r.replaced, removed: r.removed, kept: r.kept,
+    stick: !!d.querySelector('.posture-figure'), spine: !!d.querySelector('.hero-art'),
+    checkTok: d.querySelector('.feature i[data-icon]') && d.querySelector('.feature i[data-icon]').getAttribute('data-icon'),
+    checkStyle: d.querySelector('.feature i[data-icon]') && d.querySelector('.feature i[data-icon]').getAttribute('style'),
+    toks: [...d.querySelectorAll('i[data-icon]')].map((t) => t.getAttribute('data-icon')),
+    rule: !!d.querySelector('svg.rule'), split: !!d.querySelector('svg.split'), rings: !!d.querySelector('svg.arcs'),
+    swoosh: !!d.querySelector('svg.swoosh'), customer: !!d.querySelector('svg.brand'), bank: !!d.querySelector('[data-icon-name="phone"] svg'),
+    labelsKept: /Experienced, caring team/.test(r.html) && /Family-Friendly Care/.test(r.html) && /Harbour Health/.test(r.html),
+    classes: { stick: AC.classifyDrawnSvg(new DOMParser().parseFromString(STICK, 'text/html').querySelector('svg')),
+      check: AC.classifyDrawnSvg(new DOMParser().parseFromString(CHECK, 'text/html').querySelector('svg')),
+      spine: AC.classifyDrawnSvg(new DOMParser().parseFromString(SPINE, 'text/html').querySelector('svg')),
+      rings: AC.classifyDrawnSvg(new DOMParser().parseFromString(RINGS, 'text/html').querySelector('svg')) },
+  };
+});
+console.log('     ' + JSON.stringify({ replaced: drawn.replaced, removed: drawn.removed, kept: drawn.kept, classes: drawn.classes }));
+is(!drawn.stick, 'a stick-figure person (circle on lines) is removed, wrapper and all');
+is(!drawn.spine, 'a drawn spine (curved path and vertebrae) is removed');
+is(drawn.checkTok === 'check-circle' && /width:220px/.test(drawn.checkStyle || ''), 'a drawn check-in-a-circle beside "Experienced, caring team" becomes the bank\'s check-circle token, keeping its box', drawn.checkTok + ' ' + drawn.checkStyle);
+is(drawn.toks.includes('users'), 'a drawn two-people icon beside "Family-Friendly Care" becomes the bank\'s users icon', JSON.stringify(drawn.toks));
+is(drawn.rule && drawn.split && drawn.rings && drawn.swoosh, 'a rule, a diagonal split, concentric rings and a single swoosh are kept (abstract geometry)');
+is(drawn.customer, 'the customer\'s own SVG is kept');
+is(drawn.bank, 'an icon-bank icon is kept');
+is(drawn.labelsKept, 'the labels and text stay');
+is(drawn.classes.stick === 'pictorial' && drawn.classes.spine === 'pictorial' && drawn.classes.check === 'icon-like' && drawn.classes.rings === 'abstract',
+   'classification: figure and spine pictorial, check-in-circle icon-like, rings abstract', JSON.stringify(drawn.classes));
+/* through the app: the enforcer runs before the icon bank inlines tokens */
+const viaApp = await page.evaluate(async () => {
+  const html = '<!DOCTYPE html><html><head></head><body><div class="card" style="width:360px;height:216px"><div class="feature"><svg viewBox="0 0 24 24" style="width:40px;height:40px"><circle cx="12" cy="12" r="10"/><polyline points="7 12 10 15 17 8"/></svg><span>Verified results</span></div></div></body></html>';
+  const policed = policeGeneratedHtml(html);
+  const inlined = await IconBank.inline(policed);
+  const d = new DOMParser().parseFromString(inlined, 'text/html');
+  const span = d.querySelector('[data-icon-name]');
+  return { tokenName: (policed.match(/data-icon="([^"]+)"/) || [])[1], inlinedName: span && span.getAttribute('data-icon-name'), hasSvg: !!(span && span.querySelector('svg path')), report: window.SMPLastArtworkEnforcement };
+});
+is(viaApp.tokenName === 'check-circle' && viaApp.inlinedName === 'check-circle' && viaApp.hasSvg,
+   'in the app, the swap happens before IconBank inlines the real icon artwork', JSON.stringify(viaApp));
 
 await br.close(); server.close();
 console.log(`\n${pass} passed, ${fail} failed`);

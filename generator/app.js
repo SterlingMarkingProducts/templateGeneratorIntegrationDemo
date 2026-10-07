@@ -1266,6 +1266,34 @@ ${bodyFill}
   return appendUniversalFit(out);
 }
 
+/* ── Pictures the model drew itself never reach the preview ──────────
+ * Every inline <svg> the model wrote is read before the design renders: a
+ * drawing of something (a figure, a spine, an object, an icon) is swapped
+ * for the icon-bank icon its label names, or removed; abstract geometry
+ * stays. The icon-bank names are cached once so this can run synchronously
+ * at every point generated HTML enters the app. */
+let iconBankNames = null;
+if (window.IconBank && IconBank.loadManifest) {
+  IconBank.loadManifest().then((m) => { iconBankNames = new Set((m.icons || []).map((e) => e.name)); }).catch(() => {});
+}
+function policeGeneratedHtml(htmlStr) {
+  const AC = window.SMPAssetCategory;
+  if (!AC || !AC.enforceLibraryArtwork || !htmlStr) return htmlStr;
+  try {
+    const r = AC.enforceLibraryArtwork(htmlStr, {
+      customerSvg: (typeof svgPaste !== 'undefined' && svgPaste) ? svgPaste.value : '',
+      iconNames: iconBankNames,
+    });
+    window.SMPLastArtworkEnforcement = { replaced: r.replaced, removed: r.removed, kept: r.kept };
+    if (r.replaced.length || r.removed.length) {
+      console.warn('[generator] hand-drawn pictures: '
+        + (r.replaced.length ? 'swapped for bank icons ' + JSON.stringify(r.replaced) + ' ' : '')
+        + (r.removed.length ? 'removed ' + JSON.stringify(r.removed) : ''));
+    }
+    return r.html;
+  } catch (e) { console.warn('[generator] artwork enforcement skipped:', e && e.message); return htmlStr; }
+}
+
 /* ── Icon bank: swap <i data-icon="name"> tokens for real inline SVGs ── */
 async function upgradePreviewIcons(htmlStr, payload) {
   if (!window.IconBank || htmlStr.indexOf('data-icon') === -1) return;
@@ -1616,7 +1644,7 @@ async function generate(payload) {
           if (!htmlRendered) {
             const htmlMatch = accum.match(/```html\s*([\s\S]*?)```/);
             if (htmlMatch) {
-              const htmlStr = htmlMatch[1].trim();
+              const htmlStr = policeGeneratedHtml(htmlMatch[1].trim());
               generatedHtml = renderPreviewHtml(htmlStr, payload);
               upgradePreviewIcons(htmlStr, payload);
 
@@ -1649,7 +1677,7 @@ async function generate(payload) {
             if (!htmlMatch) {
               throw new Error('The AI response did not contain a valid HTML block. Please try regenerating.');
             }
-            const htmlStr = htmlMatch[1].trim();
+            const htmlStr = policeGeneratedHtml(htmlMatch[1].trim());
             generatedHtml = renderPreviewHtml(htmlStr, payload);
             upgradePreviewIcons(htmlStr, payload);
 
@@ -2241,6 +2269,9 @@ function loadDesignIntoGenerator(payload, html, label, opts) {
     businessName: payload.businessName || 'Demo Co',
     creativityLevel: creativityLevel?.value || 'balanced',   // see the note at the first use
   };
+  /* NOT policed: an uploaded or sample design is the user's own content (and
+   * the regression fixtures), not something the model drew just now. The
+   * drawn-picture rule applies to what the AI generates. */
   generatedHtml = html;
   generatedJson = null;
   setJsonState('generate');
