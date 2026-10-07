@@ -892,7 +892,13 @@ function round4(n) { return Math.round(n * 10000) / 10000; }
  * for the background raster to hide: a proof hides nothing. The snapshot is the
  * same whole-card foreignObject technique rasterizeBackground() uses — kept
  * separate rather than shared so the background path is untouched. */
-const PROOF_MAX_SIDE = 1200;
+/* A proof is a picture of the page for the chooser (300px thumb) and the
+ * Designer's preview — not print. A card renders at 2x (720px); a page that
+ * is already large in CSS px (a brochure spread, a sign) renders at most
+ * 900px on its long side, which keeps a two-page brochure's proofs near
+ * 400 KB together instead of a megabyte. Proofs must be PNG (the importer
+ * requires it), so size is the only lever. */
+const PROOF_MAX_SIDE = 900;
 async function renderPageProof(doc, rootEl) {
   try {
     const rect = rootEl.getBoundingClientRect();
@@ -1014,7 +1020,9 @@ function encodeRaster(cv, opaque) {
   fctx.fillStyle = '#ffffff';
   fctx.fillRect(0, 0, flat.width, flat.height);
   fctx.drawImage(cv, 0, 0);
-  const jpeg = flat.toDataURL('image/jpeg', 0.92);
+  /* 0.92 for a card-sized raster; 0.85 past a megapixel, where the file is
+   * the push and the difference is invisible on a brochure spread */
+  const jpeg = flat.toDataURL('image/jpeg', cv.width * cv.height > SMALL_RASTER_PIXELS ? 0.85 : 0.92);
   return jpeg.length < png.length ? jpeg : png;
 }
 
@@ -1655,6 +1663,117 @@ async function extractFromOffscreen(html, trimW, trimH, bleedPx, substitutions) 
   }
 }
 
+/* FIT THE PUSH TO WHAT THE GATEWAY WILL CARRY.
+ *
+ * A design with several photographs on a sign, or a busy two-sided card, can
+ * add up past the gateway's post-size line even with every raster encoded
+ * sensibly; refusing it outright would mean such designs never reach the
+ * Designer. So, when the push would exceed the line, the largest raster is
+ * re-encoded at 80% of its pixels (JPEG for an opaque image, PNG for one with
+ * transparency) and the objects that use it keep their drawn size exactly
+ * (width/height fall, scaleX/scaleY rise to match); then the next largest,
+ * until the push fits. Proofs shrink the same way, last. A raster is never
+ * taken below 480px on its long side — past that the transport's own check
+ * refuses the push with the number. The Designer draft is what is being
+ * pushed; a photo at 80% of its pixels on an 18x12 sign is still well past
+ * what the proof needs, and the Designer's own copy of the file is the
+ * print master. */
+const PUSH_BUDGET_FLOOR_SIDE = 480;
+async function reencodeRaster(src, factor) {
+  const img = new Image();
+  img.src = src;
+  try { await img.decode(); } catch (e) { return null; }
+  const w = Math.max(1, Math.round(img.naturalWidth * factor)), h = Math.max(1, Math.round(img.naturalHeight * factor));
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  cv.getContext('2d').drawImage(img, 0, 0, w, h);
+  const alpha = /^data:image\/png/i.test(src) && canvasHasAlpha(cv);
+  let out;
+  if (alpha) out = cv.toDataURL('image/png');
+  else {
+    const flat = document.createElement('canvas');
+    flat.width = w; flat.height = h;
+    const fctx = flat.getContext('2d');
+    fctx.fillStyle = '#ffffff'; fctx.fillRect(0, 0, w, h); fctx.drawImage(cv, 0, 0);
+    out = flat.toDataURL('image/jpeg', 0.82);
+  }
+  return { src: out, w, h };
+}
+async function fitTemplateToBudget(template) {
+  const TI = window.SMPTransportImport;
+  const budget = TI && TI.GATEWAY_BODY_BYTES;
+  if (!budget || !template || !template.pages) return null;
+  const target = budget - 96 * 1024;                     // room for the manifest JSON
+  const rasterObjs = () => {
+    const out = [];
+    template.pages.forEach((pg) => {
+      const objs = (pg.canvasData && pg.canvasData.objects) || [];
+      objs.forEach((o) => {
+        if (o && o.type === 'image' && typeof o.src === 'string' && /^data:image\/(png|jpeg)/i.test(o.src)) out.push(o);
+      });
+    });
+    return out;
+  };
+  const measure = () => {
+    const uniques = new Map();
+    rasterObjs().forEach((o) => {
+      const u = uniques.get(o.src) || { src: o.src, bytes: Math.round(o.src.length * 0.75), objs: [] };
+      u.objs.push(o); uniques.set(o.src, u);
+    });
+    let total = 0;
+    uniques.forEach((u) => { total += u.bytes; });
+    (template.pageProofs || []).forEach((p) => { if (p && p.dataUri) total += Math.round(p.dataUri.length * 0.75); });
+    return { total, uniques: [...uniques.values()] };
+  };
+  const skipped = new Set();
+  const report = { before: measure().total, steps: [] };
+  let m = measure(), rounds = 0;
+  while (m.total > target && rounds++ < 24) {
+    const candidates = m.uniques.filter((u) => !skipped.has(u.src)).sort((a, b) => b.bytes - a.bytes);
+    const big = candidates[0];
+    if (!big) break;
+    const o0 = big.objs[0];
+    const longSide = Math.max(o0.width || 0, o0.height || 0);
+    if (longSide * 0.8 < PUSH_BUDGET_FLOOR_SIDE) { skipped.add(big.src); continue; }
+    const re = await reencodeRaster(big.src, 0.8);
+    if (!re || re.src.length >= big.src.length) { skipped.add(big.src); continue; }
+    big.objs.forEach((o) => {
+      const drawnW = (o.width || re.w) * (o.scaleX || 1), drawnH = (o.height || re.h) * (o.scaleY || 1);
+      o.width = re.w; o.height = re.h;
+      o.scaleX = drawnW / re.w; o.scaleY = drawnH / re.h;
+      o.src = re.src;
+    });
+    report.steps.push({ what: 'raster', from: big.bytes, to: Math.round(re.src.length * 0.75), px: re.w + 'x' + re.h });
+    m = measure();
+  }
+  /* proofs last: they are pictures of the page, not the page */
+  let proofRounds = 0;
+  while (m.total > target && proofRounds++ < 6) {
+    const proofs = (template.pageProofs || []).filter((p) => p && p.dataUri).sort((a, b) => b.dataUri.length - a.dataUri.length);
+    const big = proofs[0];
+    if (!big) break;
+    const re = await reencodeRaster(big.dataUri, 0.8);
+    if (!re || re.src.length >= big.dataUri.length || re.w < 400) break;
+    /* a proof must stay PNG for the importer */
+    if (!/^data:image\/png/i.test(re.src)) {
+      const img = new Image(); img.src = re.src; await img.decode();
+      const cv = document.createElement('canvas'); cv.width = re.w; cv.height = re.h;
+      cv.getContext('2d').drawImage(img, 0, 0); re.src = cv.toDataURL('image/png');
+    }
+    if (re.src.length >= big.dataUri.length) break;
+    report.steps.push({ what: 'proof', from: Math.round(big.dataUri.length * 0.75), to: Math.round(re.src.length * 0.75) });
+    big.dataUri = re.src;
+    m = measure();
+  }
+  report.after = m.total; report.target = target;
+  if (report.steps.length) {
+    console.info('[push] fitted to the gateway budget: ' + (report.before / 1048576).toFixed(2) + ' MB -> '
+      + (report.after / 1048576).toFixed(2) + ' MB in ' + report.steps.length + ' step(s)');
+  }
+  window.SMPLastPushFit = report;
+  return report;
+}
+
 async function convertCurrentDesign() {
   if (!generatedHtml || !lastPayload) {
     throw new Error('Generate a design first, then push it to the designer.');
@@ -1707,7 +1826,9 @@ async function convertCurrentDesign() {
       objects: bg ? [JSON.parse(JSON.stringify(bg))] : [],
       proof: await proofFromImage(bg && bg.src, front.proof) });
   }
-  return { template: buildSterlingTemplate(pages, lastPayload), substitutions };
+  const template = buildSterlingTemplate(pages, lastPayload);
+  await fitTemplateToBudget(template);
+  return { template, substitutions };
 }
 
 /* ── Transfer transports ─────────────────────────────── */

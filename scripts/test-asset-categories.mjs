@@ -150,6 +150,16 @@ const rendered = await page.evaluate(() => {
   };
 });
 is(rendered.guardInPreview, 'renderPreviewHtml injects the asset-category guard');
+const everyProduct = await page.evaluate(() => {
+  const html = '<!DOCTYPE html><html><head></head><body><div class="card"></div></body></html>';
+  const has = (p) => renderPreviewHtml(html, p).includes('id="asset-category-guard"');
+  return { brochure: has({ templateType: 'Brochure', width: 11, height: 8.5, unit: 'in', doubleSided: true }),
+    sign: has({ templateType: 'Sign', width: 24, height: 18, unit: 'in' }),
+    nameplate: has({ templateType: 'Nameplate', width: 8, height: 2, unit: 'in' }),
+    badge: has({ templateType: 'Name Badge', width: 3, height: 1.5, unit: 'in' }) };
+});
+is(everyProduct.brochure && everyProduct.sign && everyProduct.nameplate && everyProduct.badge,
+   'on EVERY product — brochure, sign, nameplate, badge — not only a business card (the brochure preview had none)', JSON.stringify(everyProduct));
 is(rendered.once === 1, 'exactly once', String(rendered.once));
 is(rendered.inHead, 'the guard lives in <head>, outside every card\'s markup');
 is(rendered.contactSide === 'unchanged',

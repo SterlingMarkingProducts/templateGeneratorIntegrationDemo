@@ -30,12 +30,15 @@
   var MAX_PAGE_JSON_BYTES = 60000;
   var MAX_TOTAL_ASSET_BYTES = 20 * 1024 * 1024;
   /* What the web03 gateway in front of templateImport.cfm will carry. It
-   * answers a bare 502 to uploads in the several-megabyte class (7.4MB and
-   * 11.6MB pushes both died there; business-card pushes of 1-2MB pass), so a
-   * body over this is refused HERE, with the number, instead of failing on
-   * the wire with no explanation. The rasters are encoded to stay well under
-   * it (push-to-designer.js encodeRaster); this is the last line. */
-  var GATEWAY_BODY_BYTES = 6 * 1024 * 1024;
+   * answers a bare 502 to a body it will not pass: 11.6 MB, 7.4 MB and a
+   * 2.4 MB brochure push all died there, while business-card pushes of
+   * about a megabyte go through, and the endpoint itself imports a 3.7 MB
+   * brochure in two seconds — so it is the connector's post-size limit, not
+   * the import. 2 MB is the common default for that limit (Tomcat's
+   * maxPostSize, for one). A body over it is refused HERE, with the number,
+   * instead of failing on the wire with no explanation; the rasters and
+   * proofs are encoded to keep a brochure under it (push-to-designer.js). */
+  var GATEWAY_BODY_BYTES = 2 * 1024 * 1024;
 
   function ImportError(code, message, detail) {
     var e = new Error(message);
@@ -175,10 +178,11 @@
       + proofs.reduce(function (n, p) { return n + p.bytes.length; }, 0);
     if (bodyBytes > GATEWAY_BODY_BYTES) {
       throw ImportError('payload-too-large',
-        'This push is ' + (bodyBytes / 1048576).toFixed(1) + ' MB of images, and the web03 '
+        'This push is ' + (bodyBytes / 1048576).toFixed(2) + ' MB of images, and the web03 '
         + 'gateway rejects uploads over about ' + Math.round(GATEWAY_BODY_BYTES / 1048576)
         + ' MB (a bare 502). Nothing was sent. A design with fewer or smaller photographs '
-        + 'and textures will push; the gateway limit is the server\'s to raise.',
+        + 'and textures will push; raising the post-size limit on the server connector '
+        + 'in front of templateImport.cfm lifts the ceiling for every push.',
         { bytes: bodyBytes, limit: GATEWAY_BODY_BYTES });
     }
 
@@ -264,6 +268,7 @@
   root.SMPTransportImport = {
     TemplateImportTransport: TemplateImportTransport,
     buildRequest: buildRequest,
+    GATEWAY_BODY_BYTES: GATEWAY_BODY_BYTES,
     toFormData: toFormData,
     eligibility: eligibility,
     ImportError: ImportError,

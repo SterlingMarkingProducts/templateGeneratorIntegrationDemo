@@ -116,7 +116,7 @@ const BR = { templateType: 'Brochure', width: 11, height: 8.5, unit: 'in', doubl
 const b = await push(BROCHURE, BR);
 console.log('     ' + JSON.stringify(b.parts.map((p) => p.name + ':' + p.type.replace('image/', '') + ':' + Math.round(p.bytes / 1024) + 'KB')));
 is(!b.error, 'the push builds', b.error || '');
-is(b.total < 3 * 1024 * 1024, 'the whole body is under 3 MB (was 7.4 MB)', (b.total / 1048576).toFixed(2) + ' MB');
+is(b.total < 2 * 1024 * 1024, 'the whole body is under the 2 MB gateway line (was 7.4 MB)', (b.total / 1048576).toFixed(2) + ' MB');
 const bgs = b.objs.filter((o) => o.st === 'backgroundArt');
 is(bgs.length === 2 && bgs.every((o) => o.mime === 'image/jpeg'), 'both 2600px background rasters travel as JPEG', JSON.stringify(bgs.map((o) => o.mime)));
 const photos = b.objs.filter((o) => o.kind === 'photo');
@@ -141,6 +141,35 @@ const c = await page.evaluate(async (html) => {
   return { mime: bg && bg.src.slice(5, bg.src.indexOf(';')), kb: bg && Math.round(bg.src.length * 0.75 / 1024) };
 }, CARD);
 is(c.mime === 'image/png' && c.kb < 1536, 'a gradient business-card background (under a megapixel, under 1.5 MB) is still a PNG, byte for byte', JSON.stringify(c));
+
+console.log('\n3  a photo-heavy large format is FITTED to the line, not refused');
+await page.goto(`http://web03.sterling.ca:${PORT}${FOLDER}generator/index.html?product=6533&mode=live&orientation=landscape`, { waitUntil: 'domcontentloaded' });
+await page.waitForFunction(() => window.SMPProductSelection && window.SMPProductSelection.get && window.SMPProductSelection.get(), null, { timeout: 20000 });
+const sign = await page.evaluate(async (PHOTO) => {
+  window.SMPProductSelection.clear && window.SMPProductSelection.clear();
+  const W = 1728, H = 1152;
+  const p = (l, t) => '<div style="position:absolute;left:' + l + 'px;top:' + t + 'px;width:800px;height:500px;overflow:hidden"><img src="' + PHOTO + '" style="width:100%;height:100%;object-fit:cover"></div>';
+  generatedHtml = '<!DOCTYPE html><html><head><style>body{margin:0}.card{position:relative;width:' + W + 'px;height:' + H + 'px;background:linear-gradient(135deg,#123a5e,#e8620c);font-family:Arial}</style></head><body><div class="card">'
+    + p(40, 40) + p(880, 40) + p(40, 600) + p(880, 600) + p(460, 320) + p(1240, 320).replace('width:800px;height:500px', 'width:480px;height:800px')
+    + '<div style="position:absolute;left:40px;top:1110px;color:#fff;font-size:24px">Six photos on a sign</div></div></body></html>';
+  lastPayload = { templateType: 'Sign', width: 18, height: 12, unit: 'in', doubleSided: false };
+  const { template } = await window.SMPPush.convertCurrentDesign();
+  const fit = window.SMPLastPushFit;
+  const objs = template.pages[0].canvasData.objects.filter((o) => o.type === 'image' && o.sterlingType !== 'backgroundArt');
+  const factor = template.canvasProperties.width / W;
+  const uniques = new Set(); let body = 0;
+  template.pages.forEach((pg) => (pg.canvasData.objects || []).forEach((o) => { if (o.type === 'image' && /^data:image\/(png|jpeg)/.test(o.src || '') && !uniques.has(o.src)) { uniques.add(o.src); body += Math.round(o.src.length * 0.75); } }));
+  (template.pageProofs || []).forEach((pp) => { if (pp.dataUri) body += Math.round(pp.dataUri.length * 0.75); });
+  return { fit, bodyBytes: body, error: null, limit: window.SMPTransportImport.GATEWAY_BODY_BYTES,
+    drawn: objs.map((o) => [Math.round(o.width * o.scaleX / factor), Math.round(o.height * o.scaleY / factor), o.width]) };
+}, PHOTO);
+console.log('     fit: ' + JSON.stringify(sign.fit && { before: sign.fit.before, after: sign.fit.after, steps: sign.fit.steps.length }) + ' drawn: ' + JSON.stringify(sign.drawn));
+is(sign.fit && sign.fit.before > sign.limit, 'an 18x12 sign with six cover-cropped photos starts over the line', (sign.fit.before / 1048576).toFixed(2) + ' MB');
+is(sign.bodyBytes < sign.limit - 96 * 1024 && sign.fit.after === sign.bodyBytes, 'and ends under it', (sign.bodyBytes / 1048576).toFixed(2) + ' MB');
+is(sign.fit && sign.fit.steps.length > 0 && sign.fit.steps.every((st) => st.to < st.from), 'because the largest rasters were re-encoded smaller, one at a time, until it fit', JSON.stringify(sign.fit.steps));
+is(sign.drawn.length === 6 && sign.drawn.filter((d) => Math.abs(d[0] - 800) <= 1 && Math.abs(d[1] - 500) <= 1).length === 5
+   && sign.drawn.some((d) => Math.abs(d[0] - 480) <= 1 && Math.abs(d[1] - 800) <= 1),
+   'and every photo still draws at exactly its panel size (pixels fell, scale rose)', JSON.stringify(sign.drawn));
 
 await br.close(); server.close();
 console.log(`\n${pass} passed, ${fail} failed`);
